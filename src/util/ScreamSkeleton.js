@@ -53,7 +53,7 @@ const ScreamSkeleton = (props) => {
   const { classes } = props;
 
   const content = Array.from({ length: 5 }).map((item, index) => (
-    <Card className={classes.card} key={index}>
+    <Card className={classes.card} key={index}>  
       <CardMedia className={classes.cover} image={NoImg} />
       <CardContent className={classes.cardContent}>
         <div className={classes.handle} />
