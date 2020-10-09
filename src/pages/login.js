@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
 import PropTypes from 'prop-types';
-import AppIcon from '../images/icon.png';
-import { Link } from 'react-router-dom';
 
 // MUI Stuff
 import Grid from '@material-ui/core/Grid';
@@ -35,7 +33,7 @@ class login extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     const userData = {
-      email: this.state.email,
+      email: this.state.email + "@email.com",
       password: this.state.password
     };
     this.props.loginUser(userData, this.props.history);
@@ -46,17 +44,13 @@ class login extends Component {
     });
   };
   render() {
-    const {
-      classes,
-      UI: { loading }
-    } = this.props;
+    const {user, classes, UI: { loading }} = this.props;
     const { errors } = this.state;
-
+    if(user.authenticated){window.location.href = './';}
     return (
       <Grid container className={classes.form}>
         <Grid item sm />
         <Grid item sm>
-          <img src={AppIcon} alt="monkey" className={classes.image} />
           <Typography variant="h2" className={classes.pageTitle}>
             Login
           </Typography>
@@ -64,8 +58,8 @@ class login extends Component {
             <TextField
               id="email"
               name="email"
-              type="email"
-              label="Email"
+              type="text"
+              label="Username"
               className={classes.textField}
               helperText={errors.email}
               error={errors.email ? true : false}
@@ -102,10 +96,6 @@ class login extends Component {
                 <CircularProgress size={30} className={classes.progress} />
               )}
             </Button>
-            <br />
-            <small>
-              dont have an account ? sign up <Link to="/signup">here</Link>
-            </small>
           </form>
         </Grid>
         <Grid item sm />
