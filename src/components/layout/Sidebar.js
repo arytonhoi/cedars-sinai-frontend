@@ -2,42 +2,43 @@ import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import MyButton from '../../util/MyButton';
-import PostScream from '../scream/PostScream';
-import Notifications from './Notifications';
+import MyButton from '../../util/jsx/MyButton';
+import AddPost from '../posts/AddPost';
 // MUI stuff
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 // Icons
 import HomeIcon from '@material-ui/icons/Home';
+import LogoutIcon from '@material-ui/icons/PowerOff';
 
-class Navbar extends Component {
+class Sidebar extends Component {
   render() {
-    const { authenticated } = this.props;
+    const { isAdmin } = this.props;
     return (
       <AppBar>
         <Toolbar className="nav-container">
-          {authenticated ? (
+          {isAdmin ? (
             <Fragment>
-              <PostScream />
+              <AddPost />
               <Link to="/">
                 <MyButton tip="Home">
                   <HomeIcon />
                 </MyButton>
               </Link>
-              <Notifications />
+              <Link to="/logout">
+                <MyButton tip="Logout">
+                  <LogoutIcon />
+                </MyButton>
+              </Link>
             </Fragment>
           ) : (
             <Fragment>
-              <Button color="inherit" component={Link} to="/login">
-                Login
-              </Button>
               <Button color="inherit" component={Link} to="/">
                 Home
               </Button>
-              <Button color="inherit" component={Link} to="/signup">
-                Signup
+              <Button color="inherit" component={Link} to="/logout">
+                Logout
               </Button>
             </Fragment>
           )}
@@ -47,12 +48,11 @@ class Navbar extends Component {
   }
 }
 
-Navbar.propTypes = {
-  authenticated: PropTypes.bool.isRequired
+Sidebar.propTypes = {
+  isAdmin: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = (state) => ({
-  authenticated: state.user.authenticated
+  isAdmin: state.user.is_admin
 });
-
-export default connect(mapStateToProps)(Navbar);
+export default connect(mapStateToProps)(Sidebar);

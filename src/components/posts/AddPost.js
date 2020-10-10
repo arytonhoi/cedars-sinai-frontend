@@ -1,10 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
-import MyButton from '../../util/MyButton';
+import MyButton from '../../util/jsx/MyButton';
 // MUI Stuff
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -13,7 +12,11 @@ import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 // Redux stuff
 import { connect } from 'react-redux';
-import { postScream, clearErrors } from '../../redux/actions/dataActions';
+import { postPost, clearErrors } from '../../redux/actions/dataActions';
+
+//Editor
+import CKEditor from 'ckeditor4-react';
+const { ckConfig } = require('../../util/configs/ckeditor');
 
 const styles = (theme) => ({
   ...theme,
@@ -32,7 +35,7 @@ const styles = (theme) => ({
   }
 });
 
-class PostScream extends Component {
+class PostPost extends Component {
   state = {
     open: false,
     body: '',
@@ -60,17 +63,21 @@ class PostScream extends Component {
   };
   handleSubmit = (event) => {
     event.preventDefault();
-    this.props.postScream({ body: this.state.body });
+    this.props.postPost({ body: this.state.body });
+  };
+  updateState = (event) => {
+    this.setState({body : event.editor.getData()})
+    console.log();
   };
   render() {
-    const { errors } = this.state;
+    //const { errors } = this.state;
     const {
       classes,
       UI: { loading }
     } = this.props;
     return (
       <Fragment>
-        <MyButton onClick={this.handleOpen} tip="Post a Scream!">
+        <MyButton onClick={this.handleOpen} tip="Add a page">
           <AddIcon />
         </MyButton>
         <Dialog
@@ -86,21 +93,13 @@ class PostScream extends Component {
           >
             <CloseIcon />
           </MyButton>
-          <DialogTitle>Post a new scream</DialogTitle>
+          <DialogTitle>Add a new page...</DialogTitle>
           <DialogContent>
             <form onSubmit={this.handleSubmit}>
-              <TextField
-                name="body"
-                type="text"
-                label="SCREAM!!"
-                multiline
-                rows="3"
-                placeholder="Scream at your fellow apes"
-                error={errors.body ? true : false}
-                helperText={errors.body}
-                className={classes.textField}
-                onChange={this.handleChange}
-                fullWidth
+              <CKEditor
+                data=""
+                config={ ckConfig }
+                onChange = { this.updateState }
               />
               <Button
                 type="submit"
@@ -124,9 +123,8 @@ class PostScream extends Component {
     );
   }
 }
-
-PostScream.propTypes = {
-  postScream: PropTypes.func.isRequired,
+PostPost.propTypes = {
+  postPost: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
   UI: PropTypes.object.isRequired
 };
@@ -137,5 +135,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(
   mapStateToProps,
-  { postScream, clearErrors }
-)(withStyles(styles)(PostScream));
+  { postPost, clearErrors }
+)(withStyles(styles)(PostPost));
