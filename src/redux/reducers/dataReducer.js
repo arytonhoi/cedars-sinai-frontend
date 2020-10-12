@@ -1,15 +1,17 @@
 import {
   SET_POSTS,
   LOADING_DATA,
+  STOP_LOADING_DATA,
   DELETE_POST,
   POST_POST,
   SET_POST,
+  SET_ANNOUNCE,
   SUBMIT_COMMENT
 } from '../types';
 
 const initialState = {
   posts: [],
-  post: {},
+  announce: {},
   loading: false
 };
 
@@ -20,16 +22,26 @@ export default function(state = initialState, action) {
         ...state,
         loading: true
       };
+    case STOP_LOADING_DATA:
+      return {
+        ...state,
+        loading: false
+      };
     case SET_POSTS:
       return {
         ...state,
         posts: action.payload,
-        loading: false
+      };
+    case SET_ANNOUNCE:
+      return {
+        ...state,
+        announce: action.payload,
       };
     case SET_POST:
       return {
         ...state,
-        post: action.payload
+        posts: [action.payload],
+        loading: false
       };
 
     case DELETE_POST:

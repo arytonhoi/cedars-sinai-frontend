@@ -7,22 +7,22 @@ import {
 
 const initialState = {
   loading: false,
-  errors: null
+  errors: []
 };
 
 export default function(state = initialState, action) {
   switch (action.type) {
     case SET_ERRORS:
+      state.errors.push(action.payload.response)
       return {
         ...state,
         loading: false,
-        errors: action.payload
       };
     case CLEAR_ERRORS:
       return {
         ...state,
         loading: false,
-        errors: null
+        errors: []
       };
     case LOADING_UI:
       return {

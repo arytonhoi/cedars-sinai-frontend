@@ -8,13 +8,14 @@ import JWT from './util/jwt.js';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import { SET_AUTHENTICATED, SET_ADMIN } from './redux/types';
-import { logoutUser, getUserData } from './redux/actions/userActions';
+import { logoutUser } from './redux/actions/userActions';
 // Components
 import Sidebar from './components/layout/Sidebar';
 import themeObject from './util/configs/theme';
 import AuthRoute from './util/jsx/AuthRoute';
 // Pages
 import home from './pages/home';
+import genpage from './pages/genPage';
 import login from './pages/login';
 import logout from './pages/logout';
 
@@ -29,16 +30,16 @@ const token = localStorage.FBIdToken;
 if (token) {
   const decodedToken = new JWT(token).parse.payload;
   console.log(decodedToken)
+  //console.log(decodedToken.verify())
   if (decodedToken.exp * 1000 < Date.now()) {
     store.dispatch(logoutUser());
-    window.location.href = '/login';
+    window.location = '/login';
   } else {
     store.dispatch({ type: SET_AUTHENTICATED });
     if(decodedToken.email === 'admin@email.com'){
       store.dispatch({ type: SET_ADMIN });
     }
     axios.defaults.headers.common['Authorization'] = token;
-    store.dispatch(getUserData());
   }
 }
 console.log(store.getState())
@@ -56,6 +57,7 @@ class App extends Component {
                 <Route exact path="/" component={home} />
                 <AuthRoute exact path="/login" component={login} />
                 <Route exact path="/logout" component={logout} />
+                <Route path="/:pageName" component={genpage} />
               </Switch>
             </div>
           </Router>
@@ -77,6 +79,7 @@ class App extends Component {
   }
 }
 }
+
 export default App;
 
 /*

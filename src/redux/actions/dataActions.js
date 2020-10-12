@@ -1,21 +1,48 @@
 import {
   SET_POSTS,
   LOADING_DATA,
+  STOP_LOADING_DATA,
   DELETE_POST,
   SET_ERRORS,
   POST_POST,
   CLEAR_ERRORS,
   LOADING_UI,
   SET_POST,
+  SET_ANNOUNCE,
   STOP_LOADING_UI,
   SUBMIT_COMMENT
 } from '../types';
 import axios from 'axios';
 
+export const getAnnounce = () => (dispatch) => {
+  dispatch({ type: LOADING_DATA });
+  dispatch({
+    type: SET_ANNOUNCE,
+    payload: [
+               {
+                 title:"First Announcement",
+                 date:0,
+                 isPinned:false,
+                 announcementId:1,
+                 content:"First content",
+                 author:"Celine Dion"
+               },
+               {
+                 title:"Pinned Announcement",
+                 date:0,
+                 isPinned:true,
+                 announcementId:2,
+                 content:"Second content",
+                 author:"Celine Dion"
+               },
+             ]
+  });
+};
+
 export const getPosts = () => (dispatch) => {
   dispatch({ type: LOADING_DATA });
-  axios
-    .get('/screams')
+  return axios
+    .get('/files')
     .then((res) => {
       dispatch({
         type: SET_POSTS,
@@ -29,18 +56,18 @@ export const getPosts = () => (dispatch) => {
       });
     });
 };
-export const getPost = (screamId) => (dispatch) => {
-  dispatch({ type: LOADING_UI });
+export const getPost = (fileName) => (dispatch) => {
+  dispatch({ type: LOADING_DATA }); 
   axios
-    .get(`/scream/${screamId}`)
+    .get(`/files/${fileName}`)
     .then((res) => {
       dispatch({
         type: SET_POST,
         payload: res.data
       });
-      dispatch({ type: STOP_LOADING_UI });
-    })
-    .catch((err) => console.log(err));
+    }).finally(
+      dispatch({ type: STOP_LOADING_DATA }) 
+    ).catch((err) => dispatch({ type: SET_ERRORS, payload: err }))
 };
 // Post a scream
 export const postPost = (newPost) => (dispatch) => {

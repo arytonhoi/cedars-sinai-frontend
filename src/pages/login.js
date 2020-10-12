@@ -20,7 +20,7 @@ class login extends Component {
   constructor() {
     super();
     this.state = {
-      email: '',
+      username: '',
       password: '',
       errors: {}
     };
@@ -33,7 +33,7 @@ class login extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     const userData = {
-      email: this.state.email + "@email.com",
+      username: this.state.username,
       password: this.state.password
     };
     this.props.loginUser(userData, this.props.history);
@@ -45,8 +45,8 @@ class login extends Component {
   };
   render() {
     const {user, classes, UI: { loading }} = this.props;
+console.log(this.props)
     const { errors } = this.state;
-    if(user.authenticated){window.location.href = './';}
     return (
       <Grid container className={classes.form}>
         <Grid item sm />
@@ -56,14 +56,14 @@ class login extends Component {
           </Typography>
           <form noValidate onSubmit={this.handleSubmit}>
             <TextField
-              id="email"
-              name="email"
+              id="username"
+              name="username"
               type="text"
               label="Username"
               className={classes.textField}
-              helperText={errors.email}
-              error={errors.email ? true : false}
-              value={this.state.email}
+              helperText={errors.username}
+              error={errors.username ? true : false}
+              value={this.state.username}
               onChange={this.handleChange}
               fullWidth
             />

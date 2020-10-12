@@ -2,10 +2,11 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
-import { getPosts } from '../redux/actions/dataActions';
+import { getAnnounce } from '../redux/actions/dataActions';
 
 class home extends Component {
   render() {
+    getAnnounce()
     const { isAdmin } = this.props;
     if(isAdmin){
       return "Homepage for admins"
@@ -16,7 +17,7 @@ class home extends Component {
 }
 
 home.propTypes = {
-  getScreams: PropTypes.func.isRequired,
+  getAnnounce: PropTypes.func.isRequired,
   data: PropTypes.object.isRequired,
   isAdmin: PropTypes.bool.isRequired
 };
@@ -28,7 +29,7 @@ const mapStateToProps = (state) => {console.log(state);return ({
 
 export default connect(
   mapStateToProps,
-  { getPosts }
+  { getAnnounce }
 )(home);
 
 /*
