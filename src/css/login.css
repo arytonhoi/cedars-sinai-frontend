@@ -1,0 +1,61 @@
+form{
+  background: #d9d9d9;
+  border-radius: 0.5em;
+  padding: 2em;
+  text-align: left;
+  position: absolute;
+}
+
+.login-wrapper{
+  position: relative;
+}
+
+.pw-toggle{
+  position: absolute;
+  right: 0.5em;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.key-icon{
+  position: absolute;
+  left: 0.5em;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+input[type=text],input[type=password]{
+  padding: 0.5em 3em;
+}
+
+/* CSS-only autotoggle */
+label{
+  position:relative;
+  margin-bottom: 0.5em;
+}
+
+.dialog-label{
+  display: none;
+  position: absolute;
+  height: 3em;
+  left: 20%;
+  transform: translateX(-20%);
+  bottom: -3em;
+}
+#userSelect, #adminSelect{
+  display: none;
+}
+#userSelect:checked+.select-user, #adminSelect:checked+.select-admin{
+  color: #000;
+}
+#userSelect:checked+.select-user > svg, #adminSelect:checked+.select-admin > svg{
+  display: block;
+}
+
+.select-user, .select-admin{
+  font-weight:bold;
+  color: #8f8f8f;
+  padding: 1em 2em 0 0;
+  display: inline-block;
+  text-align: left;
+}
