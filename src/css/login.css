@@ -3,7 +3,6 @@ form{
   border-radius: 0.5em;
   padding: 2em;
   text-align: left;
-  position: absolute;
 }
 
 .login-wrapper{
@@ -11,17 +10,12 @@ form{
 }
 
 .pw-toggle{
-  position: absolute;
+  cursor: pointer;
   right: 0.5em;
-  top: 50%;
-  transform: translateY(-50%);
 }
 
 .key-icon{
-  position: absolute;
   left: 0.5em;
-  top: 50%;
-  transform: translateY(-50%);
 }
 
 input[type=text],input[type=password]{
@@ -45,14 +39,15 @@ label{
 #userSelect, #adminSelect{
   display: none;
 }
-#userSelect:checked+.select-user, #adminSelect:checked+.select-admin{
+#userSelect:checked+a > .select-user, #adminSelect:checked+a >.select-admin{
   color: #000;
 }
-#userSelect:checked+.select-user > svg, #adminSelect:checked+.select-admin > svg{
+#userSelect:checked+a >.select-user > svg, #adminSelect:checked+a >.select-admin > svg{
   display: block;
 }
 
 .select-user, .select-admin{
+  cursor: pointer;
   font-weight:bold;
   color: #8f8f8f;
   padding: 1em 2em 0 0;

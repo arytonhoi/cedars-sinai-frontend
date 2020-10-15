@@ -55,10 +55,8 @@ class login extends Component {
 console.log(this.props)
     const { errors } = this.state;
     return (
-      <Grid container className={classes.form}>
-        <Grid item sm />
-        <Grid item sm>
-          <form noValidate onSubmit={this.handleSubmit}>
+      <div>
+          <form class="center" noValidate onSubmit={this.handleSubmit}>
             <input
               id="adminSelect"
               type="radio"
@@ -67,20 +65,20 @@ console.log(this.props)
               class="noselect"
               onChange={this.handleChange}
             />
-            <label for="adminSelect" class="select-admin">ADMIN <svg height="50" width="40" class="dialog-label">
+            <a><label for="adminSelect" class="noselect select-admin">ADMIN <svg height="50" width="40" class="dialog-label">
   <polygon points="20,0 40,50 0,50" style={{fill:"#c4c4c4"}} />
-</svg> </label>
+</svg> </label></a>
             <input 
               id="userSelect"
               type="radio"
               name="username"
-              value="user"
+              value="staff"
               class="noselect"
               onChange={this.handleChange}
             />
-            <label for="userSelect" class="select-user">USER  <svg height="50" width="40" class="dialog-label">
+            <a><label for="userSelect" class="noselect select-user">USER  <svg height="50" width="40" class="dialog-label">
   <polygon points="20,0 40,50 0,50" style={{fill:"#c4c4c4"}} />
-</svg> </label>
+</svg> </label></a>
             <span value={ errors }></span>
             <div class="login-wrapper">
             <TextField
@@ -97,8 +95,8 @@ console.log(this.props)
               fullWidth
               disableUnderline
             />
-            <span class="key-icon noselect">Key</span>
-            <span class="pw-toggle noselect" onClick={this.togglePwField}>Eye</span>
+            <span class="key-icon valign noselect">Key</span>
+            <span class="pw-toggle valign noselect" onClick={this.togglePwField}>Eye</span>
             </div>
             {errors.general && (
               <Typography variant="body2" className={classes.customError}>
@@ -120,9 +118,7 @@ console.log(this.props)
               )}
             </Button>
           </form>
-        </Grid>
-        <Grid item sm />
-      </Grid>
+      </div>
     );
   }
 }
