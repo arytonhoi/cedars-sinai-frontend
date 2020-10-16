@@ -1,12 +1,13 @@
 import {
-  SET_POSTS,
   LOADING_DATA,
   STOP_LOADING_DATA,
-  DELETE_POST,
-  POST_POST,
+  SET_POSTS,
   SET_POST,
   SET_ANNOUNCE,
-  SUBMIT_COMMENT
+  POST_ANNOUNCE,
+  POST_POST,
+  DELETE_POST,
+  DELETE_ANNOUNCE,
 } from '../types';
 
 const initialState = {
@@ -45,28 +46,34 @@ export default function(state = initialState, action) {
         posts: [action.payload],
         loading: false
       };
-
-    case DELETE_POST:
-      let index = state.posts.findIndex(
-        (post) => post.postId === action.payload
-      );
-      state.posts.splice(index, 1);
+    case POST_ANNOUNCE:
       return {
-        ...state
+        ...state,
+        announce : [action.payload, ...state.announce],
+        loading : false
       };
     case POST_POST:
       return {
         ...state,
         posts: [action.payload, ...state.posts]
       };
-    case SUBMIT_COMMENT:
+    case DELETE_POST:
+      let index = state.posts.findIndex(
+        (x) => x.postId === action.payload
+      );
+      state.posts.splice(index, 1);
       return {
-        ...state,
-        post: {
-          ...state.post,
-          comments: [action.payload, ...state.post.comments]
-        }
+        ...state
       };
+    case DELETE_ANNOUNCE:
+      index = state.announce.findIndex(
+        (x) => x.announcementId === action.payload
+      );
+      state.announce.splice(index, 1);
+      return {
+        ...state
+      }
+
     default:
       return state;
   }

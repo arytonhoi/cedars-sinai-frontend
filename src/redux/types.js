@@ -16,5 +16,7 @@ export const SET_POSTS = 'SET_POSTS';
 export const SET_ANNOUNCE = 'SET_ANNOUNCE';
 export const SET_POST = 'SET_POST';
 export const DELETE_POST = 'DELETE_POST';
+export const DELETE_ANNOUNCE = 'DELETE_ANNOUNCE';
+export const POST_ANNOUNCE = 'POST_ANNOUNCE';
 export const POST_POST = 'POST_POST';
 export const SUBMIT_COMMENT = 'SUBMIT_COMMENT';

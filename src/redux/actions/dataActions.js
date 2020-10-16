@@ -3,17 +3,19 @@ import {
   LOADING_DATA,
   STOP_LOADING_DATA,
   DELETE_POST,
+  DELETE_ANNOUNCE,
   SET_ERRORS,
+  POST_ANNOUNCE,
   POST_POST,
   CLEAR_ERRORS,
   LOADING_UI,
   SET_POST,
   SET_ANNOUNCE,
-  STOP_LOADING_UI,
-  SUBMIT_COMMENT
+//  STOP_LOADING_UI,
 } from '../types';
 import axios from 'axios';
 
+//Get from DB
 export const getAnnounce = () => (dispatch) => {
   dispatch({ type: LOADING_DATA });
   return axios
@@ -62,7 +64,27 @@ export const getPost = (fileName) => (dispatch) => {
       dispatch({ type: STOP_LOADING_DATA }) 
     ).catch((err) => dispatch({ type: SET_ERRORS, payload: err }))
 };
-// Post a scream
+// Post to DB
+export const sendAnnounce = (newAnn) => (dispatch) => {
+  dispatch({ type: LOADING_UI });
+  axios
+    .post('/announcements', newAnn)
+    .then((res) => {
+      dispatch({
+        type: POST_ANNOUNCE,
+        payload: res.data
+      });
+      dispatch(clearErrors());
+    })
+    .catch((err) => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: err.response.data
+      });
+    });
+};
+
+
 export const postPost = (newPost) => (dispatch) => {
   dispatch({ type: LOADING_UI });
   axios
@@ -82,6 +104,26 @@ export const postPost = (newPost) => (dispatch) => {
     });
 };
 
+
+// Delete from DB
+export const deletePost = (id) => (dispatch) => {
+  axios
+    .delete(`/files/${id}`)
+    .then(() => {
+      dispatch({ type: DELETE_POST, payload: id });
+    })
+    .catch((err) => console.log(err));
+};
+export const deleteAnnounce = (id) => (dispatch) => {
+  axios
+    .delete(`/announcements/${id}`)
+    .then(() => {
+      dispatch({ type: DELETE_ANNOUNCE, payload: id });
+    })
+    .catch((err) => console.log(err));
+};
+
+/*
 // Submit a comment
 export const submitComment = (screamId, commentData) => (dispatch) => {
   axios
@@ -99,14 +141,6 @@ export const submitComment = (screamId, commentData) => (dispatch) => {
         payload: err.response.data
       });
     });
-};
-export const deletePost = (screamId) => (dispatch) => {
-  axios
-    .delete(`/scream/${screamId}`)
-    .then(() => {
-      dispatch({ type: DELETE_POST, payload: screamId });
-    })
-    .catch((err) => console.log(err));
 };
 
 export const getUserData = (userHandle) => (dispatch) => {
@@ -126,7 +160,7 @@ export const getUserData = (userHandle) => (dispatch) => {
       });
     });
 };
-
+*/
 export const clearErrors = () => (dispatch) => {
   dispatch({ type: CLEAR_ERRORS });
 };

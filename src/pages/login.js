@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 // MUI Stuff
 import '../css/login.css';
-import Grid from '@material-ui/core/Grid';
+//import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -51,7 +51,7 @@ class login extends Component {
     });
   };
   render() {
-    const {user, classes, UI: { loading }} = this.props;
+    const {classes, UI: { loading }} = this.props;
 console.log(this.props)
     const { errors } = this.state;
     return (

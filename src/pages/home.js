@@ -1,7 +1,10 @@
 import React,{ Component } from 'react';
 import PropTypes from 'prop-types';
 import DateHelper from '../util/dateHelper.js';
+
 import Announcement from '../components/announce/Announcement.js';
+import PostAnn from '../components/announce/PostAnn.js';
+import '../css/home.css';
 
 import { connect } from 'react-redux';
 import { getAnnounce } from '../redux/actions/dataActions';
@@ -24,27 +27,29 @@ class home extends Component {
       }
     )
     const [pinned, unpinned] = announces.reduce(([p, f], e) => (e.isPinned ? [[...p, e], f] : [p, [...f, e]]), [[], []]);
-console.log(pinned,unpinned)
     let pinnedAnn = pinned.map(
-      (x,i)=>
+      (x)=>
         (isAdmin || (now > x.createdTs) )?
-          (<Announcement key={i} index={"pa" + i} what={x} pending={false} />):("")
+          (<Announcement key={x.announcementId} index={x.announcementId} what={x} admin={isAdmin} />):("")
     )
     let unpinnedAnn = unpinned.map(
-      (x,i)=>
-        (isAdmin || ((now > x.createdTs) && (now - x.createdTs <7776000000)) )?
-          (<Announcement key={i} index={"ua" + i} what={x} pending={false} />):("")
+      (x)=>
+        (isAdmin || ((now > x.createdTs) && ((now - x.createdTs) <7776000000) ) )?
+          (<Announcement key={x.announcementId} index={x.announcementId} what={x} admin={isAdmin} />):("")
     )
     return(
       <div>
-      <div>
-         <span>
-           <h3>Welcome back. {isAdmin ? "You are an admin." : "What would you like to do today?" }</h3>
-         </span>
-         <span>{new DateHelper().toString()}</span>
-      </div>
-      {pinnedAnn}
-      {unpinnedAnn}
+        <div>
+          <span>
+             <h3>Welcome back. {isAdmin ? "You are an admin." : "What would you like to do today?" }</h3>
+           </span>
+           <span>{new DateHelper().toString()}</span>
+        </div>
+        <div>
+        {(isAdmin)?(<PostAnn />):("")}
+        {pinnedAnn}
+        {unpinnedAnn}
+        </div>
       </div>
     )
   }
@@ -56,7 +61,7 @@ home.propTypes = {
   isAdmin: PropTypes.bool.isRequired
 };
 
-const mapStateToProps = (state) => {console.log(state);return ({
+const mapStateToProps = (state) => {return ({
   data: state.data,
   isAdmin: state.user.is_admin
 })};

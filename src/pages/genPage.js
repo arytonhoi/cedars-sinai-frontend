@@ -14,7 +14,7 @@ class genpage extends Component {
   render() {
     const { UI, data, user } = this.props;
     const posts = data.posts;
-    const pageMarkup = (data.loading || (posts.length == 0 && UI.errors.length == 0) ) ? (
+    const pageMarkup = (data.loading || (posts.length === 0 && UI.errors.length === 0) ) ? (
       <p>Page loading...</p>
     ) : ( UI.errors.length > 0) ? (
       <p>{UI.errors[0].statusText}</p>

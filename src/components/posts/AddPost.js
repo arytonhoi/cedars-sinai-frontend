@@ -14,7 +14,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { connect } from 'react-redux';
 import { postPost, clearErrors } from '../../redux/actions/dataActions';
 
-//Editor
+// Editor
 import CKEditor from 'ckeditor4-react';
 const { ckConfig } = require('../../util/configs/ckeditor');
 

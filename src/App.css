@@ -33,6 +33,16 @@ label, .clickable{
   cursor: pointer;
 }
 
+.shadow{
+  border-collapse: separate;
+  -webkit-box-shadow: -5px 5px 20px 5px rgba(215,215,215,1);
+  -moz-box-shadow: -5px 5px 20px 5px rgba(215,215,215,1);
+  box-shadow: -5px 5px 20px 5px rgba(215,215,215,1);
+}
+
+.hide{
+  display: none;
+}
 /* Positioning */
 .center{
   position: absolute;

@@ -13,7 +13,6 @@ export class DateHelper{
     if(typeof(dateString) === "undefined"){
       dateString = "dd MMMM YYYY"
     }
-    var pos = 0
     var i=0
     var tokens=[]
     var resultString=""
