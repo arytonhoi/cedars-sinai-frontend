@@ -19,6 +19,7 @@ a {
   text-decoration: none;
 }
 
+/* UI */
 .noselect {
   -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -28,6 +29,11 @@ a {
             user-select: none;
 }
 
+label, .clickable{
+  cursor: pointer;
+}
+
+/* Positioning */
 .center{
   position: absolute;
   top: 50%;

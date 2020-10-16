@@ -1,0 +1,54 @@
+.ann{
+  width: 50%;
+  padding: 2em 3em;
+  margin: 1em 0;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid grey;
+  border-radius: 0.5em;
+}
+
+
+.ann-head{
+  display: flex;
+  align-items: center;
+  margin-bottom: 1em
+}
+
+.ann-head-left{
+  display: flex;
+  flex-direction: column;
+  margin-right: 1em;
+  width: 15%
+}
+
+.ann-title, .ann-person{
+  font-weight: bold;
+}
+
+.ann-title{
+  width: 80%
+}
+
+.ann-menu{
+  width: 10%
+}
+.ann-menu-icon{
+  width: 100%
+}
+.ann-date{
+  font-style: italic;
+}
+
+.ann-body{
+  display:none;
+}
+.ann-text{
+
+}
+.post-toggle{
+  display: none;
+}
+.post-toggle:checked+.ann-body{
+  display: block;
+}

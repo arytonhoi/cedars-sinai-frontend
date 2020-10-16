@@ -11,7 +11,7 @@ import {
 
 const initialState = {
   posts: [],
-  announce: {},
+  announce: [],
   loading: false
 };
 
@@ -31,11 +31,13 @@ export default function(state = initialState, action) {
       return {
         ...state,
         posts: action.payload,
+        loading: false
       };
     case SET_ANNOUNCE:
       return {
         ...state,
         announce: action.payload,
+        loading: false
       };
     case SET_POST:
       return {

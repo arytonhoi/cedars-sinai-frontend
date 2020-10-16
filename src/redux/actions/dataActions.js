@@ -16,27 +16,20 @@ import axios from 'axios';
 
 export const getAnnounce = () => (dispatch) => {
   dispatch({ type: LOADING_DATA });
-  dispatch({
-    type: SET_ANNOUNCE,
-    payload: [
-               {
-                 title:"First Announcement",
-                 date:0,
-                 isPinned:false,
-                 announcementId:1,
-                 content:"First content",
-                 author:"Celine Dion"
-               },
-               {
-                 title:"Pinned Announcement",
-                 date:0,
-                 isPinned:true,
-                 announcementId:2,
-                 content:"Second content",
-                 author:"Celine Dion"
-               },
-             ]
-  });
+  return axios
+    .get('/announcements')
+    .then((res) => {
+      dispatch({
+        type: SET_ANNOUNCE,
+        payload: res.data
+      });
+    })
+    .catch((err) => {
+      dispatch({
+        type: SET_ANNOUNCE,
+        payload: []
+      });
+    });
 };
 
 export const getPosts = () => (dispatch) => {
