@@ -56,47 +56,46 @@ console.log(this.props)
     const { errors } = this.state;
     return (
       <div>
-          <form class="center" noValidate onSubmit={this.handleSubmit}>
+          <form className="center" noValidate onSubmit={this.handleSubmit}>
             <input
               id="adminSelect"
               type="radio"
               name="username"
               value="admin"
-              class="noselect"
+              className="noselect"
               onChange={this.handleChange}
             />
-            <a><label for="adminSelect" class="noselect select-admin">ADMIN <svg height="50" width="40" class="dialog-label">
+            <label htmlFor="adminSelect" className="noselect select-admin">ADMIN <svg height="50" width="40" className="dialog-label">
   <polygon points="20,0 40,50 0,50" style={{fill:"#c4c4c4"}} />
-</svg> </label></a>
+</svg> </label>
             <input 
               id="userSelect"
               type="radio"
               name="username"
               value="staff"
-              class="noselect"
+              className="noselect"
               onChange={this.handleChange}
             />
-            <a><label for="userSelect" class="noselect select-user">USER  <svg height="50" width="40" class="dialog-label">
+            <label htmlFor="userSelect" className="noselect select-user">USER  <svg height="50" width="40" className="dialog-label">
   <polygon points="20,0 40,50 0,50" style={{fill:"#c4c4c4"}} />
-</svg> </label></a>
+</svg> </label>
             <span value={ errors }></span>
-            <div class="login-wrapper">
+            <div className="login-wrapper">
             <TextField
               id="password"
               name="password"
               type={this.state.showPw ? "text" : "password"}
               placeholder="Password"
-              style={{background: "#c4c4c4", padding: "0.5em 0", "border-radius":"0.5em"}}
+              style={{background: "#c4c4c4", padding: "0.5em 0", "borderRadius":"0.5em"}}
               className={classes.textField}
               helperText={errors.password}
               error={errors.password ? true : false}
               value={this.state.password}
               onChange={this.handleChange}
               fullWidth
-              disableUnderline
             />
-            <span class="key-icon valign noselect">Key</span>
-            <span class="pw-toggle valign noselect" onClick={this.togglePwField}>Eye</span>
+            <span className="key-icon valign noselect">Key</span>
+            <span className="pw-toggle valign noselect" onClick={this.togglePwField}>Eye</span>
             </div>
             {errors.general && (
               <Typography variant="body2" className={classes.customError}>

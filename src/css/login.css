@@ -37,12 +37,13 @@ label{
   bottom: -3em;
 }
 #userSelect, #adminSelect{
+  background: inherit;
   display: none;
 }
-#userSelect:checked+a > .select-user, #adminSelect:checked+a >.select-admin{
+#userSelect:checked+.select-user, #adminSelect:checked+.select-admin{
   color: #000;
 }
-#userSelect:checked+a >.select-user > svg, #adminSelect:checked+a >.select-admin > svg{
+#userSelect:checked+.select-user > svg, #adminSelect:checked+.select-admin > svg{
   display: block;
 }
 
