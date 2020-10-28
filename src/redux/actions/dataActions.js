@@ -11,25 +11,65 @@ import {
   LOADING_UI,
   SET_POST,
   SET_ANNOUNCE,
-//  STOP_LOADING_UI,
-} from '../types';
-import axios from 'axios';
+  SET_CONTACTS,
+  //  STOP_LOADING_UI,
+} from "../types";
+import axios from "axios";
 
-//Get from DB
-export const getAnnounce = () => (dispatch) => {
+// Announcements
+export const getAnnouncements = () => (dispatch) => {
   dispatch({ type: LOADING_DATA });
   return axios
-    .get('/announcements')
+    .get("/announcements")
     .then((res) => {
       dispatch({
         type: SET_ANNOUNCE,
-        payload: res.data
+        payload: res.data,
       });
     })
     .catch((err) => {
       dispatch({
         type: SET_ANNOUNCE,
-        payload: []
+        payload: [],
+      });
+    });
+};
+
+export const postAnnouncement = (newAnn) => (dispatch) => {
+  dispatch({ type: LOADING_UI });
+  axios
+    .post("/announcements", newAnn)
+    .then((res) => {
+      dispatch({
+        type: POST_ANNOUNCE,
+        payload: res.data,
+      });
+      dispatch(clearErrors());
+    })
+    .catch((err) => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: err.response.data,
+      });
+    });
+};
+
+// Contacts
+export const getContacts = () => (dispatch) => {
+  dispatch({ type: LOADING_DATA });
+  return axios
+    .get("/contacts")
+    .then((res) => {
+      console.log(res.data)
+      dispatch({
+        type: SET_CONTACTS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch({
+        type: SET_CONTACTS,
+        payload: [],
       });
     });
 };
@@ -37,73 +77,52 @@ export const getAnnounce = () => (dispatch) => {
 export const getPosts = () => (dispatch) => {
   dispatch({ type: LOADING_DATA });
   return axios
-    .get('/files')
+    .get("/files")
     .then((res) => {
       dispatch({
         type: SET_POSTS,
-        payload: res.data
+        payload: res.data,
       });
     })
     .catch((err) => {
       dispatch({
         type: SET_POSTS,
-        payload: []
+        payload: [],
       });
     });
 };
 export const getPost = (fileName) => (dispatch) => {
-  dispatch({ type: LOADING_DATA }); 
+  dispatch({ type: LOADING_DATA });
   axios
     .get(`/files/${fileName}`)
     .then((res) => {
       dispatch({
         type: SET_POST,
-        payload: res.data
+        payload: res.data,
       });
-    }).finally(
-      dispatch({ type: STOP_LOADING_DATA }) 
-    ).catch((err) => dispatch({ type: SET_ERRORS, payload: err }))
-};
-// Post to DB
-export const sendAnnounce = (newAnn) => (dispatch) => {
-  dispatch({ type: LOADING_UI });
-  axios
-    .post('/announcements', newAnn)
-    .then((res) => {
-      dispatch({
-        type: POST_ANNOUNCE,
-        payload: res.data
-      });
-      dispatch(clearErrors());
     })
-    .catch((err) => {
-      dispatch({
-        type: SET_ERRORS,
-        payload: err.response.data
-      });
-    });
+    .finally(dispatch({ type: STOP_LOADING_DATA }))
+    .catch((err) => dispatch({ type: SET_ERRORS, payload: err }));
 };
-
 
 export const postPost = (newPost) => (dispatch) => {
   dispatch({ type: LOADING_UI });
   axios
-    .post('/scream', newPost)
+    .post("/scream", newPost)
     .then((res) => {
       dispatch({
         type: POST_POST,
-        payload: res.data
+        payload: res.data,
       });
       dispatch(clearErrors());
     })
     .catch((err) => {
       dispatch({
         type: SET_ERRORS,
-        payload: err.response.data
+        payload: err.response.data,
       });
     });
 };
-
 
 // Delete from DB
 export const deletePost = (id) => (dispatch) => {

@@ -12,11 +12,15 @@ export const LOADING_DATA = 'LOADING_DATA';
 export const STOP_LOADING_DATA = 'STOP_LOADING_DATA';
 export const STOP_LOADING_UI = 'STOP_LOADING_UI';
 // Data reducer types
-export const SET_POSTS = 'SET_POSTS';
+// Announcements
 export const SET_ANNOUNCE = 'SET_ANNOUNCE';
-export const SET_POST = 'SET_POST';
-export const DELETE_POST = 'DELETE_POST';
 export const DELETE_ANNOUNCE = 'DELETE_ANNOUNCE';
 export const POST_ANNOUNCE = 'POST_ANNOUNCE';
+// Contacts
+export const SET_CONTACTS = 'SET_CONTACT';
+// Posts?
+export const SET_POSTS = 'SET_POSTS';
+export const SET_POST = 'SET_POST';
+export const DELETE_POST = 'DELETE_POST';
 export const POST_POST = 'POST_POST';
 export const SUBMIT_COMMENT = 'SUBMIT_COMMENT';

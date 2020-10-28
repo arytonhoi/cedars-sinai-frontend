@@ -4,7 +4,7 @@ import './PostAnn.css';
 
 // Redux stuff
 import { connect } from 'react-redux';
-import { sendAnnounce, clearErrors } from '../../redux/actions/dataActions';
+import { postAnnouncement, clearErrors } from '../../redux/actions/dataActions';
 
 // Editor
 import CKEditor from 'ckeditor4-react';
@@ -24,7 +24,7 @@ class PostAnn extends Component{
 console.log(this.state.ann)
     this.state.ann.isPinned = (this.state.ann.isPinned === "on")
     if(this.state.ann.title !== '' && this.state.ann.content !== ''){
-      this.props.sendAnnounce(this.state.ann);
+      this.props.postAnnouncement(this.state.ann);
     }else{
       this.errors = {"error":"Blank post"}
     }
@@ -70,4 +70,4 @@ console.log(this.state.ann)
 const mapStateToProps = (state) => ({
 });
 
-export default connect(mapStateToProps, { sendAnnounce, clearErrors })(PostAnn);
+export default connect(mapStateToProps, { postAnnouncement, clearErrors })(PostAnn);
