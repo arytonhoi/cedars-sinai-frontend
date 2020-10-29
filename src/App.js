@@ -7,8 +7,8 @@ import JWT from "./util/jwt.js";
 // Redux
 import { Provider } from "react-redux";
 import store from "./redux/store";
-import { SET_AUTHENTICATED, SET_ADMIN } from "./redux/types";
-import { logoutUser } from "./redux/actions/userActions";
+import { SET_AUTHENTICATED } from "./redux/types";
+import { logoutUser, getUserData } from "./redux/actions/userActions";
 // Components
 import Sidebar from "./components/layout/Sidebar";
 import themeObject from "./util/configs/theme";
@@ -27,24 +27,22 @@ const theme = createMuiTheme(themeObject);
 
 axios.defaults.baseURL =
   "https://us-central1-fir-db-d2d47.cloudfunctions.net/api";
+  // "http://localhost:5000/fir-db-d2d47/us-central1/api";
 
+// Authentication
 const token = localStorage.FBIdToken;
 if (token) {
   const decodedToken = new JWT(token).parse.payload;
-  console.log(decodedToken);
-  //console.log(decodedToken.verify())
   if (decodedToken.exp * 1000 < Date.now()) {
     store.dispatch(logoutUser());
     window.location = "/login";
   } else {
     store.dispatch({ type: SET_AUTHENTICATED });
-    if (decodedToken.email === "admin@email.com") {
-      store.dispatch({ type: SET_ADMIN });
-    }
-    axios.defaults.headers.common["Authorization"] = token;
+    axios.defaults.headers.common['Authorization'] = token;
+    store.dispatch(getUserData());
   }
 }
-console.log(store.getState());
+// console.log(store.getState());
 
 class App extends Component {
   render() {
@@ -63,8 +61,8 @@ class App extends Component {
                     path="/announcements"
                     component={announcementPage}
                   />
-                  {/* <Route exact path="/resources" component={home} /> */}
-                  {/* <Route exact path="/calendar" component={home} /> */}
+                  <Route exact path="/resources" component={announcementPage} />
+                  <Route exact path="/calendar" component={announcementPage} />
                   <Route exact path="/contacts" component={contactPage} />
                   <Route exact path="/logout" component={logout} />
                   <Route path="/:pageName" component={genpage} />
@@ -91,12 +89,3 @@ class App extends Component {
 }
 
 export default App;
-
-/*
-                <Route exact path="/:handle" component={user} />
-                <Route
-                  exact
-                  path="/:handle/scream/:screamId"
-                  component={user}
-                />
-*/

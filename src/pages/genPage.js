@@ -18,7 +18,7 @@ class genpage extends Component {
       <p>Page loading...</p>
     ) : ( UI.errors.length > 0) ? (
       <p>{UI.errors[0].statusText}</p>
-    ) : ( !user.is_admin && posts[0].adminOnly) ? (
+    ) : ( !user.isAdmin && posts[0].adminOnly) ? (
       <p>Not authorised to view this text.</p>
     ) : (
       <p>Page loaded, title is {posts[0].title}, content is {JSON.stringify({"a":posts[0].content})}, modified is {posts[0].lastModified}, full response is {JSON.stringify({"a":posts[0]})} </p>

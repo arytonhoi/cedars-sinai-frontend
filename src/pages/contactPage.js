@@ -35,7 +35,7 @@ home.propTypes = {
 const mapStateToProps = (state) => {
   return {
     data: state.data,
-    isAdmin: state.user.is_admin,
+    isAdmin: state.user.isAdmin,
   };
 };
 

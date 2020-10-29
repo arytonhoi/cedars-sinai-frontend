@@ -21,7 +21,6 @@ class PostAnn extends Component{
   };
   handleSubmit = (event) => {
     event.preventDefault();
-console.log(this.state.ann)
     this.state.ann.isPinned = (this.state.ann.isPinned === "on")
     if(this.state.ann.title !== '' && this.state.ann.content !== ''){
       this.props.postAnnouncement(this.state.ann);

@@ -67,7 +67,6 @@ class PostPost extends Component {
   };
   updateState = (event) => {
     this.setState({body : event.editor.getData()})
-    console.log();
   };
   render() {
     //const { errors } = this.state;

@@ -13,7 +13,7 @@ import {
 
 const initialState = {
   posts: [],
-  announce: [],
+  announcements: [],
   contacts: [],
   loading: false,
 };
@@ -34,20 +34,20 @@ export default function (state = initialState, action) {
     case SET_ANNOUNCE:
       return {
         ...state,
-        announce: action.payload,
+        announcements: action.payload,
         loading: false,
       };
     case POST_ANNOUNCE:
       return {
         ...state,
-        announce: [action.payload, ...state.announce],
+        announcements: [action.payload, ...state.announcements],
         loading: false,
       };
     case DELETE_ANNOUNCE:
-      index = state.announce.findIndex(
+      index = state.announcements.findIndex(
         (x) => x.announcementId === action.payload
       );
-      state.announce.splice(index, 1);
+      state.announcements.splice(index, 1);
       return {
         ...state,
       };

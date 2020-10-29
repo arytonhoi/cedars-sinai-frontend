@@ -60,7 +60,6 @@ export const getContacts = () => (dispatch) => {
   return axios
     .get("/contacts")
     .then((res) => {
-      console.log(res.data)
       dispatch({
         type: SET_CONTACTS,
         payload: res.data,
