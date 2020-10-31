@@ -13,11 +13,19 @@ export const STOP_LOADING_DATA = "STOP_LOADING_DATA";
 export const STOP_LOADING_UI = "STOP_LOADING_UI";
 // Data reducer types
 // Announcements
-export const SET_ANNOUNCE = "SET_ANNOUNCE";
-export const DELETE_ANNOUNCE = "DELETE_ANNOUNCE";
-export const POST_ANNOUNCE = "POST_ANNOUNCE";
-// Contacts
-export const SET_CONTACTS = "SET_CONTACT";
+export const SET_ANNOUNCEMENTS = "SET_ANNOUNCEMENTS";
+export const DELETE_ANNOUNCEMENT = "DELETE_ANNOUNCEMENT";
+export const POST_ANNOUNCEMENT = "POST_ANNOUNCEMENT";
+// Departments
+export const SET_DEPARTMENTS = "SET_DEPARTMENTS"
+export const POST_DEPARTMENT = "POSTT_DEPARTMENT"
+export const PATCH_DEPARTMENT = "PATCH_DEPARTMENT"
+export const DELETE_DEPARTMENT = "DELETE_DEPARTMENT"
+// contacts
+export const SET_CONTACTS = "SET_CONTACTS";
+export const POST_CONTACT = "POST_CONTACT";
+export const PATCH_CONTACT = "PATCH_CONTACT";
+export const DELETE_CONTACT = "DELETE_CONTACT";
 // Posts?
 export const SET_POSTS = "SET_POSTS";
 export const SET_POST = "SET_POST";

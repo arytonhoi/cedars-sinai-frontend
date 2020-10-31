@@ -1,19 +1,31 @@
 import {
   LOADING_DATA,
   STOP_LOADING_DATA,
-  SET_POSTS,
+  // posts
   SET_POST,
-  SET_ANNOUNCE,
-  POST_ANNOUNCE,
+  SET_POSTS,
   POST_POST,
   DELETE_POST,
-  DELETE_ANNOUNCE,
+  // announcements
+  SET_ANNOUNCEMENTS,
+  POST_ANNOUNCEMENT,
+  DELETE_ANNOUNCEMENT,
+  // departments
+  SET_DEPARTMENTS,
+  PATCH_DEPARTMENT,
+  POST_DEPARTMENT,
+  DELETE_DEPARTMENT,
+  // contacts
   SET_CONTACTS,
+  PATCH_CONTACT,
+  POST_CONTACT,
+  DELETE_CONTACT,
 } from "../types";
 
 const initialState = {
   posts: [],
   announcements: [],
+  departments: [],
   contacts: [],
   loading: false,
 };
@@ -31,19 +43,19 @@ export default function (state = initialState, action) {
         loading: false,
       };
     // announcements
-    case SET_ANNOUNCE:
+    case SET_ANNOUNCEMENTS:
       return {
         ...state,
         announcements: action.payload,
         loading: false,
       };
-    case POST_ANNOUNCE:
+    case POST_ANNOUNCEMENT:
       return {
         ...state,
         announcements: [action.payload, ...state.announcements],
         loading: false,
       };
-    case DELETE_ANNOUNCE:
+    case DELETE_ANNOUNCEMENT:
       index = state.announcements.findIndex(
         (x) => x.announcementId === action.payload
       );
@@ -51,11 +63,70 @@ export default function (state = initialState, action) {
       return {
         ...state,
       };
+    // departments
+    case SET_DEPARTMENTS:
+      return {
+        ...state,
+        departments: action.payload,
+        loading: false,
+      };
+    case POST_DEPARTMENT:
+      return {
+        ...state,
+        departments: [...state.departments, action.payload],
+        loading: false,
+      };
+    case PATCH_DEPARTMENT:
+      const updatedDepartment = action.payload;
+      return {
+        ...state,
+        departments: state.departments.map((department) =>
+          department.id === updatedDepartment.id
+            ? updatedDepartment
+            : department
+        ),
+        loading: false,
+      };
+    case DELETE_DEPARTMENT:
+      const deletedDepartmentId = action.payload;
+      return {
+        ...state,
+        departments: state.departments.filter(
+          (department) => department.id !== deletedDepartmentId
+        ),
+        loading: false,
+      };
     // contacts
     case SET_CONTACTS:
       return {
         ...state,
         contacts: action.payload,
+        loading: false,
+      };
+    case POST_CONTACT:
+      return {
+        ...state,
+        contacts: [...state.contacts, action.payload],
+        loading: false,
+      };
+    case PATCH_CONTACT:
+      const updateContact = action.payload;
+      return {
+        ...state,
+        contacts: state.contacts.map((contact) =>
+          contact.id === updateContact.id
+            ? updateContact
+            : contact
+        ),
+        loading: false,
+      };
+    case DELETE_CONTACT:
+      const deletedContactId = action.payload;
+      return {
+        ...state,
+        contacts: state.contacts.filter(
+          (contact) => contact.id !== deletedContactId
+        ),
         loading: false,
       };
     case SET_POSTS:
