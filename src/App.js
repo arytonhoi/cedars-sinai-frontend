@@ -15,7 +15,7 @@ import themeObject from "./util/configs/theme";
 import AuthRoute from "./util/jsx/AuthRoute";
 // Pages
 import home from "./pages/home";
-import genpage from "./pages/genPage";
+import genPage from "./pages/genPage";
 import login from "./pages/login";
 import logout from "./pages/logout";
 
@@ -37,7 +37,8 @@ if (token) {
     store.dispatch(logoutUser());
     window.location = "/login";
   } else {
-    store.dispatch({ type: SET_AUTHENTICATED });
+    const isAdmin = (decodedToken.email === "admin@email.com");
+    store.dispatch({ type: SET_AUTHENTICATED , payload: isAdmin});
     axios.defaults.headers.common['Authorization'] = token;
     store.dispatch(getUserData());
   }
@@ -61,11 +62,11 @@ class App extends Component {
                     path="/announcements"
                     component={announcementPage}
                   />
-                  <Route exact path="/resources" component={announcementPage} />
+                  <Route exact path="/resources" component={genPage} />
                   <Route exact path="/calendar" component={announcementPage} />
                   <Route exact path="/contacts" component={contactPage} />
                   <Route exact path="/logout" component={logout} />
-                  <Route path="/:pageName" component={genpage} />
+                  <Route path="/resources/:pageName" component={genPage} />
                 </Switch>
               </div>
             </Router>

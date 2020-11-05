@@ -1,18 +1,21 @@
 import {
   LOADING_DATA,
   STOP_LOADING_DATA,
-  SET_POSTS,
-  SET_POST,
+
+  SET_DATA_ARRAY,
+  SET_DATA,
+  POST_DATA,
+  DELETE_DATA,
+
   SET_ANNOUNCE,
   POST_ANNOUNCE,
-  POST_POST,
-  DELETE_POST,
   DELETE_ANNOUNCE,
+
   SET_CONTACTS,
 } from "../types";
 
 const initialState = {
-  posts: [],
+  data: [],
   announcements: [],
   contacts: [],
   loading: false,
@@ -58,27 +61,27 @@ export default function (state = initialState, action) {
         contacts: action.payload,
         loading: false,
       };
-    case SET_POSTS:
+    case SET_DATA_ARRAY:
       return {
         ...state,
-        posts: action.payload,
+        data: action.payload,
         loading: false,
       };
 
-    case SET_POST:
+    case SET_DATA:
       return {
         ...state,
-        posts: [action.payload],
+        data: [action.payload],
         loading: false,
       };
-    case POST_POST:
+    case POST_DATA:
       return {
         ...state,
-        posts: [action.payload, ...state.posts],
+        data: [action.payload, ...state.data],
       };
-    case DELETE_POST:
-      let index = state.posts.findIndex((x) => x.postId === action.payload);
-      state.posts.splice(index, 1);
+    case DELETE_DATA:
+      let index = state.data.findIndex((x) => x.postId === action.payload);
+      state.data.splice(index, 1);
       return {
         ...state,
       };
