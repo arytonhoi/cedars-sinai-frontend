@@ -76,6 +76,7 @@ class ContactPage extends Component {
       contactDepartmentId: "",
       contactPhone: "",
       contactEmail: "",
+      searchTerm: "",
     });
   };
 
@@ -106,6 +107,7 @@ class ContactPage extends Component {
     this.props.patchContact(updatedContactId, updatedContact);
     this.setState({
       targettedContactId: "",
+      searchTerm: "",
     });
   };
 
@@ -127,6 +129,9 @@ class ContactPage extends Component {
       const deleteContactId = event.target.value;
       this.props.deleteContact(deleteContactId);
     }
+    this.setState({
+      searchTerm: "",
+    })
   };
 
   // department functions

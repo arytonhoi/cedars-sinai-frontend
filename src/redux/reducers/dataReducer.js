@@ -110,24 +110,29 @@ export default function (state = initialState, action) {
       return {
         ...state,
         contacts: [...state.contacts, action.payload],
+        matchingSearchContacts: [...state.contacts, action.payload],
         loading: false,
       };
     case PATCH_CONTACT:
       const updateContact = action.payload;
+      const updatedPatchContacts = state.contacts.map((contact) =>
+        contact.id === updateContact.id ? updateContact : contact
+      );
       return {
         ...state,
-        contacts: state.contacts.map((contact) =>
-          contact.id === updateContact.id ? updateContact : contact
-        ),
+        contacts: updatedPatchContacts,
+        matchingSearchContacts: updatedPatchContacts,
         loading: false,
       };
     case DELETE_CONTACT:
       const deletedContactId = action.payload;
+      const updatedDeleteContacts = state.contacts.filter(
+        (contact) => contact.id !== deletedContactId
+      );
       return {
         ...state,
-        contacts: state.contacts.filter(
-          (contact) => contact.id !== deletedContactId
-        ),
+        contacts: updatedDeleteContacts,
+        matchingSearchContacts: updatedDeleteContacts,
         loading: false,
       };
     case SEARCH_CONTACTS:
