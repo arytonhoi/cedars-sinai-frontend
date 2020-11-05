@@ -20,6 +20,7 @@ import {
   PATCH_CONTACT,
   POST_CONTACT,
   DELETE_CONTACT,
+  SEARCH_CONTACTS,
 } from "../types";
 
 const initialState = {
@@ -27,6 +28,7 @@ const initialState = {
   announcements: [],
   departments: [],
   contacts: [],
+  matchingSearchContacts: [],
   loading: false,
 };
 
@@ -101,6 +103,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         contacts: action.payload,
+        matchingSearchContacts: action.payload,
         loading: false,
       };
     case POST_CONTACT:
@@ -114,9 +117,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         contacts: state.contacts.map((contact) =>
-          contact.id === updateContact.id
-            ? updateContact
-            : contact
+          contact.id === updateContact.id ? updateContact : contact
         ),
         loading: false,
       };
@@ -129,6 +130,18 @@ export default function (state = initialState, action) {
         ),
         loading: false,
       };
+    case SEARCH_CONTACTS:
+      const searchTerm = action.payload;
+      const matchingSearchContacts = state.contacts.filter((contact) =>
+        contact.name.toLowerCase().includes(searchTerm.trim().toLowerCase())
+      );
+
+      return {
+        ...state,
+        matchingSearchContacts: matchingSearchContacts,
+        loading: false,
+      };
+    // POSTS??
     case SET_POSTS:
       return {
         ...state,

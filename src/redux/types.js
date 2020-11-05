@@ -26,6 +26,7 @@ export const SET_CONTACTS = "SET_CONTACTS";
 export const POST_CONTACT = "POST_CONTACT";
 export const PATCH_CONTACT = "PATCH_CONTACT";
 export const DELETE_CONTACT = "DELETE_CONTACT";
+export const SEARCH_CONTACTS = "SEARCH_CONTACTS";
 // Posts?
 export const SET_POSTS = "SET_POSTS";
 export const SET_POST = "SET_POST";

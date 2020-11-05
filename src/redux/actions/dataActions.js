@@ -23,6 +23,7 @@ import {
   PATCH_CONTACT,
   POST_CONTACT,
   DELETE_CONTACT,
+  SEARCH_CONTACTS,
   //  STOP_LOADING_UI,
 } from "../types";
 import axios from "axios";
@@ -112,7 +113,9 @@ export const postDepartment = (newDepartment) => (dispatch) => {
     });
 };
 
-export const patchDepartment = (updatedDepartmentId, updatedDepartment) => (dispatch) => {
+export const patchDepartment = (updatedDepartmentId, updatedDepartment) => (
+  dispatch
+) => {
   dispatch({ type: LOADING_UI });
   axios
     .patch(`/departments/${updatedDepartmentId}`, updatedDepartment)
@@ -189,7 +192,9 @@ export const postContact = (newContact) => (dispatch) => {
     });
 };
 
-export const patchContact = (updatedContactId, updatedContact) => (dispatch) => {
+export const patchContact = (updatedContactId, updatedContact) => (
+  dispatch
+) => {
   dispatch({ type: LOADING_UI });
   axios
     .patch(`/contacts/${updatedContactId}`, updatedContact)
@@ -226,6 +231,13 @@ export const deleteContact = (contactId) => (dispatch) => {
         payload: err.response.data,
       });
     });
+};
+
+export const getSearchedContacts = (searchTerm) => (dispatch) => {
+  dispatch({
+    type: SEARCH_CONTACTS,
+    payload: searchTerm,
+  });
 };
 
 // posts

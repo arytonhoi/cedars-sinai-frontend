@@ -13,6 +13,8 @@ import {
   patchContact,
   postContact,
   deleteContact,
+  // search
+  getSearchedContacts,
 } from "../redux/actions/dataActions";
 import Department from "../components/contacts/department";
 
@@ -37,6 +39,8 @@ class ContactPage extends Component {
       contactDepartmentId: "",
       contactPhone: "",
       contactEmail: "",
+      // search
+      searchTerm: "",
       // idk??
       errors: {},
     };
@@ -196,16 +200,20 @@ class ContactPage extends Component {
     this.setState({
       [event.target.name]: event.target.value,
     });
+
+    if (event.target.name === "searchTerm") {
+      this.props.getSearchedContacts(event.target.value);
+    }
   };
 
   render() {
     const { credentials } = this.props.user;
     const isAdmin = credentials.isAdmin;
-    const { contacts, departments } = this.props.data;
+    const { matchingSearchContacts, departments } = this.props.data;
 
     // departments
     const departmentsMarkup = departments.map(function (d) {
-      const departmentContacts = contacts.filter(
+      const departmentContacts = matchingSearchContacts.filter(
         (c) => c.departmentId === d.id
       );
 
@@ -230,6 +238,14 @@ class ContactPage extends Component {
     return (
       <div>
         <h1>Contacts</h1>
+        <input
+          id="searchTerm"
+          name="searchTerm"
+          type="text"
+          placeholder="Search"
+          value={this.state.searchTerm}
+          onChange={this.handleChange}
+        />
         {isAdmin && (
           <button type="button" onClick={this.handleAddNewDepartment}>
             Add Department
@@ -413,6 +429,7 @@ ContactPage.propTypes = {
   patchContact: PropTypes.func.isRequired,
   postContact: PropTypes.func.isRequired,
   deleteContact: PropTypes.func.isRequired,
+  getSearchedContacts: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -423,12 +440,16 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
+  // departments
   getDepartments,
   postDepartment,
   patchDepartment,
   deleteDepartment,
+  // contacts
   getContacts,
   patchContact,
   postContact,
   deleteContact,
+  // search
+  getSearchedContacts,
 })(ContactPage);

@@ -8,9 +8,6 @@ import AddPost from "../posts/AddPost";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
-// Icons
-// import HomeIcon from "@material-ui/icons/Home";
-// import LogoutIcon from "@material-ui/icons/PowerOff";
 
 class Sidebar extends Component {
   render() {

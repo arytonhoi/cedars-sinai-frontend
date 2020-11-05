@@ -1,25 +1,29 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import "./App.css";
-import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
-import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
-import JWT from "./util/jwt.js";
+
 // Redux
 import { Provider } from "react-redux";
 import store from "./redux/store";
 import { SET_AUTHENTICATED } from "./redux/types";
 import { logoutUser, getUserData } from "./redux/actions/userActions";
-// Components
-import Sidebar from "./components/layout/Sidebar";
+
+// Styles
+import "./App.css";
+import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
+import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+import { Layout } from "antd";
+
+// Utils
 import themeObject from "./util/configs/theme";
 import AuthRoute from "./util/jsx/AuthRoute";
+import JWT from "./util/jwt.js";
+import axios from "axios";
+
 // Pages
-import home from "./pages/home";
+import SideNav from "./pages/sideNav";
 import genpage from "./pages/genPage";
 import login from "./pages/login";
 import logout from "./pages/logout";
-
-import axios from "axios";
 import announcementPage from "./pages/announcementPage";
 import contactPage from "./pages/contactPage";
 
@@ -27,7 +31,7 @@ const theme = createMuiTheme(themeObject);
 
 axios.defaults.baseURL =
   "https://us-central1-fir-db-d2d47.cloudfunctions.net/api";
-  // "http://localhost:5000/fir-db-d2d47/us-central1/api";
+// "http://localhost:5000/fir-db-d2d47/us-central1/api";
 
 // Authentication
 const token = localStorage.FBIdToken;
@@ -38,7 +42,7 @@ if (token) {
     window.location = "/login";
   } else {
     store.dispatch({ type: SET_AUTHENTICATED });
-    axios.defaults.headers.common['Authorization'] = token;
+    axios.defaults.headers.common["Authorization"] = token;
     store.dispatch(getUserData());
   }
 }
@@ -48,11 +52,11 @@ class App extends Component {
   render() {
     if (store.getState().user.authenticated) {
       return (
-        <MuiThemeProvider theme={theme}>
-          <Provider store={store}>
-            <Router>
-              <Sidebar />
-              <div className="container">
+        <Provider store={store}>
+          <Router>
+            <Layout style={{ minHeight: "100vh" }}>
+              <SideNav />
+              <Layout className="site-layout">
                 <Switch>
                   <AuthRoute exact path="/login" component={login} />
                   <Route exact path="/" component={announcementPage} />
@@ -67,10 +71,10 @@ class App extends Component {
                   <Route exact path="/logout" component={logout} />
                   <Route path="/:pageName" component={genpage} />
                 </Switch>
-              </div>
-            </Router>
-          </Provider>
-        </MuiThemeProvider>
+              </Layout>
+            </Layout>
+          </Router>
+        </Provider>
       );
     } else {
       return (
