@@ -1,30 +1,33 @@
 import {
+  //UI
   LOADING_UI,
+//STOP_LOADING_UI,
   LOADING_DATA,
   STOP_LOADING_DATA,
+  // Errors
   SET_ERRORS,
   CLEAR_ERRORS,
-  // posts
-  SET_POST,
-  SET_POSTS,
-  POST_POST,
-  DELETE_POST,
-  // announcements
+  // Data Handling
+  SET_DATA,
+  SET_DATA_ARRAY,
+  POST_DATA,
+  DELETE_DATA,
+  // Announcements
   SET_ANNOUNCEMENTS,
   POST_ANNOUNCEMENT,
   DELETE_ANNOUNCEMENT,
-  // departments
+  // Departments
   SET_DEPARTMENTS,
   PATCH_DEPARTMENT,
   POST_DEPARTMENT,
   DELETE_DEPARTMENT,
-  // contacts
+  // Contacts
   SET_CONTACTS,
   PATCH_CONTACT,
   POST_CONTACT,
   DELETE_CONTACT,
   SEARCH_CONTACTS,
-  //  STOP_LOADING_UI,
+
 } from "../types";
 import axios from "axios";
 
@@ -106,10 +109,15 @@ export const postDepartment = (newDepartment) => (dispatch) => {
       dispatch(clearErrors());
     })
     .catch((err) => {
-      dispatch({
+      (typeof(err.response.data)==='undefined')?
+      (dispatch({
         type: SET_ERRORS,
         payload: err.response.data,
-      });
+      })):
+      (dispatch({
+        type: SET_ERRORS,
+        payload: {'err':'blank payload'},
+      }))
     });
 };
 
@@ -240,31 +248,31 @@ export const getSearchedContacts = (searchTerm) => (dispatch) => {
   });
 };
 
-// posts
-export const getPosts = () => (dispatch) => {
+//Folders
+export const getAllFolders = () => (dispatch) => {
   dispatch({ type: LOADING_DATA });
   return axios
-    .get("/files")
+    .get("/folders")
     .then((res) => {
       dispatch({
-        type: SET_POSTS,
+        type: SET_DATA_ARRAY,
         payload: res.data,
       });
     })
     .catch((err) => {
       dispatch({
-        type: SET_POSTS,
+        type: SET_DATA_ARRAY,
         payload: [],
       });
     });
 };
-export const getPost = (fileName) => (dispatch) => {
+export const getFolder = (folderName) => (dispatch) => {
   dispatch({ type: LOADING_DATA });
   axios
-    .get(`/files/${fileName}`)
+    .get(`/folders/${folderName}`)
     .then((res) => {
       dispatch({
-        type: SET_POST,
+        type: SET_DATA,
         payload: res.data,
       });
     })
@@ -272,13 +280,52 @@ export const getPost = (fileName) => (dispatch) => {
     .catch((err) => dispatch({ type: SET_ERRORS, payload: err }));
 };
 
-export const postPost = (newPost) => (dispatch) => {
+export const createFolder = (folderName,folderDetails) => (dispatch) => {
   dispatch({ type: LOADING_UI });
   axios
-    .post("/scream", newPost)
+    .post(`/folders/${folderName}`, folderDetails)
+    .then()
+    .catch((err) => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: err.response.data,
+      });
+    });
+};
+
+export const updateFolder = (folderName,folderDetails) => (dispatch) => {
+  dispatch({ type: LOADING_UI });
+  axios
+    .patch(`/folders/${folderName}`, folderDetails)
+    .then()
+    .catch((err) => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: err.response.data,
+      });
+    });
+};
+
+export const removeFolder = (folderName) => (dispatch) => {
+  dispatch({ type: LOADING_UI });
+  axios
+    .delete(`/folders/${folderName}`)
+    .then()
+    .catch((err) => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: err.response.data,
+      });
+    });
+};
+
+export const modifyFolder = (data) => (dispatch) => {
+  dispatch({ type: LOADING_UI });
+  axios
+    .patch("/folders", data)
     .then((res) => {
       dispatch({
-        type: POST_POST,
+        type: POST_DATA,
         payload: res.data,
       });
       dispatch(clearErrors());
@@ -296,7 +343,7 @@ export const deletePost = (id) => (dispatch) => {
   axios
     .delete(`/files/${id}`)
     .then(() => {
-      dispatch({ type: DELETE_POST, payload: id });
+      dispatch({ type: DELETE_DATA, payload: id });
     })
     .catch((err) => console.log(err));
 };
@@ -327,13 +374,13 @@ export const getUserData = (userHandle) => (dispatch) => {
     .get(`/user/${userHandle}`)
     .then((res) => {
       dispatch({
-        type: SET_POSTS,
+        type: SET_DATA_ARRAY,
         payload: res.data.screams
       });
     })
     .catch(() => {
       dispatch({
-        type: SET_POSTS,
+        type: SET_DATA_ARRAY,
         payload: null
       });
     });

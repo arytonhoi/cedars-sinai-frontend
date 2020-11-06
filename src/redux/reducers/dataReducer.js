@@ -1,21 +1,21 @@
 import {
   LOADING_DATA,
   STOP_LOADING_DATA,
-  // posts
-  SET_POST,
-  SET_POSTS,
-  POST_POST,
-  DELETE_POST,
-  // announcements
+  // Data Handling
+  SET_DATA_ARRAY,
+  SET_DATA,
+  POST_DATA,
+  DELETE_DATA,
+  // Announcements
   SET_ANNOUNCEMENTS,
   POST_ANNOUNCEMENT,
   DELETE_ANNOUNCEMENT,
-  // departments
+  // Departments
   SET_DEPARTMENTS,
   PATCH_DEPARTMENT,
   POST_DEPARTMENT,
   DELETE_DEPARTMENT,
-  // contacts
+  // Contacts
   SET_CONTACTS,
   PATCH_CONTACT,
   POST_CONTACT,
@@ -24,7 +24,7 @@ import {
 } from "../types";
 
 const initialState = {
-  posts: [],
+  data: [],
   announcements: [],
   departments: [],
   contacts: [],
@@ -44,7 +44,7 @@ export default function (state = initialState, action) {
         ...state,
         loading: false,
       };
-    // announcements
+    // Announcements
     case SET_ANNOUNCEMENTS:
       return {
         ...state,
@@ -98,7 +98,7 @@ export default function (state = initialState, action) {
         ),
         loading: false,
       };
-    // contacts
+    // Contacts
     case SET_CONTACTS:
       return {
         ...state,
@@ -146,28 +146,28 @@ export default function (state = initialState, action) {
         matchingSearchContacts: matchingSearchContacts,
         loading: false,
       };
-    // POSTS??
-    case SET_POSTS:
+    // Data Handling
+    case SET_DATA_ARRAY:
       return {
         ...state,
-        posts: action.payload,
+        data: action.payload,
         loading: false,
       };
 
-    case SET_POST:
+    case SET_DATA:
       return {
         ...state,
-        posts: [action.payload],
+        data: [action.payload],
         loading: false,
       };
-    case POST_POST:
+    case POST_DATA:
       return {
         ...state,
-        posts: [action.payload, ...state.posts],
+        data: [action.payload, ...state.data],
       };
-    case DELETE_POST:
-      let index = state.posts.findIndex((x) => x.postId === action.payload);
-      state.posts.splice(index, 1);
+    case DELETE_DATA:
+      let index = state.data.findIndex((x) => x.postId === action.payload);
+      state.data.splice(index, 1);
       return {
         ...state,
       };

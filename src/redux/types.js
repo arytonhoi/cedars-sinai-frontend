@@ -21,15 +21,14 @@ export const SET_DEPARTMENTS = "SET_DEPARTMENTS"
 export const POST_DEPARTMENT = "POSTT_DEPARTMENT"
 export const PATCH_DEPARTMENT = "PATCH_DEPARTMENT"
 export const DELETE_DEPARTMENT = "DELETE_DEPARTMENT"
-// contacts
+// Contacts
 export const SET_CONTACTS = "SET_CONTACTS";
 export const POST_CONTACT = "POST_CONTACT";
 export const PATCH_CONTACT = "PATCH_CONTACT";
 export const DELETE_CONTACT = "DELETE_CONTACT";
 export const SEARCH_CONTACTS = "SEARCH_CONTACTS";
-// Posts?
-export const SET_POSTS = "SET_POSTS";
-export const SET_POST = "SET_POST";
-export const DELETE_POST = "DELETE_POST";
-export const POST_POST = "POST_POST";
-export const SUBMIT_COMMENT = "SUBMIT_COMMENT";
+// Data Handling
+export const SET_DATA_ARRAY = "SET_DATA_ARRAY";
+export const SET_DATA = "SET_DATA";
+export const DELETE_DATA = "DELETE_DATA";
+export const POST_DATA = "POST_DATA";

@@ -5,6 +5,7 @@ import "../css/home.css";
 import { connect } from "react-redux";
 import { getAnnouncements } from "../redux/actions/dataActions";
 import Announcement from "../components/announcement/Announcement.js";
+import Folder from "../components/folders/Folder.js";
 import PostAnn from "../components/announcement/PostAnn.js";
 import DateHelper from "../util/dateHelper.js";
 

@@ -1,0 +1,17 @@
+.folder{
+  color: black;
+  border: 1px solid gray;
+  padding: 0.5em;
+  border-radius: 0.5em;
+  margin: 0.5em;
+  width: calc( 30% - 2em);
+}
+
+.folder-link{
+  color: inherit;
+}
+
+.folder-logo{
+  height: 1em;
+  padding: 0 0.5em;
+}
