@@ -3,7 +3,8 @@ import PropTypes from "prop-types";
 
 // MUI Stuff
 import "../css/login.css";
-import {Button, Spin} from "antd";
+import { Button, Spin } from "antd";
+import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons"
 // Redux stuff
 import { connect } from "react-redux";
 import { loginUser } from "../redux/actions/userActions";
@@ -54,6 +55,9 @@ class login extends Component {
     const { errors } = this.state;
     return (
       <div>
+        <div className="logo-box" >
+          <img className="logo" src={process.env.PUBLIC_URL + '/logo.png'} />
+        </div>
         <form className="center" noValidate>
           <p className="login-title">OR Education Portal</p>
           <div className="pw-field-wrapper">
@@ -75,7 +79,7 @@ class login extends Component {
               className="pw-toggle valign noselect"
               onClick={this.togglePwField}
             >
-              Eye
+              {(this.state.showPw)?(<EyeInvisibleOutlined />):(<EyeOutlined />)}
             </span>
           </div>
           <p className="pw-errors noselect">{
@@ -92,9 +96,9 @@ class login extends Component {
             Sign In
             {loading && (<Spin className="button-spinner halign" />)}
           </Button>
-          <span className="noselect select-user" onClick={this.handleChange}>
+          <div className="noselect select-user" onClick={this.handleChange}>
             Sign in as {["staff","admin"][this.state.uid]} instead
-          </span>
+          </div>
         </form>
       </div>
     );

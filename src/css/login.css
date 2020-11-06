@@ -4,7 +4,20 @@ form{
   padding: 2em;
   text-align: left;
   width: 30em;
-  height: 20em;
+}
+
+.logo-box {
+  height: 32px;
+  margin: 16px;
+  background: rgba(255, 255, 255, 0.3);
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.logo {
+  width: auto;
+  height: 100%;
 }
 
 .login-title{
@@ -34,7 +47,7 @@ form{
 }
 
 input[type=text],input[type=password]{
-  padding: 0.5em 3em;
+  padding: 0.25em 2em 0.25em 0.5em !important;
   width: 70%;
 }
 .button{
@@ -43,7 +56,8 @@ input[type=text],input[type=password]{
 
 .select-user{
   cursor: pointer;
-  padding: 1em 2em 0 0;
+  padding: 0.5em 2em;
+  width: 100%;
   text-align: center;
 }
 

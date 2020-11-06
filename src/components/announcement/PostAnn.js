@@ -21,7 +21,8 @@ class PostAnn extends Component{
   };
   handleSubmit = (event) => {
     event.preventDefault();
-    this.state.ann.isPinned = (this.state.ann.isPinned === "on")
+console.log(this.state.ann)
+    this.setState({...this.state,ann:{...this.state.ann, isPinned: (this.state.ann.isPinned === "on")}})
     if(this.state.ann.title !== '' && this.state.ann.content !== ''){
       this.props.postAnnouncement(this.state.ann);
     }else{
@@ -29,10 +30,10 @@ class PostAnn extends Component{
     }
   };
   updateEditor = (event) => {
-    this.state.ann.content = event.editor.getData()
+    this.setState({...this.state,ann:{...this.state.ann, content: event.editor.getData()}});
   };
   handleChange = (event) => {
-    this.state.ann[event.target.name] = event.target.value ;
+    this.setState({...this.state,ann:{...this.state.ann, [event.target.name]: event.target.value}});
   };
   render(){
 //  console.log(this.state);console.log(this.props);
