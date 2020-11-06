@@ -3,7 +3,7 @@ import {
   LOADING_UI,
 //STOP_LOADING_UI,
   LOADING_DATA,
-  STOP_LOADING_DATA,
+//STOP_LOADING_DATA,
   // Errors
   SET_ERRORS,
   CLEAR_ERRORS,
@@ -317,7 +317,12 @@ export const removeFolder = (folderName) => (dispatch) => {
   dispatch({ type: LOADING_UI });
   axios
     .delete(`/folders/${folderName}`)
-    .then()
+    .then((res) => {
+      dispatch({
+        type: DELETE_SUBFOLDER,
+        payload: `${folderName}`,
+      });
+    })
     .catch((err) => {
       dispatch({
         type: SET_ERRORS,

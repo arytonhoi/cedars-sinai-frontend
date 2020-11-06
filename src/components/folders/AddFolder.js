@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./Folder.css";
 import "./AddFolder.css";
-import PropTypes from "prop-types";
+//import PropTypes from "prop-types";
 
 // Redux stuff
 import { connect } from "react-redux";
@@ -19,8 +19,9 @@ class AddFolder extends Component {
     }
   };
   componentDidMount() {
-    this.state.folder.parent = this.props.target;
-    if(typeof(this.props.target) === "undefined" || this.props.target === ""){this.state.folder.parent = "home"}
+    var target = this.props.target
+    if(typeof(target) === "undefined" || target === ""){target = "home"}
+    this.setState({...this.state,folder:{...this.state.folder, parent:target}});
   }
   handleChange = (event) => {
     this.setState({
@@ -38,7 +39,6 @@ class AddFolder extends Component {
     this.props.createFolder(this.state.folder.parent, newFolder);
   }
   render() {
-    const {target } = this.props
     return(
       <div className="folder">
         <label className="folder-link folder-add" htmlFor="folderCreateToggle" >
@@ -65,9 +65,7 @@ class AddFolder extends Component {
   }
 }
 
-AddFolder.propTypes = {
-
-};
+//AddFolder.propTypes = {};
 
 const mapStateToProps = (state) => ({});
 

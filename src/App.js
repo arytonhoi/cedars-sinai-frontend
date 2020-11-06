@@ -9,12 +9,10 @@ import { logoutUser, getUserData } from "./redux/actions/userActions";
 
 // Styles
 import "./App.css";
-import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
-import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import { Layout } from "antd";
 
 // Utils
-import themeObject from "./util/configs/theme";
+//import themeObject from "./util/configs/theme";
 import AuthRoute from "./util/jsx/AuthRoute";
 import JWT from "./util/jwt.js";
 import axios from "axios";
@@ -28,8 +26,6 @@ import logout from "./pages/logout";
 import announcementPage from "./pages/announcementPage";
 import contactPage from "./pages/contactPage";
 
-const theme = createMuiTheme(themeObject);
-
 axios.defaults.baseURL =
   "https://us-central1-fir-db-d2d47.cloudfunctions.net/api";
 // "http://localhost:5000/fir-db-d2d47/us-central1/api";
@@ -42,7 +38,7 @@ if (token) {
     store.dispatch(logoutUser());
     window.location = "/login";
   } else {
-    const isAdmin = (decodedToken.email === "admin@email.com");
+    const isAdmin = store.getState().user.credentials.isAdmin;
     store.dispatch({ type: SET_AUTHENTICATED , payload: isAdmin});
     axios.defaults.headers.common['Authorization'] = token;
     store.dispatch(getUserData());
@@ -80,7 +76,6 @@ class App extends Component {
       );
     } else {
       return (
-        <MuiThemeProvider theme={theme}>
           <Provider store={store}>
             <Router>
               <div className="container">
@@ -88,7 +83,6 @@ class App extends Component {
               </div>
             </Router>
           </Provider>
-        </MuiThemeProvider>
       );
     }
   }

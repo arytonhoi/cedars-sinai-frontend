@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 
 class Folder extends Component {
   render() {
-    const { key, label, href } = this.props
+    const { label, href } = this.props
     return(
       <div className="folder">
         <a className="folder-link" href={"resources/" + href}>

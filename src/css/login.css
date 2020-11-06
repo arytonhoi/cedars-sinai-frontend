@@ -3,10 +3,23 @@ form{
   border-radius: 0.5em;
   padding: 2em;
   text-align: left;
+  width: 30em;
+  height: 20em;
 }
 
-.login-wrapper{
+.login-title{
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.pw-field-wrapper{
   position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pw-input{
 }
 
 .pw-toggle{
@@ -14,44 +27,23 @@ form{
   right: 0.5em;
 }
 
-.key-icon{
-  left: 0.5em;
+.pw-errors{
+  display: block;
+  color: red;
+  font-size: 0.75em;
 }
 
 input[type=text],input[type=password]{
   padding: 0.5em 3em;
+  width: 70%;
+}
+.button{
+  position: relative;
 }
 
-/* CSS-only autotoggle */
-label{
-  position:relative;
-  margin-bottom: 0.5em;
-}
-
-.dialog-label{
-  display: none;
-  position: absolute;
-  height: 3em;
-  left: 20%;
-  transform: translateX(-20%);
-  bottom: -3em;
-}
-#userSelect, #adminSelect{
-  background: inherit;
-  display: none;
-}
-#userSelect:checked+.select-user, #adminSelect:checked+.select-admin{
-  color: #000;
-}
-#userSelect:checked+.select-user > svg, #adminSelect:checked+.select-admin > svg{
-  display: block;
-}
-
-.select-user, .select-admin{
+.select-user{
   cursor: pointer;
-  font-weight:bold;
-  color: #8f8f8f;
   padding: 1em 2em 0 0;
-  display: inline-block;
-  text-align: left;
+  text-align: center;
 }
+
