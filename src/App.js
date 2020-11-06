@@ -38,12 +38,7 @@ if (token) {
     store.dispatch(logoutUser());
     window.location = "/login";
   } else {
-<<<<<<< HEAD
     store.dispatch({ type: SET_AUTHENTICATED });
-=======
-    const isAdmin = store.getState().user.credentials.isAdmin;
-    store.dispatch({ type: SET_AUTHENTICATED , payload: isAdmin});
->>>>>>> b435b8dc6726d57c9a91778626b6ce4ce2b911c7
     axios.defaults.headers.common['Authorization'] = token;
     store.dispatch(getUserData());
   }
