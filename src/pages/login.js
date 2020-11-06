@@ -54,11 +54,11 @@ class login extends Component {
     } = this.props;
     const { errors } = this.state;
     return (
-      <div>
+      <div className="noselect">
         <div className="logo-box" >
-          <img className="logo" src={process.env.PUBLIC_URL + '/logo.png'} />
+          <img className="logo" src={process.env.PUBLIC_URL + '/logo.png'} alt=""/>
         </div>
-        <form className="center" noValidate>
+        <form className="login-form center" noValidate>
           <p className="login-title">OR Education Portal</p>
           <div className="pw-field-wrapper">
             <span>Enter Password:</span>

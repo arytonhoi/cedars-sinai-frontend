@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import "../css/home.css";
+import "../css/annPage.css";
 
 import { connect } from "react-redux";
 import { getAnnouncements } from "../redux/actions/dataActions";
@@ -24,7 +24,7 @@ class home extends Component {
     //   //   <p>{a.content}</p>
     //   // </li>
     // ));
-
+//console.log(announcements)
     const now = new Date().getTime();
     announcements.sort((a, b) => {
       a.createdAt = new DateHelper(a.createdAt);
@@ -40,8 +40,8 @@ class home extends Component {
     let pinnedAnn = pinned.map((x) =>
       isAdmin || now > x.createdTs ? (
         <Announcement
-          key={x.announcementId}
-          index={x.announcementId}
+          key={x.id}
+          index={x.id}
           what={x}
           admin={isAdmin}
         />
@@ -52,8 +52,8 @@ class home extends Component {
     let unpinnedAnn = unpinned.map((x) =>
       isAdmin || (now > x.createdTs && now - x.createdTs < 7776000000) ? (
         <Announcement
-          key={x.announcementId}
-          index={x.announcementId}
+          key={x.id}
+          index={x.id}
           what={x}
           admin={isAdmin}
         />
@@ -65,8 +65,10 @@ class home extends Component {
     return (
       <div>
         {isAdmin ? <PostAnn /> : ""}
-        {pinnedAnn}
-        {unpinnedAnn}
+        <div className="ann-parent-container shadow">
+          {pinnedAnn}
+          {unpinnedAnn}
+        </div>
       </div>
     );
   }

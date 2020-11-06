@@ -1,11 +1,15 @@
-.ann{
-  width: 50%;
-  padding: 2em 3em;
-  margin: 1em 0;
-  display: flex;
-  flex-direction: column;
+.ann-parent {
+  display: block;
+  margin-top: 1em;
   border: 2px solid #eee;
+  background: #fff;
   border-radius: 0.5em;
+}
+
+.ann {
+  width: 100%;
+  padding: 0;
+  position: relative;
 }
 
 .ann-old{
@@ -17,43 +21,44 @@
 }
 
 .ann-head{
-  display: flex;
-  align-items: center;
-  margin-bottom: 1em
 }
 
-.ann-head-left{
-  display: flex;
-  flex-direction: column;
-  margin-right: 1em;
-  width: 15%
-}
-
-.ann-title, .ann-person{
-  font-weight: bold;
+.ann-head-top{
+  padding: 0 1em;
+  width: 100%;
+  background: #eee;
 }
 
 .ann-title{
-  width: 80%
+  padding: 0.25em 1em;
+  width: 100%
 }
 
-.ann-menu{
-  width: 10%
+.ann-title, .ann-person, .ann-menu-toggle{
+  font-weight: bold;
+}
+
+.ann-menu-toggle{
+  position: absolute;
+  right: 0.5em;
 }
 .ann-menu-icon{
   height: 1em;
 }
 
 .ann-date{
-  font-style: italic;
+  padding-left: 0.5em;
+  color: #555;
 }
 
-.ann-body{
+.ann-text{
+  padding: 1em;
+  border-top: 2px solid #eee;
 }
 .delete-confirm{
   position: absolute;
-  top: 4em;
-  right: 5em;
+  top: 1em;
+  right: 1em;
   padding: 0.5em 1em;
   background: #fff;
   color: #000;

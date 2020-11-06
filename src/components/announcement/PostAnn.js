@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './PostAnn.css';
 //import PropTypes from 'prop-types';
 
+import { Button } from "antd";
+
 // Redux stuff
 import { connect } from 'react-redux';
 import { postAnnouncement, clearErrors } from '../../redux/actions/dataActions';
@@ -40,7 +42,9 @@ console.log(this.state.ann)
 //we need removeButtons or else underline will be disabled
     return (
       <form className="post-ann shadow" onSubmit={this.handleSubmit}>
-        <input name="title" type="text" placeholder="Enter a title..." onChange = { this.handleChange } /><br />
+        <h3>Post New Announcement</h3>
+        <input className="ann-input" name="author" type="text" onChange = { this.handleChange } placeholder="Name" /><br />
+        <input className="ann-input" name="title" type="text" placeholder="Enter a title..." onChange = { this.handleChange } /><br />
         <CKEditor 
           data="Share an announcement"
           onChange = { this.updateEditor }
@@ -54,14 +58,10 @@ console.log(this.state.ann)
           }}
         />
         <br />
-        Posting as <select name="author" onChange = { this.handleChange }>
-          <option value="Krystal">Krystal</option>
-        </select>
-        <br />
-        Pin post? <input type="checkbox" name="isPinned" onChange = { this.handleChange }/>
-        <br />
-        <input type="reset" value="Clear" />
-        <input type="submit" value="Post Announcement" />
+        <div className="ann-form-bottom">
+          <span>Pin post? <input type="checkbox" name="isPinned" onChange = { this.handleChange }/></span>
+          <Button className="ann-form-submit" type="primary" variant="contained" onClick={this.handleSubmit}>Post</Button>
+        </div>
       </form>
     )
   }

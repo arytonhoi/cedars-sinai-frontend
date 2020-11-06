@@ -1,4 +1,4 @@
-form{
+.login-form{
   background: #d9d9d9;
   border-radius: 0.5em;
   padding: 2em;
@@ -32,9 +32,6 @@ form{
   align-items: center;
 }
 
-.pw-input{
-}
-
 .pw-toggle{
   cursor: pointer;
   right: 0.5em;
@@ -46,7 +43,7 @@ form{
   font-size: 0.75em;
 }
 
-input[type=text],input[type=password]{
+.pw-input{
   padding: 0.25em 2em 0.25em 0.5em !important;
   width: 70%;
 }

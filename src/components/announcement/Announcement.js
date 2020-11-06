@@ -12,61 +12,40 @@ class Announcement extends Component {
     const { index, what, admin } = this.props;
     return (
       <label
-        className={what.isPinned ? "ann ann-pinned shadow" : "ann shadow"}
+        className={what.isPinned ? "ann-parent ann-pinned" : "ann-parent"}
         htmlFor={index}
       >
-        <div className={now - what.createdTs > 7776000000 ? "ann-old" : ""}>
+        <div className={now - what.createdTs > 7776000000 ? "ann ann-old" : "ann"}>
           <div className="ann-head noselect">
-            <div className="ann-head-left">
+            <div className="ann-head-top">
               <span className="ann-person">{what.author}</span>
               <span className="ann-date">
-                {what.createdAt.toString("MMM dd")}
+                {what.createdAt.toString("dd/MM/yy")}
               </span>
+              {admin ? (
+                <span>
+                  <label className="ann-menu-toggle" htmlFor={"conf_" + index}>•••</label>
+                  <input
+                    type="checkbox"
+                    className="delete-confirm-toggle hide"
+                    id={"conf_" + index}
+                  />
+                  <label
+                    htmlFor={"conf_" + index}
+                    className="delete-confirm shadow hide"
+                  >
+                    <p
+                      className="delete-action"
+                      onClick={() => this.props.deleteAnnounce(index)}
+                    >
+                      Confirm deletion
+                    </p>
+                    <p>Cancel</p>
+                  </label>
+                </span>
+              ) : ("")}
             </div>
             <span className="ann-title">{what.title}</span>
-            {admin ? (
-              <span>
-                <label className="ann-menu" htmlFor={"conf_" + index}>
-                  <svg className="ann-menu-icon" viewBox="0 0 120 120">
-                    <line
-                      x1="10"
-                      y1="10"
-                      x2="100"
-                      y2="100"
-                      stroke="red"
-                      strokeWidth="10"
-                    />
-                    <line
-                      x1="100"
-                      y1="10"
-                      x2="10"
-                      y2="100"
-                      stroke="red"
-                      strokeWidth="10"
-                    />
-                  </svg>
-                </label>
-                <input
-                  type="checkbox"
-                  className="delete-confirm-toggle hide"
-                  id={"conf_" + index}
-                />
-                <label
-                  htmlFor={"conf_" + index}
-                  className="delete-confirm shadow hide"
-                >
-                  <p
-                    className="delete-action"
-                    onClick={() => this.props.deleteAnnounce(index)}
-                  >
-                    Confirm deletion
-                  </p>
-                  <p>Cancel</p>
-                </label>
-              </span>
-            ) : (
-              ""
-            )}
           </div>
           <input type="checkbox" className="post-toggle hide" id={index} />
           <div className="ann-body hide">

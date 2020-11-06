@@ -48,8 +48,8 @@ class SideNav extends Component {
           <Menu.Item>
             {
               (this.state.collapsed)?
-              (<img className="logo" src={process.env.PUBLIC_URL + '/icon-min.svg'} />):
-              (<img className="logo" src={process.env.PUBLIC_URL + '/logo.png'} />)
+              (<img className="logo" alt="" src={process.env.PUBLIC_URL + '/icon-min.svg'} />):
+              (<img className="logo" alt="" src={process.env.PUBLIC_URL + '/logo.png'} />)
             }
           </Menu.Item>
           <Menu.Item key="announcements" icon={<NotificationOutlined />}>
