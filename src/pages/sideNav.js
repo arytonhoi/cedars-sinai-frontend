@@ -40,14 +40,18 @@ class SideNav extends Component {
         collapsed={collapsed}
         onCollapse={this.onCollapse}
       >
-        <div className="logo-box" >
-          <img className="logo" src={process.env.PUBLIC_URL + '/logo.png'} />
-        </div>
         <Menu
           theme="light"
           defaultSelectedKeys={["announcements"]}
           mode="inline"
         >
+          <Menu.Item>
+            {
+              (this.state.collapsed)?
+              (<img className="logo" src={process.env.PUBLIC_URL + '/icon-min.svg'} />):
+              (<img className="logo" src={process.env.PUBLIC_URL + '/logo.png'} />)
+            }
+          </Menu.Item>
           <Menu.Item key="announcements" icon={<NotificationOutlined />}>
             <Link to="/announcements">Announcements</Link>
           </Menu.Item>
