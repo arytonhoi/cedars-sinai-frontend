@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
+// redux
 import { connect } from "react-redux";
 import {
   // departments
@@ -16,7 +17,10 @@ import {
   // search
   getSearchedContacts,
 } from "../redux/actions/dataActions";
+
+// Components
 import Department from "../components/contacts/department";
+import AddDepartmentModal from "../components/contacts/addDepartmentModal";
 
 class ContactPage extends Component {
   componentDidMount() {
@@ -131,7 +135,7 @@ class ContactPage extends Component {
     }
     this.setState({
       searchTerm: "",
-    })
+    });
   };
 
   // department functions
@@ -258,22 +262,13 @@ class ContactPage extends Component {
         )}
 
         {isAdmin && this.state.addingDepartment && (
-          <form noValidate onSubmit={this.handleSubmit}>
-            <label htmlFor="departmentName">New Department Name</label>
-            <input
-              id="departmentName"
-              name="departmentName"
-              type="text"
-              value={this.state.departmentName}
-              onChange={this.handleChange}
-            />
-            <button type="button" onClick={this.handleSubmitNewDepartment}>
-              Create Department!
-            </button>
-            <button type="button" onClick={this.handleCancelDepartmentChange}>
-              Cancel
-            </button>
-          </form>
+          <AddDepartmentModal
+            handleSubmit={this.handleSubmit}
+            departmentName={this.state.departmentName}
+            handleChange={this.handleChange}
+            handleSubmitNewDepartment={this.handleSubmitNewDepartment}
+            handleCancelDepartmentChange={this.handleCancelDepartmentChange}
+          />
         )}
 
         {isAdmin && this.state.targettedDepartmentId !== "" && (

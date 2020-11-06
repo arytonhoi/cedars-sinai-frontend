@@ -42,8 +42,7 @@ if (token) {
     store.dispatch(logoutUser());
     window.location = "/login";
   } else {
-    const isAdmin = (decodedToken.email === "admin@email.com");
-    store.dispatch({ type: SET_AUTHENTICATED , payload: isAdmin});
+    store.dispatch({ type: SET_AUTHENTICATED });
     axios.defaults.headers.common['Authorization'] = token;
     store.dispatch(getUserData());
   }
