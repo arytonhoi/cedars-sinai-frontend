@@ -27,6 +27,9 @@ import {
   POST_CONTACT,
   DELETE_CONTACT,
   SEARCH_CONTACTS,
+  // Folders
+  ADD_SUBFOLDER,
+  DELETE_SUBFOLDER,
 
 } from "../types";
 import axios from "axios";
@@ -276,7 +279,6 @@ export const getFolder = (folderName) => (dispatch) => {
         payload: res.data,
       });
     })
-    .finally(dispatch({ type: STOP_LOADING_DATA }))
     .catch((err) => dispatch({ type: SET_ERRORS, payload: err }));
 };
 
@@ -284,7 +286,12 @@ export const createFolder = (folderName,folderDetails) => (dispatch) => {
   dispatch({ type: LOADING_UI });
   axios
     .post(`/folders/${folderName}`, folderDetails)
-    .then()
+    .then((res) => {
+      dispatch({
+        type: ADD_SUBFOLDER,
+        payload: res.data,
+      });
+    })
     .catch((err) => {
       dispatch({
         type: SET_ERRORS,

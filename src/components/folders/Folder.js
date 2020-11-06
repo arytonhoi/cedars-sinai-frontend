@@ -21,7 +21,6 @@ class Folder extends Component {
 }
 
 Folder.propTypes = {
-  key: PropTypes.number.isRequired,
   label: PropTypes.string.isRequired,
   href: PropTypes.string.isRequired,
 };

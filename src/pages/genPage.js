@@ -9,6 +9,9 @@ import Grid from '@material-ui/core/Grid';
 import { connect } from 'react-redux';
 import { getFolder } from '../redux/actions/dataActions';
 
+// Editor
+import CKEditor from 'ckeditor4-react';
+
 class genPage extends Component {
   constructor(){
     super();
@@ -24,12 +27,10 @@ class genPage extends Component {
       this.props.getFolder("home");
     }
   }
-  toggleEditable(event){
-    this.setState({editable: !this.state.editable})
+  toggleEditable = (event) => {
+    this.setState({editable: !this.state.editable && this.props.user.credentials.isAdmin})
   }
   render() {
-console.log(this.state)
-console.log(this.props)
     const { UI, data, user } = this.props;
     const pageName = this.props.match.params.pageName;
     const folders = data.data[0];
@@ -54,14 +55,18 @@ console.log(this.props)
         }<span> / {folders.title}</span></h5>
         <span>
           <span>{folders.title}</span>
-          <input type="button" value="Edit?" onClick={this.toggleEditable}/>
+          {
+            ( user.credentials.isAdmin ) ? (
+              <input type="button" value="Edit?" onClick={this.toggleEditable}/>
+            ):("")
+          }
         </span>
         <div className="folder-holder">
         {
           ( folders.subfolders.length > 0) ? (
             folders.subfolders.map(
               (x,i) => (
-                <Folder key={x.title} label={x.title} href="Not supported" />
+                <Folder key={x.id} label={x.title} href={x.id} />
               )
             )
           ):("")
@@ -73,13 +78,24 @@ console.log(this.props)
         }
         </div>
         <hr />
-        {folders.content}
+        {(this.state.editable)?(
+          <CKEditor 
+            data={folders.content}
+//            onChange = { this.updateEditor }
+            config={{
+              disallowedContent : 'script embed *[on*]',
+              removeButtons : "",
+              toolbar : [{
+                name:"Basic",
+                items:["Bold","Italic","Underline","Superscript","Subscript","Link", "Image"]
+              }]
+            }}
+          />):(folders.content)}
       </div>
     );
 
     return (
       <Grid>
-        {(this.state.editable)?("I'm editable"):("Cannot edit")}
         {pageMarkup}
       </Grid>
     );

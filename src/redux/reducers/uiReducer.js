@@ -14,7 +14,7 @@ const initialState = {
 export default function(state = initialState, action) {
   switch (action.type) {
     case SET_ERRORS:
-      state.errors.push(action.payload.response)
+      state.errors.push(action.payload)
       return {
         ...state,
         loading: false,

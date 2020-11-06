@@ -2,6 +2,6 @@
   display: flex;
   position: relative;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: align-left;
   width: 100%;
 }

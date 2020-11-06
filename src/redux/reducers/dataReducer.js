@@ -21,6 +21,9 @@ import {
   POST_CONTACT,
   DELETE_CONTACT,
   SEARCH_CONTACTS,
+  // Folders
+  ADD_SUBFOLDER,
+  DELETE_SUBFOLDER,
 } from "../types";
 
 const initialState = {
@@ -146,6 +149,10 @@ export default function (state = initialState, action) {
         matchingSearchContacts: matchingSearchContacts,
         loading: false,
       };
+    // Folders
+    case ADD_SUBFOLDER:
+      state.data[0].subfolders.push(action.payload);
+      return {...state};
     // Data Handling
     case SET_DATA_ARRAY:
       return {
