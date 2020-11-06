@@ -20,7 +20,6 @@ export default function (state = initialState, action) {
       return {
         ...state,
         authenticated: true,
-        credentials: action.payload,
       };
     case SET_UNAUTHENTICATED:
       return initialState;
