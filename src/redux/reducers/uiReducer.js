@@ -14,7 +14,12 @@ const initialState = {
 export default function(state = initialState, action) {
   switch (action.type) {
     case SET_ERRORS:
-      state.errors.push(action.payload)
+      if(typeof(action.payload.general)==="undefined" &&
+         typeof(action.payload.error)!=="undefined"){
+        state.errors.push({"general":action.payload.error})
+      }else{
+        state.errors.push(action.payload)
+      }
       return {
         ...state,
         loading: false,
@@ -22,17 +27,19 @@ export default function(state = initialState, action) {
     case CLEAR_ERRORS:
       return {
         ...state,
+        errors: [],
         loading: false,
-        errors: []
       };
     case LOADING_UI:
       return {
         ...state,
+        errors: [],
         loading: true
       };
     case STOP_LOADING_UI:
       return {
         ...state,
+        errors: [],
         loading: false
       };
     default:

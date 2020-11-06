@@ -61,7 +61,7 @@ export default function (state = initialState, action) {
         loading: false,
       };
     case DELETE_ANNOUNCEMENT:
-      index = state.announcements.findIndex(
+      let index = state.announcements.findIndex(
         (x) => x.announcementId === action.payload
       );
       state.announcements.splice(index, 1);
@@ -153,6 +153,10 @@ export default function (state = initialState, action) {
     case ADD_SUBFOLDER:
       state.data[0].subfolders.push(action.payload);
       return {...state};
+    case DELETE_SUBFOLDER:
+      index = state.data[0].subfolders.findIndex((x) => x.id === action.payload);
+      state.data.splice(index, 1);
+      return {...state};
     // Data Handling
     case SET_DATA_ARRAY:
       return {
@@ -173,7 +177,7 @@ export default function (state = initialState, action) {
         data: [action.payload, ...state.data],
       };
     case DELETE_DATA:
-      let index = state.data.findIndex((x) => x.postId === action.payload);
+      index = state.data.findIndex((x) => x.postId === action.payload);
       state.data.splice(index, 1);
       return {
         ...state,
