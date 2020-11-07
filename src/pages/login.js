@@ -58,7 +58,7 @@ class login extends Component {
         <div className="logo-box" >
           <img className="logo" src={process.env.PUBLIC_URL + '/logo.png'} alt=""/>
         </div>
-        <form className="login-form center" noValidate>
+        <form className="login-form center" noValidate onSubmit={this.handleSubmit}>
           <p className="login-title">OR Education Portal</p>
           <div className="pw-field-wrapper">
             <span>Enter Password:</span>
