@@ -23,7 +23,8 @@ class genPage extends Component {
       pagename: "",
       editFolders: false,
       editPost: false,
-      editor: ""
+      editor: "",
+      selectedFolders: []
     }
   }
   componentDidMount() {
@@ -44,17 +45,27 @@ class genPage extends Component {
     this.setState({...this.state, editor:event.editor.getData()});
   };
   saveEditorChanges = (event) => {
-    this.togglePostEditable()
     this.props.updateFolder(this.state.pagename,{
       parent: this.props.data.data[0].parent,
       title: this.props.data.data[0].title,
       content: this.state.editor
     });
+    this.togglePostEditable()
+  };
+  clearPost = (event) => {
+    this.props.updateFolder(this.state.pagename,{
+      parent: this.props.data.data[0].parent,
+      title: this.props.data.data[0].title,
+      content: ""
+    });
+    this.togglePostEditable()
   };
   render() {
     const { UI, data, user } = this.props;
     const pageName = this.props.match.params.pageName;
     const folders = data.data[0];
+    var s = "s"
+    if(this.state.selectedFolders.length === 1){s=""}
     const pageMarkup = (data.loading || (data.data.length === 0 && UI.errors.length === 0) ) ? (
       <p>Page loading...</p>
     ) : ( UI.errors.length > 0) ? (
@@ -65,10 +76,10 @@ class genPage extends Component {
       <div>
         {(this.state.editPost)?(
           <div className="resources-editbar">
-            <span>
-              <Button type="danger" onClick={this.togglePostEditable}>Delete Contents</Button>
+            <span className="button-holder">
+              <Button type="danger" onClick={this.clearPost}>Delete Contents</Button>
             </span>
-            <span>
+            <span className="button-holder">
               <Button onClick={this.togglePostEditable}>Cancel</Button>
               <Button type="primary" onClick={this.saveEditorChanges}>Save Changes</Button>
             </span>
@@ -76,12 +87,12 @@ class genPage extends Component {
         }
         {(this.state.editFolders)?(
           <div className="resources-editbar">
-            <span>
-              <Button type="danger" onClick={this.toggleFolderEditable}>Delete Contents</Button>
-              <Button onClick={this.toggleFolderEditable}>Move Folder</Button>
-              <Button onClick={this.toggleFolderEditable}>Rename Folder</Button>
+            <span className="button-holder">
+              <Button disabled={this.state.selectedFolders.length === 0} type="danger" onClick={this.toggleFolderEditable}>Delete {this.state.selectedFolders.length} Folder{s}</Button>
+              <Button disabled={this.state.selectedFolders.length === 0} onClick={this.toggleFolderEditable}>Move {this.state.selectedFolders.length} Folder{s}</Button>
+              <Button disabled={this.state.selectedFolders.length === 0} onClick={this.toggleFolderEditable}>Rename {this.state.selectedFolders.length} Folder{s}</Button>
             </span>
-            <span>
+            <span className="button-holder">
               <Button type="primary" onClick={this.toggleFolderEditable}>Done Editing</Button>
             </span>
           </div>):("")
