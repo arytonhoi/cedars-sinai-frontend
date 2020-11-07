@@ -42,7 +42,7 @@ class AddFolder extends Component {
     return(
       <div className="folder">
         <label className="folder-link folder-add" htmlFor="folderCreateToggle" >
-          <span className="folder-logo">+</span>
+          <span className="folder-logo folder-logo-plus">+</span>
           <span className="folder-label">Create New Folder</span>
         </label>
         <input type="checkbox" id="folderCreateToggle" />

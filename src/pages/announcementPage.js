@@ -97,11 +97,10 @@ class home extends Component {
         ""
       )
     );
-
     return (
       <div>
         {isAdmin ? <PostAnn /> : ""}
-        <div className="ann-parent-container shadow">
+        <div className="floating-component shadow">
           <div className="ann-navbar">
             <div className="ann-navbar-search">
               <input type="text" onChange={this.filterByText} placeholder="Search by keyword" />

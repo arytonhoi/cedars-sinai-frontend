@@ -41,7 +41,7 @@ console.log(this.state.ann)
 //  console.log(this.state);console.log(this.props);
 //we need removeButtons or else underline will be disabled
     return (
-      <form className="post-ann shadow" onSubmit={this.handleSubmit}>
+      <form className="floating-component" onSubmit={this.handleSubmit}>
         <h3>Post New Announcement</h3>
         <input className="ann-input" name="author" type="text" onChange = { this.handleChange } placeholder="Name" /><br />
         <input className="ann-input" name="title" type="text" placeholder="Enter a title..." onChange = { this.handleChange } /><br />

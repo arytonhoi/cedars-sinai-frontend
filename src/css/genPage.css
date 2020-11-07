@@ -1,7 +1,35 @@
+.resources-topbar{
+  background: #fff;
+  padding: 1em;
+}
+
+.folder-topbar{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.post-topbar{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
 .folder-holder{
   display: flex;
   position: relative;
   flex-wrap: wrap;
   justify-content: align-left;
   width: 100%;
+}
+
+.resources-editbar{
+  background: #fff;
+  position: fixed;
+  z-index: 3;
+  width: 100%;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 1em;
 }

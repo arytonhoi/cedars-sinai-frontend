@@ -29,6 +29,7 @@ import {
   SEARCH_CONTACTS,
   // Folders
   ADD_SUBFOLDER,
+  PATCH_FOLDER,
   DELETE_SUBFOLDER,
 
 } from "../types";
@@ -304,7 +305,12 @@ export const updateFolder = (folderName,folderDetails) => (dispatch) => {
   dispatch({ type: LOADING_UI });
   axios
     .patch(`/folders/${folderName}`, folderDetails)
-    .then()
+    .then((res) => {
+      dispatch({
+        type: PATCH_FOLDER,
+        payload: folderDetails,
+      });
+    })
     .catch((err) => {
       dispatch({
         type: SET_ERRORS,
