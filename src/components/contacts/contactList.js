@@ -12,7 +12,7 @@ class ContactList extends Component {
 
     const contacts = this.props.contacts;
     const contactsMarkup = contacts.map((c) => (
-      <li key={c.id}>
+      <li className="" key={c.id}>
         <h1>{c.name}</h1>
         <h3>{c.department}</h3>
         <p>{c.imageUrl}</p>

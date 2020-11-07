@@ -21,6 +21,17 @@ import {
 // Components
 import Department from "../components/contacts/department";
 import AddDepartmentModal from "../components/contacts/addDepartmentModal";
+import UpdateDepartmentModal from "../components/contacts/updateDepartmentModal";
+import AddContactModal from "../components/contacts/addContactModal";
+import EditContactModal from "../components/contacts/editContactModal";
+
+// css styles
+import "../css/contactPage.css";
+
+// Ant design
+import { Layout, Input, Button } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
+const { Content } = Layout;
 
 class ContactPage extends Component {
   componentDidMount() {
@@ -46,15 +57,22 @@ class ContactPage extends Component {
       // search
       searchTerm: "",
       // idk??
+      isEditing: false,
       errors: {},
     };
   }
 
+  toggleEditing = () => {
+    this.setState({
+      isEditing: !this.state.isEditing,
+    });
+  };
+
   // contact functions
-  handleAddNewContact = (event) => {
-    const departmentId = event.target.value;
+  handleAddNewContact = (departmentId) => {
     this.setState({
       addingContact: true,
+      targettedContactId: "",
       contactName: "",
       contactImgUrl: "",
       contactDepartmentId: departmentId,
@@ -84,11 +102,11 @@ class ContactPage extends Component {
     });
   };
 
-  handleEditThisContact = (event) => {
-    const contactId = event.target.value;
+  handleEditThisContact = (contactId) => {
     const contacts = this.props.data.contacts;
     const contact = contacts.find((c) => c.id === contactId);
     this.setState({
+      addingContact: false,
       targettedContactId: contactId,
       contactName: contact.name,
       contactImgUrl: contact.imgUrl,
@@ -127,11 +145,10 @@ class ContactPage extends Component {
     });
   };
 
-  handleDeleteContact = (event) => {
+  handleDeleteContact = (contactId) => {
     const confirmDeleteContact = window.confirm("Are you sure?");
     if (confirmDeleteContact) {
-      const deleteContactId = event.target.value;
-      this.props.deleteContact(deleteContactId);
+      this.props.deleteContact(contactId);
     }
     this.setState({
       searchTerm: "",
@@ -158,8 +175,7 @@ class ContactPage extends Component {
     });
   };
 
-  handleEditThisDepartment = (event) => {
-    const departmentId = event.target.value;
+  handleEditThisDepartment = (departmentId) => {
     const departments = this.props.data.departments;
     const department = departments.find((d) => d.id === departmentId);
     this.setState({
@@ -188,11 +204,10 @@ class ContactPage extends Component {
     });
   };
 
-  handleDeleteDepartment = (event) => {
+  handleDeleteDepartment = (departmentId) => {
     const confirmDeleteDepartment = window.confirm("Are you sure?");
     if (confirmDeleteDepartment) {
-      const deleteDepartmentId = event.target.value;
-      this.props.deleteDepartment(deleteDepartmentId);
+      this.props.deleteDepartment(departmentId);
     }
   };
 
@@ -221,7 +236,7 @@ class ContactPage extends Component {
     const { matchingSearchContacts, departments } = this.props.data;
 
     // departments
-    const departmentsMarkup = departments.map(function (d) {
+    const departmentsListComponent = departments.map(function (d) {
       const departmentContacts = matchingSearchContacts.filter(
         (c) => c.departmentId === d.id
       );
@@ -240,177 +255,127 @@ class ContactPage extends Component {
           handleCancelContactChange={this.handleCancelContactChange}
           handleDeleteContact={this.handleDeleteContact}
           handleChange={this.handleChange}
+          isEditing={this.state.isEditing}
         />
       );
     }, this);
 
     return (
       <div>
-        <h1>Contacts</h1>
-        <input
-          id="searchTerm"
-          name="searchTerm"
-          type="text"
-          placeholder="Search"
-          value={this.state.searchTerm}
-          onChange={this.handleChange}
-        />
-        {isAdmin && (
-          <button type="button" onClick={this.handleAddNewDepartment}>
-            Add Department
-          </button>
-        )}
-
-        {isAdmin && this.state.addingDepartment && (
-          <AddDepartmentModal
-            handleSubmit={this.handleSubmit}
-            departmentName={this.state.departmentName}
-            handleChange={this.handleChange}
-            handleSubmitNewDepartment={this.handleSubmitNewDepartment}
-            handleCancelDepartmentChange={this.handleCancelDepartmentChange}
-          />
-        )}
-
-        {isAdmin && this.state.targettedDepartmentId !== "" && (
-          <form noValidate onSubmit={this.handleSubmit}>
-            <label htmlFor="departmentName">Update Department Name:</label>
-            <input
-              id="departmentName"
-              name="departmentName"
+        <header className="contactHeader">
+          <div className="contactHeaderTitle">
+            <h1>Contacts</h1>
+          </div>
+          <div className="contactSearchDiv">
+            <Input
+              style={{ width: 300 }}
+              className="contactSearchInput"
+              id="searchTerm"
+              name="searchTerm"
               type="text"
-              value={this.state.departmentName}
+              placeholder="Search contacts by name"
+              value={this.state.searchTerm}
               onChange={this.handleChange}
+              suffix={
+                <SearchOutlined
+                  className="contactSearchInputIcon"
+                  style={{ color: "rgba(0,0,0,.45)" }}
+                />
+              }
             />
-            <button type="button" onClick={this.handleSubmitDepartmentChange}>
-              Change!
-            </button>
-            <button type="button" onClick={this.handleCancelDepartmentChange}>
-              Cancel
-            </button>
-          </form>
-        )}
+            {isAdmin && !this.state.isEditing && (
+              <Button
+                type="primary"
+                size={"medium"}
+                onClick={() => this.toggleEditing()}
+              >
+                Edit
+              </Button>
+            )}
+            {isAdmin && this.state.isEditing && (
+              <Button
+                type="primary"
+                size={"medium"}
+                onClick={() => this.handleAddNewDepartment()}
+              >
+                Add Department
+              </Button>
+            )}
+          </div>
+        </header>
+        <Layout style={{ padding: "0 24px 24px" }}>
+          <Content
+            className="site-layout-background"
+            style={{
+              // padding: 24,
+              margin: 0,
+              minHeight: 280,
+            }}
+          >
+            {isAdmin && this.state.addingDepartment && (
+              <AddDepartmentModal
+                departmentName={this.state.departmentName}
+                handleSubmitNewDepartment={this.handleSubmitNewDepartment}
+                handleCancelDepartmentChange={this.handleCancelDepartmentChange}
+                handleChange={this.handleChange}
+                handleSubmit={this.handleSubmit}
+              />
+            )}
 
-        {isAdmin && this.state.addingContact && (
-          <form noValidate onSubmit={this.handleSubmit}>
-            <label htmlFor="contactDepartmentId">Department:</label>
-            <select
-              name="contactDepartmentId"
-              onChange={this.handleChange}
-              value={this.state.contactDepartmentId}
+            {isAdmin && this.state.targettedDepartmentId !== "" && (
+              <UpdateDepartmentModal
+                departmentName={this.state.departmentName}
+                handleSubmitDepartmentChange={this.handleSubmitDepartmentChange}
+                handleCancelDepartmentChange={this.handleCancelDepartmentChange}
+                handleChange={this.handleChange}
+                handleSubmit={this.handleSubmit}
+              />
+            )}
+
+            {isAdmin && this.state.addingContact && (
+              <AddContactModal
+                contactDepartmentId={this.state.contactDepartmentId}
+                departments={departments}
+                contactName={this.state.contactName}
+                contactImgUrl={this.state.contactImgUrl}
+                contactPhone={this.state.contactPhone}
+                contactEmail={this.state.contactEmail}
+                handleSubmitNewContact={this.handleSubmitNewContact}
+                handleCancelContactChange={this.handleCancelContactChange}
+                handleChange={this.handleChange}
+                handleSubmit={this.handleSubmit}
+              />
+            )}
+
+            {isAdmin && this.state.targettedContactId !== "" && (
+              <EditContactModal
+                contactDepartmentId={this.state.contactDepartmentId}
+                departments={departments}
+                contactName={this.state.contactName}
+                contactImgUrl={this.state.contactImgUrl}
+                contactPhone={this.state.contactPhone}
+                contactEmail={this.state.contactEmail}
+                handleSubmitContactChange={this.handleSubmitContactChange}
+                handleCancelContactChange={this.handleCancelContactChange}
+                handleChange={this.handleChange}
+                handleSubmit={this.handleSubmit}
+              />
+            )}
+
+            {departmentsListComponent}
+          </Content>
+        </Layout>
+        {isAdmin && this.state.isEditing && (
+          <div className="contactFooter">
+            <Button
+              type="primary"
+              size={"medium"}
+              onClick={() => this.toggleEditing()}
             >
-              {departments.map((d) => (
-                <option key={d.id} value={d.id}>
-                  {d.name}
-                </option>
-              ))}
-            </select>
-            <br />
-            <label htmlFor="contactName">Name:</label>
-            <input
-              id="contactName"
-              name="contactName"
-              type="text"
-              value={this.state.contactName}
-              onChange={this.handleChange}
-            />
-            <br />
-            <label htmlFor="contactImgUrl">ImgUrl:</label>
-            <input
-              id="contactImgUrl"
-              name="contactImgUrl"
-              type="text"
-              value={this.state.contactImgUrl}
-              onChange={this.handleChange}
-            />
-            <br />
-            <label htmlFor="contactPhone">Phone:</label>
-            <input
-              id="contactPhone"
-              name="contactPhone"
-              type="text"
-              value={this.state.contactPhone}
-              onChange={this.handleChange}
-            />
-            <br />
-            <label htmlFor="contactEmail">Email:</label>
-            <input
-              id="contactEmail"
-              name="contactEmail"
-              type="text"
-              value={this.state.contactEmail}
-              onChange={this.handleChange}
-            />
-            <br />
-            <button type="button" onClick={this.handleSubmitNewContact}>
-              Create contact!
-            </button>
-            <button type="button" onClick={this.handleCancelContactChange}>
-              Cancel
-            </button>
-          </form>
+              Done Editing
+            </Button>
+          </div>
         )}
-
-        {isAdmin && this.state.targettedContactId !== "" && (
-          <form noValidate onSubmit={this.handleSubmit}>
-            <label htmlFor="contactDepartmentId">Department:</label>
-            <select
-              name="contactDepartmentId"
-              onChange={this.handleChange}
-              value={this.state.contactDepartmentId}
-            >
-              {departments.map((d) => (
-                <option key={d.id} value={d.id}>
-                  {d.name}
-                </option>
-              ))}
-            </select>
-            <br />
-            <label htmlFor="contactName">Name:</label>
-            <input
-              id="contactName"
-              name="contactName"
-              type="text"
-              value={this.state.contactName}
-              onChange={this.handleChange}
-            />
-            <br />
-            <label htmlFor="contactImgUrl">ImgUrl:</label>
-            <input
-              id="contactImgUrl"
-              name="contactImgUrl"
-              type="text"
-              value={this.state.contactImgUrl}
-              onChange={this.handleChange}
-            />
-            <br />
-            <label htmlFor="contactPhone">Phone:</label>
-            <input
-              id="contactPhone"
-              name="contactPhone"
-              type="text"
-              value={this.state.contactPhone}
-              onChange={this.handleChange}
-            />
-            <br />
-            <label htmlFor="contactEmail">Email:</label>
-            <input
-              id="contactEmail"
-              name="contactEmail"
-              type="text"
-              value={this.state.contactEmail}
-              onChange={this.handleChange}
-            />
-            <br />
-            <button type="button" onClick={this.handleSubmitContactChange}>
-              Change!
-            </button>
-            <button type="button" onClick={this.handleCancelContactChange}>
-              Cancel
-            </button>
-          </form>
-        )}
-
-        {departmentsMarkup}
       </div>
     );
   }
