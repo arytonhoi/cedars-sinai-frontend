@@ -23,6 +23,7 @@ import {
   SEARCH_CONTACTS,
   // Folders
   ADD_SUBFOLDER,
+  PATCH_FOLDER,
   DELETE_SUBFOLDER,
 } from "../types";
 
@@ -152,6 +153,9 @@ export default function (state = initialState, action) {
     // Folders
     case ADD_SUBFOLDER:
       state.data[0].subfolders.push(action.payload);
+      return {...state};
+    case PATCH_FOLDER:
+      state.data[0] = Object.assign({}, state.data[0], action.payload);
       return {...state};
     case DELETE_SUBFOLDER:
       index = state.data[0].subfolders.findIndex((x) => x.id === action.payload);

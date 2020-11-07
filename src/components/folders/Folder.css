@@ -7,7 +7,13 @@
   width: calc( 30% - 2em);
 }
 
-.folder-link{
+.folder-logo-icon{
+  color: #92ceff !important
+}
+.folder:hover{
+  background: #eee;
+}
+.folder-link, .folder-link:hover{
   color: inherit;
 }
 

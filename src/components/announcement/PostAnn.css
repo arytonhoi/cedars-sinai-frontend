@@ -1,5 +1,11 @@
-.post-ann{
-  padding: 2em 3em;
-  border-radius: 0.5em; 
-  width: 50%;
+.ann-input{
+  margin-bottom: 0.5em;
+  width: 100%;
+}
+
+.ann-form-bottom{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

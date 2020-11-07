@@ -10,6 +10,7 @@
     "ckeditor4": "^4.15.0",
     "ckeditor4-react": "^1.2.0",
     "dayjs": "^1.8.11",
+    "html-react-parser": "^0.14.1",
     "react": "^16.8.4",
     "react-app-polyfill": "^1.0.6",
     "react-dom": "^16.8.4",

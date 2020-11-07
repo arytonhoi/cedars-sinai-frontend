@@ -77,9 +77,7 @@ class App extends Component {
       return (
           <Provider store={store}>
             <Router>
-              <div className="container">
-                <Route component={login} />
-              </div>
+              <Route component={login} />
             </Router>
           </Provider>
       );
