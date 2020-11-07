@@ -9,7 +9,17 @@ import { deleteAnnounce, clearErrors } from "../../redux/actions/dataActions";
 class Announcement extends Component {
   render() {
     const now = new Date().getTime();
-    const { index, what, admin } = this.props;
+    const { index, what, admin, showUntil, searchKey } = this.props;
+    var visible = true;
+    if(typeof(searchKey) !== "undefined" && searchKey.length > 0 ){
+      var searchKeyLc = searchKey.toLowerCase()
+      if(
+        what.author.toLowerCase().match(searchKeyLc) === null &&
+        what.title.toLowerCase().match(searchKeyLc) === null &&
+        what.content.toLowerCase().match(searchKeyLc) === null
+      ){visible = false}
+    }
+    if(((now - what.createdTs) < showUntil) && visible){  
     return (
       <label
         className={what.isPinned ? "ann-parent ann-pinned" : "ann-parent"}
@@ -57,14 +67,19 @@ class Announcement extends Component {
         </div>
       </label>
     );
+    } else{return ""}
   }
 }
 
-Announcement.propTypes = {
-  what: PropTypes.object.isRequired,
+const mapStateToProps = (state) => {
+  return {
+  };
 };
 
-const mapStateToProps = (state) => ({});
+Announcement.propTypes = {
+  what: PropTypes.object.isRequired,
+  showUntil: PropTypes.oneOfType([PropTypes.string,PropTypes.number]).isRequired,
+};
 
 export default connect(mapStateToProps, { deleteAnnounce, clearErrors })(
   Announcement

@@ -5,3 +5,25 @@
   background: #fff;
   border-radius: 0.5em; 
 }
+
+.ann-navbar{
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ann-navbar-search{
+  position: relative;
+}
+
+.ann-navbar-search-icon{
+  position: absolute;
+  right: 0.5em;
+  color: #ddd !important;
+}
+
+.ann-navbar-search > input{
+  border: 2px solid #eee;
+  padding: 0.25em 2em 0.25em 0.5em !important;
+}
