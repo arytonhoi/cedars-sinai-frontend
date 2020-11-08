@@ -53,32 +53,21 @@ class genPage extends Component {
       showPostCancelConfirm: false
     })
   }
-  togglePostCancelConfirm = (event) => {
+  toggleStateFlag = (x) => {
     this.setState({
       ...this.state,
-      showPostCancelConfirm: !this.state.showPostCancelConfirm
-    })
-  }
-  toggleRenameConfirm = (event) => {
-    this.setState({
-      ...this.state,
-      showRenameConfirm: !this.state.showRenameConfirm
-    })
-  }
-  toggleDeleteConfirm = (event) => {
-    this.setState({
-      ...this.state,
-      showDeleteConfirm: !this.state.showDeleteConfirm
+      [x]: !this.state[x]
     })
   }
   toggleSelect = (e, x) => {
-    let folders = this.state.selectedFolders
-    let pos = folders.indexOf(x)
+    var folders = this.state.selectedFolders
+    var pos = folders.findIndex(p=>p.id===x.id)
     if(pos >= 0){
       folders = folders.slice(0,pos).concat(folders.slice(pos+1))
-      e.currentTarget.className = "folder folder-normal noselect"
+      x.hit.className = "folder folder-normal noselect"
     }else{
-      folders.push(x)
+      x.hit = e.currentTarget
+      folders.push({...x})
       e.currentTarget.className = "folder folder-selected noselect"
     }
     this.setState({...this.state, selectedFolders: folders})
@@ -87,31 +76,32 @@ class genPage extends Component {
     var folders = this.state.selectedFolders
     folders[e.target.name].title = e.target.value
     this.setState({...this.state, selectedFolders: folders})
-    console.log(folders)
   }
   renameFolders = () => {
     if(this.state.showRenameConfirm){
       var folders = this.state.selectedFolders
       if(folders.length >= 0){
-        folders.map(x=>this.props.updateSubFolder(x.id,{
-          parent: x.parent,
-          title: x.title,
-          content: x.content
-        }))
-        this.setState({...this.state, selectedFolders: []})
+        folders.map(x=>{
+            this.toggleSelect(null,x)
+            this.props.updateSubFolder(x.id,{
+              parent: x.parent,
+              title: x.title,
+              content: x.content
+            })
+          }
+        )
       }
     }
-    this.toggleRenameConfirm()
+    this.setState({...this.state, showRenameConfirm:false, selectedFolders: []})
   }
   deleteFolders = () => {
+    this.setState({...this.state, showDeleteConfirm:false, selectedFolders: []})
     if(this.state.showDeleteConfirm){
       let folders = this.state.selectedFolders
       if(folders.length >= 0){
         folders.map(x=>this.props.deleteFolder(x.id))
-        this.setState({...this.state, selectedFolders: []})
       }
     }
-    this.toggleDeleteConfirm()
   }
   updateEditor = (event) => {
     this.setState({...this.state, editor:event.editor.getData()});
@@ -152,15 +142,15 @@ class genPage extends Component {
               <Button type="danger" onClick={this.clearPost}>Delete Contents</Button>
             </span>
             <span className="button-holder">
-              <Button onClick={this.togglePostCancelConfirm}>Cancel</Button>
+              <Button onClick={()=>this.toggleStateFlag("showPostCancelConfirm")}>Cancel</Button>
               <Button type="primary" onClick={this.saveEditorChanges}>Save Changes</Button>
             </span>
             <Modal
               title={"Cancel changes to your post?"}
               visible={this.state.showPostCancelConfirm}
-              onCancel={this.togglePostCancelConfirm}
+              onCancel={()=>this.toggleStateFlag("showPostCancelConfirm")}
           footer={[
-            <Button key="1" onClick={this.togglePostCancelConfirm}>No</Button>,
+            <Button key="1" onClick={()=>this.toggleStateFlag("showPostCancelConfirm")}>No</Button>,
             <Button key="2" type="primary" onClick={this.togglePostEditable}>Yes, Cancel Changes</Button>,
           ]}
             >
@@ -171,16 +161,16 @@ class genPage extends Component {
         {(this.state.editFolders)?(
           <div className="resources-editbar">
             <span className="button-holder">
-              <Button disabled={this.state.selectedFolders.length === 0} type="danger" onClick={this.toggleDeleteConfirm}>Delete {this.state.selectedFolders.length} Folder{s}</Button>
+              <Button disabled={this.state.selectedFolders.length === 0} type="danger" onClick={()=>this.toggleStateFlag("showDeleteConfirm")}>Delete {this.state.selectedFolders.length} Folder{s}</Button>
               <Button disabled={this.state.selectedFolders.length === 0} onClick={this.toggleFolderEditable}>Move {this.state.selectedFolders.length} Folder{s}</Button>
-              <Button disabled={this.state.selectedFolders.length === 0} onClick={this.toggleRenameConfirm}>Rename {this.state.selectedFolders.length} Folder{s}</Button>
+              <Button disabled={this.state.selectedFolders.length === 0} onClick={()=>this.toggleStateFlag("showRenameConfirm")}>Rename {this.state.selectedFolders.length} Folder{s}</Button>
             </span>
             <Modal
               title="Are you sure?"
               visible={this.state.showDeleteConfirm}
-              onCancel={this.toggleDeleteConfirm}
+              onCancel={()=>this.toggleStateFlag("showDeleteConfirm")}
           footer={[
-            <Button key="1" onClick={this.toggleDeleteConfirm}>No</Button>,
+            <Button key="1" onClick={()=>this.toggleStateFlag("showDeleteConfirm")}>No</Button>,
             <Button key="2" type="danger" onClick={this.deleteFolders}>Yes, delete folder{s}</Button>,
           ]}
             >
@@ -195,14 +185,14 @@ class genPage extends Component {
             <Modal
               title={"Rename folder"+s}
               visible={this.state.showRenameConfirm}
-              onCancel={this.toggleRenameConfirm}
+              onCancel={()=>this.toggleStateFlag("showRenameConfirm")}
           footer={[
-            <Button key="1" onClick={this.toggleRenameConfirm}>Cancel</Button>,
+            <Button key="1" onClick={()=>this.toggleStateFlag("showRenameConfirm")}>Cancel</Button>,
             <Button key="2" type="primary" onClick={this.renameFolders}>Rename</Button>,
           ]}
             >
               {this.state.selectedFolders.map((x,i,a)=>(
-                <input className="full-width" type="text" value={x.title} name={i} onChange={this.renameFolderCallback}/>  
+                <input key={i} className="full-width" type="text" value={x.title} name={i} onChange={this.renameFolderCallback}/>  
               ))}
             </Modal>
             <span className="button-holder">
