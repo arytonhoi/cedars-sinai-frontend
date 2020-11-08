@@ -74,7 +74,7 @@ class login extends Component {
               value={this.state.password}
               onChange={this.handleTextChange}
             />
-
+            <p className="errors noselect"></p>
             <span
               className="pw-toggle valign noselect"
               onClick={this.togglePwField}
@@ -82,20 +82,20 @@ class login extends Component {
               {(this.state.showPw)?(<EyeInvisibleOutlined />):(<EyeOutlined />)}
             </span>
           </div>
-          <p className="errors noselect">{
-            (errors.length > 0)?(errors.pop().general):(<br/>)
-          }</p>
           <Button
             type="primary"
             variant="contained"
             style={{width: "100%"}}
-            className="button"
+            className="login-button"
             disabled={loading}
             onClick={this.handleSubmit}
           >
             Sign In
             {loading && (<Spin className="button-spinner halign" />)}
           </Button>
+          <p className="errors pw-errors noselect">{
+            (errors.length > 0)?(errors.pop().general):(<br/>)
+          }</p>
           <div className="noselect select-user" onClick={this.handleChange}>
             Sign in as {["staff","admin"][this.state.uid]} instead
           </div>

@@ -1,9 +1,8 @@
 html,
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Roboto', sans-serif !important;
   background-color: rgb(245, 245, 245);
+  font-size: 12px;
 }
 
 .nav-container {
@@ -60,7 +59,7 @@ label, .clickable{
 .errors{
   display: block;
   color: red;
-  font-size: 0.75em;
+  font-size: 0.85em;
 }
 /* Positioning */
 .center{

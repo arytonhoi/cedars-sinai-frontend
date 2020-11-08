@@ -88,6 +88,7 @@ class genPage extends Component {
               title: x.title,
               content: x.content
             })
+            return 0
           }
         )
       }
