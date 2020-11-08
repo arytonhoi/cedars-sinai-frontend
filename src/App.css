@@ -50,8 +50,17 @@ label, .clickable{
   border-radius: 0.5em; 
 }
 
+.full-width{
+  width: 100%;
+}
 .hide{
   display: none;
+}
+
+.errors{
+  display: block;
+  color: red;
+  font-size: 0.75em;
 }
 /* Positioning */
 .center{

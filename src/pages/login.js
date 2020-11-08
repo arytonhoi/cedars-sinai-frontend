@@ -82,7 +82,7 @@ class login extends Component {
               {(this.state.showPw)?(<EyeInvisibleOutlined />):(<EyeOutlined />)}
             </span>
           </div>
-          <p className="pw-errors noselect">{
+          <p className="errors noselect">{
             (errors.length > 0)?(errors.pop().general):(<br/>)
           }</p>
           <Button

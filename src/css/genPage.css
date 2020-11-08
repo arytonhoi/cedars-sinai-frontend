@@ -13,6 +13,10 @@
   align-items: center;
 }
 
+.folder-post{
+  position: relative;
+  overflow-x: scroll;
+}
 .post-topbar{
   display: flex;
   justify-content: flex-end;

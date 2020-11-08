@@ -11,20 +11,35 @@ import { connect } from "react-redux";
 class Folder extends Component {
   render() {
     const { label, href } = this.props
-    return(
-      <div className="folder">
-        <a className="folder-link" href={"resources/" + href}>
-          <span className="folder-logo folder-logo-icon"><FolderFilled /></span>
-          <span className="folder-label">{label}</span>
+    if(typeof(href)==="function"){
+      return(
+        <div className="folder folder-normal noselect" onClick={href}>
+          <div className="folder-link">
+            <span className="folder-logo folder-logo-icon">
+              <FolderFilled />
+            </span>
+            <span className="folder-label">{label}</span>
+          </div>
+        </div>
+      );
+    }else{
+      return(
+        <a className="folder folder-normal noselect" href={"resources/" + href}>
+          <div className="folder-link">
+            <span className="folder-logo folder-logo-icon">
+              <FolderFilled />
+            </span>
+            <span className="folder-label">{label}</span>
+          </div>
         </a>
-      </div>
-    );
+      );
+    }
   }
 }
 
 Folder.propTypes = {
   label: PropTypes.string.isRequired,
-  href: PropTypes.string.isRequired,
+  href: PropTypes.oneOfType([PropTypes.string,PropTypes.number,PropTypes.func]).isRequired,
 };
 
 const mapStateToProps = (state) => ({});

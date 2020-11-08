@@ -37,12 +37,6 @@
   right: 0.5em;
 }
 
-.pw-errors{
-  display: block;
-  color: red;
-  font-size: 0.75em;
-}
-
 input[type=text],input[type=password]{
   /* padding: 0.5em 3em; */
 }

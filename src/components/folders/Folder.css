@@ -1,20 +1,36 @@
 .folder{
-  color: black;
-  border: 1px solid gray;
   padding: 0.5em;
   border-radius: 0.5em;
   margin: 0.5em;
   width: calc( 30% - 2em);
 }
 
+.folder-normal{
+  color: black;
+  border: 1px solid gray;
+}
+.folder-normal:hover{
+  background: #f3f3f3;
+}
+
+.folder-selected{
+  background: #e9f0fd;
+  border: 1px solid #4b7ad1;
+  color: #4b7ad1;
+  cursor: pointer;
+}
+.folder-selected:hover{
+  -webkit-box-shadow: inset 0px 0px 100px 100px rgba(248,248,248,0.5);
+  -moz-box-shadow: inset 0px 0px 100px 100px rgba(248,248,248,0.5);
+  box-shadow: inset 0px 0px 100px 100px rgba(248,248,248,0.5);
+}
+
 .folder-logo-icon{
   color: #92ceff !important
 }
-.folder:hover{
-  background: #eee;
-}
-.folder-link, .folder-link:hover{
-  color: inherit;
+
+.folder-normal:hover, .folder-label:hover{
+  color: black !important;
 }
 
 .folder-logo{
