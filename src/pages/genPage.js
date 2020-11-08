@@ -216,14 +216,28 @@ class genPage extends Component {
           <h3>{folders.title}</h3>
         </div>
         <div className="floating-component">
-          <div className="folder-topbar">
-            <h3>Contents</h3>
-            {
-              ( user.credentials.isAdmin && !this.state.editFolders && !this.state.editPost ) ? (
-                <Button type="primary" onClick={this.toggleFolderEditable}>Edit Folders</Button>
-              ):("")
-            }
-          </div>
+          {
+            ( folders.subfolders.length > 0) ?
+            (<div className="folder-topbar">
+              <h3>Contents</h3>
+              {
+                ( user.credentials.isAdmin && !this.state.editFolders && !this.state.editPost ) ? (
+                  <Button type="primary" onClick={this.toggleFolderEditable}>Edit Folders</Button>
+                ):("")
+              }
+            </div>):
+            (
+              ( user.credentials.isAdmin)?
+              (
+                <div className="folder-blank">
+                  <h3>It seems like there are no subfolders</h3>
+                  <h5>You can create subfolders under any folder.</h5>
+                  <AddFolder className="folder-add-blank-override" target={pageName} />
+                </div> 
+              ):
+              ("This is a blank folder")
+            )
+          }
           <div className="folder-holder">
           {
             ( folders.subfolders.length > 0) ? (
@@ -246,10 +260,20 @@ class genPage extends Component {
           }
           </div>
           <hr />
-          {( user.credentials.isAdmin && !this.state.editPost && !this.state.editFolders ) ? (
+          {( user.credentials.isAdmin && !this.state.editPost && !this.state.editFolders && folders.content !=="" ) ? (
             <div className="post-topbar">
               <Button type="primary" onClick={this.togglePostEditable}>Edit Post</Button>
             </div>
+          ):("")}
+          {( folders.content === "" ) ? (
+            (user.credentials.isAdmin && !this.state.editPost && !this.state.editFolders)?
+            (
+              <div className="folder-blank">
+                <h3>It seems like there is no post for this folder yet.</h3>
+                <h5>Start by creating the post.</h5>
+                <Button type="primary" onClick={this.togglePostEditable}>Edit Post</Button>
+              </div>):
+            ("")
           ):("")}
           {(this.state.editPost)?(
             <CKEditor 

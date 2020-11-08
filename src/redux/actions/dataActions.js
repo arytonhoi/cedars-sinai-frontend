@@ -304,7 +304,13 @@ export const createFolder = (folderName,folderDetails) => (dispatch) => {
 
 export const updateFolder = (folderName,folderDetails) => (dispatch) => {
   dispatch({ type: LOADING_UI });
-  axios
+  if(folderName===folderDetails.parent){
+    dispatch({
+      type: SET_ERRORS,
+      payload: {"error":"Cannot move folder into itself."},
+    });
+  }else{
+    axios
     .patch(`/folders/${folderName}`, folderDetails)
     .then((res) => {
       dispatch({
@@ -318,6 +324,7 @@ export const updateFolder = (folderName,folderDetails) => (dispatch) => {
         payload: err.response.data,
       });
     });
+  }
 };
 
 export const updateSubFolder = (folderName,folderDetails) => (dispatch) => {
