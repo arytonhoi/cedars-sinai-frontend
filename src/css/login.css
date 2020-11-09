@@ -43,12 +43,8 @@
   font-size: 0.75em;
 }
 
-<<<<<<< HEAD
 input[type=text],input[type=password]{
   /* padding: 0.5em 3em; */
-=======
-.pw-input{
->>>>>>> e9f7891e3118b73ddaefbdc2a48e0da036f8e353
   width: 70%;
 }
 .button{
