@@ -13,6 +13,18 @@
   align-items: center;
 }
 
+.folder-post{
+  position: relative;
+  overflow-x: scroll;
+}
+
+.folder-blank{
+  display:flex;
+  padding: 5em 0;
+  flex-direction: column;
+  align-items: center;
+}
+
 .post-topbar{
   display: flex;
   justify-content: flex-end;

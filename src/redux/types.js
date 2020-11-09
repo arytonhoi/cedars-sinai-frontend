@@ -30,6 +30,7 @@ export const SEARCH_CONTACTS = "SEARCH_CONTACTS";
 // Folders
 export const ADD_SUBFOLDER = "ADD_SUBFOLDER";
 export const PATCH_FOLDER = "PATCH_FOLDER";
+export const PATCH_SUBFOLDER = "PATCH_SUBFOLDER";
 export const DELETE_SUBFOLDER = "DELETE_SUBFOLDER";
 // Data Handling
 export const SET_DATA_ARRAY = "SET_DATA_ARRAY";

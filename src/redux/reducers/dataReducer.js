@@ -24,6 +24,7 @@ import {
   // Folders
   ADD_SUBFOLDER,
   PATCH_FOLDER,
+  PATCH_SUBFOLDER,
   DELETE_SUBFOLDER,
 } from "../types";
 
@@ -157,9 +158,16 @@ export default function (state = initialState, action) {
     case PATCH_FOLDER:
       state.data[0] = Object.assign({}, state.data[0], action.payload);
       return {...state};
+    case PATCH_SUBFOLDER:
+      let sf = state.data[0].subfolders
+      index = sf.findIndex((x) => x.id === action.payload.id);
+      sf[index] = Object.assign({}, sf[index], action.payload.patch);
+      state.data[0].subfolders = sf;
+      return {...state};
     case DELETE_SUBFOLDER:
-      index = state.data[0].subfolders.findIndex((x) => x.id === action.payload);
-      state.data.splice(index, 1);
+      sf = state.data[0].subfolders
+      index = sf.findIndex((x) => x.id === action.payload);
+      state.data[0].subfolders = sf.slice(0,index).concat(sf.slice(index+1))
       return {...state};
     // Data Handling
     case SET_DATA_ARRAY:

@@ -58,7 +58,7 @@ class login extends Component {
         <div className="logo-box" >
           <img className="logo" src={process.env.PUBLIC_URL + '/logo.png'} alt=""/>
         </div>
-        <form className="login-form center" noValidate>
+        <form className="login-form center" noValidate onSubmit={this.handleSubmit}>
           <p className="login-title">OR Education Portal</p>
           <div className="pw-field-wrapper">
             <span>Enter Password:</span>
@@ -74,7 +74,7 @@ class login extends Component {
               value={this.state.password}
               onChange={this.handleTextChange}
             />
-
+            <p className="errors noselect"></p>
             <span
               className="pw-toggle valign noselect"
               onClick={this.togglePwField}
@@ -82,20 +82,20 @@ class login extends Component {
               {(this.state.showPw)?(<EyeInvisibleOutlined />):(<EyeOutlined />)}
             </span>
           </div>
-          <p className="pw-errors noselect">{
-            (errors.length > 0)?(errors.pop().general):(<br/>)
-          }</p>
           <Button
             type="primary"
             variant="contained"
             style={{width: "100%"}}
-            className="button"
+            className="login-button"
             disabled={loading}
             onClick={this.handleSubmit}
           >
             Sign In
             {loading && (<Spin className="button-spinner halign" />)}
           </Button>
+          <p className="errors pw-errors noselect">{
+            (errors.length > 0)?(errors.pop().general):(<br/>)
+          }</p>
           <div className="noselect select-user" onClick={this.handleChange}>
             Sign in as {["staff","admin"][this.state.uid]} instead
           </div>

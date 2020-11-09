@@ -10,7 +10,7 @@ import {
   // Data Handling
   SET_DATA,
   SET_DATA_ARRAY,
-  POST_DATA,
+//POST_DATA,
   DELETE_DATA,
   // Announcements
   SET_ANNOUNCEMENTS,
@@ -30,6 +30,7 @@ import {
   // Folders
   ADD_SUBFOLDER,
   PATCH_FOLDER,
+  PATCH_SUBFOLDER,
   DELETE_SUBFOLDER,
 
 } from "../types";
@@ -303,7 +304,13 @@ export const createFolder = (folderName,folderDetails) => (dispatch) => {
 
 export const updateFolder = (folderName,folderDetails) => (dispatch) => {
   dispatch({ type: LOADING_UI });
-  axios
+  if(folderName===folderDetails.parent){
+    dispatch({
+      type: SET_ERRORS,
+      payload: {"error":"Cannot move folder into itself."},
+    });
+  }else{
+    axios
     .patch(`/folders/${folderName}`, folderDetails)
     .then((res) => {
       dispatch({
@@ -317,16 +324,17 @@ export const updateFolder = (folderName,folderDetails) => (dispatch) => {
         payload: err.response.data,
       });
     });
+  }
 };
 
-export const removeFolder = (folderName) => (dispatch) => {
+export const updateSubFolder = (folderName,folderDetails) => (dispatch) => {
   dispatch({ type: LOADING_UI });
   axios
-    .delete(`/folders/${folderName}`)
+    .patch(`/folders/${folderName}`, folderDetails)
     .then((res) => {
       dispatch({
-        type: DELETE_SUBFOLDER,
-        payload: `${folderName}`,
+        type: PATCH_SUBFOLDER,
+        payload: {id:folderName, patch:folderDetails},
       });
     })
     .catch((err) => {
@@ -337,16 +345,14 @@ export const removeFolder = (folderName) => (dispatch) => {
     });
 };
 
-export const modifyFolder = (data) => (dispatch) => {
-  dispatch({ type: LOADING_UI });
+export const deleteFolder = (folderName) => (dispatch) => {
   axios
-    .patch("/folders", data)
+    .delete(`/folders/${folderName}`)
     .then((res) => {
       dispatch({
-        type: POST_DATA,
-        payload: res.data,
+        type: DELETE_SUBFOLDER,
+        payload: folderName,
       });
-      dispatch(clearErrors());
     })
     .catch((err) => {
       dispatch({
