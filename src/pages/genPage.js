@@ -263,7 +263,8 @@ class genPage extends Component {
                   <Folder key={x.id} label={x.title}
                     href={
                       ( user.credentials.isAdmin && this.state.editFolders )?
-                      ((e)=>this.toggleSelect(e,x)):(x.id)
+                      ((e)=>this.toggleSelect(e,x)):
+                      ((this.state.editPost)?(()=>0):(x.id))
                     }
                   />
                 )
