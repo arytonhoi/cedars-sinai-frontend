@@ -7,6 +7,9 @@
   margin-right: 0.5em;
 }
 
+.folder-blank > .ant-btn, .folder-blank > .add-blank{
+  margin: 1em;
+}
 .folder-topbar{
   display: flex;
   justify-content: space-between;
