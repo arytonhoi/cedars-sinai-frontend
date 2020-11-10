@@ -24,7 +24,7 @@ class Folder extends Component {
       );
     }else{
       return(
-        <a className="folder folder-normal noselect" href={"resources/" + href}>
+        <a className="folder folder-normal noselect" href={"/resources/" + href}>
           <div className="folder-link">
             <span className="folder-logo folder-logo-icon">
               <FolderFilled />
