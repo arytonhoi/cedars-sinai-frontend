@@ -305,12 +305,12 @@ class ContactPage extends Component {
         </header>
         <Layout style={{ padding: "0 24px 24px" }}>
           <Content
-            className="site-layout-background"
-            style={{
-              // padding: 24,
-              margin: 0,
-              minHeight: 280,
-            }}
+            className="contact-content-container"
+            // style={{
+            //   // padding: 24,
+            //   margin: 0,
+            //   // minHeight: 280,
+            // }}
           >
             {isAdmin && this.state.addingDepartment && (
               <AddDepartmentModal
