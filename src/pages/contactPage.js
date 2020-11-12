@@ -29,7 +29,7 @@ import EditContactModal from "../components/contacts/editContactModal";
 import "../css/contactPage.css";
 
 // Ant design
-import { Layout, Input, Button } from "antd";
+import { Button, Input, Layout, Modal } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 const { Content } = Layout;
 
@@ -56,11 +56,33 @@ class ContactPage extends Component {
       contactEmail: "",
       // search
       searchTerm: "",
-      // idk??
+      // editing
       isEditing: false,
+      visible: false,
+      // errors
       errors: {},
     };
   }
+
+  showModal = () => {
+    this.setState({
+      visible: true,
+    });
+  };
+
+  handleOk = (e) => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
+
+  handleCancel = (e) => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
 
   toggleEditing = () => {
     this.setState({
@@ -103,6 +125,7 @@ class ContactPage extends Component {
   };
 
   handleEditThisContact = (contactId) => {
+    this.showModal();
     const contacts = this.props.data.contacts;
     const contact = contacts.find((c) => c.id === contactId);
     this.setState({
@@ -134,6 +157,7 @@ class ContactPage extends Component {
   };
 
   handleCancelContactChange = (event) => {
+    this.handleCancel();
     this.setState({
       targettedContactId: "",
       addingContact: false,
@@ -211,16 +235,8 @@ class ContactPage extends Component {
     }
   };
 
-  handleSubmit = (event) => {
-    event.preventDefault();
-    const userData = {
-      email: this.state.email,
-      password: this.state.password,
-    };
-    this.props.loginUser(userData, this.props.history);
-  };
-
   handleChange = (event) => {
+    console.log(event)
     this.setState({
       [event.target.name]: event.target.value,
     });
@@ -304,21 +320,27 @@ class ContactPage extends Component {
           </div>
         </header>
         <Layout style={{ padding: "0 24px 24px" }}>
-          <Content
-            className="contact-content-container"
-            // style={{
-            //   // padding: 24,
-            //   margin: 0,
-            //   // minHeight: 280,
-            // }}
-          >
+          <Content className="contact-content-container">
+
+            <EditContactModal
+              visible={isAdmin && this.state.targettedContactId !== ""}
+              // visible={true}
+              contactDepartmentId={this.state.contactDepartmentId}
+              departments={departments}
+              contactName={this.state.contactName}
+              contactImgUrl={this.state.contactImgUrl}
+              contactPhone={this.state.contactPhone}
+              contactEmail={this.state.contactEmail}
+              handleCancelContactChange={this.handleCancelContactChange}
+              handleSubmitContactChange={this.handleSubmitContactChange}
+              handleChange={this.handleChange}
+            />
             {isAdmin && this.state.addingDepartment && (
               <AddDepartmentModal
                 departmentName={this.state.departmentName}
                 handleSubmitNewDepartment={this.handleSubmitNewDepartment}
                 handleCancelDepartmentChange={this.handleCancelDepartmentChange}
                 handleChange={this.handleChange}
-                handleSubmit={this.handleSubmit}
               />
             )}
 
@@ -328,7 +350,6 @@ class ContactPage extends Component {
                 handleSubmitDepartmentChange={this.handleSubmitDepartmentChange}
                 handleCancelDepartmentChange={this.handleCancelDepartmentChange}
                 handleChange={this.handleChange}
-                handleSubmit={this.handleSubmit}
               />
             )}
 
@@ -343,7 +364,6 @@ class ContactPage extends Component {
                 handleSubmitNewContact={this.handleSubmitNewContact}
                 handleCancelContactChange={this.handleCancelContactChange}
                 handleChange={this.handleChange}
-                handleSubmit={this.handleSubmit}
               />
             )}
 
@@ -358,7 +378,6 @@ class ContactPage extends Component {
                 handleSubmitContactChange={this.handleSubmitContactChange}
                 handleCancelContactChange={this.handleCancelContactChange}
                 handleChange={this.handleChange}
-                handleSubmit={this.handleSubmit}
               />
             )}
 

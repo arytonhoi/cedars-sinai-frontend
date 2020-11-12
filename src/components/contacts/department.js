@@ -44,18 +44,18 @@ class Department extends Component {
             <p>{c.email}</p>
           </span>
 
-          {isAdmin && (
+          {isAdmin && this.props.isEditing && (
             <span>
               <Button
                 icon={<EditOutlined />}
                 onClick={() => this.props.handleEditThisContact(c.id)}
                 type="text"
               />
-              {/* <Button
+              <Button
                 icon={<DeleteOutlined />}
                 onClick={() => this.props.handleDeleteContact(c.id)}
                 type="text"
-              /> */}
+              />
             </span>
           )}
         </li>
