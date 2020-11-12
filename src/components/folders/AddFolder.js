@@ -51,12 +51,19 @@ console.log(this.state)
     }
   }
   render() {
+    var style = this.props.format
     return(
-      <div className="folder folder-add noselect">
-        <div className="fit" onClick={this.toggleCreateModal}>
+      <div className={(typeof(style)==='undefined' || style===0)?("folder folder-add noselect"):("add-blank noselect")}>
+        {
+          (typeof(style)==='undefined' || style===0)?
+          (<div className="fit" onClick={this.toggleCreateModal}>
             <span className="folder-logo">+</span>
             <span className="">Create a folder</span>
-        </div>
+          </div>):
+          (<Button type="primary" onClick={this.toggleCreateModal}>
+            <span className="">Create a folder</span>
+          </Button>)
+        }
         {(this.state.showCreateModal)?
         (<form className="folder-create-bg" onSubmit={this.handleSubmit}>
           <div className="folder-create center">          

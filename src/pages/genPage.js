@@ -26,7 +26,7 @@ class genPage extends Component {
       showRenameConfirm: false,
       showDeleteConfirm: false,
       editPost: false,
-      editor: "",
+      editor: null,
       selectedFolders: []
     }
   }
@@ -38,17 +38,19 @@ class genPage extends Component {
     this.props.getFolder(pageName);
     this.setState({...this.state, pagename: pageName})
   }
-  toggleFolderEditable = (event) => {
+  toggleFolderEditable = () => {
     this.setState({
       ...this.state,
       selectedFolders:[],
+      editor: null,
       editFolders: !this.state.editFolders && this.props.user.credentials.isAdmin
     })
   }
-  togglePostEditable = (event) => {
+  togglePostEditable = () => {
     this.setState({
       ...this.state,
       selectedFolders:[],
+      editor: null,
       editPost: !this.state.editPost && this.props.user.credentials.isAdmin,
       showPostCancelConfirm: false
     })
@@ -58,6 +60,11 @@ class genPage extends Component {
       ...this.state,
       [x]: !this.state[x]
     })
+  }
+  maybeShowPostCancelConfirm = () => {
+   (this.state.editor === null)?
+   (this.togglePostEditable()):
+   (this.toggleStateFlag("showPostCancelConfirm"))
   }
   toggleSelect = (e, x) => {
     var folders = this.state.selectedFolders
@@ -107,15 +114,17 @@ class genPage extends Component {
   updateEditor = (event) => {
     this.setState({...this.state, editor:event.editor.getData()});
   };
-  saveEditorChanges = (event) => {
-    this.props.updateFolder(this.state.pagename,{
-      parent: this.props.data.data[0].parent,
-      title: this.props.data.data[0].title,
-      content: this.state.editor
-    });
+  saveEditorChanges = () => {
+    if(this.state.editor !== null){
+      this.props.updateFolder(this.state.pagename,{
+        parent: this.props.data.data[0].parent,
+        title: this.props.data.data[0].title,
+        content: this.state.editor
+      });
+    }
     this.togglePostEditable()
   };
-  clearPost = (event) => {
+  clearPost = () => {
     this.props.updateFolder(this.state.pagename,{
       parent: this.props.data.data[0].parent,
       title: this.props.data.data[0].title,
@@ -138,15 +147,21 @@ class genPage extends Component {
     ) : (
       <div>
         {(this.state.editPost)?(
-          <div className="resources-editbar">
+          <div className="resources-editbar noselect">
             <span className="button-holder">
               <Button type="danger" onClick={this.clearPost}>Delete Contents</Button>
             </span>
             <span className="button-holder">
-              <Button onClick={()=>this.toggleStateFlag("showPostCancelConfirm")}>Cancel</Button>
-              <Button type="primary" onClick={this.saveEditorChanges}>Save Changes</Button>
+              <Button onClick={this.maybeShowPostCancelConfirm}>Cancel</Button>
+              <Button
+                type="primary"
+                disabled={this.state.editor === null || this.state.editor === ""}
+                onClick={this.saveEditorChanges}>
+                Save Changes
+              </Button>
             </span>
             <Modal
+              className="center"
               title={"Cancel changes to your post?"}
               visible={this.state.showPostCancelConfirm}
               onCancel={()=>this.toggleStateFlag("showPostCancelConfirm")}
@@ -160,13 +175,14 @@ class genPage extends Component {
           </div>):("")
         }
         {(this.state.editFolders)?(
-          <div className="resources-editbar">
+          <div className="resources-editbar noselect">
             <span className="button-holder">
               <Button disabled={this.state.selectedFolders.length === 0} type="danger" onClick={()=>this.toggleStateFlag("showDeleteConfirm")}>Delete {this.state.selectedFolders.length} Folder{s}</Button>
               <Button disabled={this.state.selectedFolders.length === 0} onClick={this.toggleFolderEditable}>Move {this.state.selectedFolders.length} Folder{s}</Button>
               <Button disabled={this.state.selectedFolders.length === 0} onClick={()=>this.toggleStateFlag("showRenameConfirm")}>Rename {this.state.selectedFolders.length} Folder{s}</Button>
             </span>
             <Modal
+              className="center"
               title="Are you sure?"
               visible={this.state.showDeleteConfirm}
               onCancel={()=>this.toggleStateFlag("showDeleteConfirm")}
@@ -184,6 +200,7 @@ class genPage extends Component {
               ))} will remove all contents, including files and subfolders within the folder{s}. This action is irreversible.
             </Modal>
             <Modal
+              className="center"
               title={"Rename folder"+s}
               visible={this.state.showRenameConfirm}
               onCancel={()=>this.toggleStateFlag("showRenameConfirm")}
@@ -207,7 +224,7 @@ class genPage extends Component {
             (folders.path.map(
               (x,i) => (
                 (x!=="" && x!=="home")?
-                (<span> / <a href={x}>{x}</a></span>):
+                (<span key={i}> / <a href={x}>{x}</a></span>):
                 ("")
               )
             )):
@@ -218,7 +235,7 @@ class genPage extends Component {
         <div className="floating-component">
           {
             ( folders.subfolders.length > 0) ?
-            (<div className="folder-topbar">
+            (<div className="folder-topbar noselect">
               <h3>Contents</h3>
               {
                 ( user.credentials.isAdmin && !this.state.editFolders && !this.state.editPost ) ? (
@@ -229,10 +246,10 @@ class genPage extends Component {
             (
               ( user.credentials.isAdmin)?
               (
-                <div className="folder-blank">
+                <div className="folder-blank noselect">
                   <h3>It seems like there are no subfolders</h3>
-                  <h5>You can create subfolders under any folder.</h5>
-                  <AddFolder className="folder-add-blank-override" target={pageName} />
+                  <h4>You can create subfolders under any folder.</h4>
+                  <AddFolder target={pageName} format={1} />
                 </div> 
               ):
               ("This is a blank folder")
@@ -246,7 +263,8 @@ class genPage extends Component {
                   <Folder key={x.id} label={x.title}
                     href={
                       ( user.credentials.isAdmin && this.state.editFolders )?
-                      ((e)=>this.toggleSelect(e,x)):(x.id)
+                      ((e)=>this.toggleSelect(e,x)):
+                      ((this.state.editPost)?(()=>0):(x.id))
                     }
                   />
                 )
@@ -254,23 +272,26 @@ class genPage extends Component {
             ):("")
           }
           {
-            ( user.credentials.isAdmin && this.state.editFolders ) ? (
-              <AddFolder target={pageName} />
+            ( user.credentials.isAdmin && this.state.editFolders && folders.subfolders.length > 0 ) ? (
+              <AddFolder target={pageName} format={0} />
             ):("")
           }
           </div>
-          <hr />
+          {
+            ( !user.credentials.isAdmin && (folders.content === "" || folders.subfolders.length < 1) ) ?
+            (""):(<hr />)
+          }
           {( user.credentials.isAdmin && !this.state.editPost && !this.state.editFolders && folders.content !=="" ) ? (
-            <div className="post-topbar">
+            <div className="post-topbar noselect">
               <Button type="primary" onClick={this.togglePostEditable}>Edit Post</Button>
             </div>
           ):("")}
           {( folders.content === "" ) ? (
             (user.credentials.isAdmin && !this.state.editPost && !this.state.editFolders)?
             (
-              <div className="folder-blank">
+              <div className="folder-blank noselect">
                 <h3>It seems like there is no post for this folder yet.</h3>
-                <h5>Start by creating the post.</h5>
+                <h4>Start by creating the post.</h4>
                 <Button type="primary" onClick={this.togglePostEditable}>Edit Post</Button>
               </div>):
             ("")
