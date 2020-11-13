@@ -20,6 +20,15 @@ class EditContactModal extends Component {
         centered={true}
         closable={false}
         footer={[
+          <Button
+            className="modalFooterLeftButton"
+            danger
+            type="primary"
+            key="delete"
+            onClick={() => this.props.handleDeleteContact(this.props.contactId)}
+          >
+            Delete
+          </Button>,
           <Button key="back" onClick={this.props.handleCancelContactChange}>
             Cancel
           </Button>,

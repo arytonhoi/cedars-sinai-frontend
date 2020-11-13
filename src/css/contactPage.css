@@ -1,9 +1,15 @@
+.container {
+  height: 100%;
+  position: relative;
+}
+
 .contactHeader {
   padding: 44px 30px 12px 30px;
   background-color: white;
   margin-bottom: 30px;
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 .contactHeader h1 {
@@ -41,15 +47,24 @@
   height: 100%;
   margin: 0;
   padding: 0;
-  border-radius: 10px;
+  border-radius: 10px 10px 0 0;
   background-color: white;
 }
 
 .contactFooter {
   display: flex;
-  position: relative;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  right: 0;
   padding: 30px;
   background-color: white;
-  margin-bottom: 0;
   justify-content: flex-end;
+  border-top: 1px solid #F0F2F5;
+  border-left: 1px solid #F0F2F5;
+}
+
+.modalFooterLeftButton {
+  display: absolute;
+  left: 0;
 }

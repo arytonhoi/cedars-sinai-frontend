@@ -10,24 +10,35 @@ import "../../css/modal.css";
 // Ant Design
 import { Button, Input, Form, Modal } from "antd";
 
-class AddDepartmentModal extends Component {
+class EditDepartmentModal extends Component {
   render() {
     return (
       <Modal
-        title="Add Department"
+        title="Edit Department Info:"
         visible={this.props.visible}
         centered={true}
         closable={false}
         footer={[
+          <Button
+            className="modalFooterLeftButton"
+            danger
+            type="primary"
+            key="delete"
+            onClick={() =>
+              this.props.handleDeleteDepartment(this.props.departmentId)
+            }
+          >
+            Delete
+          </Button>,
           <Button key="back" onClick={this.props.handleCancelDepartmentChange}>
             Cancel
           </Button>,
           <Button
             key="submit"
             type="primary"
-            onClick={this.props.handleSubmitNewDepartment}
+            onClick={this.props.handleSubmitDepartmentChange}
           >
-            Add
+            Save Changes
           </Button>,
         ]}
       >
@@ -48,7 +59,7 @@ class AddDepartmentModal extends Component {
   }
 }
 
-AddDepartmentModal.propTypes = {
+EditDepartmentModal.propTypes = {
   user: PropTypes.object.isRequired,
 };
 
@@ -58,4 +69,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, {})(AddDepartmentModal);
+export default connect(mapStateToProps, {})(EditDepartmentModal);
