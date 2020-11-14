@@ -4,68 +4,88 @@ import PropTypes from "prop-types";
 // Redux stuff
 import { connect } from "react-redux";
 
+// css
+import "../../css/modal.css";
+
+// Ant Design
+import { Button, Input, Form, Modal, Select } from "antd";
+const { Option } = Select;
+
 class AddContactModal extends Component {
   render() {
     return (
-      <div>
-        <form noValidate onSubmit={this.props.handleSubmit}>
-            <label htmlFor="contactDepartmentId">Department:</label>
-            <select
+      <Modal
+        title="Add New Contact"
+        visible={this.props.visible}
+        centered={true}
+        closable={false}
+        footer={[
+          <Button key="back" onClick={this.props.handleCancelContactChange}>
+            Cancel
+          </Button>,
+          <Button
+            key="submit"
+            type="primary"
+            onClick={this.props.handleSubmitNewContact}
+          >
+            Save Changes
+          </Button>,
+        ]}
+      >
+        <Form layout="vertical">
+          <Form.Item className="requiredInput" label="Department">
+            <Select
               name="contactDepartmentId"
-              onChange={this.props.handleChange}
+              onChange={(departmentId) => {
+                var event = {};
+                var target = {};
+                target.name = "contactDepartmentId";
+                target.value = departmentId;
+                event.target = target;
+                this.props.handleChange(event);
+              }}
               value={this.props.contactDepartmentId}
+              placeholder="Select a department"
             >
               {this.props.departments.map((d) => (
-                <option key={d.id} value={d.id}>
+                <Option key={d.id} value={d.id}>
                   {d.name}
-                </option>
+                </Option>
               ))}
-            </select>
-            <br />
-            <label htmlFor="contactName">Name:</label>
-            <input
+            </Select>
+          </Form.Item>
+          <Form.Item className="requiredInput" label="Name">
+            <Input
               id="contactName"
               name="contactName"
               type="text"
               value={this.props.contactName}
               onChange={this.props.handleChange}
+              placeholder="ex: Jane Doe"
             />
-            <br />
-            <label htmlFor="contactImgUrl">ImgUrl:</label>
-            <input
-              id="contactImgUrl"
-              name="contactImgUrl"
-              type="text"
-              value={this.props.contactImgUrl}
-              onChange={this.props.handleChange}
-            />
-            <br />
-            <label htmlFor="contactPhone">Phone:</label>
-            <input
+          </Form.Item>
+          <Form.Item label="Phone Number">
+            <Input
               id="contactPhone"
               name="contactPhone"
               type="text"
               value={this.props.contactPhone}
               onChange={this.props.handleChange}
+              placeholder="ex: (123) 456 7890"
             />
-            <br />
-            <label htmlFor="contactEmail">Email:</label>
-            <input
+          </Form.Item>
+          <Form.Item className="requiredInput" label="E-mail">
+            <Input
               id="contactEmail"
               name="contactEmail"
               type="text"
               value={this.props.contactEmail}
               onChange={this.props.handleChange}
+              placeholder="ex: janedoe@email.com"
             />
-            <br />
-            <button type="button" onClick={this.props.handleSubmitNewContact}>
-              Create contact!
-            </button>
-            <button type="button" onClick={this.props.handleCancelContactChange}>
-              Cancel
-            </button>
-          </form>
-      </div>
+          </Form.Item>
+        </Form>
+      </Modal>
     );
   }
 }

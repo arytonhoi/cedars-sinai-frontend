@@ -5,43 +5,54 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { deleteAnnounce, clearErrors } from "../../redux/actions/dataActions";
 
+// Ant design
+import { Avatar, Button } from "antd";
+import {
+  EditOutlined,
+  PhoneOutlined,
+  MailOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+
 class ContactList extends Component {
   render() {
     const { credentials } = this.props.user;
     const isAdmin = credentials.isAdmin;
-
     const contacts = this.props.contacts;
-    const contactsMarkup = contacts.map((c) => (
-      <li className="" key={c.id}>
-        <h1>{c.name}</h1>
-        <h3>{c.department}</h3>
-        <p>{c.imageUrl}</p>
-        <p>{c.phone}</p>
-        <p>{c.email}</p>
-        {isAdmin && (
-          <div>
-            <button
-              onClick={this.props.handleEditThisContact}
-              // name="targettedDepartmentId"
-              value={c.id}
-              type="button"
-            >
-              Edit Contact
-            </button>
-            <button
-              onClick={this.props.handleDeleteContact}
-              // name="targettedDepartmentId"
-              value={c.id}
-              type="button"
-            >
-              Delete Contact
-            </button>
-          </div>
-        )}
-      </li>
-    ));
 
-    return <div>{contactsMarkup}</div>;
+    // contacts
+    const contactsListComponent = contacts.map(function (c) {
+      return (
+        <li key={c.id} className="contactRow">
+          <div className="contactImg">
+            {c.imgUrl === "" && <Avatar icon={<UserOutlined />} />}
+            {/* {c.imgUrl === "" && (
+              <Avatar src="../../images/cedars_robot.jpg" />
+            )} */}
+            {c.imgUrl !== "" && <Avatar src={c.imgUrl} />}
+          </div>
+          <h1 className="contactName">{c.name}</h1>
+          <div className="contactPhone">
+            <PhoneOutlined />
+            <p>{c.phone}</p>
+          </div>
+          <span className="contactEmail">
+            <MailOutlined />
+            <p>{c.email}</p>
+          </span>
+
+          {isAdmin && this.props.isEditing && (
+            <Button
+              icon={<EditOutlined />}
+              onClick={() => this.props.handleEditThisContact(c.id)}
+              type="text"
+            />
+          )}
+        </li>
+      );
+    }, this);
+
+    return <ul className="contactList">{contactsListComponent}</ul>;
   }
 }
 

@@ -1,0 +1,22 @@
+.requiredInput .ant-form-item-label::after {
+  display: inline-block;
+  margin-left: 4px;
+  color: #ff4d4f;
+  font-size: 14px;
+  font-family: SimSun, sans-serif;
+  line-height: 1;
+  content: '*';
+}
+
+.ant-row .ant-col.ant-form-item-label {
+  padding-bottom: 2px;
+}
+
+.ant-row.ant-form-item {
+  margin-bottom: 10px;
+}
+
+.ant-modal-footer .modalFooterLeftButton {
+  position: absolute;
+  left: 16px;
+}

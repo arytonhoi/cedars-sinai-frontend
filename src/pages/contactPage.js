@@ -19,9 +19,9 @@ import {
 } from "../redux/actions/dataActions";
 
 // Components
-import Department from "../components/contacts/department";
+import DepartmentSection from "../components/contacts/departmentSection";
 import AddDepartmentModal from "../components/contacts/addDepartmentModal";
-import UpdateDepartmentModal from "../components/contacts/updateDepartmentModal";
+import EditDepartmentModal from "../components/contacts/editDepartmentModal";
 import AddContactModal from "../components/contacts/addContactModal";
 import EditContactModal from "../components/contacts/editContactModal";
 
@@ -29,9 +29,9 @@ import EditContactModal from "../components/contacts/editContactModal";
 import "../css/contactPage.css";
 
 // Ant design
-import { Layout, Input, Button } from "antd";
+import { Button, Input, Layout } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-const { Content } = Layout;
+const { Content, Footer } = Layout;
 
 class ContactPage extends Component {
   componentDidMount() {
@@ -56,8 +56,10 @@ class ContactPage extends Component {
       contactEmail: "",
       // search
       searchTerm: "",
-      // idk??
+      // editing
       isEditing: false,
+      visible: false,
+      // errors
       errors: {},
     };
   }
@@ -149,10 +151,11 @@ class ContactPage extends Component {
     const confirmDeleteContact = window.confirm("Are you sure?");
     if (confirmDeleteContact) {
       this.props.deleteContact(contactId);
+      this.setState({
+        targettedContactId: "",
+        searchTerm: "",
+      });
     }
-    this.setState({
-      searchTerm: "",
-    });
   };
 
   // department functions
@@ -208,16 +211,11 @@ class ContactPage extends Component {
     const confirmDeleteDepartment = window.confirm("Are you sure?");
     if (confirmDeleteDepartment) {
       this.props.deleteDepartment(departmentId);
+      this.setState({
+        targettedDepartmentId: "",
+        departmentName: "",
+      });
     }
-  };
-
-  handleSubmit = (event) => {
-    event.preventDefault();
-    const userData = {
-      email: this.state.email,
-      password: this.state.password,
-    };
-    this.props.loginUser(userData, this.props.history);
   };
 
   handleChange = (event) => {
@@ -242,7 +240,7 @@ class ContactPage extends Component {
       );
 
       return (
-        <Department
+        <DepartmentSection
           key={d.id}
           department={d}
           contacts={departmentContacts}
@@ -261,7 +259,7 @@ class ContactPage extends Component {
     }, this);
 
     return (
-      <div>
+      <div className="container">
         <header className="contactHeader">
           <div className="contactHeaderTitle">
             <h1>Contacts</h1>
@@ -303,70 +301,60 @@ class ContactPage extends Component {
             )}
           </div>
         </header>
-        <Layout style={{ padding: "0 24px 24px" }}>
-          <Content
-            className="site-layout-background"
-            style={{
-              // padding: 24,
-              margin: 0,
-              minHeight: 280,
-            }}
-          >
-            {isAdmin && this.state.addingDepartment && (
-              <AddDepartmentModal
-                departmentName={this.state.departmentName}
-                handleSubmitNewDepartment={this.handleSubmitNewDepartment}
-                handleCancelDepartmentChange={this.handleCancelDepartmentChange}
-                handleChange={this.handleChange}
-                handleSubmit={this.handleSubmit}
-              />
-            )}
+        <Layout className="verticalFillLayout">
+          <Content className="contact-content-container">
+            <AddDepartmentModal
+              visible={isAdmin && this.state.addingDepartment}
+              departmentName={this.state.departmentName}
+              handleSubmitNewDepartment={this.handleSubmitNewDepartment}
+              handleCancelDepartmentChange={this.handleCancelDepartmentChange}
+              handleChange={this.handleChange}
+            />
 
-            {isAdmin && this.state.targettedDepartmentId !== "" && (
-              <UpdateDepartmentModal
-                departmentName={this.state.departmentName}
-                handleSubmitDepartmentChange={this.handleSubmitDepartmentChange}
-                handleCancelDepartmentChange={this.handleCancelDepartmentChange}
-                handleChange={this.handleChange}
-                handleSubmit={this.handleSubmit}
-              />
-            )}
+            <EditDepartmentModal
+              visible={isAdmin && this.state.targettedDepartmentId !== ""}
+              departmentId={this.state.targettedDepartmentId}
+              departmentName={this.state.departmentName}
+              handleSubmitDepartmentChange={this.handleSubmitDepartmentChange}
+              handleCancelDepartmentChange={this.handleCancelDepartmentChange}
+              handleDeleteDepartment={this.handleDeleteDepartment}
+              handleChange={this.handleChange}
+            />
 
-            {isAdmin && this.state.addingContact && (
-              <AddContactModal
-                contactDepartmentId={this.state.contactDepartmentId}
-                departments={departments}
-                contactName={this.state.contactName}
-                contactImgUrl={this.state.contactImgUrl}
-                contactPhone={this.state.contactPhone}
-                contactEmail={this.state.contactEmail}
-                handleSubmitNewContact={this.handleSubmitNewContact}
-                handleCancelContactChange={this.handleCancelContactChange}
-                handleChange={this.handleChange}
-                handleSubmit={this.handleSubmit}
-              />
-            )}
+            <AddContactModal
+              visible={isAdmin && this.state.addingContact}
+              contactDepartmentId={this.state.contactDepartmentId}
+              departments={departments}
+              contactName={this.state.contactName}
+              contactImgUrl={this.state.contactImgUrl}
+              contactPhone={this.state.contactPhone}
+              contactEmail={this.state.contactEmail}
+              handleSubmitNewContact={this.handleSubmitNewContact}
+              handleCancelContactChange={this.handleCancelContactChange}
+              handleChange={this.handleChange}
+            />
 
-            {isAdmin && this.state.targettedContactId !== "" && (
-              <EditContactModal
-                contactDepartmentId={this.state.contactDepartmentId}
-                departments={departments}
-                contactName={this.state.contactName}
-                contactImgUrl={this.state.contactImgUrl}
-                contactPhone={this.state.contactPhone}
-                contactEmail={this.state.contactEmail}
-                handleSubmitContactChange={this.handleSubmitContactChange}
-                handleCancelContactChange={this.handleCancelContactChange}
-                handleChange={this.handleChange}
-                handleSubmit={this.handleSubmit}
-              />
-            )}
+            <EditContactModal
+              visible={isAdmin && this.state.targettedContactId !== ""}
+              contactDepartmentId={this.state.contactDepartmentId}
+              departments={departments}
+              contactId={this.state.targettedContactId}
+              contactName={this.state.contactName}
+              contactImgUrl={this.state.contactImgUrl}
+              contactPhone={this.state.contactPhone}
+              contactEmail={this.state.contactEmail}
+              handleCancelContactChange={this.handleCancelContactChange}
+              handleSubmitContactChange={this.handleSubmitContactChange}
+              handleDeleteContact={this.handleDeleteContact}
+              handleChange={this.handleChange}
+            />
 
             {departmentsListComponent}
           </Content>
+          <Footer style={{ textAlign: 'center' }}>DevelopForGood ©2020</Footer>
         </Layout>
         {isAdmin && this.state.isEditing && (
-          <div className="contactFooter">
+          <header className="contactFooter">
             <Button
               type="primary"
               size={"medium"}
@@ -374,7 +362,7 @@ class ContactPage extends Component {
             >
               Done Editing
             </Button>
-          </div>
+          </header>
         )}
       </div>
     );
