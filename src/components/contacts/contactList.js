@@ -25,8 +25,11 @@ class ContactList extends Component {
       return (
         <li key={c.id} className="contactRow">
           <div className="contactImg">
-            <Avatar icon={<UserOutlined />} />
-            {/* <p>{c.imageUrl}</p> */}
+            {c.imgUrl === "" && <Avatar icon={<UserOutlined />} />}
+            {/* {c.imgUrl === "" && (
+              <Avatar src="../../images/cedars_robot.jpg" />
+            )} */}
+            {c.imgUrl !== "" && <Avatar src={c.imgUrl} />}
           </div>
           <h1 className="contactName">{c.name}</h1>
           <div className="contactPhone">
