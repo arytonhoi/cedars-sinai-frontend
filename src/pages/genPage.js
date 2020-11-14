@@ -133,6 +133,7 @@ class genPage extends Component {
     this.togglePostEditable()
   };
   render() {
+console.log(this.props.data)
     const { UI, data, user } = this.props;
     const pageName = this.props.match.params.pageName;
     const folders = data.data[0];
