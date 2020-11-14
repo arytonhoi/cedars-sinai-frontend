@@ -15,3 +15,8 @@
 .ant-row.ant-form-item {
   margin-bottom: 10px;
 }
+
+.ant-modal-footer .modalFooterLeftButton {
+  position: absolute;
+  left: 16px;
+}

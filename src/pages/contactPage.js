@@ -31,7 +31,7 @@ import "../css/contactPage.css";
 // Ant design
 import { Button, Input, Layout } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-const { Content } = Layout;
+const { Content, Footer } = Layout;
 
 class ContactPage extends Component {
   componentDidMount() {
@@ -301,7 +301,7 @@ class ContactPage extends Component {
             )}
           </div>
         </header>
-        <Layout style={{ padding: "0 24px 24px", height: "100%"}}>
+        <Layout className="verticalFillLayout">
           <Content className="contact-content-container">
             <AddDepartmentModal
               visible={isAdmin && this.state.addingDepartment}
@@ -351,6 +351,7 @@ class ContactPage extends Component {
 
             {departmentsListComponent}
           </Content>
+          <Footer style={{ textAlign: 'center' }}>DevelopForGood ©2020</Footer>
         </Layout>
         {isAdmin && this.state.isEditing && (
           <header className="contactFooter">
