@@ -94,6 +94,7 @@ class AddFolder extends Component {
                   name="title"
                   required
                   placeholder="Name"
+                  maxlength="256"
                   onChange={this.handleChange}
                 />
                 <span className="errors">

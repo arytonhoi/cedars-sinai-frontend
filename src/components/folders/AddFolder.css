@@ -5,7 +5,10 @@
 .folder-add:hover{
   background: #f3f3f3;
 }
-
+.folder-logo{
+  height: 1em;
+  padding: 0 0.5em;
+}
 .fit{
   width: 100%;
 }

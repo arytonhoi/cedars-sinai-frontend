@@ -15,7 +15,7 @@ class Folder extends Component {
       return(
         <div className="folder folder-normal noselect" onClick={href}>
           <div className="folder-link">
-            <span className="folder-logo folder-logo-icon">
+            <span className="folder-logo-icon">
               <FolderFilled />
             </span>
             <span className="folder-label">{label}</span>
@@ -26,7 +26,7 @@ class Folder extends Component {
       return(
         <a className="folder folder-normal noselect" href={"/resources/" + href}>
           <div className="folder-link">
-            <span className="folder-logo folder-logo-icon">
+            <span className="folder-logo-icon">
               <FolderFilled />
             </span>
             <span className="folder-label">{label}</span>

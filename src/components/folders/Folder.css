@@ -1,10 +1,15 @@
 .folder{
-  padding: 0.5em;
+  padding: 0 0.5em;
   border-radius: 0.5em;
   margin: 0.5em;
   width: calc( 30% - 2em);
+  display: flex;
+  align-items: center;
 }
-
+.folder-link{
+  display: flex;
+  align-items: center;
+}
 .folder-normal{
   color: black;
   border: 1px solid gray;
@@ -26,14 +31,15 @@
 }
 
 .folder-logo-icon{
-  color: #92ceff !important
+  color: #92ceff !important;
+}
+.folder-logo-icon > .anticon-folder > svg{
+  width: 2.5em !important;
+  height: 2.5em !important;
+  padding: 0 0.5em;
 }
 
 .folder-normal:hover, .folder-label:hover{
   color: black !important;
 }
 
-.folder-logo{
-  height: 1em;
-  padding: 0 0.5em;
-}

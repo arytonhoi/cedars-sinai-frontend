@@ -36,7 +36,6 @@ if (token) {
   const decodedToken = new JWT(token).parse.payload;
   if (decodedToken.exp * 1000 < Date.now()) {
     store.dispatch(logoutUser());
-    window.location = "/login";
   } else {
     store.dispatch({ type: SET_AUTHENTICATED });
     axios.defaults.headers.common['Authorization'] = token;
