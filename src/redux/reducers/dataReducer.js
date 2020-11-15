@@ -21,7 +21,7 @@ import {
   POST_CONTACT,
   DELETE_CONTACT,
   SEARCH_CONTACTS,
-  POST_IMAGE,
+  // POST_IMAGE,
   // Folders
   ADD_SUBFOLDER,
   PATCH_FOLDER,
@@ -52,12 +52,12 @@ export default function (state = initialState, action) {
         loading: false,
       };
     // Imagess
-    case POST_IMAGE:
-      console.log(action.payload);
-      return {
-        ...state,
-        uploadedImageUrl: action.payload.imgUrl,
-      };
+    // case POST_IMAGE:
+    //   console.log(action.payload);
+    //   return {
+    //     ...state,
+    //     uploadedImageUrl: action.payload.imgUrl,
+    //   };
     // Announcements
     case SET_ANNOUNCEMENTS:
       return {

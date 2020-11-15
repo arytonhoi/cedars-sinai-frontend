@@ -7,12 +7,7 @@ import { deleteAnnounce, clearErrors } from "../../redux/actions/dataActions";
 
 // Ant design
 import { Avatar, Button } from "antd";
-import {
-  EditOutlined,
-  PhoneOutlined,
-  MailOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { EditOutlined, PhoneOutlined, MailOutlined } from "@ant-design/icons";
 
 class ContactList extends Component {
   render() {
@@ -25,10 +20,6 @@ class ContactList extends Component {
       return (
         <li key={c.id} className="contactRow">
           <div className="contactImg">
-            {/* {c.imgUrl === "" && <Avatar icon={<UserOutlined />} />} */}
-            {/* {c.imgUrl === "" && (
-              <Avatar src="https://firebasestorage.googleapis.com/v0/b/fir-db-d2d47.appspot.com/o/cedars_robot_1080x1080.jpg?alt=media&token=0932153f-e1e3-4f47-b419-fd5ae76abd34" />
-            )} */}
             {c.imgUrl !== "" && <Avatar src={c.imgUrl} />}
           </div>
           <h1 className="contactName">{c.name}</h1>
