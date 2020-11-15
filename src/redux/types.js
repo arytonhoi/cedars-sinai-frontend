@@ -12,6 +12,8 @@ export const LOADING_DATA = "LOADING_DATA";
 export const STOP_LOADING_DATA = "STOP_LOADING_DATA";
 export const STOP_LOADING_UI = "STOP_LOADING_UI";
 // Data reducer types
+// Images
+export const POST_IMAGE = "POST_IMAGE";
 // Announcements
 export const SET_ANNOUNCEMENTS = "SET_ANNOUNCEMENTS";
 export const DELETE_ANNOUNCEMENT = "DELETE_ANNOUNCEMENT";

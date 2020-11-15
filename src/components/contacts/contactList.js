@@ -25,9 +25,9 @@ class ContactList extends Component {
       return (
         <li key={c.id} className="contactRow">
           <div className="contactImg">
-            {c.imgUrl === "" && <Avatar icon={<UserOutlined />} />}
+            {/* {c.imgUrl === "" && <Avatar icon={<UserOutlined />} />} */}
             {/* {c.imgUrl === "" && (
-              <Avatar src="../../images/cedars_robot.jpg" />
+              <Avatar src="https://firebasestorage.googleapis.com/v0/b/fir-db-d2d47.appspot.com/o/cedars_robot_1080x1080.jpg?alt=media&token=0932153f-e1e3-4f47-b419-fd5ae76abd34" />
             )} */}
             {c.imgUrl !== "" && <Avatar src={c.imgUrl} />}
           </div>

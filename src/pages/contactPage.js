@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import axios from "axios";
 
 // redux
 import { connect } from "react-redux";
@@ -32,6 +33,8 @@ import "../css/contactPage.css";
 import { Button, Input, Layout } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 const { Content, Footer } = Layout;
+const defaultContactPic = `https://firebasestorage.googleapis.com/v0/b/fir-db-d2d47.appspot.com/o/
+cedars_robot_1080x1080.jpg?alt=media&token=0932153f-e1e3-4f47-b419-fd5ae76abd34`;
 
 class ContactPage extends Component {
   componentDidMount() {
@@ -68,6 +71,28 @@ class ContactPage extends Component {
     this.setState({
       isEditing: !this.state.isEditing,
     });
+  };
+
+  // images
+  handleClickImageUpload = () => {
+    const fileInputDocument = document.getElementById("imageInput");
+    fileInputDocument.click();
+  };
+
+  handleImageChange = (event) => {
+    const image = event.target.files[0];
+    const formData = new FormData();
+    formData.append("image", image, image.name);
+    axios
+      .post(`/images`, formData)
+      .then((res) => {
+        this.setState({
+          contactImgUrl: res.data.imgUrl,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   // contact functions
@@ -131,7 +156,6 @@ class ContactPage extends Component {
     this.props.patchContact(updatedContactId, updatedContact);
     this.setState({
       targettedContactId: "",
-      searchTerm: "",
     });
   };
 
@@ -153,7 +177,6 @@ class ContactPage extends Component {
       this.props.deleteContact(contactId);
       this.setState({
         targettedContactId: "",
-        searchTerm: "",
       });
     }
   };
@@ -219,6 +242,7 @@ class ContactPage extends Component {
   };
 
   handleChange = (event) => {
+    console.log(this.state);
     this.setState({
       [event.target.name]: event.target.value,
     });
@@ -233,9 +257,18 @@ class ContactPage extends Component {
     const isAdmin = credentials.isAdmin;
     const { matchingSearchContacts, departments } = this.props.data;
 
+    // insert default contact pic for contacts w/o avatars
+    const matchingSearchContactsWithImgs = matchingSearchContacts.map((c) => {
+      const contactWithImg = c;
+      if (contactWithImg.imgUrl === "") {
+        contactWithImg.imgUrl = defaultContactPic;
+      }
+      return contactWithImg;
+    });
+
     // departments
     const departmentsListComponent = departments.map(function (d) {
-      const departmentContacts = matchingSearchContacts.filter(
+      const departmentContacts = matchingSearchContactsWithImgs.filter(
         (c) => c.departmentId === d.id
       );
 
@@ -325,12 +358,13 @@ class ContactPage extends Component {
               visible={isAdmin && this.state.addingContact}
               contactDepartmentId={this.state.contactDepartmentId}
               departments={departments}
-              contactName={this.state.contactName}
               contactImgUrl={this.state.contactImgUrl}
               contactPhone={this.state.contactPhone}
               contactEmail={this.state.contactEmail}
               handleSubmitNewContact={this.handleSubmitNewContact}
               handleCancelContactChange={this.handleCancelContactChange}
+              handleClickImageUpload={this.handleClickImageUpload}
+              handleImageChange={this.handleImageChange}
               handleChange={this.handleChange}
             />
 
@@ -346,12 +380,14 @@ class ContactPage extends Component {
               handleCancelContactChange={this.handleCancelContactChange}
               handleSubmitContactChange={this.handleSubmitContactChange}
               handleDeleteContact={this.handleDeleteContact}
+              handleClickImageUpload={this.handleClickImageUpload}
+              handleImageChange={this.handleImageChange}
               handleChange={this.handleChange}
             />
 
             {departmentsListComponent}
           </Content>
-          <Footer style={{ textAlign: 'center' }}>DevelopForGood ©2020</Footer>
+          <Footer style={{ textAlign: "center" }}>DevelopForGood ©2020</Footer>
         </Layout>
         {isAdmin && this.state.isEditing && (
           <header className="contactFooter">

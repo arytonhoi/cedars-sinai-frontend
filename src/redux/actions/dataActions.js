@@ -1,17 +1,19 @@
 import {
   //UI
   LOADING_UI,
-//STOP_LOADING_UI,
+  //STOP_LOADING_UI,
   LOADING_DATA,
-//STOP_LOADING_DATA,
+  //STOP_LOADING_DATA,
   // Errors
   SET_ERRORS,
   CLEAR_ERRORS,
   // Data Handling
   SET_DATA,
   SET_DATA_ARRAY,
-//POST_DATA,
+  //POST_DATA,
   DELETE_DATA,
+  // Images
+  POST_IMAGE,
   // Announcements
   SET_ANNOUNCEMENTS,
   POST_ANNOUNCEMENT,
@@ -27,6 +29,7 @@ import {
   POST_CONTACT,
   DELETE_CONTACT,
   SEARCH_CONTACTS,
+
   // Folders
   ADD_SUBFOLDER,
   PATCH_FOLDER,
@@ -37,6 +40,22 @@ import {
 
 } from "../types";
 import axios from "axios";
+
+// Images
+export const postImage = (formData) => (dispatch) => {
+  // dispatch({ type: LOADING_UI });
+  axios
+    .post(`/images`, formData)
+    .then((res) => {
+      return res.data.imgUrl;
+    })
+    .catch((err) => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: err.response.data,
+      });
+    });
+};
 
 // Announcements
 export const getAnnouncements = () => (dispatch) => {
@@ -116,15 +135,15 @@ export const postDepartment = (newDepartment) => (dispatch) => {
       dispatch(clearErrors());
     })
     .catch((err) => {
-      (typeof(err.response.data)==='undefined')?
-      (dispatch({
-        type: SET_ERRORS,
-        payload: err.response.data,
-      })):
-      (dispatch({
-        type: SET_ERRORS,
-        payload: {'err':'blank payload'},
-      }))
+      typeof err.response.data === "undefined"
+        ? dispatch({
+            type: SET_ERRORS,
+            payload: err.response.data,
+          })
+        : dispatch({
+            type: SET_ERRORS,
+            payload: { err: "blank payload" },
+          });
     });
 };
 
@@ -304,7 +323,7 @@ export const getNavRoute = (folderName) => (dispatch) => {
     .catch((err) => dispatch({ type: SET_ERRORS, payload: err })))
 };
 
-export const createFolder = (folderName,folderDetails) => (dispatch) => {
+export const createFolder = (folderName, folderDetails) => (dispatch) => {
   dispatch({ type: LOADING_UI });
   axios
     .post(`/folders/${folderName}`, folderDetails)
@@ -322,39 +341,39 @@ export const createFolder = (folderName,folderDetails) => (dispatch) => {
     });
 };
 
-export const updateFolder = (folderName,folderDetails) => (dispatch) => {
+export const updateFolder = (folderName, folderDetails) => (dispatch) => {
   dispatch({ type: LOADING_UI });
-  if(folderName===folderDetails.parent){
+  if (folderName === folderDetails.parent) {
     dispatch({
       type: SET_ERRORS,
-      payload: {"error":"Cannot move folder into itself."},
+      payload: { error: "Cannot move folder into itself." },
     });
-  }else{
+  } else {
     axios
-    .patch(`/folders/${folderName}`, folderDetails)
-    .then((res) => {
-      dispatch({
-        type: PATCH_FOLDER,
-        payload: folderDetails,
+      .patch(`/folders/${folderName}`, folderDetails)
+      .then((res) => {
+        dispatch({
+          type: PATCH_FOLDER,
+          payload: folderDetails,
+        });
+      })
+      .catch((err) => {
+        dispatch({
+          type: SET_ERRORS,
+          payload: err.response.data,
+        });
       });
-    })
-    .catch((err) => {
-      dispatch({
-        type: SET_ERRORS,
-        payload: err.response.data,
-      });
-    });
   }
 };
 
-export const updateSubFolder = (folderName,folderDetails) => (dispatch) => {
+export const updateSubFolder = (folderName, folderDetails) => (dispatch) => {
   dispatch({ type: LOADING_UI });
   axios
     .patch(`/folders/${folderName}`, folderDetails)
     .then((res) => {
       dispatch({
         type: PATCH_SUBFOLDER,
-        payload: {id:folderName, patch:folderDetails},
+        payload: { id: folderName, patch: folderDetails },
       });
       dispatch({
         type: DELETE_SUBFOLDER,
@@ -396,44 +415,6 @@ export const deletePost = (id) => (dispatch) => {
     .catch((err) => console.log(err));
 };
 
-/*
-// Submit a comment
-export const submitComment = (screamId, commentData) => (dispatch) => {
-  axios
-    .post(`/scream/${screamId}/comment`, commentData)
-    .then((res) => {
-      dispatch({
-        type: SUBMIT_COMMENT,
-        payload: res.data
-      });
-      dispatch(clearErrors());
-    })
-    .catch((err) => {
-      dispatch({
-        type: SET_ERRORS,
-        payload: err.response.data
-      });
-    });
-};
-
-export const getUserData = (userHandle) => (dispatch) => {
-  dispatch({ type: LOADING_DATA });
-  axios
-    .get(`/user/${userHandle}`)
-    .then((res) => {
-      dispatch({
-        type: SET_DATA_ARRAY,
-        payload: res.data.screams
-      });
-    })
-    .catch(() => {
-      dispatch({
-        type: SET_DATA_ARRAY,
-        payload: null
-      });
-    });
-};
-*/
 export const clearErrors = () => (dispatch) => {
   dispatch({ type: CLEAR_ERRORS });
 };

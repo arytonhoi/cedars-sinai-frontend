@@ -8,7 +8,8 @@ import { connect } from "react-redux";
 import "../../css/modal.css";
 
 // Ant Design
-import { Button, Input, Form, Modal, Select } from "antd";
+import { Avatar, Button, Input, Form, Modal, Select } from "antd";
+import { CameraOutlined, EditOutlined } from "@ant-design/icons";
 const { Option } = Select;
 
 class EditContactModal extends Component {
@@ -42,6 +43,23 @@ class EditContactModal extends Component {
         ]}
       >
         <Form layout="vertical">
+          <div className="upload-centered">
+            <input
+              id="imageInput"
+              type="file"
+              hidden="hidden"
+              onChange={this.props.handleImageChange}
+            />
+
+            <Avatar size="large" src={this.props.contactImgUrl} />
+            <Button
+              icon={<EditOutlined />}
+              onClick={this.props.handleClickImageUpload}
+            >
+              Edit photo
+            </Button>
+          </div>
+
           <Form.Item className="requiredInput" label="Department">
             <Select
               name="contactDepartmentId"

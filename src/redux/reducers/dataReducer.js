@@ -21,6 +21,7 @@ import {
   POST_CONTACT,
   DELETE_CONTACT,
   SEARCH_CONTACTS,
+  POST_IMAGE,
   // Folders
   ADD_SUBFOLDER,
   PATCH_FOLDER,
@@ -32,13 +33,14 @@ import {
 } from "../types";
 
 const initialState = {
+  loading: false,
   data: [],
   navpath: {id:"",parent:"",children:[]},
   announcements: [],
   departments: [],
   contacts: [],
   matchingSearchContacts: [],
-  loading: false,
+  uploadedImageUrl: "",
 };
 
 export default function (state = initialState, action) {
@@ -52,6 +54,13 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
+      };
+    // Imagess
+    case POST_IMAGE:
+      console.log(action.payload);
+      return {
+        ...state,
+        uploadedImageUrl: action.payload.imgUrl,
       };
     // Announcements
     case SET_ANNOUNCEMENTS:
@@ -158,20 +167,20 @@ export default function (state = initialState, action) {
     // Folders
     case ADD_SUBFOLDER:
       state.data[0].subfolders.push(action.payload);
-      return {...state};
+      return { ...state };
     case PATCH_FOLDER:
       state.data[0] = Object.assign({}, state.data[0], action.payload);
-      return {...state};
+      return { ...state };
     case PATCH_SUBFOLDER:
-      let sf = state.data[0].subfolders
+      let sf = state.data[0].subfolders;
       index = sf.findIndex((x) => x.id === action.payload.id);
       if(action.payload.patch){
         sf[index] = Object.assign({}, sf[index], action.payload.patch);
       }
       state.data[0].subfolders = sf;
-      return {...state};
+      return { ...state };
     case DELETE_SUBFOLDER:
-      sf = state.data[0].subfolders
+      sf = state.data[0].subfolders;
       index = sf.findIndex((x) => x.id === action.payload);
       state.data[0].subfolders = sf.slice(0,index).concat(sf.slice(index+1))
       return {...state};
@@ -220,6 +229,7 @@ export default function (state = initialState, action) {
         },
         loading: false,
       };
+
     // Data Handling
     case SET_DATA_ARRAY:
       return {
