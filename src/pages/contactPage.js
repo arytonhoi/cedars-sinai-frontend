@@ -15,7 +15,6 @@ import {
   patchContact,
   postContact,
   deleteContact,
-  postImage,
   // search
   getSearchedContacts,
 } from "../redux/actions/dataActions";
@@ -420,8 +419,6 @@ ContactPage.propTypes = {
   postContact: PropTypes.func.isRequired,
   deleteContact: PropTypes.func.isRequired,
   getSearchedContacts: PropTypes.func.isRequired,
-  // images
-  postImage: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -442,7 +439,6 @@ export default connect(mapStateToProps, {
   patchContact,
   postContact,
   deleteContact,
-  postImage,
   // search
   getSearchedContacts,
 })(ContactPage);
