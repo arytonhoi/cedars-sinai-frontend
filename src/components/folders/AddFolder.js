@@ -72,7 +72,7 @@ class AddFolder extends Component {
       >
         {typeof style === "undefined" || style === 0 ? (
           <div className="fit" onClick={this.toggleCreateModal}>
-            <span className="folder-logo">+</span>
+            <span className="folder-logo-plus">+</span>
             <span className="">Create a folder</span>
           </div>
         ) : (
