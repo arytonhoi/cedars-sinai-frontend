@@ -5,7 +5,7 @@
   font-size: 14px;
   font-family: SimSun, sans-serif;
   line-height: 1;
-  content: '*';
+  content: "*";
 }
 
 .ant-row .ant-col.ant-form-item-label {
@@ -19,4 +19,40 @@
 .ant-modal-footer .modalFooterLeftButton {
   position: absolute;
   left: 16px;
+}
+
+.ant-btn-circle.upload-img-circle-btn,
+.ant-avatar.ant-avatar-lg {
+  width: 209px;
+  height: 209px;
+}
+
+.ant-avatar.ant-avatar-lg {
+  box-shadow: 0 0 8px grey;
+}
+
+.ant-btn-circle.upload-img-circle-btn {
+  font-size: 12px;
+  color: rgba(53, 53, 53, 0.65);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.large-anticon svg {
+  width: 33px;
+  height: 33px;
+}
+
+.upload-centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: center; */
+  margin-bottom: 10px;
+}
+
+.upload-centered .ant-btn {
+  margin-top: 10px;
 }
