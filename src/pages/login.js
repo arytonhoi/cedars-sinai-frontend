@@ -68,8 +68,9 @@ class login extends Component {
               className="pw-input"
               type={this.state.showPw ? "text" : "password"}
               style={{
-                padding: "0.5em 0",
-                borderRadius: "0.5em",
+                padding: "0 0",
+                borderRadius: "2px",
+                border: "1px solid #D9D9D9"
               }}
               value={this.state.password}
               onChange={this.handleTextChange}
@@ -79,18 +80,19 @@ class login extends Component {
               className="pw-toggle valign noselect"
               onClick={this.togglePwField}
             >
-              {(this.state.showPw)?(<EyeInvisibleOutlined />):(<EyeOutlined />)}
+              {(this.state.showPw)?(<EyeInvisibleOutlined style={{ fontSize: "1.2em" }} />):
+              (<EyeOutlined style={{ fontSize: "1.2em" }} />)}
             </span>
           </div>
           <Button
             type="primary"
             variant="contained"
-            style={{width: "100%"}}
+            style={{width: "324px"}}
             className="login-button"
             disabled={loading}
             onClick={this.handleSubmit}
           >
-            Sign In
+            Sign in
             {loading && (<Spin className="button-spinner halign" />)}
           </Button>
           <p className="errors pw-errors noselect">{
