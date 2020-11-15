@@ -13,7 +13,7 @@ import {
   //POST_DATA,
   DELETE_DATA,
   // Images
-  POST_IMAGE,
+  // POST_IMAGE,
   // Announcements
   SET_ANNOUNCEMENTS,
   POST_ANNOUNCEMENT,
@@ -42,20 +42,20 @@ import {
 import axios from "axios";
 
 // Images
-export const postImage = (formData) => (dispatch) => {
-  // dispatch({ type: LOADING_UI });
-  axios
-    .post(`/images`, formData)
-    .then((res) => {
-      return res.data.imgUrl;
-    })
-    .catch((err) => {
-      dispatch({
-        type: SET_ERRORS,
-        payload: err.response.data,
-      });
-    });
-};
+// export const postImage = (formData) => (dispatch) => {
+//   // dispatch({ type: LOADING_UI });
+//   axios
+//     .post(`/images`, formData)
+//     .then((res) => {
+//       return res.data.imgUrl;
+//     })
+//     .catch((err) => {
+//       dispatch({
+//         type: SET_ERRORS,
+//         payload: err.response.data,
+//       });
+//     });
+// };
 
 // Announcements
 export const getAnnouncements = () => (dispatch) => {

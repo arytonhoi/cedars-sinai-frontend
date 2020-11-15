@@ -1,5 +1,10 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from "react-router-dom";
 
 // Redux
 import { Provider } from "react-redux";
@@ -18,7 +23,7 @@ import JWT from "./util/jwt.js";
 import axios from "axios";
 
 // Pages
-import SideNav from "./pages/sideNav";
+import SideNav from "./components/layout/sideNav";
 //import home from "./pages/home";
 import genPage from "./pages/genPage";
 import login from "./pages/login";
@@ -28,7 +33,6 @@ import contactPage from "./pages/contactPage";
 
 axios.defaults.baseURL =
   "https://us-central1-fir-db-d2d47.cloudfunctions.net/api";
-// "http://localhost:5000/fir-db-d2d47/us-central1/api";
 
 // Authentication
 const token = localStorage.FBIdToken;
@@ -38,11 +42,10 @@ if (token) {
     store.dispatch(logoutUser());
   } else {
     store.dispatch({ type: SET_AUTHENTICATED });
-    axios.defaults.headers.common['Authorization'] = token;
+    axios.defaults.headers.common["Authorization"] = token;
     store.dispatch(getUserData());
   }
 }
-// console.log(store.getState());
 
 class App extends Component {
   render() {
@@ -51,11 +54,13 @@ class App extends Component {
         <Provider store={store}>
           <Router>
             <Layout style={{ minHeight: "100vh" }}>
-              <SideNav />
+              <SideNav location={this.props.location} />
               <Layout className="site-layout">
                 <Switch>
                   <AuthRoute exact path="/login" component={login} />
-                  <Route exact path="/" component={announcementPage} />
+                  <Route exact path="/">
+                    <Redirect to="/announcements" />
+                  </Route>
                   <Route
                     exact
                     path="/announcements"
@@ -74,11 +79,11 @@ class App extends Component {
       );
     } else {
       return (
-          <Provider store={store}>
-            <Router>
-              <Route component={login} />
-            </Router>
-          </Provider>
+        <Provider store={store}>
+          <Router>
+            <Route component={login} />
+          </Router>
+        </Provider>
       );
     }
   }

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
@@ -16,7 +16,7 @@ import {
 } from "@ant-design/icons";
 
 // Styles
-import "../css/home.css";
+import "../../css/home.css";
 
 const { Sider } = Layout;
 class SideNav extends Component {
@@ -25,7 +25,6 @@ class SideNav extends Component {
   };
 
   onCollapse = (collapsed) => {
-    console.log(collapsed);
     this.setState({ collapsed });
   };
 
@@ -33,6 +32,7 @@ class SideNav extends Component {
     const { credentials } = this.props.user;
     const isAdmin = credentials.isAdmin;
     const { collapsed } = this.state;
+    const { location } = this.props;
     return (
       <Sider
         theme="light"
@@ -42,15 +42,23 @@ class SideNav extends Component {
       >
         <Menu
           theme="light"
-          defaultSelectedKeys={["announcements"]}
+          selectedKeys={[location.pathname.substring(1)]}
           mode="inline"
         >
           <Menu.Item>
-            {
-              (this.state.collapsed)?
-              (<img className="logo" alt="" src={process.env.PUBLIC_URL + '/icon-min.svg'} />):
-              (<img className="logo" alt="" src={process.env.PUBLIC_URL + '/logo.png'} />)
-            }
+            {this.state.collapsed ? (
+              <img
+                className="logo"
+                alt=""
+                src={process.env.PUBLIC_URL + "/icon-min.svg"}
+              />
+            ) : (
+              <img
+                className="logo"
+                alt=""
+                src={process.env.PUBLIC_URL + "/logo.png"}
+              />
+            )}
           </Menu.Item>
           <Menu.Item key="announcements" icon={<NotificationOutlined />}>
             <Link to="/announcements">Announcements</Link>
@@ -85,4 +93,5 @@ SideNav.propTypes = {
 const mapStateToProps = (state) => ({
   user: state.user,
 });
-export default connect(mapStateToProps)(SideNav);
+
+export default withRouter(connect(mapStateToProps)(SideNav));

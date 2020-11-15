@@ -9,7 +9,7 @@ import "../../css/modal.css";
 
 // Ant Design
 import { Avatar, Button, Input, Form, Modal, Select } from "antd";
-import { CameraOutlined, EditOutlined } from "@ant-design/icons";
+import { EditOutlined } from "@ant-design/icons";
 const { Option } = Select;
 
 class EditContactModal extends Component {
