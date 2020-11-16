@@ -60,7 +60,7 @@ class ContactPage extends Component {
       // search
       searchTerm: "",
       // editing
-      isEditing: true,
+      isEditing: false,
       visible: false,
       // errors
       errors: {},

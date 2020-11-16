@@ -98,7 +98,10 @@ class AddContactModal extends Component {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item className="requiredInput" label="Name">
+          <Form.Item
+            className="requiredInput"
+            label="Name"
+          >
             <Input
               id="contactName"
               name="contactName"
