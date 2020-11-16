@@ -5,15 +5,19 @@ import "../css/genPage.css";
 import Folder from "../components/folders/Folder.js";
 import AddFolder from "../components/folders/AddFolder.js";
 
-import { Modal, Button } from "antd";
+import { Menu, Dropdown, Modal, Button } from "antd";
+import { FolderFilled, ArrowLeftOutlined, RightOutlined, DownOutlined } from '@ant-design/icons';
 
 import { connect } from "react-redux";
+import store from "../redux/store";
 import {
   getFolder,
   deleteFolder,
   updateFolder,
   updateSubFolder,
+  getNavRoute,
 } from "../redux/actions/dataActions";
+import { SORT_SUBFOLDER } from "../redux/types";
 
 // Editor
 import CKEditor from "ckeditor4-react";
@@ -30,6 +34,7 @@ class genPage extends Component {
       showPostCancelConfirm: false,
       showRenameConfirm: false,
       showDeleteConfirm: false,
+      showMoveDialog: false,
       editPost: false,
       editor: null,
       selectedFolders: [],
@@ -42,7 +47,11 @@ class genPage extends Component {
     }
     this.props.getFolder(pageName);
     this.setState({ ...this.state, pagename: pageName });
+console.log(this.props)
   }
+  sortSubfolders = (e) => {
+    store.dispatch({ type: SORT_SUBFOLDER, payload: e.key });
+  };
   toggleFolderEditable = () => {
     this.setState({
       ...this.state,
@@ -111,6 +120,29 @@ class genPage extends Component {
       selectedFolders: [],
     });
   };
+  moveFolders = () => {
+    if (this.state.showMoveDialog) {
+      var folders = this.state.selectedFolders;
+      if (folders.length >= 0) {
+        folders.map((x) => {
+          if(this.props.data.navpath.id !== x.id){
+            this.toggleSelect(null, x);
+            this.props.updateSubFolder(x.id, {
+              parent: this.props.data.navpath.id,
+              title: x.title,
+              content: x.content,
+            });
+          }
+          return 0;
+        });
+      }
+    }
+    this.setState({
+      ...this.state,
+      showMoveDialog: false,
+      selectedFolders: [],
+    });
+  };
   deleteFolders = () => {
     this.setState({
       ...this.state,
@@ -146,9 +178,30 @@ class genPage extends Component {
     this.togglePostEditable();
   };
   render() {
+console.log(this.props.data)
+console.log(this.state)
     const { UI, data, user } = this.props;
     const pageName = this.props.match.params.pageName;
     const folders = data.data[0];
+    const menu = (
+      <Menu onClick={(e)=>(this.sortSubfolders(e))}>
+        <Menu.Item key="0">
+          Alphabetical order
+        </Menu.Item>
+        <Menu.Item key="1">
+          Reverse alphabetical order
+        </Menu.Item>
+        <Menu.Item key="2">
+          Most recently added
+        </Menu.Item>
+        <Menu.Item key="3">
+          Least recently added
+        </Menu.Item>
+        <Menu.Item key="4">
+          Most popular
+        </Menu.Item>
+      </Menu>
+    );
     var s = "s";
     if (this.state.selectedFolders.length === 1) {
       s = "";
@@ -224,7 +277,7 @@ class genPage extends Component {
                 </Button>
                 <Button
                   disabled={this.state.selectedFolders.length === 0}
-                  onClick={this.toggleFolderEditable}
+                  onClick={() => this.toggleStateFlag("showMoveDialog")}
                 >
                   Move {this.state.selectedFolders.length} Folder{s}
                 </Button>
@@ -255,12 +308,12 @@ class genPage extends Component {
                 Deleting{" "}
                 {this.state.selectedFolders.map((x, i, a) =>
                   a.length === 1
-                    ? x.title
+                    ? "'" + x.title + "'"
                     : a.length - i === 1
-                    ? " and " + x.title
+                    ? " and '" + x.title + "'"
                     : i < a.length - 2
-                    ? x.title + ", "
-                    : x.title + " "
+                    ? "'" + x.title + "', "
+                    : "'" + x.title + "' "
                 )}{" "}
                 will remove all contents, including files and subfolders within
                 the folder{s}. This action is irreversible.
@@ -292,6 +345,64 @@ class genPage extends Component {
                     onChange={this.renameFolderCallback}
                   />
                 ))}
+              </Modal>
+              <Modal
+                className="move-dialog center noselect"
+                title={
+                  (data.navpath.parent==="")?
+                  ("Move to " + data.navpath.title):
+                  (<div className="move-modal-top">
+                    <ArrowLeftOutlined
+                      onClick={()=>this.props.getNavRoute(data.navpath.parent)} /> 
+                    <span>{"Move to " + data.navpath.title}</span>
+                  </div>)
+                }
+                visible={this.state.showMoveDialog}
+                onCancel={() =>
+                  {this.toggleStateFlag("showMoveDialog");this.props.getNavRoute()}}
+                footer={[
+                  <Button
+                    key="1"
+                    onClick={() => 
+                      {this.toggleStateFlag("showMoveDialog");this.props.getNavRoute()}}
+                  >
+                    Cancel
+                  </Button>,
+                  <Button key="2" type="primary" onClick={this.moveFolders} disabled={data.navpath.id === data.data[0].id}>
+                    {"Move Folder" + s + " Here"}
+                  </Button>,
+                ]}
+              >
+{
+  (data.navpath.children.length===0)?
+  (<div className="navpath-list-empty">
+    <i>This folder has no subfolders</i>
+  </div>):
+  (data.navpath.children.map( (x,i)=>
+    (this.state.selectedFolders.findIndex(p=>(p.id===x.id)) === -1)?
+    (<div className="navpath-list navpath-list-enabled" key={x.id}
+      onClick={()=>this.props.getNavRoute(x.id)}
+     >
+      <span className="navpath-list-left">
+        <FolderFilled/>
+        {x.title}
+      </span>
+      <span className="navpath-list-right">
+        <RightOutlined />
+      </span>
+    </div>):
+    (<div className="navpath-list navpath-list-disabled" key={x.id}>
+      <span className="navpath-list-left">
+        <FolderFilled/>
+        {x.title}
+      </span>
+      <span className="navpath-list-right">
+        <RightOutlined />
+      </span>
+    </div>
+    )
+  ))
+}
               </Modal>
               <span className="button-holder">
                 <Button type="primary" onClick={this.toggleFolderEditable}>
@@ -327,15 +438,22 @@ class genPage extends Component {
             {folders.subfolders.length > 0 ? (
               <div className="folder-topbar noselect">
                 <h3>Contents</h3>
-                {user.credentials.isAdmin &&
-                !this.state.editFolders &&
-                !this.state.editPost ? (
-                  <Button type="primary" onClick={this.toggleFolderEditable}>
-                    Edit Folders
-                  </Button>
-                ) : (
-                  ""
-                )}
+                <div>
+                  <Dropdown overlay={menu}>
+                    <Button>
+                      Order folders by <DownOutlined />
+                    </Button>
+                  </Dropdown>
+                  {user.credentials.isAdmin &&
+                  !this.state.editFolders &&
+                  !this.state.editPost ? (
+                    <Button type="primary" onClick={this.toggleFolderEditable}>
+                      Edit Folders
+                    </Button>
+                  ) : (
+                    ""
+                  )}
+              </div>
               </div>
             ) : user.credentials.isAdmin ? (
               <div className="folder-blank noselect">
@@ -344,7 +462,7 @@ class genPage extends Component {
                 <AddFolder target={pageName} format={1} />
               </div>
             ) : (
-              "This is a blank folder"
+              ""
             )}
             <div className="folder-holder">
               {folders.subfolders.length > 0
@@ -444,6 +562,7 @@ genPage.propTypes = {
   deleteFolder: PropTypes.func.isRequired,
   updateFolder: PropTypes.func.isRequired,
   updateSubFolder: PropTypes.func.isRequired,
+  getNavRoute: PropTypes.func.isRequired,
   data: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   UI: PropTypes.object.isRequired,
@@ -461,4 +580,5 @@ export default connect(mapStateToProps, {
   updateFolder,
   updateSubFolder,
   deleteFolder,
+  getNavRoute,
 })(genPage);

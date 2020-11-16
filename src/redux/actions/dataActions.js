@@ -35,6 +35,9 @@ import {
   PATCH_FOLDER,
   PATCH_SUBFOLDER,
   DELETE_SUBFOLDER,
+  SET_NAV_PATH,
+  RESET_NAV_PATH,
+
 } from "../types";
 import axios from "axios";
 
@@ -298,8 +301,26 @@ export const getFolder = (folderName) => (dispatch) => {
         type: SET_DATA,
         payload: res.data,
       });
+      dispatch({
+        type: SET_NAV_PATH,
+        payload: res.data,
+      });
     })
     .catch((err) => dispatch({ type: SET_ERRORS, payload: err }));
+};
+
+export const getNavRoute = (folderName) => (dispatch) => {
+  (typeof(folderName) === 'undefined')?
+  (dispatch({ type: RESET_NAV_PATH })):
+  (axios
+    .get(`/folders/${folderName}`)
+    .then((res) => {
+      dispatch({
+        type: SET_NAV_PATH,
+        payload: res.data,
+      });
+    })
+    .catch((err) => dispatch({ type: SET_ERRORS, payload: err })))
 };
 
 export const createFolder = (folderName, folderDetails) => (dispatch) => {
@@ -353,6 +374,10 @@ export const updateSubFolder = (folderName, folderDetails) => (dispatch) => {
       dispatch({
         type: PATCH_SUBFOLDER,
         payload: { id: folderName, patch: folderDetails },
+      });
+      dispatch({
+        type: DELETE_SUBFOLDER,
+        payload: folderName,
       });
     })
     .catch((err) => {

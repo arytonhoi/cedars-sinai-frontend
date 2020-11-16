@@ -27,11 +27,15 @@ import {
   PATCH_FOLDER,
   PATCH_SUBFOLDER,
   DELETE_SUBFOLDER,
+  SORT_SUBFOLDER,
+  SET_NAV_PATH,
+  RESET_NAV_PATH,
 } from "../types";
 
 const initialState = {
   loading: false,
   data: [],
+  navpath: {id:"",parent:"",children:[]},
   announcements: [],
   departments: [],
   contacts: [],
@@ -170,14 +174,62 @@ export default function (state = initialState, action) {
     case PATCH_SUBFOLDER:
       let sf = state.data[0].subfolders;
       index = sf.findIndex((x) => x.id === action.payload.id);
-      sf[index] = Object.assign({}, sf[index], action.payload.patch);
+      if(action.payload.patch){
+        sf[index] = Object.assign({}, sf[index], action.payload.patch);
+      }
       state.data[0].subfolders = sf;
       return { ...state };
     case DELETE_SUBFOLDER:
       sf = state.data[0].subfolders;
       index = sf.findIndex((x) => x.id === action.payload);
-      state.data[0].subfolders = sf.slice(0, index).concat(sf.slice(index + 1));
-      return { ...state };
+      state.data[0].subfolders = sf.slice(0,index).concat(sf.slice(index+1))
+      return {...state};
+    case SORT_SUBFOLDER:
+      switch(parseInt(action.payload)){
+        case 0:
+        state.data[0].subfolders.sort((a,b)=>
+          (a.title.toUpperCase()>=b.title.toUpperCase())
+        )
+        break;
+        case 1:
+        state.data[0].subfolders.sort((a,b)=>
+          (a.title.toUpperCase()<b.title.toUpperCase())
+        )
+        break;
+        case 2:
+        state.data[0].subfolders.sort((a,b)=>(a.createdAt<b.createdAt))
+        break;
+        case 3:
+        state.data[0].subfolders.sort((a,b)=>(a.createdAt>=b.createdAt))
+        break;
+        default:
+        state.data[0].subfolders.sort((a,b)=>(a.id>=b.id))
+        break;
+      }
+      return {...state};
+    case SET_NAV_PATH:
+      return {
+        ...state,
+        navpath: {
+          id:action.payload.id,
+          title:action.payload.title,
+          parent:action.payload.parent,
+          children:action.payload.subfolders
+        },
+        loading: false,
+      };
+    case RESET_NAV_PATH:
+      return {
+        ...state,
+        navpath: {
+          id:state.data[0].id,
+          title:state.data[0].title,
+          parent:state.data[0].parent,
+          children:state.data[0].subfolders
+        },
+        loading: false,
+      };
+
     // Data Handling
     case SET_DATA_ARRAY:
       return {
