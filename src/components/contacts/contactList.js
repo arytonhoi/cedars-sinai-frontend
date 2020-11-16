@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { deleteAnnounce, clearErrors } from "../../redux/actions/dataActions";
 
 // Ant design
-import { Avatar, Button } from "antd";
+import { Avatar, Button, Empty } from "antd";
 import { EditOutlined, PhoneOutlined, MailOutlined } from "@ant-design/icons";
 
 class ContactList extends Component {
@@ -16,7 +16,7 @@ class ContactList extends Component {
     const contacts = this.props.contacts;
 
     // contacts
-    const contactsListComponent = contacts.map(function (c) {
+    const contactsListComponent = contacts.map((c) => {
       return (
         <li key={c.id} className="contactRow">
           <div className="contactImg">
@@ -29,7 +29,8 @@ class ContactList extends Component {
           </div>
           <span className="contactEmail">
             <MailOutlined />
-            <p>{c.email}</p>
+            {/* <p href={`mailto:${c.email}`}>{c.email}</p> */}
+            <a href={`mailto:${c.email}`}>{c.email}</a>
           </span>
 
           {isAdmin && this.props.isEditing && (
@@ -43,7 +44,11 @@ class ContactList extends Component {
       );
     }, this);
 
-    return <ul className="contactList">{contactsListComponent}</ul>;
+    return contacts.length !== 0 ? (
+      <ul className="contactList">{contactsListComponent}</ul>
+    ) : (
+      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+    );
   }
 }
 

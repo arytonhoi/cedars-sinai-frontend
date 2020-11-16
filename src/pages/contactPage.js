@@ -60,7 +60,7 @@ class ContactPage extends Component {
       // search
       searchTerm: "",
       // editing
-      isEditing: false,
+      isEditing: true,
       visible: false,
       // errors
       errors: {},
@@ -242,7 +242,6 @@ class ContactPage extends Component {
   };
 
   handleChange = (event) => {
-    console.log(this.state);
     this.setState({
       [event.target.name]: event.target.value,
     });
@@ -267,11 +266,10 @@ class ContactPage extends Component {
     });
 
     // departments
-    const departmentsListComponent = departments.map(function (d) {
+    const departmentsListComponent = departments.map((d) => {
       const departmentContacts = matchingSearchContactsWithImgs.filter(
         (c) => c.departmentId === d.id
       );
-
       return (
         <DepartmentSection
           key={d.id}
@@ -327,9 +325,9 @@ class ContactPage extends Component {
               <Button
                 type="primary"
                 size={"medium"}
-                onClick={() => this.handleAddNewDepartment()}
+                onClick={() => this.toggleEditing()}
               >
-                Add Department
+                Done Editing
               </Button>
             )}
           </div>
@@ -384,22 +382,21 @@ class ContactPage extends Component {
               handleImageChange={this.handleImageChange}
               handleChange={this.handleChange}
             />
-
+            {isAdmin && this.state.isEditing && (
+              <div style={{ textAlign: "right", padding: " 10px 20px" }}>
+                <Button
+                  type="primary"
+                  size={"medium"}
+                  onClick={() => this.handleAddNewDepartment()}
+                >
+                  Add Department
+                </Button>
+              </div>
+            )}
             {departmentsListComponent}
           </Content>
           <Footer style={{ textAlign: "center" }}>DevelopForGood ©2020</Footer>
         </Layout>
-        {isAdmin && this.state.isEditing && (
-          <header className="contactFooter">
-            <Button
-              type="primary"
-              size={"medium"}
-              onClick={() => this.toggleEditing()}
-            >
-              Done Editing
-            </Button>
-          </header>
-        )}
       </div>
     );
   }

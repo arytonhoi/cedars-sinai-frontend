@@ -39,7 +39,7 @@ class AddDepartmentModal extends Component {
               type="text"
               value={this.props.departmentName}
               onChange={this.props.handleChange}
-              placeholder="ex: Jane Doe"
+              placeholder="ex: Managers"
             />
           </Form.Item>
         </Form>

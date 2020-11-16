@@ -19,40 +19,46 @@ class DepartmentSection extends Component {
     const isAdmin = credentials.isAdmin;
     const department = this.props.department;
 
-    return (
-      <div className="departmentComponent">
-        <header className="departmentHeader">
-          <h2>{department.name}</h2>
+    if (!isAdmin && this.props.contacts.length === 0) {
+      return null;
+    } else {
+      return (
+        <div className="departmentComponent">
+          <header className="departmentHeader">
+            <h2>{department.name}</h2>
+            {isAdmin && this.props.isEditing && (
+              <div className="departmentAndContactButton">
+                <Button
+                  icon={<EditOutlined />}
+                  onClick={() =>
+                    this.props.handleEditThisDepartment(department.id)
+                  }
+                  type="text"
+                />
+              </div>
+            )}
+          </header>
+          <ContactList
+            contacts={this.props.contacts}
+            department={department}
+            isEditing={this.props.isEditing}
+            handleEditThisContact={this.props.handleEditThisContact}
+          />
+
           {isAdmin && this.props.isEditing && (
-            <div className="departmentAndContactButton">
+            <footer className="addContactFooter">
               <Button
-                icon={<EditOutlined />}
-                onClick={() =>
-                  this.props.handleEditThisDepartment(department.id)
-                }
-                type="text"
-              />
-            </div>
+                onClick={() => this.props.handleAddNewContact(department.id)}
+                type="dashed"
+                block
+              >
+                + Add New Contact
+              </Button>
+            </footer>
           )}
-        </header>
-        <ContactList
-          contacts={this.props.contacts}
-          isEditing={this.props.isEditing}
-          handleEditThisContact={this.props.handleEditThisContact}
-        />
-        {isAdmin && this.props.isEditing && (
-          <footer className="addContactFooter">
-            <Button
-              onClick={() => this.props.handleAddNewContact(department.id)}
-              type="dashed"
-              block
-            >
-              + Add New Contact
-            </Button>
-          </footer>
-        )}
-      </div>
-    );
+        </div>
+      );
+    }
   }
 }
 

@@ -59,15 +59,7 @@
   background-color: white;
 }
 
-.contactFooter {
-  display: flex;
-  position: fixed;
-  width: 100%;
-  bottom: 0;
-  right: 0;
-  padding: 30px;
-  background-color: white;
-  justify-content: flex-end;
-  border-top: 1px solid #f0f2f5;
-  border-left: 1px solid #f0f2f5;
+.rightAlignedButton {
+  margin-left: auto;
+  margin-right: 0;
 }
