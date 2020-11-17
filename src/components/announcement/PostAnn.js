@@ -23,7 +23,7 @@ class PostAnn extends Component{
   };
   handleSubmit = (event) => {
     event.preventDefault();
-console.log(this.state.ann)
+    console.log(this.state.ann)
     this.setState({...this.state,ann:{...this.state.ann, isPinned: (this.state.ann.isPinned === "on")}})
     if(this.state.ann.title !== '' && this.state.ann.content !== ''){
       this.props.postAnnouncement(this.state.ann);
@@ -51,10 +51,26 @@ console.log(this.state.ann)
           config={{
             disallowedContent : 'script embed *[on*]',
             removeButtons : "",
-            toolbar : [{
-              name:"Basic",
-              items:["Bold","Italic","Underline","Superscript","Subscript","Link", "Image"]
-            }]
+            // toolbar : [{
+            //   name:"Basic",
+            //   items:["Bold","Italic","Underline","Superscript","Subscript","Link", "Image"]
+            // }]
+            toolbarGroups: [
+              { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+              { name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
+              { name: 'links' },
+              { name: 'insert' },
+              { name: 'forms' },
+              { name: 'tools' },
+              { name: 'document',       groups: [ 'mode', 'document', 'doctools' ] },
+              { name: 'others' },
+              '/',
+              { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+              { name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
+              { name: 'styles' },
+              { name: 'colors' },
+              { name: 'about' }
+            ]
           }}
         />
         <br />
