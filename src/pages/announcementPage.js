@@ -69,6 +69,7 @@ class home extends Component {
       ([p, f], e) => (e.isPinned ? [[...p, e], f] : [p, [...f, e]]),
       [[], []]
     );
+    //console.log( pinned);
     let pinnedAnn = pinned.map((x) =>
       isAdmin || now > x.createdTs ? (
         <Announcement
@@ -99,6 +100,7 @@ class home extends Component {
     );
     return (
       <div>
+        {isAdmin ? <h3>Welcome Back, Admin</h3> : ""}
         {isAdmin ? <PostAnn /> : ""}
         <div className="floating-component shadow">
           <div className="ann-navbar">
