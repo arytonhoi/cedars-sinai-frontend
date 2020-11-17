@@ -62,6 +62,8 @@ class ContactPage extends Component {
       // editing
       isEditing: false,
       visible: false,
+      // image
+      isUploading: false,
       // errors
       errors: {},
     };
@@ -82,12 +84,23 @@ class ContactPage extends Component {
   handleImageChange = (event) => {
     const image = event.target.files[0];
     const formData = new FormData();
+    const reader = new FileReader();
+    reader.addEventListener("load", () =>
+      this.setState({
+        contactImgUrl: reader.result,
+        isUploading: true
+      })
+    , false);
+    if(typeof(image)!== 'undefined'){
+      reader.readAsDataURL(image)
+    }
     formData.append("image", image, image.name);
     axios
       .post(`/images`, formData)
       .then((res) => {
         this.setState({
           contactImgUrl: res.data.imgUrl,
+          isUploading: false
         });
       })
       .catch((err) => {
@@ -359,6 +372,7 @@ class ContactPage extends Component {
               contactImgUrl={this.state.contactImgUrl}
               contactPhone={this.state.contactPhone}
               contactEmail={this.state.contactEmail}
+              isUploading={this.state.isUploading}
               handleSubmitNewContact={this.handleSubmitNewContact}
               handleCancelContactChange={this.handleCancelContactChange}
               handleClickImageUpload={this.handleClickImageUpload}
@@ -375,6 +389,7 @@ class ContactPage extends Component {
               contactImgUrl={this.state.contactImgUrl}
               contactPhone={this.state.contactPhone}
               contactEmail={this.state.contactEmail}
+              isUploading={this.state.isUploading}
               handleCancelContactChange={this.handleCancelContactChange}
               handleSubmitContactChange={this.handleSubmitContactChange}
               handleDeleteContact={this.handleDeleteContact}

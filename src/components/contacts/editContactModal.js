@@ -51,7 +51,7 @@ class EditContactModal extends Component {
               onChange={this.props.handleImageChange}
             />
 
-            <Avatar size="large" src={this.props.contactImgUrl} />
+            <Avatar className={(this.props.isUploading)?("blur"):("noblur")} size="large" src={this.props.contactImgUrl} />
             <Button
               icon={<EditOutlined />}
               onClick={this.props.handleClickImageUpload}
