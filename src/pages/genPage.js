@@ -38,6 +38,8 @@ class genPage extends Component {
       editPost: false,
       editor: null,
       selectedFolders: [],
+      folderMoveCandidate: {start:[0,0],target:null},
+      folderPosList:[[],[]]
     };
   }
   componentDidMount() {
@@ -143,6 +145,27 @@ console.log(this.props)
       selectedFolders: [],
     });
   };
+  folderDragStart = (e) => {
+    var x = document.querySelectorAll(".folder")
+    var arr = this.state.folderPosList
+    x.forEach((a)=>{arr[0].push(a.offsetLeft);arr[1].push(a.offsetTop)})
+    arr = [arr[0].filter((v,i,a)=>a.indexOf(v)===i),arr[1].filter((v,i,a)=>a.indexOf(v)===i)]
+    this.setState({
+      folderMoveCandidate:{start:[e.clientX-e.currentTarget.offsetLeft,e.clientY-e.currentTarget.offsetTop],target:e.currentTarget},
+      folderPosList:arr
+    })
+  }
+  folderDragEnd = (e) => {
+    var x = this.state.folderMoveCandidate.target
+    var y = this.state.folderMoveCandidate.start
+    console.log([e.clientX-y[0],e.clientY-y[1]])
+    var arr = this.state.folderPosList
+    console.log(arr, x)
+    this.setState({
+      folderMoveCandidate:{start:[0,0],target:null},
+      folderPosList:[[],[]]
+    })
+  }
   deleteFolders = () => {
     this.setState({
       ...this.state,
@@ -468,6 +491,8 @@ console.log(this.state)
               {folders.subfolders.length > 0
                 ? folders.subfolders.map((x, i) => (
                     <Folder
+                      onMouseDown={this.folderDragStart}
+                      onMouseUp={this.folderDragEnd}
                       key={x.id}
                       label={x.title}
                       href={
