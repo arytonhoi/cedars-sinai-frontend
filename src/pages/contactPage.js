@@ -27,7 +27,8 @@ import AddContactModal from "../components/contacts/addContactModal";
 import EditContactModal from "../components/contacts/editContactModal";
 
 // css styles
-import "../css/contactPage.css";
+import "../css/layout.css";
+import "../css/input.css";
 
 // Ant design
 import { Button, Input, Layout } from "antd";
@@ -304,14 +305,14 @@ class ContactPage extends Component {
 
     return (
       <div className="container">
-        <header className="contactHeader">
-          <div className="contactHeaderTitle">
+        <header className="page-header">
+          <div className="page-header-title">
             <h1>Contacts</h1>
           </div>
-          <div className="contactSearchDiv">
+          <div className="header-search-items">
             <Input
               style={{ width: 300 }}
-              className="contactSearchInput"
+              className="search-input"
               id="searchTerm"
               name="searchTerm"
               type="text"
@@ -320,7 +321,7 @@ class ContactPage extends Component {
               onChange={this.handleChange}
               suffix={
                 <SearchOutlined
-                  className="contactSearchInputIcon"
+                  className="search-input-icon"
                   style={{ color: "rgba(0,0,0,.45)" }}
                 />
               }
@@ -345,8 +346,8 @@ class ContactPage extends Component {
             )}
           </div>
         </header>
-        <Layout className="verticalFillLayout">
-          <Content className="contact-content-container">
+        <Layout className="vertical-fill-layout">
+          <Content className="content-container">
             <AddDepartmentModal
               visible={isAdmin && this.state.addingDepartment}
               departmentName={this.state.departmentName}

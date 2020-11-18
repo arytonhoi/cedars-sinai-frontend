@@ -1,0 +1,26 @@
+/* PAGE SECTIONS */
+.section-header,
+.padded-section-header {
+  position: relative;
+}
+
+.padded-section-header {
+  padding: 0 16px;
+}
+
+.section-header h2,
+.padded-section-header h2 {
+  display: inline-block;
+}
+
+/* CKEDITOR */
+.ckeditor-content p {
+  color: gray;
+}
+
+.ckeditor-content p {
+  font-size: 13px;
+  font-weight: 400;
+  color: gray;
+  margin-bottom: 0;
+}

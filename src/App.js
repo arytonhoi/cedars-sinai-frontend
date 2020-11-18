@@ -24,7 +24,6 @@ import axios from "axios";
 
 // Pages
 import SideNav from "./components/layout/sideNav";
-//import home from "./pages/home";
 import genPage from "./pages/genPage";
 import login from "./pages/login";
 import logout from "./pages/logout";

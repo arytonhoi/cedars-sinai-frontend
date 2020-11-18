@@ -1,0 +1,30 @@
+/* ============================================================================================== */
+/* SEARCH INPUT STYLES */
+/* ============================================================================================== */
+.header-search-items {
+  position: absolute;
+  right: 25px;
+  display: flex;
+  align-items: center;
+}
+
+.content-search-items {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 18px 0;
+}
+
+.search-input {
+  margin-right: 15px;
+}
+
+.search-input-icon {
+  position: absolute;
+  right: 10px;
+}
+
+.content-search-items .right-aligned {
+  position: absolute;
+  right: 0;
+}

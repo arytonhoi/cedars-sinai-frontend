@@ -12,6 +12,7 @@ import { EditOutlined } from "@ant-design/icons";
 
 // class
 import "./department.css";
+import "../../css/textContent.css";
 
 class DepartmentSection extends Component {
   render() {
@@ -24,7 +25,7 @@ class DepartmentSection extends Component {
     } else {
       return (
         <div className="departmentComponent">
-          <header className="departmentHeader">
+          <header className="padded-section-header">
             <h2>{department.name}</h2>
             {isAdmin && this.props.isEditing && (
               <div className="departmentAndContactButton">
