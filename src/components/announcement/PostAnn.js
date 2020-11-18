@@ -43,14 +43,14 @@ class PostAnn extends Component{
     return (
       <div className="floating-component"><Form novalidate onFinish={this.handleSubmit}>
         <h3>Post New Announcement</h3>
-        <Form.Item rules={[{ required: true, message: 'Please input your name.' }]}>
+        <Form.Item name="author" rules={[{ required: true, message: 'Please input your name.' }]}>
           <Input className="ann-input" name="author" type="text" onChange = { this.handleChange } placeholder="Name" />
         </Form.Item>
-        <Form.Item rules={[{ required: true, message: 'Please input a title.' }]}>
+        <Form.Item name="title" rules={[{ required: true, message: 'Please input a title.' }]}>
           <Input className="ann-input" name="title" type="text" placeholder="Enter a title..." onChange = { this.handleChange } />
         </Form.Item>
-        <Form.Item>
-          <CKEditor 
+        <CKEditor 
+          name="announce"
           data="Share an announcement"
           onChange = { this.updateEditor }
           config={{
@@ -72,8 +72,7 @@ class PostAnn extends Component{
             ]
 
           }}
-          />
-        </Form.Item>
+        />
         <div className="ann-form-bottom">
           <span>Pin post? <input type="checkbox" name="isPinned" onChange = { this.handleChange }/></span>
           <span>
