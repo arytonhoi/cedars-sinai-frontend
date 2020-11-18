@@ -22,7 +22,6 @@ body{
   font-size: 1.7em;
   font-weight: bold;
   color: rgba(0, 0, 0, 0.85);
-
 }
 
 .pw-field-wrapper{
@@ -33,12 +32,13 @@ body{
 .ant-form-row-login{
   align-items: center;
 }
-
+.ant-form-row-login,.ant-form-item-has-error{
+  align-items: flex-start;
+}
 .pw-toggle{
   cursor: pointer;
   right: 0.7em;
   text-align: center;
-  margin-top: 0.36em;
   color: rgba(0, 0, 0, 0.65);
 }
 .pw-errors{
@@ -47,20 +47,13 @@ body{
 }
 
 .pw-input{
-  width: 15.4em;
-  margin-top: 0.4em;
-  margin-left: 0.7em;
-
 }
 .login-button{
-  margin-top: 1.4em;
-  margin-bottom: 0em;
   justify-content: center;
 }
 
 .select-user{
   cursor: pointer;
-  padding-top: 1.3em;
   width: 100%;
   text-align: center;
   color: rgba(0, 0, 0, 0.65);
