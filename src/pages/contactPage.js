@@ -47,6 +47,7 @@ class ContactPage extends Component {
     this.state = {
       // departments
       addingDepartment: false,
+      confirmDeleteDepartment: false,
       targettedDepartmentId: "",
       departmentName: "",
       // contacts
@@ -57,6 +58,7 @@ class ContactPage extends Component {
       contactDepartmentId: "",
       contactPhone: "",
       contactEmail: "",
+      confirmDeleteContact: false,
       // search
       searchTerm: "",
       // editing
@@ -153,6 +155,8 @@ class ContactPage extends Component {
       contactDepartmentId: contact.departmentId,
       contactPhone: contact.phone,
       contactEmail: contact.email,
+      confirmDeleteContact: false,
+      confirmDeleteDepartment: false,
     });
   };
 
@@ -169,6 +173,8 @@ class ContactPage extends Component {
     this.props.patchContact(updatedContactId, updatedContact);
     this.setState({
       targettedContactId: "",
+      confirmDeleteContact: false,
+      confirmDeleteDepartment: false,
     });
   };
 
@@ -181,15 +187,25 @@ class ContactPage extends Component {
       contactDepartmentId: "",
       contactPhone: "",
       contactEmail: "",
+      confirmDeleteContact: false,
+      confirmDeleteDepartment: false,
+    });
+  };
+
+  toggleDeleteContactFlag = () => {
+    this.setState({
+     confirmDeleteContact: !this.state.confirmDeleteContact
     });
   };
 
   handleDeleteContact = (contactId) => {
-    const confirmDeleteContact = window.confirm("Are you sure?");
+    const confirmDeleteContact = true;
     if (confirmDeleteContact) {
       this.props.deleteContact(contactId);
       this.setState({
         targettedContactId: "",
+        confirmDeleteContact: false,
+        confirmDeleteDepartment: false,
       });
     }
   };
@@ -240,18 +256,27 @@ class ContactPage extends Component {
       targettedDepartmentId: "",
       addingDepartment: false,
       departmentName: "",
+      confirmDeleteContact: false,
+      confirmDeleteDepartment: false,
     });
   };
 
   handleDeleteDepartment = (departmentId) => {
-    const confirmDeleteDepartment = window.confirm("Are you sure?");
+    const confirmDeleteDepartment = true;
     if (confirmDeleteDepartment) {
       this.props.deleteDepartment(departmentId);
       this.setState({
         targettedDepartmentId: "",
         departmentName: "",
+        confirmDeleteContact: false,
+        confirmDeleteDepartment: false,
       });
     }
+  };
+  toggleDeleteDepartmentFlag = () => {
+    this.setState({
+     confirmDeleteDepartment: !this.state.confirmDeleteDepartment
+    });
   };
 
   handleChange = (event) => {
@@ -363,6 +388,8 @@ class ContactPage extends Component {
               handleCancelDepartmentChange={this.handleCancelDepartmentChange}
               handleDeleteDepartment={this.handleDeleteDepartment}
               handleChange={this.handleChange}
+              confirmDelete={this.state.confirmDeleteDepartment}
+              toggleDeleteModal={this.toggleDeleteDepartmentFlag}
             />
 
             <AddContactModal
@@ -396,6 +423,8 @@ class ContactPage extends Component {
               handleClickImageUpload={this.handleClickImageUpload}
               handleImageChange={this.handleImageChange}
               handleChange={this.handleChange}
+              confirmDelete={this.state.confirmDeleteContact}
+              toggleDeleteModal={this.toggleDeleteContactFlag}
             />
             {isAdmin && this.state.isEditing && (
               <div style={{ textAlign: "right", padding: " 10px 20px" }}>

@@ -15,6 +15,29 @@ const { Option } = Select;
 class EditContactModal extends Component {
   render() {
     return (
+      <>
+      <Modal
+        title="Confirm Deletion?"
+        visible={this.props.confirmDelete }
+        centered={true}
+        closable={false}
+        footer={[
+          <Button key="back" onClick={this.props.toggleDeleteModal}>
+            Cancel
+          </Button>,
+          <Button
+            key="submit"
+            type="danger"
+            onClick={() =>
+              this.props.handleDeleteContact(this.props.contactId)
+            }
+          >
+            Delete
+          </Button>,
+        ]}
+      >
+        <span>This action cannot be undone.</span>
+      </Modal>
       <Modal
         title="Edit Contact Info"
         visible={this.props.visible}
@@ -26,7 +49,7 @@ class EditContactModal extends Component {
             danger
             type="primary"
             key="delete"
-            onClick={() => this.props.handleDeleteContact(this.props.contactId)}
+            onClick={this.props.toggleDeleteModal}
           >
             Delete
           </Button>,
@@ -122,6 +145,7 @@ class EditContactModal extends Component {
           /> */}
         </Form>
       </Modal>
+      </>
     );
   }
 }

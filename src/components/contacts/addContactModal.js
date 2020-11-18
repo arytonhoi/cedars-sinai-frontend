@@ -77,7 +77,10 @@ class AddContactModal extends Component {
             </div>
           )}
 
-          <Form.Item className="requiredInput" label="Department">
+          <Form.Item
+            name="contactDepartmentId"
+            className="requiredInput"
+            label="Department">
             <Select
               name="contactDepartmentId"
               onChange={(departmentId) => {
@@ -99,6 +102,8 @@ class AddContactModal extends Component {
             </Select>
           </Form.Item>
           <Form.Item
+            name="contactName"
+            rules={[{ required: true, message: 'Please input your name.' }]}
             className="requiredInput"
             label="Name"
           >
@@ -111,21 +116,28 @@ class AddContactModal extends Component {
               placeholder="ex: Jane Doe"
             />
           </Form.Item>
-          <Form.Item label="Phone Number">
+          <Form.Item
+            name="contactPhone"
+            rules={[{ required: true, message: 'Please input your phone number.' }]}
+            label="Phone Number">
             <Input
               id="contactPhone"
               name="contactPhone"
-              type="text"
+              type="phone"
               value={this.props.contactPhone}
               onChange={this.props.handleChange}
               placeholder="ex: (123) 456 7890"
             />
           </Form.Item>
-          <Form.Item className="requiredInput" label="E-mail">
+          <Form.Item
+            className="requiredInput"
+            name="contactEmail"
+            rules={[{ required: true, message: 'Please input your email.' }]}
+            label="E-mail">
             <Input
               id="contactEmail"
               name="contactEmail"
-              type="text"
+              type="email"
               value={this.props.contactEmail}
               onChange={this.props.handleChange}
               placeholder="ex: janedoe@email.com"

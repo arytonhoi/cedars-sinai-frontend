@@ -13,6 +13,29 @@ import { Button, Input, Form, Modal } from "antd";
 class EditDepartmentModal extends Component {
   render() {
     return (
+      <>
+      <Modal
+        title="Confirm Deletion?"
+        visible={this.props.confirmDelete }
+        centered={true}
+        closable={false}
+        footer={[
+          <Button key="back" onClick={this.props.toggleDeleteModal}>
+            Cancel
+          </Button>,
+          <Button
+            key="submit"
+            type="danger"
+            onClick={() =>
+              this.props.handleDeleteDepartment(this.props.departmentId)
+            }
+          >
+            Delete
+          </Button>,
+        ]}
+      >
+        <span>This action cannot be undone.</span>
+      </Modal>
       <Modal
         title="Edit Department Info:"
         visible={this.props.visible}
@@ -24,9 +47,7 @@ class EditDepartmentModal extends Component {
             danger
             type="primary"
             key="delete"
-            onClick={() =>
-              this.props.handleDeleteDepartment(this.props.departmentId)
-            }
+            onClick={this.props.toggleDeleteModal}
           >
             Delete
           </Button>,
@@ -43,7 +64,11 @@ class EditDepartmentModal extends Component {
         ]}
       >
         <Form layout="vertical">
-          <Form.Item className="requiredInput" label="Department Name">
+          <Form.Item
+            name="departmentName"
+            className="requiredInput"
+            rules={[{ required: true, message: 'Department cannot be blank.' }]}
+            label="Department Name">
             <Input
               id="departmentName"
               name="departmentName"
@@ -55,6 +80,7 @@ class EditDepartmentModal extends Component {
           </Form.Item>
         </Form>
       </Modal>
+      </>
     );
   }
 }
