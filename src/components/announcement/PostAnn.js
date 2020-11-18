@@ -78,7 +78,7 @@ class PostAnn extends Component{
           <span>Pin post? <input type="checkbox" name="isPinned" onChange = { this.handleChange }/></span>
           <span>
             <Button onClick={this.props.onCancel}>Cancel</Button>
-            <Button htmlType="submit" className="ann-form-submit" type="primary">Post</Button>
+            <Button disabled={this.state.ann.title==="" || this.state.ann.author==="" || this.state.ann.content==="" } htmlType="submit" className="ann-form-submit" type="primary">Post</Button>
           </span>
         </div>
       </Form></div>
