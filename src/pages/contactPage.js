@@ -304,29 +304,39 @@ class ContactPage extends Component {
     });
 
     // departments
-    const departmentsListComponent = departments.map((d) => {
-      const departmentContacts = matchingSearchContactsWithImgs.filter(
-        (c) => c.departmentId === d.id
-      );
-      return (
-        <DepartmentSection
-          key={d.id}
-          department={d}
-          contacts={departmentContacts}
-          handleEditThisDepartment={this.handleEditThisDepartment}
-          handleDeleteDepartment={this.handleDeleteDepartment}
-          handleAddNewContact={this.handleAddNewContact}
-          handleSubmitNewContact={this.handleSubmitNewContact}
-          handleEditThisContact={this.handleEditThisContact}
-          handleSubmitContactChange={this.handleSubmitContactChange}
-          handleCancelContactChange={this.handleCancelContactChange}
-          handleDeleteContact={this.handleDeleteContact}
-          handleChange={this.handleChange}
-          isEditing={this.state.isEditing}
-        />
-      );
-    }, this);
-
+    var departmentsListComponent
+    if(departments.length > 0){
+      departmentsListComponent = departments.map((d) => {
+        const departmentContacts = matchingSearchContactsWithImgs.filter(
+          (c) => c.departmentId === d.id
+        );
+        return (
+          <DepartmentSection
+            key={d.id}
+            department={d}
+            contacts={departmentContacts}
+            handleEditThisDepartment={this.handleEditThisDepartment}
+            handleDeleteDepartment={this.handleDeleteDepartment}
+            handleAddNewContact={this.handleAddNewContact}
+            handleSubmitNewContact={this.handleSubmitNewContact}
+            handleEditThisContact={this.handleEditThisContact}
+            handleSubmitContactChange={this.handleSubmitContactChange}
+            handleCancelContactChange={this.handleCancelContactChange}
+            handleDeleteContact={this.handleDeleteContact}
+            handleChange={this.handleChange}
+            isEditing={this.state.isEditing}
+          />
+        );
+      }, this);
+      if(!isAdmin && departmentsListComponent.findIndex(x=>x.props.contacts.length > 0) === -1){
+        departmentsListComponent = "No search results were found"
+      }
+    }else{
+      departmentsListComponent = "Zero departments found. "
+      if(isAdmin){
+        departmentsListComponent += "Add some more?"
+      }
+    }
     return (
       <div className="container">
         <header className="contactHeader">
