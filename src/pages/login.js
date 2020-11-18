@@ -54,7 +54,7 @@ class login extends Component {
     } = this.props;
     const { errors } = this.state;
     return (
-      <div className="noselect">
+      <div className="noselect login-root">
         <div className="logo-box" >
           <img className="logo" src={process.env.PUBLIC_URL + '/logo.png'} alt=""/>
         </div>
@@ -80,7 +80,6 @@ class login extends Component {
                 value={this.state.password}
                 onChange={this.handleTextChange}
               />
-              <p className="errors noselect"></p>
               <span
                 className="pw-toggle valign noselect"
                 onClick={this.togglePwField}

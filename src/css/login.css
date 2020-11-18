@@ -1,3 +1,7 @@
+.login-root{
+  background: #fff;
+}
+
 .login-form{
   background: #f3f3f3;
   border-radius: 0.5em;
@@ -12,9 +16,6 @@
   position: absolute;
   left: 1em;
   top: 0.75em;
-}
-
-.logo {
 }
 
 .login-title{
@@ -52,14 +53,14 @@
 
 }
 .login-button{
-  margin-top: 2.4em;
+  margin-top: 1.4em;
   margin-bottom: 0em;
   justify-content: center;
 }
 
 .select-user{
   cursor: pointer;
-  padding-top: 2.3em;
+  padding-top: 1.3em;
   width: 100%;
   text-align: center;
   color: rgba(0, 0, 0, 0.65);
