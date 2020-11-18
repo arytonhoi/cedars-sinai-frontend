@@ -163,8 +163,8 @@ class AnnouncementPage extends Component {
               size="large"
               header={
                 <h2
-                  className="double-padded-content-container section-header"
-                  style={{ marginBottom: "0" }}
+                  className="padded-content-container section-header"
+                  style={{ marginBottom: "0", paddingBottom: "0" }}
                 >
                   Recent Announcements
                 </h2>
