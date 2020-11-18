@@ -118,6 +118,7 @@ class AddContactModal extends Component {
           </Form.Item>
           <Form.Item
             name="contactPhone"
+            className="requiredInput"
             rules={[{ required: true, message: 'Please input your phone number.' }]}
             label="Phone Number">
             <Input

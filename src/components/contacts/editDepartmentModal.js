@@ -63,7 +63,11 @@ class EditDepartmentModal extends Component {
           </Button>,
         ]}
       >
-        <Form layout="vertical">
+        <Form layout="vertical"
+          initialValues={{
+            departmentName:this.props.departmentName
+          }}
+        >
           <Form.Item
             name="departmentName"
             className="requiredInput"
@@ -73,7 +77,6 @@ class EditDepartmentModal extends Component {
               id="departmentName"
               name="departmentName"
               type="text"
-              value={this.props.departmentName}
               onChange={this.props.handleChange}
               placeholder="ex: Managers"
             />

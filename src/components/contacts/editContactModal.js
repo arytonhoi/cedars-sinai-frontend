@@ -65,7 +65,14 @@ class EditContactModal extends Component {
           </Button>,
         ]}
       >
-        <Form layout="vertical">
+        <Form layout="vertical"
+          initialValues={{
+            contactDepartmentId:this.props.contactDepartmentId,
+            contactName:this.props.contactName,
+            contactPhone:this.props.contactPhone,
+            contactEmail:this.props.contactEmail,
+          }}
+        >
           <div className="upload-centered">
             <input
               id="imageInput"
@@ -83,7 +90,10 @@ class EditContactModal extends Component {
             </Button>
           </div>
 
-          <Form.Item className="requiredInput" label="Department">
+          <Form.Item
+            name="contactDepartmentId"
+            className="requiredInput"
+            label="Department">
             <Select
               name="contactDepartmentId"
               onChange={(departmentId) => {
@@ -94,7 +104,6 @@ class EditContactModal extends Component {
                 event.target = target;
                 this.props.handleChange(event);
               }}
-              value={this.props.contactDepartmentId}
               placeholder="Select a department"
             >
               {this.props.departments.map((d) => (
@@ -104,32 +113,42 @@ class EditContactModal extends Component {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item className="requiredInput" label="Name">
+          <Form.Item
+            name="contactName"
+            rules={[{ required: true, message: 'Please input your name.' }]}
+            className="requiredInput"
+            label="Name"
+          >
             <Input
               id="contactName"
               name="contactName"
               type="text"
-              value={this.props.contactName}
               onChange={this.props.handleChange}
               placeholder="ex: Jane Doe"
             />
           </Form.Item>
-          <Form.Item label="Phone Number">
+          <Form.Item
+            name="contactPhone"
+            className="requiredInput"
+            rules={[{ required: true, message: 'Please input your phone number.' }]}
+            label="Phone Number">
             <Input
               id="contactPhone"
               name="contactPhone"
-              type="text"
-              value={this.props.contactPhone}
+              type="phone"
               onChange={this.props.handleChange}
               placeholder="ex: (123) 456 7890"
             />
           </Form.Item>
-          <Form.Item className="requiredInput" label="E-mail">
+          <Form.Item
+            className="requiredInput"
+            name="contactEmail"
+            rules={[{ required: true, message: 'Please input your email.' }]}
+            label="E-mail">
             <Input
               id="contactEmail"
               name="contactEmail"
-              type="text"
-              value={this.props.contactEmail}
+              type="email"
               onChange={this.props.handleChange}
               placeholder="ex: janedoe@email.com"
             />
