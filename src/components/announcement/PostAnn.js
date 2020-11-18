@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './PostAnn.css';
 //import PropTypes from 'prop-types';
 
-import { Button } from "antd";
+import { Form, Input, Button } from "antd";
 
 // Redux stuff
 import { connect } from 'react-redux';
@@ -41,43 +41,47 @@ class PostAnn extends Component{
 //  console.log(this.state);console.log(this.props);
 //we need removeButtons or else underline will be disabled
     return (
-      <form className="floating-component" onSubmit={this.handleSubmit}>
+      <div className="floating-component"><Form novalidate onFinish={this.handleSubmit}>
         <h3>Post New Announcement</h3>
-        <input className="ann-input" name="author" type="text" onChange = { this.handleChange } placeholder="Name" /><br />
-        <input className="ann-input" name="title" type="text" placeholder="Enter a title..." onChange = { this.handleChange } /><br />
-        <CKEditor 
+        <Form.Item rules={[{ required: true, message: 'Please input your name.' }]}>
+          <Input className="ann-input" name="author" type="text" onChange = { this.handleChange } placeholder="Name" />
+        </Form.Item>
+        <Form.Item rules={[{ required: true, message: 'Please input a title.' }]}>
+          <Input className="ann-input" name="title" type="text" placeholder="Enter a title..." onChange = { this.handleChange } />
+        </Form.Item>
+        <Form.Item>
+          <CKEditor 
           data="Share an announcement"
           onChange = { this.updateEditor }
           config={{
             disallowedContent : 'script embed *[on*]',
             removeButtons : "",
-            // toolbar : [{
-            //   name:"Basic",
-            //   items:["Bold","Italic","Underline","Superscript","Subscript","Link", "Image"]
-            // }]
-            toolbar: [
+            toolbarGroups: [
               { name: 'clipboard',groups: [ 'clipboard', 'undo' ] },
               { name: 'editing', groups: [ 'find', 'selection', 'spellchecker' ] },
-              { name: 'links' },
-              { name: 'insert' },
-              { name: 'forms' },
-              { name: 'tools' },
+              { name: 'links', groups: ["links"] },
+              { name: 'insert', groups: ["insert"] },
+              { name: 'forms', groups: ["forms"] },
+              { name: 'tools', groups: ["tools"] },
               { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
-              { name: 'others' },
               '/',
               { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
               { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
-              { name: 'styles' },
-              { name: 'colors' },
+              { name: 'styles', groups: ["styles"] },
+              { name: 'colors', groups: ["colors"] },
             ]
+
           }}
-        />
-        <br />
+          />
+        </Form.Item>
         <div className="ann-form-bottom">
           <span>Pin post? <input type="checkbox" name="isPinned" onChange = { this.handleChange }/></span>
-          <Button className="ann-form-submit" type="primary" variant="contained" onClick={this.handleSubmit}>Post</Button>
+          <span>
+            <Button onClick={this.props.onCancel}>Cancel</Button>
+            <Button htmlType="submit" className="ann-form-submit" type="primary">Post</Button>
+          </span>
         </div>
-      </form>
+      </Form></div>
     )
   }
 }

@@ -54,11 +54,11 @@ class login extends Component {
     } = this.props;
     const { errors } = this.state;
     return (
-      <div className="noselect login-root">
+      <div className="noselect">
         <div className="logo-box" >
           <img className="logo" src={process.env.PUBLIC_URL + '/logo.png'} alt=""/>
         </div>
-        <Form className="login-form center" noValidate onSubmit={this.handleSubmit}>
+        <Form className="login-form center" onSubmit={this.handleSubmit}>
           <p className="login-title">OR Education Portal</p>
           <Form.Item
             className="ant-form-row-login"
@@ -94,7 +94,7 @@ class login extends Component {
             variant="contained"
             style={{width: "100%"}}
             className="login-button"
-            disabled={loading}
+            disabled={loading || this.state.password===""}
             onClick={this.handleSubmit}
           >
             Sign in

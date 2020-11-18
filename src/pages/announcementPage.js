@@ -16,7 +16,8 @@ class home extends Component {
     super();
     this.state = {
       searchKey : "",
-      maxAge : 7776000000
+      maxAge : 7776000000,
+      showCreateAnn : false
     }
   };
   componentDidMount() {
@@ -27,6 +28,9 @@ class home extends Component {
   }
   filterByText = (e) => {
     this.setState({...this.state, searchKey:e.target.value})
+  }
+  togglePostAnn = () => {
+    this.setState({showCreateAnn:!this.state.showCreateAnn})
   }
   render() {
     const menu = (
@@ -100,8 +104,14 @@ class home extends Component {
     );
     return (
       <div>
-        {isAdmin ? <h3>Welcome Back, Admin</h3> : ""}
-        {isAdmin ? <PostAnn /> : ""}
+        {(isAdmin) ?
+         (<div>
+           <h3>Welcome Back, Admin</h3>
+           {this.state.showCreateAnn ? "" : <Button type="primary" onClick={this.togglePostAnn}>Create Announcement</Button>}
+         </div>) :
+         ("")
+        }
+        {(isAdmin&&this.state.showCreateAnn) ? <PostAnn onCancel={this.togglePostAnn} /> : ""}
         <div className="floating-component shadow">
           <div className="ann-navbar">
             <div className="ann-navbar-search">
