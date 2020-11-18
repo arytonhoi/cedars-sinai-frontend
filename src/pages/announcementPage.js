@@ -17,6 +17,7 @@ import "../css/annPage.css";
 import "../css/layout.css";
 import "../css/input.css";
 import "../css/textContent.css";
+import "../components/announcement/Announcement.css"
 
 // Ant design
 import { Button, Dropdown, Input, Layout, List, Menu, Space } from "antd";
