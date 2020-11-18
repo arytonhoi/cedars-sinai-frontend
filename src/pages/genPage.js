@@ -151,16 +151,17 @@ console.log(this.props)
     x.forEach((a)=>{arr[0].push(a.offsetLeft);arr[1].push(a.offsetTop)})
     arr = [arr[0].filter((v,i,a)=>a.indexOf(v)===i),arr[1].filter((v,i,a)=>a.indexOf(v)===i)]
     this.setState({
-      folderMoveCandidate:{start:[e.clientX-e.currentTarget.offsetLeft,e.clientY-e.currentTarget.offsetTop],target:e.currentTarget},
+      folderMoveCandidate:{start:[e.clientX,e.clientY],target:e.currentTarget},
       folderPosList:arr
     })
   }
   folderDragEnd = (e) => {
-    var x = this.state.folderMoveCandidate.target
-    var y = this.state.folderMoveCandidate.start
-    console.log([e.clientX-y[0],e.clientY-y[1]])
+    var x = this.state.folderMoveCandidate
     var arr = this.state.folderPosList
-    console.log(arr, x)
+    var final = [x.target.offsetLeft+e.clientX-x.start[0],x.target.offsetTop+e.clientY-x.start[1]]
+    var pos = [Math.max(arr[0].findIndex(x=>x>final[0])),Math.max(arr[1].findIndex(x=>x>final[1]))]
+    //pos= pos[0] + pos[1]*arr[0].length
+    console.log(arr,final, pos)
     this.setState({
       folderMoveCandidate:{start:[0,0],target:null},
       folderPosList:[[],[]]

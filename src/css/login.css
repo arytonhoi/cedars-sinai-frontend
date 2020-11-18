@@ -1,10 +1,8 @@
 .login-form{
   background: #f3f3f3;
   border-radius: 0.5em;
-  padding:4.6em 2.9em 3.2em 3.2em;
+  padding:4.6em 2.9em 3.2em 3.2em !important;
   text-align: left;
-  width: 29.5em;
-  height: 24.7em;
 }
 
 .logo-box {
@@ -17,8 +15,6 @@
 }
 
 .logo {
-  width: 35.5%;
-  height: 127.5%;
 }
 
 .login-title{
@@ -30,12 +26,11 @@
 
 .pw-field-wrapper{
   position: relative;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
   color: rgba(0, 0, 0, 0.85);
-  font-size: 1em;
-  margin-top: 1.4em;
+}
+
+.ant-form-row-login{
+  align-items: center;
 }
 
 .pw-toggle{
@@ -48,9 +43,6 @@
 .pw-errors{
   width: 100%;
   text-align: center;
-}
-input[type=text],input[type=password]{
-  /* padding: 0.5em 3em; */
 }
 
 .pw-input{
