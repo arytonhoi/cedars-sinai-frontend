@@ -442,19 +442,13 @@ console.log(this.state)
               <span>
                 <a href="/resources">Resources</a>
               </span>
-              {/* {typeof folders.path === "object"
-                ? folders.path.map((x, i) =>
-                    x !== "" && x !== "home" ? (
-                      <span key={i}>
-                        {" "}
-                        / <a href={x}>{x}</a>
-                      </span>
-                    ) : (
-                      ""
-                    )
+              { (typeof(folders.path) === "object")?
+                (folders.path.map((x, i) =>
+                    ((x.id !== "" && x.id !== "home") ?
+                    (<span key={x.id}>{" / "}<a href={x.id}>{x.name}</a></span>):
+                    (""))
                   )
-                : ""} */}
-              <span> / {folders.title}</span>
+                ): ("") }
             </h5>
             <h3>{folders.title}</h3>
           </div>
