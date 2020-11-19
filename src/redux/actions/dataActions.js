@@ -17,6 +17,7 @@ import {
   // Announcements
   SET_ANNOUNCEMENTS,
   POST_ANNOUNCEMENT,
+  PATCH_ANNOUNCEMENT,
   DELETE_ANNOUNCEMENT,
   // Departments
   SET_DEPARTMENTS,
@@ -37,7 +38,6 @@ import {
   DELETE_SUBFOLDER,
   SET_NAV_PATH,
   RESET_NAV_PATH,
-
 } from "../types";
 import axios from "axios";
 
@@ -76,10 +76,10 @@ export const getAnnouncements = () => (dispatch) => {
     });
 };
 
-export const postAnnouncement = (newAnn) => (dispatch) => {
+export const postAnnouncement = (newAnnouncement) => (dispatch) => {
   dispatch({ type: LOADING_UI });
   axios
-    .post("/announcements", newAnn)
+    .post("/announcements", newAnnouncement)
     .then((res) => {
       dispatch({
         type: POST_ANNOUNCEMENT,
@@ -95,7 +95,30 @@ export const postAnnouncement = (newAnn) => (dispatch) => {
     });
 };
 
-export const deleteAnnounce = (id) => (dispatch) => {
+export const patchAnnouncement = (
+  updatedAnnnouncementId,
+  updatedAnnnouncement
+) => (dispatch) => {
+  dispatch({ type: LOADING_UI });
+  axios
+    .patch(`/announcements/${updatedAnnnouncementId}`, updatedAnnnouncement)
+    .then((res) => {
+      updatedAnnnouncement.id = updatedAnnnouncementId;
+      dispatch({
+        type: PATCH_ANNOUNCEMENT,
+        payload: updatedAnnnouncement,
+      });
+      dispatch(clearErrors());
+    })
+    .catch((err) => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: err.response.data,
+      });
+    });
+};
+
+export const deleteAnnouncement = (id) => (dispatch) => {
   axios
     .delete(`/announcements/${id}`)
     .then(() => {
@@ -310,17 +333,17 @@ export const getFolder = (folderName) => (dispatch) => {
 };
 
 export const getNavRoute = (folderName) => (dispatch) => {
-  (typeof(folderName) === 'undefined')?
-  (dispatch({ type: RESET_NAV_PATH })):
-  (axios
-    .get(`/folders/${folderName}`)
-    .then((res) => {
-      dispatch({
-        type: SET_NAV_PATH,
-        payload: res.data,
-      });
-    })
-    .catch((err) => dispatch({ type: SET_ERRORS, payload: err })))
+  typeof folderName === "undefined"
+    ? dispatch({ type: RESET_NAV_PATH })
+    : axios
+        .get(`/folders/${folderName}`)
+        .then((res) => {
+          dispatch({
+            type: SET_NAV_PATH,
+            payload: res.data,
+          });
+        })
+        .catch((err) => dispatch({ type: SET_ERRORS, payload: err }));
 };
 
 export const createFolder = (folderName, folderDetails) => (dispatch) => {

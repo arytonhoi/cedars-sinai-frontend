@@ -9,6 +9,7 @@ import {
   // Announcements
   SET_ANNOUNCEMENTS,
   POST_ANNOUNCEMENT,
+  PATCH_ANNOUNCEMENT,
   DELETE_ANNOUNCEMENT,
   // Departments
   SET_DEPARTMENTS,
@@ -35,13 +36,15 @@ import {
 const initialState = {
   loading: false,
   data: [],
-  navpath: {id:"",parent:"",children:[]},
+  navpath: { id: "", parent: "", children: [] },
   announcements: [],
   departments: [],
   contacts: [],
   matchingSearchContacts: [],
   uploadedImageUrl: "",
 };
+
+var index;
 
 export default function (state = initialState, action) {
   switch (action.type) {
@@ -75,13 +78,25 @@ export default function (state = initialState, action) {
         announcements: [action.payload, ...state.announcements],
         loading: false,
       };
-    case DELETE_ANNOUNCEMENT:
-      let index = state.announcements.findIndex(
-        (x) => x.announcementId === action.payload
-      );
-      state.announcements.splice(index, 1);
+    case PATCH_ANNOUNCEMENT:
+      const updatedAnnouncement = action.payload;
       return {
         ...state,
+        announcements: state.announcements.map((announcement) =>
+          announcement.id === updatedAnnouncement.id
+            ? updatedAnnouncement
+            : announcement
+        ),
+        loading: false,
+      };
+    case DELETE_ANNOUNCEMENT:
+      const deletedAnnouncementId = action.payload;
+      return {
+        ...state,
+        announcements: state.announcements.filter(
+          (announcement) => announcement.id !== deletedAnnouncementId
+        ),
+        loading: false,
       };
     // departments
     case SET_DEPARTMENTS:
@@ -174,7 +189,7 @@ export default function (state = initialState, action) {
     case PATCH_SUBFOLDER:
       let sf = state.data[0].subfolders;
       index = sf.findIndex((x) => x.id === action.payload.id);
-      if(action.payload.patch){
+      if (action.payload.patch) {
         sf[index] = Object.assign({}, sf[index], action.payload.patch);
       }
       state.data[0].subfolders = sf;
@@ -182,39 +197,39 @@ export default function (state = initialState, action) {
     case DELETE_SUBFOLDER:
       sf = state.data[0].subfolders;
       index = sf.findIndex((x) => x.id === action.payload);
-      state.data[0].subfolders = sf.slice(0,index).concat(sf.slice(index+1))
-      return {...state};
+      state.data[0].subfolders = sf.slice(0, index).concat(sf.slice(index + 1));
+      return { ...state };
     case SORT_SUBFOLDER:
-      switch(parseInt(action.payload)){
+      switch (parseInt(action.payload)) {
         case 0:
-        state.data[0].subfolders.sort((a,b)=>
-          (a.title.toUpperCase()>=b.title.toUpperCase())
-        )
-        break;
+          state.data[0].subfolders.sort(
+            (a, b) => a.title.toUpperCase() >= b.title.toUpperCase()
+          );
+          break;
         case 1:
-        state.data[0].subfolders.sort((a,b)=>
-          (a.title.toUpperCase()<b.title.toUpperCase())
-        )
-        break;
+          state.data[0].subfolders.sort(
+            (a, b) => a.title.toUpperCase() < b.title.toUpperCase()
+          );
+          break;
         case 2:
-        state.data[0].subfolders.sort((a,b)=>(a.createdAt<b.createdAt))
-        break;
+          state.data[0].subfolders.sort((a, b) => a.createdAt < b.createdAt);
+          break;
         case 3:
-        state.data[0].subfolders.sort((a,b)=>(a.createdAt>=b.createdAt))
-        break;
+          state.data[0].subfolders.sort((a, b) => a.createdAt >= b.createdAt);
+          break;
         default:
-        state.data[0].subfolders.sort((a,b)=>(a.id>=b.id))
-        break;
+          state.data[0].subfolders.sort((a, b) => a.id >= b.id);
+          break;
       }
-      return {...state};
+      return { ...state };
     case SET_NAV_PATH:
       return {
         ...state,
         navpath: {
-          id:action.payload.id,
-          title:action.payload.title,
-          parent:action.payload.parent,
-          children:action.payload.subfolders
+          id: action.payload.id,
+          title: action.payload.title,
+          parent: action.payload.parent,
+          children: action.payload.subfolders,
         },
         loading: false,
       };
@@ -222,10 +237,10 @@ export default function (state = initialState, action) {
       return {
         ...state,
         navpath: {
-          id:state.data[0].id,
-          title:state.data[0].title,
-          parent:state.data[0].parent,
-          children:state.data[0].subfolders
+          id: state.data[0].id,
+          title: state.data[0].title,
+          parent: state.data[0].parent,
+          children: state.data[0].subfolders,
         },
         loading: false,
       };

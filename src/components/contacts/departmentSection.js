@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 
 // Redux stuff
 import { connect } from "react-redux";
-import { deleteAnnounce, clearErrors } from "../../redux/actions/dataActions";
 import ContactList from "./contactList";
 
 // Ant design
@@ -12,6 +11,7 @@ import { EditOutlined } from "@ant-design/icons";
 
 // class
 import "./department.css";
+import "../../css/textContent.css";
 
 class DepartmentSection extends Component {
   render() {
@@ -24,7 +24,7 @@ class DepartmentSection extends Component {
     } else {
       return (
         <div className="departmentComponent">
-          <header className="departmentHeader">
+          <header className="padded-section-header">
             <h2>{department.name}</h2>
             {isAdmin && this.props.isEditing && (
               <div className="departmentAndContactButton">
@@ -73,6 +73,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { deleteAnnounce, clearErrors })(
-  DepartmentSection
-);
+export default connect(mapStateToProps, {})(DepartmentSection);
