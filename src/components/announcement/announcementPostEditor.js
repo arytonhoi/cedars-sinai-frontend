@@ -106,19 +106,17 @@ class AnnouncementPostEditor extends Component {
                 Delete
               </Button>
             )}
-            {this.props.isEditingExistingAnnouncement && (
-              <Button
-                // className="right-aligned-btn"
-                // style={{ marginRight: "0" }}
-                variant="contained"
-                onClick={() => {
-                  this.props.handleCancelEditAnnouncement();
-                  this.formRef.current.resetFields();
-                }}
-              >
-                Cancel
-              </Button>
-            )}
+            <Button
+              // className="right-aligned-btn"
+              // style={{ marginRight: "0" }}
+              variant="contained"
+              onClick={() => {
+                this.props.handleCancelEditAnnouncement();
+                this.formRef.current.resetFields();
+              }}
+            >
+              Cancel
+            </Button>
             <Button
               className="right-aligned-btn"
               style={{ marginRight: "0" }}
