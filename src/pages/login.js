@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 // MUI Stuff
 import "../css/login.css";
-import { Button, Spin } from "antd";
+import { Form, Button, Spin } from "antd";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons"
 // Redux stuff
 import { connect } from "react-redux";
@@ -58,38 +58,43 @@ class login extends Component {
         <div className="logo-box" >
           <img className="logo" src={process.env.PUBLIC_URL + '/logo.png'} alt=""/>
         </div>
-        <form className="login-form center" noValidate onSubmit={this.handleSubmit}>
+        <Form className="login-form center" onSubmit={this.handleSubmit}>
           <p className="login-title">OR Education Portal</p>
-          <div className="pw-field-wrapper">
-            <span>Enter Password:</span>
-            <input
-              id="password"
-              name="password"
-              className="pw-input"
-              type={this.state.showPw ? "text" : "password"}
-              style={{
-                padding: "0 0",
-                borderRadius: "2px",
-                border: "1px solid #D9D9D9"
-              }}
-              value={this.state.password}
-              onChange={this.handleTextChange}
-            />
-            <p className="errors noselect"></p>
-            <span
-              className="pw-toggle valign noselect"
-              onClick={this.togglePwField}
-            >
-              {(this.state.showPw)?(<EyeInvisibleOutlined style={{ fontSize: "1.2em" }} />):
-              (<EyeOutlined style={{ fontSize: "1.2em" }} />)}
-            </span>
-          </div>
+          <Form.Item
+            className="ant-form-row-login"
+            label="Enter Password:"
+            name="password"
+            rules={[{ required: true, message: 'Please input your password!' }]}
+          >
+            <div className="pw-field-wrapper">
+              <input
+                id="password"
+                name="password"
+                className="pw-input"
+                type={this.state.showPw ? "text" : "password"}
+                style={{
+                  padding: "0 0",
+                  borderRadius: "2px",
+                  border: "1px solid #D9D9D9"
+                }}
+                value={this.state.password}
+                onChange={this.handleTextChange}
+              />
+              <span
+                className="pw-toggle valign noselect"
+                onClick={this.togglePwField}
+              >
+                {(this.state.showPw)?(<EyeInvisibleOutlined style={{ fontSize: "1.2em" }} />):
+                (<EyeOutlined style={{ fontSize: "1.2em" }} />)}
+              </span>
+            </div>
+          </Form.Item>
           <Button
             type="primary"
             variant="contained"
-            style={{width: "324px"}}
+            style={{width: "100%"}}
             className="login-button"
-            disabled={loading}
+            disabled={loading || this.state.password===""}
             onClick={this.handleSubmit}
           >
             Sign in
@@ -101,7 +106,7 @@ class login extends Component {
           <div className="noselect select-user" onClick={this.handleChange}>
             Sign in as {["staff","admin"][this.state.uid]} instead
           </div>
-        </form>
+        </Form>
       </div>
     );
   }

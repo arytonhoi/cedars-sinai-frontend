@@ -11,6 +11,10 @@ import "../../css/modal.css";
 import { Avatar, Button, Input, Form, Modal, Select } from "antd";
 import { CameraOutlined, EditOutlined } from "@ant-design/icons";
 const { Option } = Select;
+// eslint-disable-next-line
+const RFC5322 = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
+const phoneRegex = /^\(? *\d{3} *\)? *\d{3} *-? *\d{4}$/
+
 
 class AddContactModal extends Component {
   // handleClickImageUpload = () => {
@@ -77,7 +81,10 @@ class AddContactModal extends Component {
             </div>
           )}
 
-          <Form.Item className="requiredInput" label="Department">
+          <Form.Item
+            name="contactDepartmentId"
+            className="requiredInput"
+            label="Department">
             <Select
               name="contactDepartmentId"
               onChange={(departmentId) => {
@@ -99,6 +106,8 @@ class AddContactModal extends Component {
             </Select>
           </Form.Item>
           <Form.Item
+            name="contactName"
+            rules={[{ required: true, message: 'Please input your name.' }]}
             className="requiredInput"
             label="Name"
           >
@@ -111,21 +120,35 @@ class AddContactModal extends Component {
               placeholder="ex: Jane Doe"
             />
           </Form.Item>
-          <Form.Item label="Phone Number">
+          <Form.Item
+            name="contactPhone"
+            className="requiredInput"
+            rules={[
+              { required: true, message: 'Please input your phone number.' },
+              { pattern: phoneRegex, message: 'Did not fit phone regex.' },
+            ]}
+            label="Phone Number">
             <Input
               id="contactPhone"
               name="contactPhone"
-              type="text"
+              type="phone"
               value={this.props.contactPhone}
               onChange={this.props.handleChange}
               placeholder="ex: (123) 456 7890"
             />
           </Form.Item>
-          <Form.Item className="requiredInput" label="E-mail">
+          <Form.Item
+            className="requiredInput"
+            name="contactEmail"
+            rules={[
+              { required: true, message: 'Please input your email.' },
+              { pattern: RFC5322, message: 'Did not fit email regex.' },
+            ]}
+            label="E-mail">
             <Input
               id="contactEmail"
               name="contactEmail"
-              type="text"
+              type="email"
               value={this.props.contactEmail}
               onChange={this.props.handleChange}
               placeholder="ex: janedoe@email.com"

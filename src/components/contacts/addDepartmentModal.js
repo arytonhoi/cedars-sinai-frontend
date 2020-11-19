@@ -23,6 +23,7 @@ class AddDepartmentModal extends Component {
             Cancel
           </Button>,
           <Button
+ htmlType="submit"
             key="submit"
             type="primary"
             onClick={this.props.handleSubmitNewDepartment}
@@ -32,7 +33,11 @@ class AddDepartmentModal extends Component {
         ]}
       >
         <Form layout="vertical">
-          <Form.Item className="requiredInput" label="Department Name">
+          <Form.Item
+            name="departmentName"
+            className="requiredInput"
+            rules={[{ required: true, message: 'Department cannot be blank.' }]}
+            label="Department Name">
             <Input
               id="departmentName"
               name="departmentName"

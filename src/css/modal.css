@@ -57,6 +57,10 @@
   margin-top: 10px;
 }
 
+.requiredInput > .ant-form-item-control {
+  width: 100%;
+}
+
 .ant-avatar.blur > img {
   
 }

@@ -28,10 +28,11 @@ class AnnouncementPage extends Component {
   constructor() {
     super();
     this.state = {
-      searchKey: "",
-      maxAge: 7776000000,
-    };
-  }
+      searchKey : "",
+      maxAge : 7776000000,
+      showCreateAnn : false
+    }
+  };
   componentDidMount() {
     this.props.getAnnouncements();
   }
@@ -39,8 +40,11 @@ class AnnouncementPage extends Component {
     this.setState({ ...this.state, maxAge: e.key });
   };
   filterByText = (e) => {
-    this.setState({ ...this.state, searchKey: e.target.value });
-  };
+    this.setState({...this.state, searchKey:e.target.value})
+  }
+  togglePostAnn = () => {
+    this.setState({showCreateAnn:!this.state.showCreateAnn})
+  }
   render() {
     const menu = (
       <Menu onClick={this.filterByAge}>
@@ -134,6 +138,22 @@ class AnnouncementPage extends Component {
               }
             />
             <Dropdown overlay={menu} className="right-aligned">
+      {/* <div>
+        {(isAdmin) ?
+         (<div>
+           <h3>Welcome Back, Admin</h3>
+           {this.state.showCreateAnn ? "" : <Button type="primary" onClick={this.togglePostAnn}>Create Announcement</Button>}
+         </div>) :
+         ("")
+        }
+        {(isAdmin&&this.state.showCreateAnn) ? <PostAnn onCancel={this.togglePostAnn} /> : ""}
+        <div className="floating-component shadow">
+          <div className="ann-navbar">
+            <div className="ann-navbar-search">
+              <input type="text" onChange={this.filterByText} placeholder="Search by keyword" />
+              <SearchOutlined className="ann-navbar-search-icon valign"/>
+            </div>
+            <Dropdown overlay={menu}> */}
               <Button>
                 Filter by date <DownOutlined />
               </Button>
