@@ -18,6 +18,11 @@
   background: #f3f3f3;
 }
 
+.folder-label{
+  max-height: 1.5em;
+  overflow: hidden;
+  word-wrap: anywhere;
+}
 .folder-selected{
   background: #e9f0fd;
   border: 1px solid #4b7ad1;

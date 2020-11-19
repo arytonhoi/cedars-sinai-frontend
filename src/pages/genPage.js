@@ -483,6 +483,13 @@ console.log(this.state)
               ""
             )}
             <div className="folder-holder">
+              {user.credentials.isAdmin &&
+              this.state.editFolders &&
+              folders.subfolders.length > 0 ? (
+                <AddFolder target={pageName} format={0} />
+              ) : (
+                ""
+              )}
               {folders.subfolders.length > 0
                 ? folders.subfolders.map((x, i) => (
                     <Folder
@@ -500,13 +507,6 @@ console.log(this.state)
                     />
                   ))
                 : ""}
-              {user.credentials.isAdmin &&
-              this.state.editFolders &&
-              folders.subfolders.length > 0 ? (
-                <AddFolder target={pageName} format={0} />
-              ) : (
-                ""
-              )}
             </div>
             {!user.credentials.isAdmin &&
             (folders.content === "" || folders.subfolders.length < 1) ? (
