@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 
 // Redux stuff
 import { connect } from "react-redux";
-import { deleteAnnounce, clearErrors } from "../../redux/actions/dataActions";
 import ContactList from "./contactList";
 
 // Ant design
@@ -74,6 +73,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { deleteAnnounce, clearErrors })(
-  DepartmentSection
-);
+export default connect(mapStateToProps, {})(DepartmentSection);

@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 
 // Redux stuff
 import { connect } from "react-redux";
-import { deleteAnnounce, clearErrors } from "../../redux/actions/dataActions";
 
 // Ant design
 import { Avatar, Button, Empty } from "antd";
@@ -63,6 +62,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { deleteAnnounce, clearErrors })(
-  ContactList
-);
+export default connect(mapStateToProps, {})(ContactList);

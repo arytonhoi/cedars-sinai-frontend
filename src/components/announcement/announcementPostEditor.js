@@ -3,13 +3,13 @@ import PropTypes from "prop-types";
 
 // Redux stuff
 import { connect } from "react-redux";
-import { postAnnouncement, clearErrors } from "../../redux/actions/dataActions";
+import { clearErrors } from "../../redux/actions/dataActions";
 
 // Editor
 import CKEditor from "ckeditor4-react";
 
 // styles
-import "./PostAnn.css";
+// import "./PostAnn.css";
 import "../../css/textContent.css";
 import "../../css/layout.css";
 
@@ -17,144 +17,118 @@ import "../../css/layout.css";
 import { Button, Form, Input } from "antd";
 
 class AnnouncementPostEditor extends Component {
-  state = {
-    ann: {
-      title: "",
-      author: "Krystal",
-      content: "",
-      isPinned: false,
-    },
-    errors: {},
-  };
+  componentDidUpdate() {
+    this.formRef.current.resetFields();
+  }
 
-  handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(this.state.ann);
-    this.setState({
-      ...this.state,
-      ann: { ...this.state.ann, isPinned: this.state.ann.isPinned === "on" },
-    });
-    if (this.state.ann.title !== "" && this.state.ann.content !== "") {
-      this.props.postAnnouncement(this.state.ann);
-    } else {
-      this.errors = { error: "Blank post" };
-    }
-  };
-
-  updateEditor = (event) => {
-    this.setState({
-      ...this.state,
-      ann: { ...this.state.ann, content: event.editor.getData() },
-    });
-  };
-
-  handleChange = (event) => {
-    this.setState({
-      ...this.state,
-      ann: { ...this.state.ann, [event.target.name]: event.target.value },
-    });
-  };
+  formRef = React.createRef();
 
   render() {
-    //  console.log(this.state);console.log(this.props);
-    //we need removeButtons or else underline will be disabled
     return (
       <div
         className="double-padded-content-container"
         style={{ marginBottom: "15px" }}
       >
         <h2 className="section-header">Post New Announcement</h2>
-        <Form layout="vertical">
-          {/* <input
-            className="ann-input"
-            name="author"
-            type="text"
-            onChange={this.handleChange}
-            placeholder="Name"
-          />
-          <br />
-          <input
-            className="ann-input"
-            name="title"
-            type="text"
-            placeholder="Enter a title..."
-            onChange={this.handleChange}
-          />
-          <br /> */}
-          <Form.Item>
-            <Input
-              id="contactName"
-              name="contactName"
-              type="text"
-              value={this.props.contactName}
-              onChange={this.props.handleChange}
-              placeholder="Title"
-            />
+        <Form
+          layout="vertical"
+          ref={this.formRef}
+          initialValues={{
+            announcementTitle: this.props.announcementTitle,
+            announcementAuthor: this.props.announcementAuthor,
+            announcementContent: this.props.announcementContent,
+          }}
+          onFinish={(formValues) => {
+            this.props.handlePostOrPatchAnnouncement(formValues);
+            this.formRef.current.resetFields();
+          }}
+        >
+          <Form.Item
+            name="announcementTitle"
+            rules={[{ required: true, message: "Please input a title." }]}
+          >
+            <Input name="announcementTitle" type="text" placeholder="Title" />
           </Form.Item>
-          <Form.Item>
-            <Input
-              id="contactName"
-              name="contactName"
-              type="text"
-              value={this.props.contactName}
-              onChange={this.props.handleChange}
-              placeholder="Author"
-            />
+          <Form.Item
+            name="announcementAuthor"
+            rules={[{ required: true, message: "Please input your name." }]}
+          >
+            <Input name="announcementAuthor" type="text" placeholder="Author" />
           </Form.Item>
-          <CKEditor
-            // data="Share an announcement"
-            onChange={this.updateEditor}
-            style={{ marginBottom: "15px" }}
-            config={{
-              disallowedContent: "script embed *[on*]",
-              removeButtons: "",
-              toolbar: [
-                {
-                  name: "Basic",
-                  items: [
-                    "Bold",
-                    "Italic",
-                    "Underline",
-                    "Superscript",
-                    "Subscript",
-                    "Link",
-                    "Image",
-                  ],
-                },
-              ],
-              // toolbarGroups: [
-              //   { name: "clipboard", groups: ["clipboard", "undo"] },
-              //   {
-              //     name: "editing",
-              //     groups: ["find", "selection", "spellchecker"],
-              //   },
-              //   { name: "links" },
-              //   { name: "insert" },
-              //   { name: "forms" },
-              //   { name: "tools" },
-              //   { name: "document", groups: ["mode", "document", "doctools"] },
-              //   { name: "others" },
-              //   "/",
-              //   { name: "basicstyles", groups: ["basicstyles", "cleanup"] },
-              //   {
-              //     name: "paragraph",
-              //     groups: ["list", "indent", "blocks", "align", "bidi"],
-              //   },
-              //   { name: "styles" },
-              //   { name: "colors" },
-              //   { name: "about" },
-              // ],
+          <Form.Item
+            name="announcementContent"
+            getValueFromEvent={(event) => {
+              const data = event.editor.getData();
+              return data;
             }}
-          />
+            rules={[{ required: true, message: "Please add some content." }]}
+          >
+            <CKEditor
+              // onChange={() => {
+              //   console.log(
+              //     this.formRef.current.getFieldValue("announcementContent")
+              //   );
+              // }}
+              data={this.props.announcementContent}
+              style={{ marginBottom: "15px" }}
+              config={{
+                disallowedContent: "script embed *[on*]",
+                removeButtons: "",
+                toolbar: [
+                  {
+                    name: "Basic",
+                    items: [
+                      "Bold",
+                      "Italic",
+                      "Underline",
+                      "Superscript",
+                      "Subscript",
+                      "Link",
+                      "Image",
+                    ],
+                  },
+                ],
+              }}
+            />
+          </Form.Item>
           <Form.Item>
+            {this.props.isEditingExistingAnnouncement && (
+              <Button
+                // className="right-aligned-btn"
+                // style={{ marginRight: "0" }}
+                variant="contained"
+                type="danger"
+                onClick={() => {
+                  this.props.handleDeleteThisAnnouncement();
+                  this.formRef.current.resetFields();
+                }}
+              >
+                Delete
+              </Button>
+            )}
+            {this.props.isEditingExistingAnnouncement && (
+              <Button
+                // className="right-aligned-btn"
+                // style={{ marginRight: "0" }}
+                variant="contained"
+                onClick={() => {
+                  this.props.handleCancelEditAnnouncement();
+                  this.formRef.current.resetFields();
+                }}
+              >
+                Cancel
+              </Button>
+            )}
             <Button
-            className="right-aligned-btn"
+              className="right-aligned-btn"
               style={{ marginRight: "0" }}
               type="primary"
               variant="contained"
-              onClick={this.handleSubmit}
+              htmlType="submit"
             >
-              Post
+              {this.props.isEditingExistingAnnouncement
+                ? "Save changes"
+                : "Post"}
             </Button>
           </Form.Item>
         </Form>
@@ -163,8 +137,20 @@ class AnnouncementPostEditor extends Component {
   }
 }
 
+AnnouncementPostEditor.propTypes = {
+  // announcement info
+  isEditingExistingAnnouncement: PropTypes.bool.isRequired,
+  announcementTitle: PropTypes.string.isRequired,
+  announcementAuthor: PropTypes.string.isRequired,
+  announcementContent: PropTypes.string.isRequired,
+  // functions
+  handlePostOrPatchAnnouncement: PropTypes.func.isRequired,
+  handleCancelEditAnnouncement: PropTypes.func.isRequired,
+  handleDeleteThisAnnouncement: PropTypes.func.isRequired,
+};
+
 const mapStateToProps = (state) => ({});
 
-export default connect(mapStateToProps, { postAnnouncement, clearErrors })(
+export default connect(mapStateToProps, { clearErrors })(
   AnnouncementPostEditor
 );

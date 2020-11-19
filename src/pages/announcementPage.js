@@ -3,7 +3,12 @@ import PropTypes from "prop-types";
 
 // redux
 import { connect } from "react-redux";
-import { getAnnouncements } from "../redux/actions/dataActions";
+import {
+  deleteAnnouncement,
+  getAnnouncements,
+  patchAnnouncement,
+  postAnnouncement,
+} from "../redux/actions/dataActions";
 
 // utils
 import DateHelper from "../util/dateHelper.js";
@@ -17,34 +22,90 @@ import "../css/annPage.css";
 import "../css/layout.css";
 import "../css/input.css";
 import "../css/textContent.css";
-import "../components/announcement/Announcement.css"
+import "../components/announcement/Announcement.css";
 
 // Ant design
-import { Button, Dropdown, Input, Layout, List, Menu, Space } from "antd";
-import { DownOutlined, SearchOutlined } from "@ant-design/icons";
+import { Button, Dropdown, Input, Layout, List, Menu } from "antd";
+import { DownOutlined, EditOutlined, SearchOutlined } from "@ant-design/icons";
 const { Content, Footer } = Layout;
 
 class AnnouncementPage extends Component {
   constructor() {
     super();
     this.state = {
-      searchKey : "",
-      maxAge : 7776000000,
-      showCreateAnn : false
-    }
-  };
+      // announcement
+      announcementId: "",
+      announcementTitle: "",
+      announcementAuthor: "",
+      announcementContent: "",
+      // search and filter
+      searchKey: "",
+      maxAge: 7776000000,
+      showCreateAnn: false,
+    };
+  }
+
   componentDidMount() {
     this.props.getAnnouncements();
   }
+
+  handleChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  handleEditThisAnnouncement = (announcement) => {
+    this.setState({
+      announcementId: announcement.id,
+      announcementTitle: announcement.title,
+      announcementAuthor: announcement.author,
+      announcementContent: announcement.content,
+    });
+  };
+
+  handleCancelEditAnnouncement = () => {
+    this.setState({
+      announcementId: "",
+      announcementTitle: "",
+      announcementAuthor: "",
+      announcementContent: "",
+    });
+  };
+
+  handlePostOrPatchAnnouncement = (formValues) => {
+    const newAnnouncement = {
+      title: formValues.announcementTitle,
+      author: formValues.announcementAuthor,
+      content: formValues.announcementContent,
+      isPinned: false,
+    };
+
+    if (this.state.announcementId === "") {
+      // posting new announcement
+      this.props.postAnnouncement(newAnnouncement);
+    } else {
+      // editing exisitng announcement
+      this.props.patchAnnouncement(this.state.announcementId, newAnnouncement);
+    }
+
+    this.handleCancelEditAnnouncement();
+  };
+
+  handleDeleteThisAnnouncement = () => {
+    this.props.deleteAnnouncement(this.state.announcementId);
+    this.handleCancelEditAnnouncement();
+  };
+
+  // filters
   filterByAge = (e) => {
     this.setState({ ...this.state, maxAge: e.key });
   };
+
   filterByText = (e) => {
-    this.setState({...this.state, searchKey:e.target.value})
-  }
-  togglePostAnn = () => {
-    this.setState({showCreateAnn:!this.state.showCreateAnn})
-  }
+    this.setState({ ...this.state, searchKey: e.target.value });
+  };
+
   render() {
     const menu = (
       <Menu onClick={this.filterByAge}>
@@ -66,7 +127,7 @@ class AnnouncementPage extends Component {
     //   // </li>
     // ));
     //console.log(announcements)
-    const now = new Date().getTime();
+    // const now = new Date().getTime();
     announcements.sort((a, b) => {
       a.createdAt = new DateHelper(a.createdAt);
       a.createdTs = a.createdAt.getTimestamp();
@@ -81,7 +142,7 @@ class AnnouncementPage extends Component {
           <div className="page-header-title">
             <h1>Announcements</h1>
           </div>
-          <div className="header-search-items">
+          {/* <div className="header-search-items">
             <Input
               style={{ width: 300 }}
               className="search-input"
@@ -116,7 +177,7 @@ class AnnouncementPage extends Component {
                 Done Editing
               </Button>
             )}
-          </div>
+          </div> */}
         </header>
         <Layout className="vertical-fill-layout">
           <div className="content-search-items">
@@ -138,7 +199,7 @@ class AnnouncementPage extends Component {
               }
             />
             <Dropdown overlay={menu} className="right-aligned">
-      {/* <div>
+              {/* <div>
         {(isAdmin) ?
          (<div>
            <h3>Welcome Back, Admin</h3>
@@ -160,7 +221,6 @@ class AnnouncementPage extends Component {
             </Dropdown>
           </div>
           <Content className="padded-content-container">
-            {/* {isAdmin ? <h3>Welcome Back, Admin</h3> : ""} */}
             {/* <div className="ann-navbar">
               <div className="ann-navbar-search">
                 <input
@@ -176,8 +236,19 @@ class AnnouncementPage extends Component {
                 </Button>
               </Dropdown>
             </div> */}
-
-            {isAdmin && <AnnouncementPostEditor />}
+            {isAdmin && (
+              <AnnouncementPostEditor
+                isEditingExistingAnnouncement={this.state.announcementId !== ""}
+                announcementTitle={this.state.announcementTitle}
+                announcementAuthor={this.state.announcementAuthor}
+                announcementContent={this.state.announcementContent}
+                handlePostOrPatchAnnouncement={
+                  this.handlePostOrPatchAnnouncement
+                }
+                handleCancelEditAnnouncement={this.handleCancelEditAnnouncement}
+                handleDeleteThisAnnouncement={this.handleDeleteThisAnnouncement}
+              />
+            )}
             <List
               itemLayout="vertical"
               size="large"
@@ -202,6 +273,16 @@ class AnnouncementPage extends Component {
                   className="announcement-container"
                 >
                   <div className="announcement-header">
+                    {isAdmin && (
+                      <Button
+                        className="right-aligned-btn"
+                        icon={<EditOutlined />}
+                        onClick={() =>
+                          this.handleEditThisAnnouncement(announcement)
+                        }
+                        type="text"
+                      />
+                    )}
                     <h1>{announcement.title}</h1>
                     <span>
                       <h3>{announcement.author}</h3>
@@ -225,6 +306,9 @@ class AnnouncementPage extends Component {
 
 AnnouncementPage.propTypes = {
   getAnnouncements: PropTypes.func.isRequired,
+  postAnnouncement: PropTypes.func.isRequired,
+  patchAnnouncement: PropTypes.func.isRequired,
+  deleteAnnouncement: PropTypes.func.isRequired,
   data: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
 };
@@ -236,4 +320,9 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { getAnnouncements })(AnnouncementPage);
+export default connect(mapStateToProps, {
+  getAnnouncements,
+  postAnnouncement,
+  patchAnnouncement,
+  deleteAnnouncement,
+})(AnnouncementPage);

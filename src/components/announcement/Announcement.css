@@ -73,10 +73,10 @@
 } */
 
 .ant-list-lg .ant-list-item.announcement-container {
-  padding: 18px 16px
+  padding: 18px 16px;
 }
 
-..announcement-header {
+.announcement-header {
   margin-bottom: 8px;
 }
 
