@@ -5,8 +5,8 @@ import "../css/genPage.css";
 import Folder from "../components/folders/Folder.js";
 import AddFolder from "../components/folders/AddFolder.js";
 
-import { Menu, Dropdown, Modal, Button } from "antd";
-import { FolderFilled, ArrowLeftOutlined, RightOutlined, DownOutlined } from '@ant-design/icons';
+import { Input, Menu, Dropdown, Modal, Button } from "antd";
+import { FolderFilled, ArrowLeftOutlined, RightOutlined, DownOutlined, SearchOutlined } from '@ant-design/icons';
 
 import { connect } from "react-redux";
 import store from "../redux/store";
@@ -236,9 +236,7 @@ console.log(this.state)
         <div className="floating-component">Page loading...</div>
       ) : UI.errors.length > 0 ? (
         <div className="floating-component">{UI.errors[0].statusText}</div>
-      ) : !user.credentials.isAdmin && folders.adminOnly ? (
-        <div className="floating-component">Not authorised to view this folder.</div>
-      ) : (
+      ) : this.state.searchKey === "" ? (
         <div>
           {this.state.editFolders ? (
             <div className="resources-editbar noselect">
@@ -566,14 +564,18 @@ console.log(this.state)
             )}
           </div>
         </div>
-      );
-
+      ):("");
+      const searchMarkup = 
+        (this.state.searchKey !== "") ?
+        (<div className= "floating-component">Search Markup</div>): ("")
+      
     return (
       <>
           <div className="resources-topbar">
+            <div>
             <h5>
               <span>
-                <a href="/resources">Resources</a>
+                <a className="resources-breadcrumb" href="/resources">Resources</a>
               </span>
               { (typeof(folders) === "object" && typeof(folders.path) === "object")?
                 (folders.path.map((x, i) =>
@@ -584,8 +586,14 @@ console.log(this.state)
                 ): ("") }
             </h5>
             <h3>{typeof(folders) === "object"? folders.title : "Loading..."}</h3>
+            </div>
+            <div className="resources-topbar-right">
+              <Input className="no-padding" enterButton="Search" suffix={<SearchOutlined />} placeholder="Search resources by name" />
+              <Button type="primary">Search</Button>
+            </div>
           </div>
         {pageMarkup}
+        {searchMarkup}
       </>);
   }
 }

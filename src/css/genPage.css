@@ -1,6 +1,18 @@
 .resources-topbar{
   background: #fff;
   padding: 1em;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.resources-breadcrumb{
+  color: #555 !important;
+}
+
+.resources-topbar-right{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .button-holder > .ant-btn{
@@ -29,6 +41,7 @@
 }
 
 .post-topbar{
+
   display: flex;
   justify-content: flex-end;
   align-items: center;
