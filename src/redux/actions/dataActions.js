@@ -83,18 +83,23 @@ export const patchAnnouncement = (
   updatedAnnnouncementId,
   updatedAnnnouncement
 ) => (dispatch) => {
-  dispatch({ type: LOADING_UI });
+  // dispatch({ type: LOADING_UI });
+  console.log(updatedAnnnouncementId);
+  console.log(updatedAnnnouncement);
   axios
     .patch(`/announcements/${updatedAnnnouncementId}`, updatedAnnnouncement)
     .then((res) => {
       updatedAnnnouncement.id = updatedAnnnouncementId;
+      console.log("yay");
       dispatch({
         type: PATCH_ANNOUNCEMENT,
         payload: updatedAnnnouncement,
       });
-      dispatch(clearErrors());
+      console.log("yay2");
+      // dispatch(clearErrors());
     })
     .catch((err) => {
+      console.log(err);
       dispatch({
         type: SET_ERRORS,
         payload: err.response.data,

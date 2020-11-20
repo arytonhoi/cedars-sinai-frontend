@@ -76,6 +76,11 @@
   padding: 18px 16px;
 }
 
+.announcement-container.collapsed {
+  max-height: 400px;
+  overflow: hidden;
+}
+
 .announcement-header {
   margin-bottom: 8px;
 }

@@ -78,7 +78,10 @@ export default function (state = initialState, action) {
         loading: false,
       };
     case POST_ANNOUNCEMENT:
-      const postedAnnouncements = [action.payload, ...state.announcements];
+      const newAnnouncement = action.payload;
+      newAnnouncement.createdAt = new DateHelper(newAnnouncement.createdAt);
+      newAnnouncement.createdAtTimestamp = newAnnouncement.createdAt.getTimestamp();
+      const postedAnnouncements = [newAnnouncement, ...state.announcements];
       return {
         ...state,
         announcements: postedAnnouncements,
@@ -87,11 +90,16 @@ export default function (state = initialState, action) {
       };
     case PATCH_ANNOUNCEMENT:
       const updatedAnnouncement = action.payload;
-      const updatedAnnouncements = state.announcements.map((announcement) =>
-        announcement.id === updatedAnnouncement.id
-          ? updatedAnnouncement
-          : announcement
-      );
+      console.log(updatedAnnouncement);
+      const updatedAnnouncements = state.announcements.map((a) => {
+        if (a.id === updatedAnnouncement.id) {
+          updatedAnnouncement.createdAt = a.createdAt;
+          return updatedAnnouncement;
+        } else {
+          return a;
+        }
+      });
+      console.log(updatedAnnouncements);
       return {
         ...state,
         announcements: updatedAnnouncements,

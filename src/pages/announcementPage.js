@@ -11,11 +11,7 @@ import {
   getFilteredAnnouncements,
 } from "../redux/actions/dataActions";
 
-// utils
-import DateHelper from "../util/dateHelper.js";
-
 // components
-// import Announcement from "../components/announcement/Announcement.js";
 import AnnouncementPostEditorModal from "../components/announcement/announcementPostEditorModal.js";
 
 // css styles
@@ -46,7 +42,7 @@ class AnnouncementPage extends Component {
         oldestAnnouncementTimestamp: 7776000000,
       },
       // announcement editor modal
-      showCreateAnn: false,
+      isEditing: false,
     };
   }
 
@@ -81,6 +77,12 @@ class AnnouncementPage extends Component {
   };
 
   // form handlers
+  toggleEditing = () => {
+    this.setState({
+      isEditing: !this.state.isEditing,
+    });
+  };
+
   handleEditThisAnnouncement = (announcement) => {
     this.setState({
       announcementId: announcement.id,
@@ -96,6 +98,7 @@ class AnnouncementPage extends Component {
       announcementTitle: "",
       announcementAuthor: "",
       announcementContent: "",
+      isEditing: false,
     });
   };
 
@@ -130,50 +133,20 @@ class AnnouncementPage extends Component {
 
     return (
       <div className="container">
-        <header className="page-header">
-          <div className="page-header-title">
-            <h1>Announcements</h1>
-          </div>
-        </header>
         <Layout className="vertical-fill-layout">
-          <div className="content-search-items">
-            <Input
-              style={{ width: 400 }}
-              size="small"
-              className="search-input"
-              id="searchTerm"
-              name="searchTerm"
-              type="text"
-              placeholder="Search by keyword"
-              value={this.state.searchTerm}
-              onChange={this.handleFilterChange}
-              suffix={
-                <SearchOutlined
-                  className="search-input-icon"
-                  style={{ color: "rgba(0,0,0,.45)" }}
-                />
-              }
+          <Content className="unpadded-content-container">
+            <img
+              className="banner-img"
+              alt="bg"
+              src="https://firebasestorage.googleapis.com/v0/b/fir-db-d2d47.appspot.com/o/cedars_sinai_pic_1.png?alt=media&token=8370797b-7650-49b7-8b3a-9997fab0c32c"
             />
-            <Dropdown
-              overlay={
-                <Menu onClick={this.handleAgeFilterChange}>
-                  <Menu.Item key="259200000">Recently Added</Menu.Item>
-                  <Menu.Item key="86400000">Last 24 Hours</Menu.Item>
-                  <Menu.Item key="604800000">Last Week</Menu.Item>
-                  <Menu.Item key="2678400000">Last Month</Menu.Item>
-                  <Menu.Item key="7776000000">Everything</Menu.Item>
-                </Menu>
-              }
-              className="right-aligned"
-            >
-              <Button>
-                Filter by date <DownOutlined />
-              </Button>
-            </Dropdown>
-          </div>
+          </Content>
           <Content className="padded-content-container">
             {isAdmin && (
               <AnnouncementPostEditorModal
+                visible={
+                  this.state.isEditing || this.state.announcementId !== ""
+                }
                 isEditingExistingAnnouncement={this.state.announcementId !== ""}
                 announcementTitle={this.state.announcementTitle}
                 announcementAuthor={this.state.announcementAuthor}
@@ -185,6 +158,48 @@ class AnnouncementPage extends Component {
                 handleDeleteThisAnnouncement={this.handleDeleteThisAnnouncement}
               />
             )}
+            <div className="content-search-items">
+              <Input
+                style={{ width: 400 }}
+                size="small"
+                className="search-input"
+                id="searchTerm"
+                name="searchTerm"
+                type="text"
+                placeholder="Search by keyword"
+                value={this.state.searchTerm}
+                onChange={this.handleFilterChange}
+                suffix={
+                  <SearchOutlined
+                    className="search-input-icon"
+                    style={{ color: "rgba(0,0,0,.45)" }}
+                  />
+                }
+              />
+              <Dropdown
+                overlay={
+                  <Menu onClick={this.handleAgeFilterChange}>
+                    <Menu.Item key="259200000">Recently Added</Menu.Item>
+                    <Menu.Item key="86400000">Last 24 Hours</Menu.Item>
+                    <Menu.Item key="604800000">Last Week</Menu.Item>
+                    <Menu.Item key="2678400000">Last Month</Menu.Item>
+                    <Menu.Item key="7776000000">Everything</Menu.Item>
+                  </Menu>
+                }
+                className="right-aligned"
+              >
+                <Button>
+                  Filter by date <DownOutlined />
+                </Button>
+              </Dropdown>
+            </div>
+            <Button
+              type="primary"
+              size={"medium"}
+              onClick={() => this.toggleEditing()}
+            >
+              Post New Announcement
+            </Button>
             <List
               itemLayout="vertical"
               size="large"
@@ -196,17 +211,17 @@ class AnnouncementPage extends Component {
                   Recent Announcements
                 </h2>
               }
-              // pagination={{
-              //   onChange: (page) => {
-              //     console.log(page);
-              //   },
-              //   pageSize: 3,
-              // }}
+              pagination={{
+                onChange: (page) => {
+                  console.log(page);
+                },
+                pageSize: 3,
+              }}
               dataSource={filteredAnnouncements}
               renderItem={(announcement) => (
                 <List.Item
                   key={announcement.id}
-                  className="announcement-container"
+                  className="announcement-container collapsed"
                 >
                   <div className="announcement-header">
                     {isAdmin && (

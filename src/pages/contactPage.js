@@ -88,14 +88,17 @@ class ContactPage extends Component {
     const image = event.target.files[0];
     const formData = new FormData();
     const reader = new FileReader();
-    reader.addEventListener("load", () =>
-      this.setState({
-        contactImgUrl: reader.result,
-        isUploading: true
-      })
-    , false);
-    if(typeof(image)!== 'undefined'){
-      reader.readAsDataURL(image)
+    reader.addEventListener(
+      "load",
+      () =>
+        this.setState({
+          contactImgUrl: reader.result,
+          isUploading: true,
+        }),
+      false
+    );
+    if (typeof image !== "undefined") {
+      reader.readAsDataURL(image);
     }
     formData.append("image", image, image.name);
     axios
@@ -103,7 +106,7 @@ class ContactPage extends Component {
       .then((res) => {
         this.setState({
           contactImgUrl: res.data.imgUrl,
-          isUploading: false
+          isUploading: false,
         });
       })
       .catch((err) => {
@@ -195,7 +198,7 @@ class ContactPage extends Component {
 
   toggleDeleteContactFlag = () => {
     this.setState({
-     confirmDeleteContact: !this.state.confirmDeleteContact
+      confirmDeleteContact: !this.state.confirmDeleteContact,
     });
   };
 
@@ -274,9 +277,10 @@ class ContactPage extends Component {
       });
     }
   };
+
   toggleDeleteDepartmentFlag = () => {
     this.setState({
-     confirmDeleteDepartment: !this.state.confirmDeleteDepartment
+      confirmDeleteDepartment: !this.state.confirmDeleteDepartment,
     });
   };
 
@@ -305,8 +309,8 @@ class ContactPage extends Component {
     });
 
     // departments
-    var departmentsListComponent
-    if(departments.length > 0){
+    var departmentsListComponent;
+    if (departments.length > 0) {
       departmentsListComponent = departments.map((d) => {
         const departmentContacts = matchingSearchContactsWithImgs.filter(
           (c) => c.departmentId === d.id
@@ -329,13 +333,18 @@ class ContactPage extends Component {
           />
         );
       }, this);
-      if(!isAdmin && departmentsListComponent.findIndex(x=>x.props.contacts.length > 0) === -1){
-        departmentsListComponent = "No search results were found"
+      if (
+        !isAdmin &&
+        departmentsListComponent.findIndex(
+          (x) => x.props.contacts.length > 0
+        ) === -1
+      ) {
+        departmentsListComponent = "No search results were found";
       }
-    }else{
-      departmentsListComponent = "Zero departments found. "
-      if(isAdmin){
-        departmentsListComponent += "Add some more?"
+    } else {
+      departmentsListComponent = "Zero departments found. ";
+      if (isAdmin) {
+        departmentsListComponent += "Add some more?";
       }
     }
     return (
