@@ -48,9 +48,9 @@ class genPage extends Component {
     if (typeof pageName !== "string" || pageName === "") {
       pageName = "home";
     }
-    this.props.getFolder(pageName);
+    this.props.getFolder(pageName,true);
     this.setState({ ...this.state, pagename: pageName });
-console.log(this.props)
+//console.log(this.props)
   }
   sortSubfolders = (e) => {
     store.dispatch({ type: SORT_SUBFOLDER, payload: e.key });
@@ -203,8 +203,8 @@ console.log(this.props)
     this.togglePostEditable();
   };
   render() {
-console.log(this.props.data)
-console.log(this.state)
+//console.log(this.props.data)
+//console.log(this.state)
     const { UI, data, user } = this.props;
     const pageName = this.props.match.params.pageName;
     const folders = data.data[0];
@@ -588,7 +588,7 @@ console.log(this.state)
             <h3>{typeof(folders) === "object"? folders.title : "Loading..."}</h3>
             </div>
             <div className="resources-topbar-right">
-              <Input className="no-padding" enterButton="Search" suffix={<SearchOutlined />} placeholder="Search resources by name" />
+              <Input className="no-padding" suffix={<SearchOutlined />} placeholder="Search resources by name" />
               <Button type="primary">Search</Button>
             </div>
           </div>

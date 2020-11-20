@@ -311,10 +311,10 @@ export const getAllFolders = () => (dispatch) => {
       });
     });
 };
-export const getFolder = (folderName) => (dispatch) => {
+export const getFolder = (folderName,track) => (dispatch) => {
   dispatch({ type: LOADING_DATA });
   axios
-    .get(`/folders/${folderName}`)
+    .get(`/folders/${folderName}?${(typeof(track) !== "undefined" && track===true)?"i":""}`)
     .then((res) => {
       dispatch({
         type: SET_DATA,
