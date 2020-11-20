@@ -8,14 +8,11 @@ import {
   getAnnouncements,
   patchAnnouncement,
   postAnnouncement,
+  getFilteredAnnouncements,
 } from "../redux/actions/dataActions";
 
-// utils
-import DateHelper from "../util/dateHelper.js";
-
 // components
-// import Announcement from "../components/announcement/Announcement.js";
-import AnnouncementPostEditor from "../components/announcement/announcementPostEditor.js";
+import AnnouncementPostEditorModal from "../components/announcement/announcementPostEditorModal.js";
 
 // css styles
 import "../css/annPage.css";
@@ -33,15 +30,19 @@ class AnnouncementPage extends Component {
   constructor() {
     super();
     this.state = {
-      // announcement
+      // announcement inputs
       announcementId: "",
       announcementTitle: "",
       announcementAuthor: "",
       announcementContent: "",
       // search and filter
-      searchKey: "",
-      maxAge: 7776000000,
-      showCreateAnn: false,
+      filteredAnnouncements: [],
+      filter: {
+        searchTerm: "",
+        oldestAnnouncementTimestamp: 7776000000,
+      },
+      // announcement editor modal
+      isEditing: false,
     };
   }
 
@@ -49,9 +50,36 @@ class AnnouncementPage extends Component {
     this.props.getAnnouncements();
   }
 
+  // input change handlers
   handleChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value,
+    });
+    console.log(this.state);
+  };
+
+  handleFilterChange = (event) => {
+    const updatedFilter = this.state.filter;
+    updatedFilter[event.target.name] = event.target.value;
+    this.setState({
+      filter: updatedFilter,
+    });
+    this.props.getFilteredAnnouncements(updatedFilter);
+  };
+
+  handleAgeFilterChange = (event) => {
+    const updatedFilter = this.state.filter;
+    updatedFilter.oldestAnnouncementTimestamp = event.key;
+    this.setState({
+      filter: updatedFilter,
+    });
+    this.props.getFilteredAnnouncements(updatedFilter);
+  };
+
+  // form handlers
+  toggleEditing = () => {
+    this.setState({
+      isEditing: !this.state.isEditing,
     });
   };
 
@@ -70,6 +98,7 @@ class AnnouncementPage extends Component {
       announcementTitle: "",
       announcementAuthor: "",
       announcementContent: "",
+      isEditing: false,
     });
   };
 
@@ -97,147 +126,27 @@ class AnnouncementPage extends Component {
     this.handleCancelEditAnnouncement();
   };
 
-  // filters
-  filterByAge = (e) => {
-    this.setState({ ...this.state, maxAge: e.key });
-  };
-
-  filterByText = (e) => {
-    this.setState({ ...this.state, searchKey: e.target.value });
-  };
-
   render() {
-    const menu = (
-      <Menu onClick={this.filterByAge}>
-        <Menu.Item key="259200000">Recently Added</Menu.Item>
-        <Menu.Item key="2678400000">Last Month</Menu.Item>
-        <Menu.Item key="604800000">Last Week</Menu.Item>
-        <Menu.Item key="86400000">Last 24 Hours</Menu.Item>
-      </Menu>
-    );
-    var { maxAge, searchKey } = this.state;
     const { credentials } = this.props.user;
     const isAdmin = credentials.isAdmin;
-    const { announcements } = this.props.data;
-    // let announcementsMarkup = announcements.map((a) => (
-    //   // <li key={a.announcementId}>
-    //   //   <h1>{a.title}</h1>
-    //   //   <h3>{a.author}</h3>
-    //   //   <p>{a.content}</p>
-    //   // </li>
-    // ));
-    //console.log(announcements)
-    // const now = new Date().getTime();
-    announcements.sort((a, b) => {
-      a.createdAt = new DateHelper(a.createdAt);
-      a.createdTs = a.createdAt.getTimestamp();
-      b.createdAt = new DateHelper(b.createdAt);
-      b.createdTs = b.createdAt.getTimestamp();
-      return a.createdTs < b.createdTs;
-    });
+    const { filteredAnnouncements } = this.props.data;
 
     return (
       <div className="container">
-        <header className="page-header">
-          <div className="page-header-title">
-            <h1>Announcements</h1>
-          </div>
-          {/* <div className="header-search-items">
-            <Input
-              style={{ width: 300 }}
-              className="search-input"
-              id="searchTerm"
-              name="searchTerm"
-              type="text"
-              placeholder="Search contacts by name"
-              value={this.state.searchTerm}
-              onChange={this.handleChange}
-              suffix={
-                <SearchOutlined
-                  className="search-input-icon"
-                  style={{ color: "rgba(0,0,0,.45)" }}
-                />
-              }
-            />
-            {isAdmin && !this.state.isEditing && (
-              <Button
-                type="primary"
-                size={"medium"}
-                onClick={() => this.toggleEditing()}
-              >
-                Edit
-              </Button>
-            )}
-            {isAdmin && this.state.isEditing && (
-              <Button
-                type="primary"
-                size={"medium"}
-                onClick={() => this.toggleEditing()}
-              >
-                Done Editing
-              </Button>
-            )}
-          </div> */}
-        </header>
         <Layout className="vertical-fill-layout">
-          <div className="content-search-items">
-            <Input
-              style={{ width: 400 }}
-              size="small"
-              className="search-input"
-              id="searchTerm"
-              name="searchTerm"
-              type="text"
-              placeholder="Search by keyword"
-              value={this.state.searchTerm}
-              onChange={this.handleChange}
-              suffix={
-                <SearchOutlined
-                  className="search-input-icon"
-                  style={{ color: "rgba(0,0,0,.45)" }}
-                />
-              }
+          <Content className="unpadded-content-container">
+            <img
+              className="banner-img"
+              alt="bg"
+              src="https://firebasestorage.googleapis.com/v0/b/fir-db-d2d47.appspot.com/o/cedars_sinai_pic_1.png?alt=media&token=8370797b-7650-49b7-8b3a-9997fab0c32c"
             />
-            <Dropdown overlay={menu} className="right-aligned">
-              {/* <div>
-        {(isAdmin) ?
-         (<div>
-           <h3>Welcome Back, Admin</h3>
-           {this.state.showCreateAnn ? "" : <Button type="primary" onClick={this.togglePostAnn}>Create Announcement</Button>}
-         </div>) :
-         ("")
-        }
-        {(isAdmin&&this.state.showCreateAnn) ? <PostAnn onCancel={this.togglePostAnn} /> : ""}
-        <div className="floating-component shadow">
-          <div className="ann-navbar">
-            <div className="ann-navbar-search">
-              <input type="text" onChange={this.filterByText} placeholder="Search by keyword" />
-              <SearchOutlined className="ann-navbar-search-icon valign"/>
-            </div>
-            <Dropdown overlay={menu}> */}
-              <Button>
-                Filter by date <DownOutlined />
-              </Button>
-            </Dropdown>
-          </div>
+          </Content>
           <Content className="padded-content-container">
-            {/* <div className="ann-navbar">
-              <div className="ann-navbar-search">
-                <input
-                  type="text"
-                  onChange={this.filterByText}
-                  placeholder="Search by keyword"
-                />
-                <SearchOutlined className="ann-navbar-search-icon valign" />
-              </div>
-              <Dropdown overlay={menu}>
-                <Button>
-                  Filter by date <DownOutlined />
-                </Button>
-              </Dropdown>
-            </div> */}
             {isAdmin && (
-              <AnnouncementPostEditor
+              <AnnouncementPostEditorModal
+                visible={
+                  this.state.isEditing || this.state.announcementId !== ""
+                }
                 isEditingExistingAnnouncement={this.state.announcementId !== ""}
                 announcementTitle={this.state.announcementTitle}
                 announcementAuthor={this.state.announcementAuthor}
@@ -249,6 +158,48 @@ class AnnouncementPage extends Component {
                 handleDeleteThisAnnouncement={this.handleDeleteThisAnnouncement}
               />
             )}
+            <div className="content-search-items">
+              <Input
+                style={{ width: 400 }}
+                size="small"
+                className="search-input"
+                id="searchTerm"
+                name="searchTerm"
+                type="text"
+                placeholder="Search by keyword"
+                value={this.state.searchTerm}
+                onChange={this.handleFilterChange}
+                suffix={
+                  <SearchOutlined
+                    className="search-input-icon"
+                    style={{ color: "rgba(0,0,0,.45)" }}
+                  />
+                }
+              />
+              <Dropdown
+                overlay={
+                  <Menu onClick={this.handleAgeFilterChange}>
+                    <Menu.Item key="259200000">Recently Added</Menu.Item>
+                    <Menu.Item key="86400000">Last 24 Hours</Menu.Item>
+                    <Menu.Item key="604800000">Last Week</Menu.Item>
+                    <Menu.Item key="2678400000">Last Month</Menu.Item>
+                    <Menu.Item key="7776000000">Everything</Menu.Item>
+                  </Menu>
+                }
+                className="right-aligned"
+              >
+                <Button>
+                  Filter by date <DownOutlined />
+                </Button>
+              </Dropdown>
+            </div>
+            <Button
+              type="primary"
+              size={"medium"}
+              onClick={() => this.toggleEditing()}
+            >
+              Post New Announcement
+            </Button>
             <List
               itemLayout="vertical"
               size="large"
@@ -260,17 +211,17 @@ class AnnouncementPage extends Component {
                   Recent Announcements
                 </h2>
               }
-              // pagination={{
-              //   onChange: (page) => {
-              //     console.log(page);
-              //   },
-              //   pageSize: 3,
-              // }}
-              dataSource={announcements}
+              pagination={{
+                onChange: (page) => {
+                  console.log(page);
+                },
+                pageSize: 3,
+              }}
+              dataSource={filteredAnnouncements}
               renderItem={(announcement) => (
                 <List.Item
                   key={announcement.id}
-                  className="announcement-container"
+                  className="announcement-container collapsed"
                 >
                   <div className="announcement-header">
                     {isAdmin && (
@@ -309,6 +260,7 @@ AnnouncementPage.propTypes = {
   postAnnouncement: PropTypes.func.isRequired,
   patchAnnouncement: PropTypes.func.isRequired,
   deleteAnnouncement: PropTypes.func.isRequired,
+  getFilteredAnnouncements: PropTypes.func.isRequired,
   data: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
 };
@@ -325,4 +277,5 @@ export default connect(mapStateToProps, {
   postAnnouncement,
   patchAnnouncement,
   deleteAnnouncement,
+  getFilteredAnnouncements,
 })(AnnouncementPage);

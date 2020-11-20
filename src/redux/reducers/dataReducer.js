@@ -11,6 +11,7 @@ import {
   POST_ANNOUNCEMENT,
   PATCH_ANNOUNCEMENT,
   DELETE_ANNOUNCEMENT,
+  FILTER_ANNOUNCEMENTS,
   // Departments
   SET_DEPARTMENTS,
   PATCH_DEPARTMENT,
@@ -33,11 +34,14 @@ import {
   RESET_NAV_PATH,
 } from "../types";
 
+import DateHelper from "../../util/dateHelper";
+
 const initialState = {
   loading: false,
   data: [],
   navpath: { id: "", parent: "", children: [] },
   announcements: [],
+  filteredAnnouncements: [],
   departments: [],
   contacts: [],
   matchingSearchContacts: [],
@@ -46,6 +50,7 @@ const initialState = {
 
 var index;
 
+// export functions
 export default function (state = initialState, action) {
   switch (action.type) {
     case LOADING_DATA:
@@ -58,35 +63,47 @@ export default function (state = initialState, action) {
         ...state,
         loading: false,
       };
-    // Imagess
-    // case POST_IMAGE:
-    //   console.log(action.payload);
-    //   return {
-    //     ...state,
-    //     uploadedImageUrl: action.payload.imgUrl,
-    //   };
     // Announcements
     case SET_ANNOUNCEMENTS:
+      const announcements = action.payload;
+      announcements.forEach((a) => {
+        a.createdAt = new DateHelper(a.createdAt);
+        a.createdAtTimestamp = a.createdAt.getTimestamp();
+        return a;
+      });
       return {
         ...state,
-        announcements: action.payload,
+        announcements: announcements,
+        filteredAnnouncements: announcements,
         loading: false,
       };
     case POST_ANNOUNCEMENT:
+      const newAnnouncement = action.payload;
+      newAnnouncement.createdAt = new DateHelper(newAnnouncement.createdAt);
+      newAnnouncement.createdAtTimestamp = newAnnouncement.createdAt.getTimestamp();
+      const postedAnnouncements = [newAnnouncement, ...state.announcements];
       return {
         ...state,
-        announcements: [action.payload, ...state.announcements],
+        announcements: postedAnnouncements,
+        filteredAnnouncements: postedAnnouncements,
         loading: false,
       };
     case PATCH_ANNOUNCEMENT:
       const updatedAnnouncement = action.payload;
+      console.log(updatedAnnouncement);
+      const updatedAnnouncements = state.announcements.map((a) => {
+        if (a.id === updatedAnnouncement.id) {
+          updatedAnnouncement.createdAt = a.createdAt;
+          return updatedAnnouncement;
+        } else {
+          return a;
+        }
+      });
+      console.log(updatedAnnouncements);
       return {
         ...state,
-        announcements: state.announcements.map((announcement) =>
-          announcement.id === updatedAnnouncement.id
-            ? updatedAnnouncement
-            : announcement
-        ),
+        announcements: updatedAnnouncements,
+        filteredAnnouncements: updatedAnnouncements,
         loading: false,
       };
     case DELETE_ANNOUNCEMENT:
@@ -94,9 +111,31 @@ export default function (state = initialState, action) {
       return {
         ...state,
         announcements: state.announcements.filter(
-          (announcement) => announcement.id !== deletedAnnouncementId
+          (a) => a.id !== deletedAnnouncementId
+        ),
+        filteredAnnouncements: state.filteredAnnouncements.filter(
+          (a) => a.id !== deletedAnnouncementId
         ),
         loading: false,
+      };
+    case FILTER_ANNOUNCEMENTS:
+      const filters = action.payload;
+      const announcementSearchTerm = filters.searchTerm;
+      const oldestAnnouncementTimestamp = filters.oldestAnnouncementTimestamp;
+      const now = new Date().getTime();
+      return {
+        ...state,
+        filteredAnnouncements: state.announcements.filter(
+          (a) =>
+            now - a.createdAtTimestamp < oldestAnnouncementTimestamp &&
+            (announcementSearchTerm.trim() === "" ||
+              a.title
+                .toLowerCase()
+                .includes(announcementSearchTerm.trim().toLowerCase()) ||
+              a.content
+                .toLowerCase()
+                .includes(announcementSearchTerm.trim().toLowerCase()))
+        ),
       };
     // departments
     case SET_DEPARTMENTS:
@@ -162,21 +201,22 @@ export default function (state = initialState, action) {
       const updatedDeleteContacts = state.contacts.filter(
         (contact) => contact.id !== deletedContactId
       );
+      const updatedSearchDeleteContacts = state.matchingSearchContacts.filter(
+        (contact) => contact.id !== deletedContactId
+      );
       return {
         ...state,
         contacts: updatedDeleteContacts,
-        matchingSearchContacts: updatedDeleteContacts,
+        matchingSearchContacts: updatedSearchDeleteContacts,
         loading: false,
       };
     case SEARCH_CONTACTS:
       const searchTerm = action.payload;
-      const matchingSearchContacts = state.contacts.filter((contact) =>
-        contact.name.toLowerCase().includes(searchTerm.trim().toLowerCase())
-      );
-
       return {
         ...state,
-        matchingSearchContacts: matchingSearchContacts,
+        matchingSearchContacts: state.contacts.filter((contact) =>
+          contact.name.toLowerCase().includes(searchTerm.trim().toLowerCase())
+        ),
         loading: false,
       };
     // Folders

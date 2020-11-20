@@ -9,10 +9,18 @@
   flex-direction: column;
 }
 
+.unpadded-content-container {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 24px;
+}
+
 .content-container,
 .padded-content-container {
   height: 100%;
   margin: 0;
+  margin-top: 24px;
   padding: 0;
   padding: 10px 0;
   border-radius: 10px;
@@ -30,6 +38,16 @@
 .ant-layout.vertical-fill-layout {
   padding: 0 24px;
   flex: 1;
+}
+
+.banner-img {
+  width: 100%;
+  /* position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto; */
 }
 
 /* ============================================================================================== */
