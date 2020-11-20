@@ -35,6 +35,7 @@ class genPage extends Component {
       showRenameConfirm: false,
       showDeleteConfirm: false,
       showMoveDialog: false,
+      searchKey: "",
       editPost: false,
       editor: null,
       selectedFolders: [],
@@ -232,11 +233,11 @@ console.log(this.state)
     }
     const pageMarkup =
       data.loading || (data.data.length === 0 && UI.errors.length === 0) ? (
-        <p>Page loading...</p>
+        <div className="floating-component">Page loading...</div>
       ) : UI.errors.length > 0 ? (
-        <p>{UI.errors[0].statusText}</p>
+        <div className="floating-component">{UI.errors[0].statusText}</div>
       ) : !user.credentials.isAdmin && folders.adminOnly ? (
-        <p>Not authorised to view this text.</p>
+        <div className="floating-component">Not authorised to view this folder.</div>
       ) : (
         <div>
           {this.state.editFolders ? (
@@ -326,56 +327,41 @@ console.log(this.state)
                   </Button>,
                 ]}
               >
-{
-  (data.navpath.children.length===0)?
-  (<div className="navpath-list-empty">
-    <i>This folder has no subfolders</i>
-  </div>):
-  (data.navpath.children.map( (x,i)=>
-    (this.state.selectedFolders.findIndex(p=>(p.id===x.id)) === -1)?
-    (<div className="navpath-list navpath-list-enabled" key={x.id}
-      onClick={()=>this.props.getNavRoute(x.id)}
-     >
-      <span className="navpath-list-left">
-        <FolderFilled/>
-        {x.title}
-      </span>
-      <span className="navpath-list-right">
-        <RightOutlined />
-      </span>
-    </div>):
-    (<div className="navpath-list navpath-list-disabled" key={x.id}>
-      <span className="navpath-list-left">
-        <FolderFilled/>
-        {x.title}
-      </span>
-      <span className="navpath-list-right">
-        <RightOutlined />
-      </span>
-    </div>
-    )
-  ))
-}
+                {
+                  (data.navpath.children.length===0)?
+                  (<div className="navpath-list-empty">
+                    <i>This folder has no subfolders</i>
+                  </div>):
+                  (data.navpath.children.map( (x,i)=>
+                    (this.state.selectedFolders.findIndex(p=>(p.id===x.id)) === -1)?
+                    (<div className="navpath-list navpath-list-enabled" key={x.id}
+                      onClick={()=>this.props.getNavRoute(x.id)}
+                     >
+                      <span className="navpath-list-left">
+                        <FolderFilled/>
+                        {x.title}
+                      </span>
+                      <span className="navpath-list-right">
+                        <RightOutlined />
+                      </span>
+                    </div>):
+                    (<div className="navpath-list navpath-list-disabled" key={x.id}>
+                      <span className="navpath-list-left">
+                        <FolderFilled/>
+                        {x.title}
+                      </span>
+                      <span className="navpath-list-right">
+                        <RightOutlined />
+                      </span>
+                    </div>
+                    )
+                  ))
+                }
               </Modal>
             </div>
           ) : (
             ""
           )}
-          <div className="resources-topbar">
-            <h5>
-              <span>
-                <a href="/resources">Resources</a>
-              </span>
-              { (typeof(folders.path) === "object")?
-                (folders.path.map((x, i) =>
-                    ((x.id !== "" && x.id !== "home") ?
-                    (<span key={x.id}>{" / "}<a href={x.id}>{x.name}</a></span>):
-                    (""))
-                  )
-                ): ("") }
-            </h5>
-            <h3>{folders.title}</h3>
-          </div>
           <div className="floating-component">
             {folders.subfolders.length > 0 ? (
               <div className="folder-topbar noselect">
@@ -411,23 +397,26 @@ console.log(this.state)
                       Order folders by <DownOutlined />
                     </Button>
                   </Dropdown>
-                  {user.credentials.isAdmin &&
-                  !this.state.editFolders &&
-                  !this.state.editPost ? (
-                    <Button type="primary" onClick={this.toggleFolderEditable}>
+                  {
+                    user.credentials.isAdmin && !this.state.editFolders && !this.state.editPost ?
+                    (<Button type="primary" onClick={this.toggleFolderEditable}>
                       Edit Folders
-                    </Button>
-                  ):
-                  ("")
+                    </Button>):
+                    ("")
                   }
-                  {user.credentials.isAdmin && this.state.editFolders && !this.state.editPost ? (
-                    <span className="button-holder">
-                      <Button type="primary" style={{ background: "green", borderColor: "green"}} onClick={this.toggleFolderEditable}>
+                  {
+                    user.credentials.isAdmin && this.state.editFolders && !this.state.editPost ?
+                    (<span className="button-holder">
+                      <Button
+                        type="primary"
+                        style={{ background: "green", borderColor: "green"}}
+                        onClick={this.toggleFolderEditable}
+                      >
                         Finish Editing
                       </Button>
-                    </span>
-                  ) :
-                  ("")}
+                    </span>):
+                    ("")
+                  }
               </div>
               </div>
             ) : user.credentials.isAdmin ? (
@@ -579,7 +568,25 @@ console.log(this.state)
         </div>
       );
 
-    return <div>{pageMarkup}</div>;
+    return (
+      <>
+          <div className="resources-topbar">
+            <h5>
+              <span>
+                <a href="/resources">Resources</a>
+              </span>
+              { (typeof(folders) === "object" && typeof(folders.path) === "object")?
+                (folders.path.map((x, i) =>
+                    ((x.id !== "" && x.id !== "home") ?
+                    (<span key={x.id}>{" / "}<a href={x.id}>{x.name}</a></span>):
+                    (""))
+                  )
+                ): ("") }
+            </h5>
+            <h3>{typeof(folders) === "object"? folders.title : "Loading..."}</h3>
+          </div>
+        {pageMarkup}
+      </>);
   }
 }
 
