@@ -19,6 +19,7 @@ import {
   POST_ANNOUNCEMENT,
   PATCH_ANNOUNCEMENT,
   DELETE_ANNOUNCEMENT,
+  FILTER_ANNOUNCEMENTS,
   // Departments
   SET_DEPARTMENTS,
   PATCH_DEPARTMENT,
@@ -30,7 +31,6 @@ import {
   POST_CONTACT,
   DELETE_CONTACT,
   SEARCH_CONTACTS,
-
   // Folders
   ADD_SUBFOLDER,
   PATCH_FOLDER,
@@ -40,22 +40,6 @@ import {
   RESET_NAV_PATH,
 } from "../types";
 import axios from "axios";
-
-// Images
-// export const postImage = (formData) => (dispatch) => {
-//   // dispatch({ type: LOADING_UI });
-//   axios
-//     .post(`/images`, formData)
-//     .then((res) => {
-//       return res.data.imgUrl;
-//     })
-//     .catch((err) => {
-//       dispatch({
-//         type: SET_ERRORS,
-//         payload: err.response.data,
-//       });
-//     });
-// };
 
 // Announcements
 export const getAnnouncements = () => (dispatch) => {
@@ -125,6 +109,13 @@ export const deleteAnnouncement = (id) => (dispatch) => {
       dispatch({ type: DELETE_ANNOUNCEMENT, payload: id });
     })
     .catch((err) => console.log(err));
+};
+
+export const getFilteredAnnouncements = (filters) => (dispatch) => {
+  dispatch({
+    type: FILTER_ANNOUNCEMENTS,
+    payload: filters,
+  });
 };
 
 // Departments

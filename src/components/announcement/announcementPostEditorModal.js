@@ -16,7 +16,7 @@ import "../../css/layout.css";
 // Antd
 import { Button, Form, Input } from "antd";
 
-class AnnouncementPostEditor extends Component {
+class AnnouncementPostEditorModal extends Component {
   componentDidUpdate() {
     this.formRef.current.resetFields();
   }
@@ -135,7 +135,7 @@ class AnnouncementPostEditor extends Component {
   }
 }
 
-AnnouncementPostEditor.propTypes = {
+AnnouncementPostEditorModal.propTypes = {
   // announcement info
   isEditingExistingAnnouncement: PropTypes.bool.isRequired,
   announcementTitle: PropTypes.string.isRequired,
@@ -150,5 +150,5 @@ AnnouncementPostEditor.propTypes = {
 const mapStateToProps = (state) => ({});
 
 export default connect(mapStateToProps, { clearErrors })(
-  AnnouncementPostEditor
+  AnnouncementPostEditorModal
 );
