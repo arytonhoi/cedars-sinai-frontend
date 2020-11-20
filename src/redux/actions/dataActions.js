@@ -401,10 +401,6 @@ export const updateSubFolder = (folderName, folderDetails) => (dispatch) => {
         type: PATCH_SUBFOLDER,
         payload: { id: folderName, patch: folderDetails },
       });
-      dispatch({
-        type: DELETE_SUBFOLDER,
-        payload: folderName,
-      });
     })
     .catch((err) => {
       dispatch({
