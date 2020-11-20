@@ -42,7 +42,17 @@
   width: 100%;
 }
 
+.post-editbar{
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-end;
+  padding-top: 0.5em;
+  padding-bottom: 1em;
+}
+/*
 .resources-editbar{
+  display:none;
   background: #fff;
   position: fixed;
   z-index: 3;
@@ -53,7 +63,7 @@
   justify-content: space-between;
   padding: 1em;
 }
-
+*/
 .move-dialog > .ant-modal-content > .ant-modal-body{
   padding: 0;
 }

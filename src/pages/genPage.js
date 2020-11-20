@@ -239,79 +239,8 @@ console.log(this.state)
         <p>Not authorised to view this text.</p>
       ) : (
         <div>
-          {this.state.editPost ? (
-            <div className="resources-editbar noselect">
-              <span className="button-holder">
-                <Button type="danger" onClick={this.clearPost}>
-                  Delete Contents
-                </Button>
-              </span>
-              <span className="button-holder">
-                <Button onClick={this.maybeShowPostCancelConfirm}>
-                  Cancel
-                </Button>
-                <Button
-                  type="primary"
-                  disabled={
-                    this.state.editor === null || this.state.editor === ""
-                  }
-                  onClick={this.saveEditorChanges}
-                >
-                  Save Changes
-                </Button>
-              </span>
-              <Modal
-                className="center"
-                title={"Cancel changes to your post?"}
-                visible={this.state.showPostCancelConfirm}
-                onCancel={() => this.toggleStateFlag("showPostCancelConfirm")}
-                footer={[
-                  <Button
-                    key="1"
-                    onClick={() =>
-                      this.toggleStateFlag("showPostCancelConfirm")
-                    }
-                  >
-                    No
-                  </Button>,
-                  <Button
-                    key="2"
-                    type="primary"
-                    onClick={this.togglePostEditable}
-                  >
-                    Yes, Cancel Changes
-                  </Button>,
-                ]}
-              >
-                This will remove all new changes made to your post.
-              </Modal>
-            </div>
-          ) : (
-            ""
-          )}
           {this.state.editFolders ? (
             <div className="resources-editbar noselect">
-              <span className="button-holder">
-                <Button
-                  disabled={this.state.selectedFolders.length === 0}
-                  type="danger"
-                  onClick={() => this.toggleStateFlag("showDeleteConfirm")}
-                >
-                  Delete {this.state.selectedFolders.length} Folder{s}
-                </Button>
-                <Button
-                  disabled={this.state.selectedFolders.length === 0}
-                  onClick={() => this.toggleStateFlag("showMoveDialog")}
-                >
-                  Move {this.state.selectedFolders.length} Folder{s}
-                </Button>
-                <Button
-                  disabled={this.state.selectedFolders.length === 0}
-                  onClick={() => this.toggleStateFlag("showRenameConfirm")}
-                >
-                  Rename {this.state.selectedFolders.length} Folder{s}
-                </Button>
-              </span>
               <Modal
                 className="center"
                 title="Are you sure?"
@@ -428,11 +357,6 @@ console.log(this.state)
   ))
 }
               </Modal>
-              <span className="button-holder">
-                <Button type="primary" onClick={this.toggleFolderEditable}>
-                  Exit Folder Edit Mode
-                </Button>
-              </span>
             </div>
           ) : (
             ""
@@ -457,6 +381,31 @@ console.log(this.state)
               <div className="folder-topbar noselect">
                 <h3>Contents</h3>
                 <div>
+                  {
+                    (user.credentials.isAdmin && this.state.editFolders)?
+                    (<span className="button-holder">
+                    <Button
+                      disabled={this.state.selectedFolders.length === 0}
+                      type="danger"
+                      onClick={() => this.toggleStateFlag("showDeleteConfirm")}
+                    >
+                      Delete {this.state.selectedFolders.length} Folder{s}
+                    </Button>
+                    <Button
+                      disabled={this.state.selectedFolders.length === 0}
+                      onClick={() => this.toggleStateFlag("showMoveDialog")}
+                    >
+                      Move {this.state.selectedFolders.length} Folder{s}
+                    </Button>
+                    <Button
+                      disabled={this.state.selectedFolders.length === 0}
+                      onClick={() => this.toggleStateFlag("showRenameConfirm")}
+                    >
+                      Rename {this.state.selectedFolders.length} Folder{s}
+                    </Button>
+                    </span>):
+                    ("")
+                  }
                   <Dropdown overlay={menu}>
                     <Button>
                       Order folders by <DownOutlined />
@@ -468,9 +417,17 @@ console.log(this.state)
                     <Button type="primary" onClick={this.toggleFolderEditable}>
                       Edit Folders
                     </Button>
-                  ) : (
-                    ""
-                  )}
+                  ):
+                  ("")
+                  }
+                  {user.credentials.isAdmin && this.state.editFolders && !this.state.editPost ? (
+                    <span className="button-holder">
+                      <Button type="primary" style={{ background: "green", borderColor: "green"}} onClick={this.toggleFolderEditable}>
+                        Finish Editing
+                      </Button>
+                    </span>
+                  ) :
+                  ("")}
               </div>
               </div>
             ) : user.credentials.isAdmin ? (
@@ -544,28 +501,77 @@ console.log(this.state)
               ""
             )}
             {this.state.editPost ? (
-              <CKEditor
-                data={folders.content}
-                onChange={this.updateEditor}
-                config={{
-                  disallowedContent: "script embed *[on*]",
-                  removeButtons: "",
-                  toolbar: [
-                    {
-                      name: "Basic",
-                      items: [
-                        "Bold",
-                        "Italic",
-                        "Underline",
-                        "Superscript",
-                        "Subscript",
-                        "Link",
-                        "Image",
-                      ],
-                    },
-                  ],
-                }}
-              />
+              <>
+                <div className="post-editbar noselect">
+                  <span className="button-holder">
+                    <Button type="danger" onClick={this.clearPost}>
+                      Delete Contents
+                    </Button>
+                  </span>
+                  <span className="button-holder">
+                    <Button onClick={this.maybeShowPostCancelConfirm}>
+                      Cancel
+                    </Button>
+                    <Button
+                      type="primary"
+                      style={{ background: "green", borderColor: "green" }}
+                      disabled={
+                        this.state.editor === null || this.state.editor === ""
+                      }
+                      onClick={this.saveEditorChanges}
+                    >
+                      Save Changes
+                    </Button>
+                  </span>
+                  <Modal
+                    className="center"
+                    title={"Cancel changes to your post?"}
+                    visible={this.state.showPostCancelConfirm}
+                    onCancel={() => this.toggleStateFlag("showPostCancelConfirm")}
+                    footer={[
+                      <Button
+                        key="1"
+                        onClick={() =>
+                          this.toggleStateFlag("showPostCancelConfirm")
+                        }
+                      >
+                        No
+                      </Button>,
+                      <Button
+                        key="2"
+                        type="primary"
+                        onClick={this.togglePostEditable}
+                      >
+                        Yes, Cancel Changes
+                      </Button>,
+                    ]}
+                  >
+                    This will remove all new changes made to your post.
+                  </Modal>
+                </div>
+                <CKEditor
+                  data={folders.content}
+                  onChange={this.updateEditor}
+                  config={{
+                    disallowedContent: "script embed *[on*]",
+                    removeButtons: "",
+                    toolbar: [
+                      {
+                        name: "Basic",
+                        items: [
+                          "Bold",
+                          "Italic",
+                          "Underline",
+                          "Superscript",
+                          "Subscript",
+                          "Link",
+                          "Image",
+                        ],
+                      },
+                    ],
+                  }}
+                />
+              </>
             ) : (
               <div className="folder-post">{parse(folders.content)}</div>
             )}
