@@ -3,7 +3,7 @@ import "./Folder.css";
 import "./AddFolder.css";
 //import PropTypes from "prop-types";
 
-import { Button } from "antd";
+import { Input, Button } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 
 // Redux stuff
@@ -88,11 +88,10 @@ class AddFolder extends Component {
                 <CloseOutlined onClick={this.toggleCreateModal} />
               </div>
               <div className="folder-create-middlebar">
-                <input
+                <Input
                   className="folder-create-input"
                   type="text"
                   name="title"
-                  required
                   placeholder="Name"
                   maxLength="256"
                   onChange={this.handleChange}

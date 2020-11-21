@@ -9,8 +9,8 @@ hr.folder-hr{
   justify-content: space-between;
   align-items: flex-end;
 }
-.resources-breadcrumb{
-  color: #555 !important;
+span.em4-light:last-of-type > a{
+  color: #595959 !important;
 }
 
 .resources-topbar-right{
@@ -52,7 +52,6 @@ hr.folder-hr{
 }
 
 .post-topbar{
-
   display: flex;
   justify-content: flex-end;
   align-items: center;

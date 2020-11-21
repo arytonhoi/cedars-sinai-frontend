@@ -25,8 +25,8 @@
 }
 .folder-selected{
   background: #e9f0fd;
-  border: 1px solid #4b7ad1;
-  color: #4b7ad1;
+  border: 1px solid #3068cb;
+  color: #3068cb;
   cursor: pointer;
 }
 .folder-selected:hover{

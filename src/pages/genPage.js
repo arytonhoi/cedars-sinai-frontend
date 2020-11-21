@@ -423,8 +423,8 @@ class genPage extends Component {
               </div>
             ) : user.credentials.isAdmin ? (
               <div className="folder-blank noselect">
-                <h3>It seems like there are no subfolders</h3>
-                <h4>You can create subfolders under any folder.</h4>
+                <h3 className="em2">It seems like there are no subfolders</h3>
+                <h4 className="em3">You can create subfolders under any folder.</h4>
                 <AddFolder target={pageName} format={1} />
               </div>
             ) : (
@@ -479,10 +479,10 @@ class genPage extends Component {
               !this.state.editPost &&
               !this.state.editFolders ? (
                 <div className="folder-blank noselect">
-                  <h3>It seems like there is no post for this folder yet.</h3>
-                  <h4>Start by creating the post.</h4>
+                  <h3 className="em2">It seems like there is no post for this folder yet.</h3>
+                  <h4 className="em3">Start by creating the post.</h4>
                   <Button type="primary" onClick={this.togglePostEditable}>
-                    Edit Post
+                    Begin Post
                   </Button>
                 </div>
               ) : (
@@ -577,12 +577,12 @@ class genPage extends Component {
             <div>
             <h5>
               <span>
-                <a className="resources-breadcrumb" href="/resources">Resources</a>
+                <a className="em4-light" href="/resources">Resources</a>
               </span>
               { (typeof(folders) === "object" && typeof(folders.path) === "object")?
                 (folders.path.map((x, i) =>
                     ((x.id !== "" && x.id !== "home") ?
-                    (<span key={x.id}>{" / "}<a href={x.id}>{x.name}</a></span>):
+                    (<span className="em4-light" key={x.id}>{" / "}<a className="em4-light" href={x.id}>{x.name}</a></span>):
                     (""))
                   )
                 ): ("") }
