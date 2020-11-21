@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import "../css/genPage.css";
 import Folder from "../components/folders/Folder.js";
 import AddFolder from "../components/folders/AddFolder.js";
+import SearchResult from "../components/folders/SearchResult.js";
 
 import { Input, Menu, Dropdown, Modal, Button } from "antd";
 import { FolderFilled, ArrowLeftOutlined, RightOutlined, DownOutlined, SearchOutlined } from '@ant-design/icons';
@@ -12,6 +13,7 @@ import { connect } from "react-redux";
 import store from "../redux/store";
 import {
   getFolder,
+  searchFolder,
   deleteFolder,
   updateFolder,
   updateSubFolder,
@@ -106,6 +108,12 @@ class genPage extends Component {
     var folders = this.state.selectedFolders;
     folders[e.target.name].title = e.target.value;
     this.setState({ ...this.state, selectedFolders: folders });
+  };
+  searchFolderCallback = (e) => {
+    if(e.target.value !== ""){
+      this.props.searchFolder(e.target.value)
+    }
+    this.setState({ ...this.state, searchKey: e.target.value });
   };
   renameFolders = () => {
     if (this.state.showRenameConfirm) {
@@ -208,8 +216,8 @@ class genPage extends Component {
     this.togglePostEditable();
   };
   render() {
-//console.log(this.props.data)
-//console.log(this.state)
+console.log(this.props)
+console.log(this.state)
     const { UI, data, user } = this.props;
     const pageName = this.props.match.params.pageName;
     const folders = data.data[0];
@@ -567,9 +575,24 @@ class genPage extends Component {
           </div>
         </div>
       ):("");
-      const searchMarkup = 
-        (this.state.searchKey !== "") ?
-        (<div className= "floating-component">Search Markup</div>): ("")
+      var searchMarkup = () => 
+        (this.props.data.folderSearchRes.length > 0 && !this.props.UI.loadingFolderSearch) ?
+        (<div className= "floating-component">
+          <h3 className= "em2">
+            Search Results for '{this.state.searchKey}'
+          </h3>
+          {this.props.data.folderSearchRes.map((x,i)=><SearchResult key={i} data={x} searchKey={this.state.searchKey}/>)}
+        </div>):(this.props.UI.loadingFolderSearch)?
+        (<div className= "floating-component">
+          <h3 className= "em2">
+            Searching for results...
+          </h3>
+        </div>):
+        (<div className= "floating-component">
+          <h3 className= "em2">
+            No results for '{this.state.searchKey}' were found
+          </h3>
+        </div>)
       
     return (
       <>
@@ -590,18 +613,18 @@ class genPage extends Component {
             <h3>{typeof(folders) === "object"? folders.title : "Loading..."}</h3>
             </div>
             <div className="resources-topbar-right">
-              <Input className="no-padding" suffix={<SearchOutlined />} placeholder="Search resources by name" />
+              <Input onKeyUp={this.searchFolderCallback} className="no-padding" suffix={<SearchOutlined />} placeholder="Search resources by name" />
               <Button type="primary">Search</Button>
             </div>
           </div>
-        {pageMarkup}
-        {searchMarkup}
+        {this.state.searchKey === "" ? pageMarkup : searchMarkup()}
       </>);
   }
 }
 
 genPage.propTypes = {
   getFolder: PropTypes.func.isRequired,
+  searchFolder: PropTypes.func.isRequired,
   deleteFolder: PropTypes.func.isRequired,
   updateFolder: PropTypes.func.isRequired,
   updateSubFolder: PropTypes.func.isRequired,
@@ -620,6 +643,7 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   getFolder,
+  searchFolder,
   updateFolder,
   updateSubFolder,
   deleteFolder,

@@ -32,6 +32,7 @@ import {
   SORT_SUBFOLDER,
   SET_NAV_PATH,
   RESET_NAV_PATH,
+  SET_FOLDER_SEARCH_RES,
 } from "../types";
 
 import DateHelper from "../../util/dateHelper";
@@ -39,6 +40,7 @@ import DateHelper from "../../util/dateHelper";
 const initialState = {
   loading: false,
   data: [],
+  folderSearchRes: [],
   navpath: { id: "", parent: "", children: [] },
   announcements: [],
   filteredAnnouncements: [],
@@ -287,7 +289,12 @@ export default function (state = initialState, action) {
         },
         loading: false,
       };
-
+    case SET_FOLDER_SEARCH_RES:
+      return {
+        ...state,
+        folderSearchRes: action.payload,
+        loading: false,
+      };
     // Data Handling
     case SET_DATA_ARRAY:
       return {
