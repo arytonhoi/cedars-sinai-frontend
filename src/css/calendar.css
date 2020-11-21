@@ -1,0 +1,11 @@
+.google-calendar {
+  margin:0 auto;
+  display: flex;
+  justify-content: center;
+}
+.edit-button {
+  
+  position: absolute;
+  right: 10px;
+
+}
