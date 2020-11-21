@@ -600,8 +600,8 @@ console.log(this.state)
             <h3>{typeof(folders) === "object"? folders.title : "Loading..."}</h3>
             </div>
             <div className="resources-topbar-right">
-              <Input onKeyUp={this.searchFolderCallback} className="no-padding" suffix={<SearchOutlined />} placeholder="Search resources by name" />
-              <Button type="primary">Search</Button>
+              <Input onKeyUp={this.searchFolderCallback} disabled={this.state.editFolders || this.state.editPost} className="no-padding" suffix={<SearchOutlined />} placeholder="Search resources by name" />
+              <Button type="primary" disabled={this.state.editFolders || this.state.editPost}>Search</Button>
             </div>
           </div>
         {(this.state.searchKey === "" || this.state.editFolders || this.state.editPost) ? pageMarkup : searchMarkup()}
