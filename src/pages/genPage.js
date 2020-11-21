@@ -552,25 +552,11 @@ console.log(this.state)
                   config={{
                     disallowedContent: "script embed *[on*]",
                     removeButtons: "",
-                    toolbar: [
-                      {
-                        name: "Basic",
-                        items: [
-                          "Bold",
-                          "Italic",
-                          "Underline",
-                          "Superscript",
-                          "Subscript",
-                          "Link",
-                          "Image",
-                        ],
-                      },
-                    ],
                   }}
                 />
               </>
             ) : (
-              <div className="folder-post">{parse(folders.content)}</div>
+              <p className="folder-post">{parse(folders.content)}</p>
             )}
           </div>
         </div>
