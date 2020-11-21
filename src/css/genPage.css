@@ -1,3 +1,7 @@
+hr.folder-hr{
+  border: 1px solid #ABABAB
+}
+
 .resources-topbar{
   background: #fff;
   padding: 1em;
@@ -15,8 +19,15 @@
   align-items: center;
 }
 
+.button-holder{
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
 .button-holder > .ant-btn{
-  margin-right: 0.5em;
+  margin: 0.25em !important;
 }
 
 .folder-blank > .ant-btn, .folder-blank > .add-blank{
@@ -60,8 +71,7 @@
   width: 100%;
   align-items: center;
   justify-content: flex-end;
-  padding-top: 0.5em;
-  padding-bottom: 1em;
+  padding-bottom: 1.25em;
 }
 /*
 .resources-editbar{

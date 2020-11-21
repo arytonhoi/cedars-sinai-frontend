@@ -368,11 +368,10 @@ class genPage extends Component {
           <div className="floating-component">
             {folders.subfolders.length > 0 ? (
               <div className="folder-topbar noselect">
-                <h3>Contents</h3>
-                <div>
+                <div className="button-holder">
                   {
                     (user.credentials.isAdmin && this.state.editFolders)?
-                    (<span className="button-holder">
+                    (<>
                     <Button
                       disabled={this.state.selectedFolders.length === 0}
                       type="danger"
@@ -392,7 +391,7 @@ class genPage extends Component {
                     >
                       Rename {this.state.selectedFolders.length} Folder{s}
                     </Button>
-                    </span>):
+                    </>):
                     ("")
                   }
                   <Dropdown overlay={menu}>
@@ -409,15 +408,15 @@ class genPage extends Component {
                   }
                   {
                     user.credentials.isAdmin && this.state.editFolders && !this.state.editPost ?
-                    (<span className="button-holder">
+                    (<>
                       <Button
                         type="primary"
-                        style={{ background: "green", borderColor: "green"}}
+                        style={{ background: "#52C41A", borderColor: "#52C41A"}}
                         onClick={this.toggleFolderEditable}
                       >
                         Finish Editing
                       </Button>
-                    </span>):
+                    </>):
                     ("")
                   }
               </div>
@@ -461,13 +460,13 @@ class genPage extends Component {
             (folders.content === "" || folders.subfolders.length < 1) ? (
               ""
             ) : (
-              <hr />
+              <hr className="folder-hr"/>
             )}
             {user.credentials.isAdmin &&
             !this.state.editPost &&
             !this.state.editFolders &&
             folders.content !== "" ? (
-              <div className="post-topbar noselect">
+              <div className="noselect button-holder">
                 <Button type="primary" onClick={this.togglePostEditable}>
                   Edit Post
                 </Button>
@@ -495,18 +494,16 @@ class genPage extends Component {
             {this.state.editPost ? (
               <>
                 <div className="post-editbar noselect">
-                  <span className="button-holder">
+                  <div className="button-holder">
                     <Button type="danger" onClick={this.clearPost}>
-                      Delete Contents
+                      Delete entire post
                     </Button>
-                  </span>
-                  <span className="button-holder">
                     <Button onClick={this.maybeShowPostCancelConfirm}>
                       Cancel
                     </Button>
                     <Button
                       type="primary"
-                      style={{ background: "green", borderColor: "green" }}
+                      style={{ background: "#52C41A", borderColor: "#52C41A" }}
                       disabled={
                         this.state.editor === null || this.state.editor === ""
                       }
@@ -514,7 +511,7 @@ class genPage extends Component {
                     >
                       Save Changes
                     </Button>
-                  </span>
+                  </div>
                   <Modal
                     className="center"
                     title={"Cancel changes to your post?"}
