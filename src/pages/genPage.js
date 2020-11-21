@@ -110,7 +110,7 @@ class genPage extends Component {
     this.setState({ ...this.state, selectedFolders: folders });
   };
   searchFolderCallback = (e) => {
-    if(e.target.value !== ""){
+    if(e.target.value !== "" && !this.props.UI.loadingFolderSearch){
       this.props.searchFolder(e.target.value)
     }
     this.setState({ ...this.state, searchKey: e.target.value });
