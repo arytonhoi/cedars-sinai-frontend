@@ -14,6 +14,7 @@ import { logoutUser, getUserData } from "./redux/actions/userActions";
 
 // Styles
 import "./App.css";
+import "./css/text.css";
 import { Layout } from "antd";
 
 // Utils

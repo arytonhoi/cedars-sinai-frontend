@@ -20,15 +20,14 @@ import {
 } from "../redux/actions/dataActions";
 
 // Components
-import DepartmentSection from "../components/contacts/departmentSection";
+import DepartmentList from "../components/contacts/departmentList";
 import AddDepartmentModal from "../components/contacts/addDepartmentModal";
 import EditDepartmentModal from "../components/contacts/editDepartmentModal";
 import AddContactModal from "../components/contacts/addContactModal";
 import EditContactModal from "../components/contacts/editContactModal";
 
 // css styles
-import "../css/layout.css";
-import "../css/input.css";
+import "../css/page.css";
 
 // Ant design
 import { Button, Input, Layout } from "antd";
@@ -309,89 +308,91 @@ class ContactPage extends Component {
     });
 
     // departments
-    var departmentsListComponent;
-    if (departments.length > 0) {
-      departmentsListComponent = departments.map((d) => {
-        const departmentContacts = matchingSearchContactsWithImgs.filter(
-          (c) => c.departmentId === d.id
-        );
-        return (
-          <DepartmentSection
-            key={d.id}
-            department={d}
-            contacts={departmentContacts}
-            handleEditThisDepartment={this.handleEditThisDepartment}
-            handleDeleteDepartment={this.handleDeleteDepartment}
-            handleAddNewContact={this.handleAddNewContact}
-            handleSubmitNewContact={this.handleSubmitNewContact}
-            handleEditThisContact={this.handleEditThisContact}
-            handleSubmitContactChange={this.handleSubmitContactChange}
-            handleCancelContactChange={this.handleCancelContactChange}
-            handleDeleteContact={this.handleDeleteContact}
-            handleChange={this.handleChange}
-            isEditing={this.state.isEditing}
-          />
-        );
-      }, this);
-      if (
-        !isAdmin &&
-        departmentsListComponent.findIndex(
-          (x) => x.props.contacts.length > 0
-        ) === -1
-      ) {
-        departmentsListComponent = "No search results were found";
-      }
-    } else {
-      departmentsListComponent = "Zero departments found. ";
-      if (isAdmin) {
-        departmentsListComponent += "Add some more?";
-      }
-    }
+    // var departmentsListComponent;
+    // if (departments.length > 0) {
+    //   departmentsListComponent = departments.map((d) => {
+    //     const departmentContacts = matchingSearchContactsWithImgs.filter(
+    //       (c) => c.departmentId === d.id
+    //     );
+    //     return (
+    //       <DepartmentSection
+    //         key={d.id}
+    //         department={d}
+    //         contacts={departmentContacts}
+    //         handleEditThisDepartment={this.handleEditThisDepartment}
+    //         handleDeleteDepartment={this.handleDeleteDepartment}
+    //         handleAddNewContact={this.handleAddNewContact}
+    //         handleSubmitNewContact={this.handleSubmitNewContact}
+    //         handleEditThisContact={this.handleEditThisContact}
+    //         handleSubmitContactChange={this.handleSubmitContactChange}
+    //         handleCancelContactChange={this.handleCancelContactChange}
+    //         handleDeleteContact={this.handleDeleteContact}
+    //         handleChange={this.handleChange}
+    //         isEditing={this.state.isEditing}
+    //       />
+    //     );
+    //   }, this);
+    //   if (
+    //     !isAdmin &&
+    //     departmentsListComponent.findIndex(
+    //       (x) => x.props.contacts.length > 0
+    //     ) === -1
+    //   ) {
+    //     departmentsListComponent = "No search results were found";
+    //   }
+    // } else {
+    //   departmentsListComponent = "Zero departments found. ";
+    //   if (isAdmin) {
+    //     departmentsListComponent += "Add some more?";
+    //   }
+    // }
     return (
-      <div className="container">
-        <header className="page-header">
-          <div className="page-header-title">
-            <h1>Contacts</h1>
-          </div>
-          <div className="header-search-items">
-            <Input
-              style={{ width: 300 }}
-              className="search-input"
-              id="searchTerm"
-              name="searchTerm"
-              type="text"
-              placeholder="Search contacts by name"
-              value={this.state.searchTerm}
-              onChange={this.handleChange}
-              suffix={
-                <SearchOutlined
-                  className="search-input-icon"
-                  style={{ color: "rgba(0,0,0,.45)" }}
-                />
-              }
-            />
-            {isAdmin && !this.state.isEditing && (
-              <Button
-                type="primary"
-                size={"medium"}
-                onClick={() => this.toggleEditing()}
-              >
-                Edit
-              </Button>
-            )}
-            {isAdmin && this.state.isEditing && (
-              <Button
-                type="primary"
-                size={"medium"}
-                onClick={() => this.toggleEditing()}
-              >
-                Done Editing
-              </Button>
-            )}
+      <div className="page-container">
+        <header className="page-header-container">
+          <div className="page-header-main-items">
+            <h1>Contact Us</h1>
+            <span className="page-header-interactive-items">
+              <Input
+                style={{ width: 300 }}
+                id="searchTerm"
+                name="searchTerm"
+                type="text"
+                placeholder="Search contacts by name"
+                value={this.state.searchTerm}
+                onChange={this.handleChange}
+                suffix={<SearchOutlined style={{ color: "rgba(0,0,0,.45)" }} />}
+              />
+              {isAdmin && this.state.isEditing && (
+                <Button
+                  size={"medium"}
+                  onClick={() => this.handleAddNewDepartment()}
+                >
+                  Add Department
+                </Button>
+              )}
+              {isAdmin && !this.state.isEditing && (
+                <Button
+                  type="primary"
+                  size={"medium"}
+                  onClick={() => this.toggleEditing()}
+                >
+                  Edit
+                </Button>
+              )}
+              {isAdmin && this.state.isEditing && (
+                <Button
+                  type="primary"
+                  size={"medium"}
+                  onClick={() => this.toggleEditing()}
+                >
+                  Done Editing
+                </Button>
+              )}
+            </span>
           </div>
         </header>
         <Layout className="vertical-fill-layout">
-          <Content className="content-container">
+          <Content className="content-card">
             <AddDepartmentModal
               visible={isAdmin && this.state.addingDepartment}
               departmentName={this.state.departmentName}
@@ -446,18 +447,20 @@ class ContactPage extends Component {
               confirmDelete={this.state.confirmDeleteContact}
               toggleDeleteModal={this.toggleDeleteContactFlag}
             />
-            {isAdmin && this.state.isEditing && (
-              <div style={{ textAlign: "right", padding: " 10px 20px" }}>
-                <Button
-                  type="primary"
-                  size={"medium"}
-                  onClick={() => this.handleAddNewDepartment()}
-                >
-                  Add Department
-                </Button>
-              </div>
-            )}
-            {departmentsListComponent}
+            <DepartmentList
+              departments={departments}
+              contacts={matchingSearchContactsWithImgs}
+              handleEditThisDepartment={this.handleEditThisDepartment}
+              handleDeleteDepartment={this.handleDeleteDepartment}
+              handleAddNewContact={this.handleAddNewContact}
+              handleSubmitNewContact={this.handleSubmitNewContact}
+              handleEditThisContact={this.handleEditThisContact}
+              handleSubmitContactChange={this.handleSubmitContactChange}
+              handleCancelContactChange={this.handleCancelContactChange}
+              handleDeleteContact={this.handleDeleteContact}
+              handleChange={this.handleChange}
+              isEditing={this.state.isEditing}
+            />
           </Content>
           <Footer style={{ textAlign: "center" }}>DevelopForGood ©2020</Footer>
         </Layout>

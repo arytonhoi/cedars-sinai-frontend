@@ -15,11 +15,10 @@ import {
 import AnnouncementPostEditorModal from "../components/announcement/announcementPostEditorModal.js";
 
 // css styles
-import "../css/annPage.css";
-import "../css/layout.css";
+import "../css/page.css";
 import "../css/input.css";
-import "../css/textContent.css";
-import "../components/announcement/Announcement.css";
+// import "../css/textContent.css";
+import "../components/announcement/announcement.css";
 
 // Ant design
 import { Button, Dropdown, Input, Layout, List, Menu } from "antd";
@@ -132,37 +131,47 @@ class AnnouncementPage extends Component {
     const { filteredAnnouncements } = this.props.data;
 
     return (
-      <div className="container">
+      <div className="page-container">
+        {isAdmin && (
+          <AnnouncementPostEditorModal
+            visible={this.state.isEditing || this.state.announcementId !== ""}
+            isEditingExistingAnnouncement={this.state.announcementId !== ""}
+            announcementTitle={this.state.announcementTitle}
+            announcementAuthor={this.state.announcementAuthor}
+            announcementContent={this.state.announcementContent}
+            handlePostOrPatchAnnouncement={this.handlePostOrPatchAnnouncement}
+            handleCancelEditAnnouncement={this.handleCancelEditAnnouncement}
+            handleDeleteThisAnnouncement={this.handleDeleteThisAnnouncement}
+          />
+        )}
         <Layout className="vertical-fill-layout">
-          <Content className="unpadded-content-container">
+          <Content className="content-card img-banner">
             <img
-              className="banner-img"
               alt="bg"
               src="https://firebasestorage.googleapis.com/v0/b/fir-db-d2d47.appspot.com/o/cedars_sinai_pic_1.png?alt=media&token=8370797b-7650-49b7-8b3a-9997fab0c32c"
             />
           </Content>
-          <Content className="padded-content-container">
-            {isAdmin && (
-              <AnnouncementPostEditorModal
-                visible={
-                  this.state.isEditing || this.state.announcementId !== ""
-                }
-                isEditingExistingAnnouncement={this.state.announcementId !== ""}
-                announcementTitle={this.state.announcementTitle}
-                announcementAuthor={this.state.announcementAuthor}
-                announcementContent={this.state.announcementContent}
-                handlePostOrPatchAnnouncement={
-                  this.handlePostOrPatchAnnouncement
-                }
-                handleCancelEditAnnouncement={this.handleCancelEditAnnouncement}
-                handleDeleteThisAnnouncement={this.handleDeleteThisAnnouncement}
-              />
-            )}
-            <div className="content-search-items">
+          <div
+            style={{
+              position: "relative",
+              bottom: "-15px",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
+            <Button
+              type="primary"
+              size={"medium"}
+              onClick={() => this.toggleEditing()}
+            >
+              Post New Announcement
+            </Button>
+          </div>
+          <Content className="content-card">
+            <div className="content-card-header padded">
               <Input
                 style={{ width: 400 }}
-                size="small"
-                className="search-input"
+                // size="small"
                 id="searchTerm"
                 name="searchTerm"
                 type="text"
@@ -186,61 +195,58 @@ class AnnouncementPage extends Component {
                     <Menu.Item key="7776000000">Everything</Menu.Item>
                   </Menu>
                 }
-                className="right-aligned"
               >
                 <Button>
                   Filter by date <DownOutlined />
                 </Button>
               </Dropdown>
             </div>
-            <Button
-              type="primary"
-              size={"medium"}
-              onClick={() => this.toggleEditing()}
-            >
-              Post New Announcement
-            </Button>
+
             <List
+              className="announcement-list"
               itemLayout="vertical"
               size="large"
               header={
-                <h2
-                  className="padded-content-container section-header"
-                  style={{ marginBottom: "0", paddingBottom: "0" }}
-                >
-                  Recent Announcements
-                </h2>
+                <header className="content-card-header">
+                  <h1>Recent Announcements</h1>
+                  {/* <Button
+                    type="primary"
+                    size={"medium"}
+                    onClick={() => this.toggleEditing()}
+                  >
+                    Post New Announcement
+                  </Button> */}
+                </header>
               }
               pagination={{
                 onChange: (page) => {
                   console.log(page);
                 },
-                pageSize: 3,
+                pageSize: 6,
               }}
               dataSource={filteredAnnouncements}
               renderItem={(announcement) => (
                 <List.Item
                   key={announcement.id}
-                  className="announcement-container collapsed"
+                  className="announcement-item collapsed"
                 >
-                  <div className="announcement-header">
-                    {isAdmin && (
-                      <Button
-                        className="right-aligned-btn"
-                        icon={<EditOutlined />}
-                        onClick={() =>
-                          this.handleEditThisAnnouncement(announcement)
-                        }
-                        type="text"
-                      />
-                    )}
-                    <h1>{announcement.title}</h1>
-                    <span>
-                      <h3>{announcement.author}</h3>
-                      <h3>{announcement.createdAt.toString("MM/dd/yy")}</h3>
+                  <header className="announcement-header">
+                    <span className="announcement-title">
+                      <h1>{announcement.title}</h1>
+                      {isAdmin && (
+                        <Button
+                          icon={<EditOutlined />}
+                          onClick={() =>
+                            this.handleEditThisAnnouncement(announcement)
+                          }
+                          type="text"
+                        />
+                      )}
                     </span>
-                  </div>
-                  <div
+                    <h3>{announcement.author}</h3>
+                    <h3>{announcement.createdAt.toString("MM/dd/yy")}</h3>
+                  </header>
+                  <content
                     className="ckeditor-content"
                     dangerouslySetInnerHTML={{ __html: announcement.content }}
                   />

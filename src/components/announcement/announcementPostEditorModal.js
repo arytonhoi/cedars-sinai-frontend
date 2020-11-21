@@ -10,8 +10,9 @@ import CKEditor from "ckeditor4-react";
 
 // styles
 // import "./PostAnn.css";
-import "../../css/textContent.css";
-import "../../css/layout.css";
+// import "../../css/textContent.css";
+import "../../css/modal.css";
+// import "../../css/layout.css";
 
 // Antd
 import { Button, Form, Input, Modal } from "antd";
@@ -33,7 +34,7 @@ class AnnouncementPostEditorModal extends Component {
         closable={false}
         footer={[
           <Button
-            className="modalFooterLeftButton"
+            className="left-align"
             danger
             type="primary"
             key="delete"
@@ -64,12 +65,9 @@ class AnnouncementPostEditorModal extends Component {
           </Button>,
         ]}
       >
-        <div
-          className="double-padded-content-container"
-          style={{ marginBottom: "15px" }}
-        >
-          {/* <h2 className="section-header">Post New Announcement</h2> */}
+        <div style={{ marginTop: "-15px", marginBottom: "-15px" }}>
           <Form
+            className="modal-form"
             id="announcementPostEditorForm"
             layout="vertical"
             ref={this.formRef}
@@ -135,44 +133,6 @@ class AnnouncementPostEditorModal extends Component {
                 }}
               />
             </Form.Item>
-            {/* <Form.Item>
-              {this.props.isEditingExistingAnnouncement && (
-                <Button
-                  // className="right-aligned-btn"
-                  // style={{ marginRight: "0" }}
-                  variant="contained"
-                  type="danger"
-                  onClick={() => {
-                    this.props.handleDeleteThisAnnouncement();
-                    this.formRef.current.resetFields();
-                  }}
-                >
-                  Delete
-                </Button>
-              )}
-              <Button
-                // className="right-aligned-btn"
-                // style={{ marginRight: "0" }}
-                variant="contained"
-                onClick={() => {
-                  this.props.handleCancelEditAnnouncement();
-                  this.formRef.current.resetFields();
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                className="right-aligned-btn"
-                style={{ marginRight: "0" }}
-                type="primary"
-                variant="contained"
-                htmlType="submit"
-              >
-                {this.props.isEditingExistingAnnouncement
-                  ? "Save changes"
-                  : "Post"}
-              </Button>
-            </Form.Item> */}
           </Form>
         </div>
       </Modal>

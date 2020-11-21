@@ -10,8 +10,8 @@ import { Button } from "antd";
 import { EditOutlined } from "@ant-design/icons";
 
 // class
-import "./department.css";
-import "../../css/textContent.css";
+import "./contacts.css";
+import "../../css/page.css";
 
 class DepartmentSection extends Component {
   render() {
@@ -23,19 +23,17 @@ class DepartmentSection extends Component {
       return null;
     } else {
       return (
-        <div className="departmentComponent">
-          <header className="padded-section-header">
-            <h2>{department.name}</h2>
+        <li className="department-item">
+          <header className="content-card-header padded">
+            <h1>{department.name}</h1>
             {isAdmin && this.props.isEditing && (
-              <div className="departmentAndContactButton">
-                <Button
-                  icon={<EditOutlined />}
-                  onClick={() =>
-                    this.props.handleEditThisDepartment(department.id)
-                  }
-                  type="text"
-                />
-              </div>
+              <Button
+                icon={<EditOutlined />}
+                onClick={() =>
+                  this.props.handleEditThisDepartment(department.id)
+                }
+                type="text"
+              />
             )}
           </header>
           <ContactList
@@ -46,7 +44,7 @@ class DepartmentSection extends Component {
           />
 
           {isAdmin && this.props.isEditing && (
-            <footer className="addContactFooter">
+            <footer>
               <Button
                 onClick={() => this.props.handleAddNewContact(department.id)}
                 type="dashed"
@@ -56,7 +54,7 @@ class DepartmentSection extends Component {
               </Button>
             </footer>
           )}
-        </div>
+        </li>
       );
     }
   }

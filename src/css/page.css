@@ -1,0 +1,99 @@
+/* ============================================================================================== */
+/* GENERAL LAYOUT STYLES */
+/* ============================================================================================== */
+
+.page-container {
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.vertical-fill-layout {
+  padding: 0 24px;
+  flex: 1;
+}
+
+/* ============================================================================================== */
+/* HEADER LAYOUT STYLES */
+/* ============================================================================================== */
+.page-header-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 98px;
+  padding: 16px 24px;
+  background-color: white;
+}
+
+.page-header-main-items {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-header-main-items h1 {
+  color: rgba(0, 0, 0, 0.85);
+  font-size: 20px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.page-header-interactive-items input,
+.page-header-interactive-items button {
+  margin-left: 16px;
+}
+
+/* ============================================================================================== */
+/* CONTENT CARD/CONTAINER STYLES */
+/* ============================================================================================== */
+
+.content-card {
+  position: relative;
+  margin: 24px 0 0 0;
+  border-radius: 10px;
+  background-color: white;
+  overflow: hidden;
+}
+
+.content-card.img-banner {
+  height: 200px;
+}
+
+.content-card.img-banner img {
+  width: 100%;
+}
+
+.content-card.pad-1 {
+}
+
+/* ============================================================================================== */
+/* CONTENT LAYOUTS AND STYLES */
+/* ============================================================================================== */
+.content-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.content-card-header.padded {
+  padding: 16px 20px 12px 20px;
+}
+
+.content-card-header h1 {
+  font-size: 20px;
+  font-weight: 400;
+  margin: 0;
+}
+
+.content-card-header h1.bold {
+  font-weight: 500;
+}
+
+.content-card ul {
+  padding: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}

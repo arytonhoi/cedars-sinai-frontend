@@ -1,13 +1,13 @@
-html,
+/* html,
 body {
-  font-family: 'Roboto', sans-serif !important;
+  font-family: "Roboto", sans-serif !important;
   background: #fff;
   font-style: normal;
-  font-weight:400;
+  font-weight: 400;
   font-size: 12px;
 }
 
-h4{
+h4 {
   color: #999 !important;
   font-weight: 400 !important;
 }
@@ -21,10 +21,10 @@ a {
   text-decoration: none;
 }
 
-input{
-}
+input {
+} */
 
-.pw-input{
+.pw-input {
   border: 2px solid #eee;
   padding: 0.25em 2em 0.25em 0.5em !important;
 }
@@ -32,59 +32,61 @@ input{
 /* UI */
 .noselect {
   -webkit-touch-callout: none;
-    -webkit-user-select: none;
-     -khtml-user-select: none;
-       -moz-user-select: none;
-        -ms-user-select: none;
-            user-select: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
-label, .clickable{
+label,
+.clickable {
   cursor: pointer;
 }
 
-.floating-component, .shadow{
+.floating-component,
+.shadow {
   border-collapse: separate;
-  -webkit-box-shadow: -5px 5px 20px 5px rgba(215,215,215,1);
-  -moz-box-shadow: -5px 5px 20px 5px rgba(215,215,215,1);
-  box-shadow: -5px 5px 20px 5px rgba(215,215,215,1);
+  -webkit-box-shadow: -5px 5px 20px 5px rgba(215, 215, 215, 1);
+  -moz-box-shadow: -5px 5px 20px 5px rgba(215, 215, 215, 1);
+  box-shadow: -5px 5px 20px 5px rgba(215, 215, 215, 1);
 }
 
-.floating-component{
+.floating-component {
   display: block;
   margin: 2em;
   padding: 2em 3em;
   background: #fff;
-  border-radius: 0.5em; 
+  border-radius: 0.5em;
 }
 
-.full-width{
+.full-width {
   width: 100%;
 }
-.hide{
+.hide {
   display: none;
 }
 
-.errors{
+.errors {
   display: block;
   color: red;
   font-size: 0.85em;
 }
 /* Positioning */
-.center{
+.center {
   position: absolute !important;
   top: 50% !important;
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
 }
 
-.valign{
+.valign {
   position: absolute !important;
   top: 50% !important;
   transform: translateY(-50%) !important;
 }
 
-.halign{
+.halign {
   position: absolute !important;
   left: 50% !important;
   transform: translateX(-50%) !important;

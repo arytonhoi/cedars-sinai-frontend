@@ -14,6 +14,7 @@ class AddDepartmentModal extends Component {
   render() {
     return (
       <Modal
+        className="modal"
         title="Add Department"
         visible={this.props.visible}
         centered={true}
@@ -23,7 +24,7 @@ class AddDepartmentModal extends Component {
             Cancel
           </Button>,
           <Button
- htmlType="submit"
+            htmlType="submit"
             key="submit"
             type="primary"
             onClick={this.props.handleSubmitNewDepartment}
@@ -32,12 +33,13 @@ class AddDepartmentModal extends Component {
           </Button>,
         ]}
       >
-        <Form layout="vertical">
+        <Form className="modal-form" layout="vertical">
           <Form.Item
             name="departmentName"
             className="requiredInput"
-            rules={[{ required: true, message: 'Department cannot be blank.' }]}
-            label="Department Name">
+            rules={[{ required: true, message: "Department cannot be blank." }]}
+            label="Department Name"
+          >
             <Input
               id="departmentName"
               name="departmentName"
