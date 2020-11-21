@@ -376,7 +376,7 @@ console.log(this.state)
           <div className="floating-component">
             {folders.subfolders.length > 0 ? (
               <div className="folder-topbar noselect">
-                <div className="button-holder">
+                <div className="folder-editbar button-holder">
                   {
                     (user.credentials.isAdmin && this.state.editFolders)?
                     (<>
@@ -474,7 +474,7 @@ console.log(this.state)
             !this.state.editPost &&
             !this.state.editFolders &&
             folders.content !== "" ? (
-              <div className="noselect button-holder">
+              <div className="noselect post-editbar button-holder">
                 <Button type="primary" onClick={this.togglePostEditable}>
                   Edit Post
                 </Button>
@@ -552,6 +552,7 @@ console.log(this.state)
                   config={{
                     disallowedContent: "script embed *[on*]",
                     removeButtons: "",
+                    height: "38vh"
                   }}
                 />
               </>
