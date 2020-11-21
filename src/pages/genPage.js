@@ -110,7 +110,7 @@ class genPage extends Component {
     this.setState({ ...this.state, selectedFolders: folders });
   };
   searchFolderCallback = (e) => {
-    if(e.target.value !== "" && !this.props.UI.loadingFolderSearch){
+    if(e.target.value !== "" && !this.props.UI.loadingFolderSearch && !this.state.editFolders && !this.state.editPost){
       this.props.searchFolder(e.target.value)
     }
     this.setState({ ...this.state, searchKey: e.target.value });
@@ -249,7 +249,7 @@ console.log(this.state)
         <div className="floating-component">Page loading...</div>
       ) : UI.errors.length > 0 ? (
         <div className="floating-component">{UI.errors[0].statusText}</div>
-      ) : this.state.searchKey === "" ? (
+      ) : (this.state.searchKey === "" || this.state.editFolders || this.state.editPost) ? (
         <div>
           {this.state.editFolders ? (
             <div className="resources-editbar noselect">
@@ -557,7 +557,7 @@ console.log(this.state)
                 />
               </>
             ) : (
-              <p className="folder-post">{parse(folders.content)}</p>
+              <div className="folder-post">{parse(folders.content)}</div>
             )}
           </div>
         </div>
@@ -604,7 +604,7 @@ console.log(this.state)
               <Button type="primary">Search</Button>
             </div>
           </div>
-        {this.state.searchKey === "" ? pageMarkup : searchMarkup()}
+        {(this.state.searchKey === "" || this.state.editFolders || this.state.editPost) ? pageMarkup : searchMarkup()}
       </>);
   }
 }

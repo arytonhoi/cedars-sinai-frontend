@@ -263,7 +263,7 @@ export default function (state = initialState, action) {
           state.data[0].subfolders.sort((a, b) => a.visits <= b.visits);
           break;
         default:
-          state.data[0].subfolders.sort((a, b) => a.id >= b.id);
+          state.data[0].subfolders.sort((a, b) => a.index >= b.index);
           break;
       }
       return { ...state };
