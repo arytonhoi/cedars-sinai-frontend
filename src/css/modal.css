@@ -1,4 +1,9 @@
-.requiredInput .ant-form-item-label::after {
+/* ============================================================================================== */
+/* MODAL CONTENT STYLES */
+/* ============================================================================================== */
+.modal-form
+  .ant-form-item-label
+  > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::after {
   display: inline-block;
   margin-left: 4px;
   color: #ff4d4f;
@@ -8,19 +13,32 @@
   content: "*";
 }
 
-.ant-row .ant-col.ant-form-item-label {
-  padding-bottom: 2px;
+.modal-form
+  .ant-form-item-label
+  > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
+  display: none;
 }
 
-.ant-row.ant-form-item {
-  margin-bottom: 10px;
+.modal-form.ant-form-vertical .ant-col.ant-form-item-label {
+  padding: 0;
+  margin-bottom: 2px;
 }
 
-.ant-modal-footer .modalFooterLeftButton {
+.modal-form.ant-form-vertical .ant-row.ant-form-item {
+  margin: 16px 0 0 0;
+}
+
+/* ============================================================================================== */
+/* MODAL FOOTER STYLES */
+/* ============================================================================================== */
+.ant-modal-footer .left-align {
   position: absolute;
   left: 16px;
 }
 
+/* ============================================================================================== */
+/* CUSTOM */
+/* ============================================================================================== */
 .ant-btn-circle.upload-img-circle-btn,
 .ant-avatar.ant-avatar-lg {
   width: 209px;
@@ -62,5 +80,4 @@
 }
 
 .ant-avatar.blur > img {
-  
 }

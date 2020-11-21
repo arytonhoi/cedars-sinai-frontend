@@ -1,0 +1,71 @@
+/* ============================================================================================== */
+/* GENERAL CONTACT STYLES*/
+/* ============================================================================================== */
+li:last-child {
+  margin-bottom: 15px;
+}
+
+/* ============================================================================================== */
+/* CONTACT LIST AND ITEM STYLES*/
+/* ============================================================================================== */
+.contact-item {
+  width: 100%;
+  padding: 11px 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: inset 0 0 2px #bfbfbf;
+}
+
+.contact-item:last-child {
+  /* border-bottom: solid 1px #bfbfbf; */
+  /* box-shadow: 0 2px 2px -1px #bfbfbf; */
+}
+
+.contact-item:nth-child(even) {
+  background: #fafafa;
+}
+
+.contact-item a {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.contact-item h1,
+.contact-item p,
+.contact-item a {
+  margin-bottom: 0;
+  display: inline-block;
+}
+
+.contact-item p,
+.contact-item a {
+  margin-left: 5px;
+}
+
+.contact-item h1 {
+  margin-left: 8px;
+}
+/* 
+.contact-item-info {
+  border: 1px black solid;
+} */
+
+.contact-item-info.name {
+  flex: 1 1 auto;
+}
+
+.contact-item-info.phone {
+  flex: 0 0 25%;
+}
+
+.contact-item-info.phone,
+.contact-item-info.email {
+  flex: 0 0 35%;
+}
+
+.department-item footer {
+  padding: 0 17px;
+  margin-bottom: 10px;
+}

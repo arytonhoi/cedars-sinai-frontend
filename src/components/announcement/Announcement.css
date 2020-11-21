@@ -1,94 +1,53 @@
-/* .ann-parent {
-  display: block;
-  margin-top: 1em;
-  border: 2px solid #eee;
-  background: #fff;
-  border-radius: 0.5em;
+/* ============================================================================================== */
+/* ANNOUNCEMENT LIST STYLES */
+/* ============================================================================================== */
+.ant-list.announcement-list {
+  padding: 0 16px;
 }
 
-.ann {
-  width: 100%;
-  padding: 0;
+.announcement-list .content-card-header {
+  padding: 0 4px;
+}
+
+.announcement-list .ant-pagination {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.announcement-list .ant-pagination li:last-child {
+  margin-bottom: 0;
+}
+
+/* ============================================================================================== */
+/* ANNOUNCEMENT ITEM STYLES */
+/* ============================================================================================== */
+.ant-list-lg .ant-list-item.announcement-item {
   position: relative;
+  padding: 18px 4px;
 }
 
-.ann-old{
-  color: #555;
-}
-
-.ann-pinned{
-  background: #ffe;
-}
-
-.ann-head{
-}
-
-.ann-head-top{
-  padding: 0 1em;
-  width: 100%;
-  background: #eee;
-}
-
-.ann-title{
-  padding: 0.25em 1em;
-  width: 100%
-}
-
-.ann-title, .ann-person, .ann-menu-toggle{
-  font-weight: bold;
-}
-
-.ann-menu-toggle{
-  position: absolute;
-  right: 0.5em;
-}
-.ann-menu-icon{
-  height: 1em;
-}
-
-.ann-date{
-  padding-left: 0.5em;
-  color: #555;
-}
-
-.ann-text{
-  padding: 1em;
-  border-top: 2px solid #eee;
-}
-.delete-confirm{
-  position: absolute;
-  top: 1em;
-  right: 1em;
-  padding: 0.5em 1em;
-  background: #fff;
-  color: #000;
-  border-radius: 0.5em;
-  z-index:2
-}
-.delete-action{
-  color: #f00
-}
-.post-toggle:checked+.ann-body, .delete-confirm-toggle:checked+.delete-confirm{
-  display: block;
-} */
-
-.ant-list-lg .ant-list-item.announcement-container {
-  padding: 18px 16px;
-}
-
-.announcement-container.collapsed {
-  max-height: 400px;
+.announcement-item.collapsed {
+  max-height: 300px;
   overflow: hidden;
 }
 
 .announcement-header {
+  padding: 0;
   margin-bottom: 8px;
+}
+
+.announcement-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: -10px;
 }
 
 .announcement-header h1,
 .announcement-header h3 {
+  display: inline-block;
   margin-bottom: 0;
-  line-height: 1.1em;
+  /* line-height: 0.5em; */
 }
 
 .announcement-header h1 {

@@ -42,13 +42,14 @@ class EditContactModal extends Component {
           <span>This action cannot be undone.</span>
         </Modal>
         <Modal
+          className="modal"
           title="Edit Contact Info"
           visible={this.props.visible}
           centered={true}
           closable={false}
           footer={[
             <Button
-              className="modalFooterLeftButton"
+              className="left-align"
               danger
               type="primary"
               key="delete"
@@ -69,6 +70,7 @@ class EditContactModal extends Component {
           ]}
         >
           <Form
+            className="modal-form"
             layout="vertical"
             initialValues={{
               contactDepartmentId: this.props.contactDepartmentId,
@@ -98,11 +100,7 @@ class EditContactModal extends Component {
               </Button>
             </div>
 
-            <Form.Item
-              name="contactDepartmentId"
-              className="requiredInput"
-              label="Department"
-            >
+            <Form.Item name="contactDepartmentId" label="Department">
               <Select
                 name="contactDepartmentId"
                 onChange={(departmentId) => {
@@ -125,7 +123,6 @@ class EditContactModal extends Component {
             <Form.Item
               name="contactName"
               rules={[{ required: true, message: "Please input your name." }]}
-              className="requiredInput"
               label="Name"
             >
               <Input
@@ -138,7 +135,6 @@ class EditContactModal extends Component {
             </Form.Item>
             <Form.Item
               name="contactPhone"
-              className="requiredInput"
               rules={[
                 { required: true, message: "Please input your phone number." },
                 { pattern: phoneRegex, message: "Did not fit phone regex." },
@@ -154,7 +150,6 @@ class EditContactModal extends Component {
               />
             </Form.Item>
             <Form.Item
-              className="requiredInput"
               name="contactEmail"
               rules={[
                 { required: true, message: "Please input your email." },
@@ -170,15 +165,6 @@ class EditContactModal extends Component {
                 placeholder="ex: janedoe@email.com"
               />
             </Form.Item>
-            <br />
-            {/* <label htmlFor="contactImgUrl">ImgUrl:</label>
-          <input
-            id="contactImgUrl"
-            name="contactImgUrl"
-            type="text"
-            value={this.props.contactImgUrl}
-            onChange={this.props.handleChange}
-          /> */}
           </Form>
         </Modal>
       </>

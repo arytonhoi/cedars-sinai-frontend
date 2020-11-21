@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./Announcement.css";
+import "./announcement.css";
 import PropTypes from "prop-types";
 
 // Redux stuff

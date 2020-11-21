@@ -17,20 +17,19 @@ class ContactList extends Component {
     // contacts
     const contactsListComponent = contacts.map((c) => {
       return (
-        <li key={c.id} className="contactRow">
-          <div className="contactImg">
+        <li key={c.id} className="contact-item">
+          <div className="contact-item-info name">
             {c.imgUrl !== "" && <Avatar src={c.imgUrl} />}
+            <h1 className="bold">{c.name}</h1>
           </div>
-          <h1 className="contactName">{c.name}</h1>
-          <div className="contactPhone">
+          <div className="contact-item-info phone">
             <PhoneOutlined />
             <p>{c.phone}</p>
           </div>
-          <span className="contactEmail">
+          <div className="contact-item-info email">
             <MailOutlined />
-            {/* <p href={`mailto:${c.email}`}>{c.email}</p> */}
             <a href={`mailto:${c.email}`}>{c.email}</a>
-          </span>
+          </div>
 
           {isAdmin && this.props.isEditing && (
             <Button
@@ -44,7 +43,7 @@ class ContactList extends Component {
     }, this);
 
     return contacts.length !== 0 ? (
-      <ul className="contactList">{contactsListComponent}</ul>
+      <ul>{contactsListComponent}</ul>
     ) : (
       <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
     );
