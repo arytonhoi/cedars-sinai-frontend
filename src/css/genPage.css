@@ -24,6 +24,7 @@ span.em4-light:last-of-type > a{
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .button-holder > .ant-btn{
@@ -61,7 +62,7 @@ span.em4-light:last-of-type > a{
   display: flex;
   position: relative;
   flex-wrap: wrap;
-  justify-content: align-left;
+  justify-content: space-between;
   width: 100%;
 }
 

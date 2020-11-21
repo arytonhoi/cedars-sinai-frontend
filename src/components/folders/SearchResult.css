@@ -17,3 +17,17 @@
 .search-result-content{
   color:#000 !important;
 }
+
+.search-main-box{
+  display: flex;
+  flex-direction: column;
+}
+
+.search-main-box > span{
+  word-wrap: anywhere;
+}
+
+.search-result-breadcrumb{
+  padding-top: 0.25em;
+  padding-bottom: 0.5em
+}

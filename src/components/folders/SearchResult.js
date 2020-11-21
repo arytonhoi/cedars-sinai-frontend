@@ -7,21 +7,7 @@ import { FolderFilled } from "@ant-design/icons"
 // Redux stuff
 import { connect } from "react-redux";
 //import { deleteAnnounce, clearErrors } from "../../redux/actions/dataActions";
-// todo: pass folder path in backend
-/*
-          <h5>
-            <span>
-              <a className="em4-light" href="/resources">Resources</a>
-            </span>
-            { (typeof(data.folders) === "object" && typeof(data.folders.path) === "object")?
-              (data.folders.path.map((x, i) =>
-                  ((x.id !== "" && x.id !== "home") ?
-                  (<span className="em4-light" key={x.id}>{" / "}<a className="em4-light" href={x.id}>{x.name}</a></span>):
-                  (""))
-                )
-              ): ("") }
-          </h5>
-*/
+
 class SearchResult extends Component {
 // eslint-disable-next-line
   stripHTMLRegex = new RegExp(`<\\/? *[a-zA-Z0-9]+( *[a-zA-Z0-9]+ *= *['"].+?['"])* *\\/? *>`,"gi")
@@ -50,8 +36,20 @@ class SearchResult extends Component {
           <div className="folder-logo-icon">
             <FolderFilled />
           </div>
-          <div className="">
-            <h4 className="em2 search-result-title">{data.title}</h4>
+          <div className="search-main-box">
+            <span className="em2 search-result-title">{data.title}</span>
+            <span className="search-result-breadcrumb">
+              <span>
+                <a className="em4-light" href="/resources">Resources</a>
+              </span>
+              { (typeof(data) === "object" && typeof(data.path) === "object")?
+                (data.path.map((x, i) =>
+                    ((x.id !== "" && x.id !== "home") ?
+                    (<span className="em4-light" key={x.id}>{" / "}<a className="em4-light" href={x.id}>{x.name}</a></span>):
+                    (""))
+                  )
+                ): ("") }
+            </span>
             {this.showSearchResult(data.content)}
           </div>
       </a>
