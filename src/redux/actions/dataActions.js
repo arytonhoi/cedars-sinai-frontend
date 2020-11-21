@@ -35,6 +35,7 @@ import {
   ADD_SUBFOLDER,
   PATCH_FOLDER,
   PATCH_SUBFOLDER,
+  SORT_SUBFOLDER,
   DELETE_SUBFOLDER,
   SET_NAV_PATH,
   RESET_NAV_PATH,
@@ -324,6 +325,12 @@ export const getFolder = (folderName,track) => (dispatch) => {
         type: SET_NAV_PATH,
         payload: res.data,
       });
+      if(!isNaN(parseInt(res.data.preferredSort))){
+        dispatch({
+          type: SORT_SUBFOLDER,
+          payload: parseInt(res.data.preferredSort),
+        })
+      }
     })
     .catch((err) => dispatch({ type: SET_ERRORS, payload: err }));
 };
@@ -393,10 +400,6 @@ export const updateSubFolder = (folderName, folderDetails) => (dispatch) => {
       dispatch({
         type: PATCH_SUBFOLDER,
         payload: { id: folderName, patch: folderDetails },
-      });
-      dispatch({
-        type: DELETE_SUBFOLDER,
-        payload: folderName,
       });
     })
     .catch((err) => {

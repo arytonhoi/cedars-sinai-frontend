@@ -224,13 +224,13 @@ export default function (state = initialState, action) {
       state.data[0].subfolders.push(action.payload);
       return { ...state };
     case PATCH_FOLDER:
-      state.data[0] = Object.assign({}, state.data[0], action.payload);
+      state.data[0] = Object.assign(state.data[0], action.payload);
       return { ...state };
     case PATCH_SUBFOLDER:
       let sf = state.data[0].subfolders;
       index = sf.findIndex((x) => x.id === action.payload.id);
-      if (action.payload.patch) {
-        sf[index] = Object.assign({}, sf[index], action.payload.patch);
+      if (action.payload.patch && index >= 0) {
+        sf[index] = Object.assign(sf[index], action.payload.patch);
       }
       state.data[0].subfolders = sf;
       return { ...state };
