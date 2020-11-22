@@ -19,7 +19,7 @@ import {
   updateSubFolder,
   getNavRoute,
 } from "../redux/actions/dataActions";
-import { SORT_SUBFOLDER } from "../redux/types";
+import { MOVE_SUBFOLDER, SORT_SUBFOLDER } from "../redux/types";
 
 // Editor
 import CKEditor from "ckeditor4-react";
@@ -41,7 +41,7 @@ class genPage extends Component {
       editPost: false,
       editor: null,
       selectedFolders: [],
-      folderMoveCandidate: {start:[0,0],target:null},
+      folderMoveCandidate: {start:[0,0],target:null,id:""},
       folderPosList:[[],[]]
     };
   }
@@ -159,25 +159,31 @@ class genPage extends Component {
       selectedFolders: [],
     });
   };
-  folderDragStart = (e) => {
-    var x = document.querySelectorAll(".folder")
+  folderDragStart = (e,x) => {
+    var f = document.querySelectorAll(".folder")
     var arr = this.state.folderPosList
-    x.forEach((a)=>{arr[0].push(a.offsetLeft);arr[1].push(a.offsetTop)})
+    f.forEach((a)=>{arr[0].push(a.offsetLeft);arr[1].push(a.offsetTop)})
     arr = [arr[0].filter((v,i,a)=>a.indexOf(v)===i),arr[1].filter((v,i,a)=>a.indexOf(v)===i)]
+    arr[0][arr[0].length-1] = +Infinity
+    arr[1][arr[1].length-1] = +Infinity
     this.setState({
-      folderMoveCandidate:{start:[e.clientX,e.clientY],target:e.currentTarget},
+      folderMoveCandidate:{start:[e.clientX,e.clientY],target:e.currentTarget,id:x.id},
       folderPosList:arr
     })
   }
   folderDragEnd = (e) => {
-    var x = this.state.folderMoveCandidate
+    var f = this.state.folderMoveCandidate
+    var targetSize = [e.target.clientWidth, e.target.clientHeight]
     var arr = this.state.folderPosList
-    var final = [x.target.offsetLeft+e.clientX-x.start[0],x.target.offsetTop+e.clientY-x.start[1]]
+    var final = [f.target.offsetLeft+e.clientX-f.start[0]-(targetSize[0]/2),f.target.offsetTop+e.clientY-f.start[1]-(targetSize[1]/2)]
     var pos = [Math.max(arr[0].findIndex(x=>x>final[0])),Math.max(arr[1].findIndex(x=>x>final[1]))]
-    //pos= pos[0] + pos[1]*arr[0].length
-    console.log(arr,final, pos)
+    pos = pos[0] + pos[1]*arr[0].length - 1
+    store.dispatch({ type: MOVE_SUBFOLDER, payload: {"id":f.id,"newIndex":pos} });
+    this.props.updateFolder(this.state.pagename, {
+      preferredSort: -1,
+    });
     this.setState({
-      folderMoveCandidate:{start:[0,0],target:null},
+      folderMoveCandidate:{start:[0,0],target:null,id:""},
       folderPosList:[[],[]]
     })
   }
@@ -216,8 +222,11 @@ class genPage extends Component {
     this.togglePostEditable();
   };
   render() {
-console.log(this.props)
+try{
+console.log(this.props.data.data[0].subfolders)
+}catch(e){
 console.log(this.state)
+}
     const { UI, data, user } = this.props;
     const pageName = this.props.match.params.pageName;
     const folders = data.data[0];
@@ -449,7 +458,7 @@ console.log(this.state)
               {folders.subfolders.length > 0
                 ? folders.subfolders.map((x, i) => (
                     <Folder
-                      onMouseDown={this.folderDragStart}
+                      onMouseDown={(e)=>this.folderDragStart(e,x)}
                       onMouseUp={this.folderDragEnd}
                       key={x.id}
                       label={x.title}

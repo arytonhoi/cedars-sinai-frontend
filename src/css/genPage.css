@@ -63,7 +63,6 @@ span.em4-light:last-of-type > a{
   display: flex;
   position: relative;
   flex-wrap: wrap;
-  justify-content: space-between;
   width: 100%;
 }
 

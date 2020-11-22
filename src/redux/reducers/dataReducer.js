@@ -30,6 +30,7 @@ import {
   PATCH_SUBFOLDER,
   DELETE_SUBFOLDER,
   SORT_SUBFOLDER,
+  MOVE_SUBFOLDER,
   SET_NAV_PATH,
   RESET_NAV_PATH,
   SET_FOLDER_SEARCH_RES,
@@ -265,6 +266,16 @@ export default function (state = initialState, action) {
         default:
           state.data[0].subfolders.sort((a, b) => a.index >= b.index);
           break;
+      }
+      return { ...state };
+    case MOVE_SUBFOLDER:
+      sf = state.data[0].subfolders;
+      let oldIndex = sf.findIndex((x) => x.id === action.payload.id);
+      if(oldIndex >= 0){
+        let newIndex = Math.min(Math.max(0,action.payload.newIndex), sf.length)
+        sf = sf.slice(0, oldIndex).concat(sf.slice(oldIndex + 1));
+        sf = sf.slice(0, newIndex).concat(state.data[0].subfolders[oldIndex]).concat(sf.slice(newIndex));
+        state.data[0].subfolders = sf.map((x,i)=>Object.assign(x,{"index":i}))
       }
       return { ...state };
     case SET_NAV_PATH:
