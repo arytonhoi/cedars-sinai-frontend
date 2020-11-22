@@ -18,7 +18,7 @@ import AnnouncementPostEditorModal from "../components/announcement/announcement
 import "../css/page.css";
 import "../css/input.css";
 // import "../css/textContent.css";
-import "../components/announcement/Announcement.css";
+import "../components/announcement/announcement.css";
 
 // Ant design
 import { Button, Dropdown, Input, Layout, List, Menu } from "antd";
