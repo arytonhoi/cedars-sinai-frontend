@@ -60,10 +60,10 @@ class genPage extends Component {
   sortSubfolders = (e) => {
     if(this.state.editFolders && this.props.user.credentials.isAdmin){
       this.props.updateFolder(this.state.pagename, {
-        preferredSort: e.key,
+        preferredSort: parseInt(e.key),
       });
     }
-    store.dispatch({ type: SORT_SUBFOLDER, payload: e.key });
+    store.dispatch({ type: SORT_SUBFOLDER, payload: parseInt(e.key) });
   };
   toggleFolderEditable = () => {
     this.setState({
