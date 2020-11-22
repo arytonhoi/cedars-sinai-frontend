@@ -38,6 +38,7 @@ class genPage extends Component {
       showRenameConfirm: false,
       showDeleteConfirm: false,
       showMoveDialog: false,
+      showSearchResults: false,
       searchKey: "",
       editPost: false,
       editor: null,
@@ -111,10 +112,13 @@ class genPage extends Component {
     this.setState({ ...this.state, selectedFolders: folders });
   };
   searchFolderCallback = (e) => {
-    if(e.target.value !== "" && !this.props.UI.loadingFolderSearch && !this.state.editFolders && !this.state.editPost){
-      this.props.searchFolder(e.target.value)
+    this.setState({showSearchResults: false, searchKey: e.target.value });
+  };
+  searchFolder = () => {
+    if(this.state.searchKey !== "" && !this.props.UI.loadingFolderSearch && !this.state.editFolders && !this.state.editPost){
+      this.props.searchFolder(this.state.searchKey)
     }
-    this.setState({ ...this.state, searchKey: e.target.value });
+    this.setState({showSearchResults: true});
   };
   renameFolders = () => {
     if (this.state.showRenameConfirm) {
@@ -254,7 +258,7 @@ class genPage extends Component {
         <div className="floating-component">Page loading...</div>
       ) : UI.errors.length > 0 ? (
         <div className="floating-component">{UI.errors[0].statusText}</div>
-      ) : (this.state.searchKey === "" || this.state.editFolders || this.state.editPost) ? (
+      ) : (this.state.searchKey === "" || !this.state.showSearchResults || this.state.editFolders || this.state.editPost) ? (
         <div>
           {this.state.editFolders ? (
             <div className="resources-editbar noselect">
@@ -606,10 +610,10 @@ class genPage extends Component {
             </div>
             <div className="resources-topbar-right">
               <Input onKeyUp={this.searchFolderCallback} disabled={this.state.editFolders || this.state.editPost} className="no-padding" suffix={<SearchOutlined />} placeholder="Search resources by name" />
-              <Button type="primary" disabled={this.state.editFolders || this.state.editPost}>Search</Button>
+              <Button type="primary" disabled={this.state.editFolders || this.state.editPost} onClick={this.searchFolder} >Search</Button>
             </div>
           </div>
-        {(this.state.searchKey === "" || this.state.editFolders || this.state.editPost) ? pageMarkup : searchMarkup()}
+        {(this.state.searchKey === "" || !this.state.showSearchResults || this.state.editFolders || this.state.editPost) ? pageMarkup : searchMarkup()}
       </>);
   }
 }

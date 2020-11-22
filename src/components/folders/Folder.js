@@ -10,7 +10,7 @@ import { connect } from "react-redux";
 
 class Folder extends Component {
   render() {
-    const { key,label, href } = this.props
+    const { label, href } = this.props
     if(typeof(href)==="function"){
       return(
         <div className="folder folder-normal noselect"
