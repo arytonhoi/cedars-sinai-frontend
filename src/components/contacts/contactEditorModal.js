@@ -51,8 +51,8 @@ class ContactEditorModal extends Component {
         className="modal"
         title={
           this.props.isEditingExistingContact
-            ? "Edit Contact Info"
-            : "Add New Contact"
+            ? "Edit contact"
+            : "Add new contact"
         }
         visible={this.props.visible}
         centered={true}

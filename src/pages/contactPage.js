@@ -278,17 +278,18 @@ class ContactPage extends Component {
                   size={"medium"}
                   onClick={() => this.handleAddorEditDepartment()}
                 >
-                  Add Department
+                  Add department
                 </Button>
               )}
 
               {isAdmin && this.state.isEditingPage && (
                 <Button
                   type="primary"
+                  style={{ background: "#52C41A", borderColor: "#52C41A" }}
                   size={"medium"}
                   onClick={() => this.toggleEditPage()}
                 >
-                  Done Editing
+                  Save changes
                 </Button>
               )}
             </span>

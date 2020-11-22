@@ -54,7 +54,7 @@ class DepartmentSection extends Component {
                 type="dashed"
                 block
               >
-                + Add New Contact
+                + Add new contact
               </Button>
             </footer>
           )}
