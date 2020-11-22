@@ -1,0 +1,30 @@
+[debug] [2020-11-22T01:04:05.002Z] ----------------------------------------------------------------------
+[debug] [2020-11-22T01:04:05.004Z] Command:       /usr/bin/node /usr/bin/firebase deploy
+[debug] [2020-11-22T01:04:05.004Z] CLI Version:   8.11.2
+[debug] [2020-11-22T01:04:05.005Z] Platform:      linux
+[debug] [2020-11-22T01:04:05.005Z] Node Version:  v14.13.1
+[debug] [2020-11-22T01:04:05.005Z] Time:          Sun Nov 22 2020 01:04:05 GMT+0000 (Greenwich Mean Time)
+[debug] [2020-11-22T01:04:05.005Z] ----------------------------------------------------------------------
+[debug] [2020-11-22T01:04:05.005Z] 
+[debug] [2020-11-22T01:04:05.012Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-11-22T01:04:05.013Z] > authorizing via signed-in user
+[debug] [2020-11-22T01:04:05.013Z] [iam] checking project fir-db-d2d47 for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2020-11-22T01:04:05.016Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/fir-db-d2d47:testIamPermissions  
+ {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2020-11-22T01:04:05.714Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 22 Nov 2020 01:04:05 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=549","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-11-22T01:04:05.716Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/fir-db-d2d47  
+ 
+[debug] [2020-11-22T01:04:06.011Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 22 Nov 2020 01:04:05 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] 
+[info] === Deploying to 'fir-db-d2d47'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2020-11-22T01:04:06.017Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/fir-db-d2d47/versions  
+ {"config":{"rewrites":[{"glob":"**","path":"/index.html"}]},"labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2020-11-22T01:04:07.344Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 22 Nov 2020 01:04:07 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] i  hosting[fir-db-d2d47]: beginning deploy... 
+[info] i  hosting[fir-db-d2d47]: found 31 files in build 
+[debug] [2020-11-22T01:04:08.165Z] [hosting] hash cache [YnVpbGQ] stored for 31 files
+[debug] [2020-11-22T01:04:08.166Z] [hosting][hash queue][FINAL] {"max":796,"min":33,"avg":81.80645161290323,"active":0,"complete":31,"success":31,"errored":0,"retried":0,"total":31,"elapsed":803}
+[debug] [2020-11-22T01:04:08.166Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/fir-db-d2d47/versions/9c2050c25c069160:populateFiles  
+ <request body omitted>

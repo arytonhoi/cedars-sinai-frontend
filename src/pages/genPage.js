@@ -18,6 +18,7 @@ import {
   updateFolder,
   updateSubFolder,
   getNavRoute,
+  syncAllSubFolders,
 } from "../redux/actions/dataActions";
 import { MOVE_SUBFOLDER, SORT_SUBFOLDER } from "../redux/types";
 
@@ -222,11 +223,6 @@ class genPage extends Component {
     this.togglePostEditable();
   };
   render() {
-try{
-console.log(this.props.data.data[0].subfolders)
-}catch(e){
-console.log(this.state)
-}
     const { UI, data, user } = this.props;
     const pageName = this.props.match.params.pageName;
     const folders = data.data[0];
@@ -429,7 +425,7 @@ console.log(this.state)
                       <Button
                         type="primary"
                         style={{ background: "#52C41A", borderColor: "#52C41A"}}
-                        onClick={this.toggleFolderEditable}
+                        onClick={()=>{console.log(this.props.data.data[0].subfolders);this.props.syncAllSubFolders(this.props.data.data[0].subfolders);this.toggleFolderEditable()}}
                       >
                         Finish Editing
                       </Button>
@@ -624,6 +620,7 @@ genPage.propTypes = {
   deleteFolder: PropTypes.func.isRequired,
   updateFolder: PropTypes.func.isRequired,
   updateSubFolder: PropTypes.func.isRequired,
+  syncAllSubFolders: PropTypes.func.isRequired,
   getNavRoute: PropTypes.func.isRequired,
   data: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
@@ -644,4 +641,5 @@ export default connect(mapStateToProps, {
   updateSubFolder,
   deleteFolder,
   getNavRoute,
+  syncAllSubFolders,
 })(genPage);

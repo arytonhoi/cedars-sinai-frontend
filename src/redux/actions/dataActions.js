@@ -429,6 +429,22 @@ export const updateSubFolder = (folderName, folderDetails) => (dispatch) => {
     });
 };
 
+export const syncAllSubFolders = (subfolders) => (dispatch) => {
+  if(typeof(subfolders)==="object" && subfolders.length > 0){
+  subfolders.forEach( x=>{
+    axios
+      .patch(`/folders/${x.id}`, x)
+      .then()
+      .catch((err) => {
+        dispatch({
+          type: SET_ERRORS,
+          payload: err.response.data,
+        });
+      })
+    })
+  }
+};
+
 export const deleteFolder = (folderName) => (dispatch) => {
   axios
     .delete(`/folders/${folderName}`)
