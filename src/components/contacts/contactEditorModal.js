@@ -17,11 +17,24 @@ const RFC5322 = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_{|}~-]+
 const phoneRegex = /^\(? *\d{3} *\)? *\d{3} *-? *\d{4}$/;
 
 class ContactEditorModal extends Component {
+  constructor() {
+    super();
+    this.state = {
+      isDeleting: false,
+    };
+  }
+
   componentDidUpdate() {
     if (this.formRef.current) {
       this.formRef.current.resetFields();
     }
   }
+
+  toggleDeleting = () => {
+    this.setState({
+      isDeleting: !this.state.isDeleting,
+    });
+  };
 
   formRef = React.createRef();
 
@@ -44,39 +57,57 @@ class ContactEditorModal extends Component {
         visible={this.props.visible}
         centered={true}
         closable={false}
-        footer={[
-          this.props.isEditingExistingContact ? (
-            <Button
-              className="left-align"
-              danger
-              type="primary"
-              key="delete"
-              onClick={() => {
-                this.props.handleDeleteContact();
-                this.formRef.current.resetFields();
-              }}
-            >
-              Delete
-            </Button>
-          ) : null,
-          <Button
-            key="back"
-            onClick={() => {
-              this.props.handleCancelAddorEditContact();
-              this.formRef.current.resetFields();
-            }}
-          >
-            Cancel
-          </Button>,
-          <Button
-            key="submit"
-            type="primary"
-            form="contactEditorForm"
-            htmlType="submit"
-          >
-            {this.props.isEditingExistingContact ? "Save changes" : "Add"}
-          </Button>,
-        ]}
+        footer={
+          this.state.isDeleting
+            ? [
+                <h3 className="modal-delete-confirmation">Delete contact?</h3>,
+                <span className="modal-footer-filler"></span>,
+                <Button key="back" onClick={this.toggleDeleting}>
+                  Cancel
+                </Button>,
+                <Button
+                  key="submit"
+                  type="danger"
+                  onClick={() => {
+                    this.props.handleDeleteContact();
+                    this.formRef.current.resetFields();
+                    this.toggleDeleting();
+                  }}
+                >
+                  Delete
+                </Button>,
+              ]
+            : [
+                this.props.isEditingExistingContact ? (
+                  <Button
+                    danger
+                    type="primary"
+                    key="delete"
+                    onClick={this.toggleDeleting}
+                  >
+                    Delete
+                  </Button>
+                ) : null,
+                <span className="modal-footer-filler"></span>,
+                <Button
+                  key="back"
+                  onClick={() => {
+                    this.props.handleCancelAddorEditContact();
+                    this.formRef.current.resetFields();
+                  }}
+                >
+                  Cancel
+                </Button>,
+                <Button
+                  key="submit"
+                  type="primary"
+                  form="contactEditorForm"
+                  htmlType="submit"
+                >
+                  {this.props.isEditingExistingContact ? "Save changes" : "Add"}
+                </Button>,
+              ]
+        }
       >
         <Form
           className="modal-form"

@@ -41,7 +41,7 @@
   margin: 0;
 }
 
-.page-header-interactive-items input,
+.page-header-interactive-items .ant-input-affix-wrapper,
 .page-header-interactive-items button {
   margin-left: 16px;
 }

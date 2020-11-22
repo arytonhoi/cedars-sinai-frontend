@@ -11,11 +11,24 @@ import "../../css/modal.css";
 import { Button, Input, Form, Modal } from "antd";
 
 class DepartmentEditorModal extends Component {
+  constructor() {
+    super();
+    this.state = {
+      isDeleting: false,
+    };
+  }
+
   componentDidUpdate() {
     if (this.formRef.current) {
       this.formRef.current.resetFields();
     }
   }
+
+  toggleDeleting = () => {
+    this.setState({
+      isDeleting: !this.state.isDeleting,
+    });
+  };
 
   formRef = React.createRef();
 
@@ -31,33 +44,58 @@ class DepartmentEditorModal extends Component {
         visible={this.props.visible}
         centered={true}
         closable={false}
-        footer={[
-          this.props.isEditingExistingDepartment ? (
-            <Button
-              className="left-align"
-              danger
-              type="primary"
-              key="delete"
-              onClick={this.props.handleDeleteDepartment}
-            >
-              Delete
-            </Button>
-          ) : null,
-          <Button
-            key="back"
-            onClick={this.props.handleCancelAddorEditDepartment}
-          >
-            Cancel
-          </Button>,
-          <Button
-            key="submit"
-            type="primary"
-            form="departmentEditorForm"
-            htmlType="submit"
-          >
-            {this.props.isEditingExistingDepartment ? "Save changes" : "Add"}
-          </Button>,
-        ]}
+        footer={
+          this.state.isDeleting
+            ? [
+                <h3 className="modal-delete-confirmation">
+                  Delete department and its contacts?
+                </h3>,
+                <span className="modal-footer-filler"></span>,
+                <Button key="back" onClick={this.toggleDeleting}>
+                  Cancel
+                </Button>,
+                <Button
+                  key="submit"
+                  type="danger"
+                  onClick={() => {
+                    this.props.handleDeleteDepartment();
+                    this.formRef.current.resetFields();
+                    this.toggleDeleting();
+                  }}
+                >
+                  Delete
+                </Button>,
+              ]
+            : [
+                this.props.isEditingExistingDepartment ? (
+                  <Button
+                    danger
+                    type="primary"
+                    key="delete"
+                    onClick={this.toggleDeleting}
+                  >
+                    Delete
+                  </Button>
+                ) : null,
+                <span className="modal-footer-filler"></span>,
+                <Button
+                  key="back"
+                  onClick={this.props.handleCancelAddorEditDepartment}
+                >
+                  Cancel
+                </Button>,
+                <Button
+                  key="submit"
+                  type="primary"
+                  form="departmentEditorForm"
+                  htmlType="submit"
+                >
+                  {this.props.isEditingExistingDepartment
+                    ? "Save changes"
+                    : "Add"}
+                </Button>,
+              ]
+        }
       >
         <Form
           className="modal-form"

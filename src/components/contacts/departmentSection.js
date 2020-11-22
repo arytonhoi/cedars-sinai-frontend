@@ -18,8 +18,12 @@ class DepartmentSection extends Component {
     const { credentials } = this.props.user;
     const isAdmin = credentials.isAdmin;
     const department = this.props.department;
+    const contacts = this.props.contacts;
 
-    if (!isAdmin && this.props.contacts.length === 0) {
+    if (
+      (contacts.length === 0 && this.props.searchTerm !== "") ||
+      (!isAdmin && contacts.length === 0)
+    ) {
       return null;
     } else {
       return (
@@ -38,7 +42,7 @@ class DepartmentSection extends Component {
           </header>
           <ContactList
             department={department}
-            contacts={this.props.contacts}
+            contacts={contacts}
             handleAddorEditContact={this.props.handleAddorEditContact}
             isEditingPage={this.props.isEditingPage}
           />
@@ -71,6 +75,7 @@ DepartmentSection.propTypes = {
   handleAddorEditContact: PropTypes.func.isRequired,
   // general
   isEditingPage: PropTypes.bool.isRequired,
+  searchTerm: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => {

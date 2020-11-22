@@ -35,17 +35,11 @@ const defaultContactPic = `https://firebasestorage.googleapis.com/v0/b/fir-db-d2
 cedars_robot_1080x1080.jpg?alt=media&token=0932153f-e1e3-4f47-b419-fd5ae76abd34`;
 
 class ContactPage extends Component {
-  componentDidMount() {
-    this.props.getDepartments();
-    this.props.getContacts();
-  }
-
   constructor() {
     super();
     this.state = {
       isEditingPage: false,
       // departments
-      // addingDepartment: false,
       confirmDeleteDepartment: false,
       departmentId: "",
       departmentName: "",
@@ -56,7 +50,6 @@ class ContactPage extends Component {
       contactImgUrl: "",
       contactPhone: "",
       contactEmail: "",
-      // confirmDeleteContact: false,
       // search
       searchTerm: "",
       // modals
@@ -69,11 +62,10 @@ class ContactPage extends Component {
     };
   }
 
-  // images
-  // handleClickImageUpload = () => {
-  //   const fileInputDocument = document.getElementById("imageInput");
-  //   fileInputDocument.click();
-  // };
+  componentDidMount() {
+    this.props.getDepartments();
+    this.props.getContacts();
+  }
 
   handleImageChange = (event) => {
     console.log(event);
@@ -130,7 +122,6 @@ class ContactPage extends Component {
     this.setState({
       showDepartmentEditorModal: true,
     });
-    console.log(departmentId);
     if (departmentId === null) {
       this.setState({
         departmentName: "",

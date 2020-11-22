@@ -35,9 +35,22 @@
 /* ============================================================================================== */
 /* MODAL FOOTER STYLES */
 /* ============================================================================================== */
-.ant-modal-footer .left-align {
-  position: absolute;
-  left: 16px;
+.modal .ant-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.modal .ant-modal-footer .modal-footer-filler {
+  flex: 1 0 auto;
+}
+
+.modal .ant-modal-footer .modal-delete-confirmation {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ff4d4f;
+  margin-bottom: 0;
 }
 
 /* ============================================================================================== */

@@ -70,6 +70,7 @@ class DepartmentList extends Component {
             handleAddorEditContact={this.props.handleAddorEditContact}
             // general
             isEditingPage={this.props.isEditingPage}
+            searchTerm={this.props.searchTerm}
           />
         );
       }, this);
