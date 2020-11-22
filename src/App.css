@@ -47,7 +47,6 @@ label,
   cursor: pointer;
 }
 
-.floating-component,
 .shadow {
   border-collapse: separate;
   -webkit-box-shadow: -5px 5px 20px 5px rgba(215, 215, 215, 1);
