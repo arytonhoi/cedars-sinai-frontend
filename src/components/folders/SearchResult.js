@@ -40,12 +40,12 @@ class SearchResult extends Component {
             <span key={Math.random()} className="em2 search-result-title">{data.title}</span>
             <span key={Math.random()} className="search-result-breadcrumb">
               <span key={Math.random()}>
-                <span key={Math.random()}className="em4-light">Resources</span>
+                <span key={Math.random()} className="em4-light">Resources</span>
               </span>
               { (typeof(data) === "object" && typeof(data.path) === "object")?
                 (data.path.map((x, i) =>
                     ((x.id !== "" && x.id !== "home") ?
-                    (<span key={Math.random()} className="em4-light" key={x.id}>{" / "}<span key={Math.random()} className="em4-light">{x.name}</span></span>):
+                    (<span className="em4-light" key={x.id}>{" / "}{x.name}</span>):
                     (""))
                   )
                 ): ("") }
