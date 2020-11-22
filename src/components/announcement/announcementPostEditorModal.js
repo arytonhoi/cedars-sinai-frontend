@@ -118,20 +118,6 @@ class AnnouncementPostEditorModal extends Component {
                 config={{
                   disallowedContent: "script embed *[on*]",
                   removeButtons: "",
-                  toolbar: [
-                    {
-                      name: "Basic",
-                      items: [
-                        "Bold",
-                        "Italic",
-                        "Underline",
-                        "Superscript",
-                        "Subscript",
-                        "Link",
-                        "Image",
-                      ],
-                    },
-                  ],
                 }}
               />
             </Form.Item>
