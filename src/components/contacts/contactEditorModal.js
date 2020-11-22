@@ -137,7 +137,10 @@ class ContactEditorModal extends Component {
           <Form.Item
             name="contactPhone"
             rules={[
-              { required: true, message: "Please input a phone number." },
+              {
+                required: true,
+                message: "Please input a phone number.",
+              },
               { pattern: phoneRegex, message: "Invalid phone number." },
             ]}
             label="Phone Number"
