@@ -58,7 +58,7 @@ label,
 .floating-component {
   display: block;
   margin: 2em;
-  padding: 2em 3em;
+  padding: 2em 1.71em;
   background: #fff;
   border-radius: 0.5em;
 }
