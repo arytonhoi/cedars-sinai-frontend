@@ -12,7 +12,7 @@ class SearchResult extends Component {
 // eslint-disable-next-line
   stripHTMLRegex = new RegExp(`<\\/? *[a-zA-Z0-9]+( *[a-zA-Z0-9]+ *= *['"].+?['"])* *\\/? *>`,"gi")
 // eslint-disable-next-line
-  findMatchStringRegex = new RegExp( `((\\w+\\W+){0,4}).*?${this.props.searchKey}.+?((\\w+\\W+){0,4})`, "gi")
+  findMatchStringRegex = new RegExp( `(((\\w+\\W+){5}|^.*?)[^ ]*${this.props.searchKey}[^ ]*((\\W+\\w+){5}|.*?$))`, "gim")
   boldMatchStringRegex = new RegExp(`${this.props.searchKey}`, "gi")
   showSearchResult = (string) => {
     string = string.replace(this.stripHTMLRegex, "")
