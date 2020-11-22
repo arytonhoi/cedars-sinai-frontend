@@ -47,22 +47,24 @@ li:last-child {
 .contact-item h1 {
   margin-left: 8px;
 }
-/* 
-.contact-item-info {
+
+/* .contact-item-info {
   border: 1px black solid;
 } */
 
 .contact-item-info.name {
   flex: 1 1 auto;
+  min-width: 225px;
 }
 
 .contact-item-info.phone {
-  flex: 0 0 25%;
+  flex: 0 0 20%;
+  min-width: 175px;
 }
 
-.contact-item-info.phone,
 .contact-item-info.email {
-  flex: 0 0 35%;
+  flex: 0 0 30%;
+  min-width: 275px;
 }
 
 .department-item footer {
