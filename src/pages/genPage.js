@@ -44,6 +44,7 @@ class genPage extends Component {
       editPost: false,
       editor: null,
       selectedFolders: [],
+      requestedSort: null,
       folderMoveCandidate: {start:[0,0],target:null,id:""},
       folderPosList:[[],[]]
     };
@@ -60,10 +61,11 @@ class genPage extends Component {
   sortSubfolders = (e) => {
     if(this.state.editFolders && this.props.user.credentials.isAdmin){
       this.props.updateFolder(this.state.pagename, {
-        preferredSort: e.key,
+        preferredSort: parseInt(e.key),
       });
     }
-    store.dispatch({ type: SORT_SUBFOLDER, payload: e.key });
+    this.setState({ ...this.state, requestedSort: parseInt(e.key) });
+    store.dispatch({ type: SORT_SUBFOLDER, payload: parseInt(e.key) });
   };
   toggleFolderEditable = () => {
     this.setState({
@@ -263,11 +265,12 @@ class genPage extends Component {
     if (this.state.selectedFolders.length === 1) {
       s = "";
     }
+    const menuSelector = ["Alphabetical order","Reverse alphabetical order","Most recently added","Least recently added","Most popular"]
     const pageMarkup =
       data.loading || (data.data.length === 0 && UI.errors.length === 0) ? (
-        <div className="floating-component">Page loading...</div>
+        <div className="floating-component noselect padding-normal">Page loading...</div>
       ) : UI.errors.length > 0 ? (
-        <div className="floating-component">{UI.errors[0].statusText}</div>
+        <div className="floating-componentnoselect  padding-normal">{UI.errors[0].statusText}</div>
       ) : (this.state.searchKey === "" || !this.state.showSearchResults || this.state.editFolders || this.state.editPost) ? (
         <div>
           {this.state.editFolders ? (
@@ -423,7 +426,7 @@ class genPage extends Component {
                   }
                   <Dropdown overlay={menu}>
                     <Button>
-                      Order folders by <DownOutlined />
+                      {this.state.requestedSort===null? "Order folders by" : menuSelector[this.state.requestedSort]} <DownOutlined />
                     </Button>
                   </Dropdown>
                   {
@@ -565,7 +568,7 @@ class genPage extends Component {
                     This will remove all new changes made to your post.
                   </Modal>
                 </div>
-                <CKEditor
+                <div className="folder-post"><CKEditor
                   data={folders.content}
                   onChange={this.updateEditor}
                   config={{
@@ -573,7 +576,7 @@ class genPage extends Component {
                     removeButtons: "",
                     height: "38vh"
                   }}
-                />
+                /></div>
               </>
             ) : (
               <div className="folder-post">{parse(folders.content)}</div>
@@ -584,27 +587,27 @@ class genPage extends Component {
       var searchMarkup = () => 
         (this.props.data.folderSearchRes.length > 0 && !this.props.UI.loadingFolderSearch) ?
         (<div className= "floating-component">
-          <h3 className= "em2">
+          <h3 className= "em2 padding-normal">
             Search Results for '{this.state.searchKey}'
           </h3>
           {this.props.data.folderSearchRes.map((x,i)=><SearchResult key={i} data={x} searchKey={this.state.searchKey}/>)}
         </div>):(this.props.UI.loadingFolderSearch)?
         (<div className= "floating-component">
-          <h3 className= "em2">
+          <h3 className= "em2 padding-normal">
             Searching for results...
           </h3>
         </div>):
         (<div className= "floating-component">
-          <h3 className= "em2">
+          <h3 className= "em2 padding-normal">
             No results for '{this.state.searchKey}' were found
           </h3>
         </div>)
       
     return (
       <>
-          <div className="resources-topbar">
+          <div className="resources-topbar noselect">
             <div>
-            <h5>
+            <p>
               <span>
                 <a className="em4-light" href="/resources">Resources</a>
               </span>
@@ -615,11 +618,11 @@ class genPage extends Component {
                     (""))
                   )
                 ): ("") }
-            </h5>
-            <h3>{typeof(folders) === "object"? folders.title : "Loading..."}</h3>
+            </p>
+            <div className="em2">{typeof(folders) === "object"? folders.title : "Loading..."}</div>
             </div>
             <div className="resources-topbar-right">
-              <Input onKeyUp={this.searchFolderCallback} disabled={this.state.editFolders || this.state.editPost} className="no-padding" suffix={<SearchOutlined />} placeholder="Search resources by name" />
+              <Input onKeyUp={this.searchFolderCallback} onSubmit={this.searchFolder} disabled={this.state.editFolders || this.state.editPost} className="resources-search no-padding" suffix={<SearchOutlined />} placeholder="Search resources by name" />
               <Button type="primary" disabled={this.state.editFolders || this.state.editPost} onClick={this.searchFolder} >Search</Button>
             </div>
           </div>

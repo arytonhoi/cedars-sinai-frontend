@@ -1,12 +1,12 @@
-/* html,
+html,
 body {
   font-family: "Roboto", sans-serif !important;
   background: #fff;
   font-style: normal;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 14px;
 }
-
+/* 
 h4 {
   color: #999 !important;
   font-weight: 400 !important;
@@ -47,7 +47,6 @@ label,
   cursor: pointer;
 }
 
-.floating-component,
 .shadow {
   border-collapse: separate;
   -webkit-box-shadow: -5px 5px 20px 5px rgba(215, 215, 215, 1);
@@ -58,7 +57,7 @@ label,
 .floating-component {
   display: block;
   margin: 2em;
-  padding: 2em 1.71em;
+  padding: 1.71em 0;
   background: #fff;
   border-radius: 0.5em;
 }
@@ -74,6 +73,11 @@ label,
   display: block;
   color: red;
   font-size: 0.85em;
+}
+
+.padding-normal{
+  padding-left: 1.71em;
+  padding-right: 1.71em;
 }
 
 .em2{

@@ -12,7 +12,7 @@ class SearchResult extends Component {
 // eslint-disable-next-line
   stripHTMLRegex = new RegExp(`<\\/? *[a-zA-Z0-9]+( *[a-zA-Z0-9]+ *= *['"].+?['"])* *\\/? *>`,"gi")
 // eslint-disable-next-line
-  findMatchStringRegex = new RegExp( `((\\w+\\W+){0,4}).*?${this.props.searchKey}.+?((\\w+\\W+){0,4})`, "gi")
+  findMatchStringRegex = new RegExp( `(((\\w+\\W+){5}|^.*?)[^ ]*${this.props.searchKey}[^ ]*((\\W+\\w+){5}|.*?$))`, "gim")
   boldMatchStringRegex = new RegExp(`${this.props.searchKey}`, "gi")
   showSearchResult = (string) => {
     string = string.replace(this.stripHTMLRegex, "")
@@ -24,7 +24,7 @@ class SearchResult extends Component {
     }else{
       return (<span className="em3 search-result-content">
         {matches.map(x=>{
-          return (<span dangerouslySetInnerHTML={{__html:" ..."+x.replace(this.boldMatchStringRegex,`<b>${this.props.searchKey}</b>`) + "... "}} />)
+          return (<span key={Math.random()} dangerouslySetInnerHTML={{__html:" ..."+x.replace(this.boldMatchStringRegex,`<b>${this.props.searchKey}</b>`) + "... "}} />)
         })}
       </span>)
     }
@@ -32,20 +32,20 @@ class SearchResult extends Component {
   render() {
     const { data } = this.props
     return(
-      <a className="search-result noselect" href={"/resources/"+data.id}>
-          <div className="folder-logo-icon">
+      <a className="search-result noselect padding-normal" href={"/resources/"+data.id}>
+          <div key={Math.random()} className="folder-logo-icon">
             <FolderFilled />
           </div>
-          <div className="search-main-box">
-            <span className="em2 search-result-title">{data.title}</span>
-            <span className="search-result-breadcrumb">
-              <span>
-                <a className="em4-light" href="/resources">Resources</a>
+          <div key={Math.random()} className="search-main-box">
+            <span key={Math.random()} className="em2 search-result-title">{data.title}</span>
+            <span key={Math.random()} className="search-result-breadcrumb">
+              <span key={Math.random()}>
+                <span key={Math.random()} className="em4-light">Resources</span>
               </span>
               { (typeof(data) === "object" && typeof(data.path) === "object")?
                 (data.path.map((x, i) =>
                     ((x.id !== "" && x.id !== "home") ?
-                    (<span className="em4-light" key={x.id}>{" / "}<a className="em4-light" href={x.id}>{x.name}</a></span>):
+                    (<span className="em4-light" key={x.id}>{" / "}{x.name}</span>):
                     (""))
                   )
                 ): ("") }

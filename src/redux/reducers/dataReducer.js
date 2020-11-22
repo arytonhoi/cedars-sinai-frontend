@@ -246,25 +246,25 @@ export default function (state = initialState, action) {
       switch (parseInt(action.payload)) {
         case 0:
           state.data[0].subfolders.sort(
-            (a, b) => a.title.toUpperCase() >= b.title.toUpperCase()
+            (a, b) => (a.title.toUpperCase() >= b.title.toUpperCase())? (1):(-1)
           );
           break;
         case 1:
           state.data[0].subfolders.sort(
-            (a, b) => a.title.toUpperCase() < b.title.toUpperCase()
+            (a, b) => (a.title.toUpperCase() < b.title.toUpperCase())? (1):(-1)
           );
           break;
         case 2:
-          state.data[0].subfolders.sort((a, b) => a.createdAt < b.createdAt);
+          state.data[0].subfolders.sort((a, b) => (a.createdAt < b.createdAt)? (1):(-1));
           break;
         case 3:
-          state.data[0].subfolders.sort((a, b) => a.createdAt >= b.createdAt);
+          state.data[0].subfolders.sort((a, b) => (a.createdAt >= b.createdAt)? (1):(-1));
           break;
         case 4:
-          state.data[0].subfolders.sort((a, b) => a.visits <= b.visits);
+          state.data[0].subfolders.sort((a, b) => (a.visits <= b.visits)? (1):(-1));
           break;
         default:
-          state.data[0].subfolders.sort((a, b) => a.index >= b.index);
+          state.data[0].subfolders.sort((a, b) => (a.index >= b.index)? (1):(-1));
           break;
       }
       return { ...state };

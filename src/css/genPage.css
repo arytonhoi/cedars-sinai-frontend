@@ -1,12 +1,13 @@
 hr.folder-hr{
   border: 1px solid #ABABAB;
-  margin: 1em 0;
+  margin: 1em;
 }
 
 .resources-topbar{
   background: #fff;
-  padding: 1em;
+  padding: 1em 1.71em;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-end;
 }
@@ -16,9 +17,18 @@ span.em4-light:last-of-type > a{
 
 .resources-topbar-right{
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-around;
   align-items: center;
+  margin-top: 1em;
 }
+
+@media only screen and (orientation: landscape) {
+  .resources-search {
+    width: 18em !important;
+  }
+}
+
 
 .button-holder{
   width: 100%;
@@ -39,6 +49,10 @@ span.em4-light:last-of-type > a{
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid #f3f3f3;
+  padding: 0 1.71em;
+  padding-bottom: 0.89em;
+  margin-bottom: 1.71em;
 }
 
 .folder-post{
@@ -64,6 +78,7 @@ span.em4-light:last-of-type > a{
   position: relative;
   flex-wrap: wrap;
   width: 100%;
+  padding: 0 1.71em;
 }
 
 .post-editbar{
@@ -71,9 +86,10 @@ span.em4-light:last-of-type > a{
   width: 100%;
   align-items: center;
   justify-content: flex-end;
+  border-bottom: 1px solid #f3f3f3;
+  padding: 0 1.71em;
   padding-bottom: 0.89em;
   margin-bottom: 1.71em;
-  border-bottom: 1px solid #f3f3f3;
 }
 
 .folder-editbar{
@@ -81,9 +97,10 @@ span.em4-light:last-of-type > a{
   width: 100%;
   align-items: center;
   justify-content: flex-end;
-  padding-bottom: 0.89em;
-  margin-bottom: 1.71em;
-  border-bottom: 1px solid #f3f3f3;
+}
+
+.folder-post{
+  padding: 0 1.71em;
 }
 
 /*
