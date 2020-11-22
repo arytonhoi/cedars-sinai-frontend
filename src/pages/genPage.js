@@ -40,6 +40,7 @@ class genPage extends Component {
       showMoveDialog: false,
       showSearchResults: false,
       searchKey: "",
+      positionModified: false,
       editPost: false,
       editor: null,
       selectedFolders: [],
@@ -172,6 +173,7 @@ class genPage extends Component {
     arr[0][arr[0].length-1] = +Infinity
     arr[1][arr[1].length-1] = +Infinity
     this.setState({
+      positionModified: true,
       folderMoveCandidate:{start:[e.clientX,e.clientY],target:e.currentTarget,id:x.id},
       folderPosList:arr
     })
@@ -205,6 +207,14 @@ class genPage extends Component {
       }
     }
   };
+  exitFolderEditMode = () => { 
+    console.log(this.props.data.data[0].subfolders);
+    if(this.state.positionModified){
+      this.props.syncAllSubFolders(this.props.data.data[0].subfolders);
+      this.setState({ positionModified: false, })
+    }
+    this.toggleFolderEditable()
+  }
   updateEditor = (event) => {
     this.setState({ ...this.state, editor: event.editor.getData() });
   };
@@ -387,7 +397,7 @@ class genPage extends Component {
               <div className="folder-topbar noselect">
                 <div className="folder-editbar button-holder">
                   {
-                    (user.credentials.isAdmin && this.state.editFolders)?
+                    (user.credentials.isAdmin && this.state.editFolders && this.state.selectedFolders.length > 0)?
                     (<>
                     <Button
                       disabled={this.state.selectedFolders.length === 0}
@@ -429,7 +439,7 @@ class genPage extends Component {
                       <Button
                         type="primary"
                         style={{ background: "#52C41A", borderColor: "#52C41A"}}
-                        onClick={()=>{console.log(this.props.data.data[0].subfolders);this.props.syncAllSubFolders(this.props.data.data[0].subfolders);this.toggleFolderEditable()}}
+                        onClick={this.exitFolderEditMode}
                       >
                         Finish Editing
                       </Button>
