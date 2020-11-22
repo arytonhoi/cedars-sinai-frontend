@@ -622,7 +622,7 @@ class genPage extends Component {
             <div className="em2">{typeof(folders) === "object"? folders.title : "Loading..."}</div>
             </div>
             <div className="resources-topbar-right">
-              <Input onKeyUp={this.searchFolderCallback} onSubmit={this.searchFolder} disabled={this.state.editFolders || this.state.editPost} className="no-padding" suffix={<SearchOutlined />} placeholder="Search resources by name" />
+              <Input onKeyUp={this.searchFolderCallback} onSubmit={this.searchFolder} disabled={this.state.editFolders || this.state.editPost} className="resources-search no-padding" suffix={<SearchOutlined />} placeholder="Search resources by name" />
               <Button type="primary" disabled={this.state.editFolders || this.state.editPost} onClick={this.searchFolder} >Search</Button>
             </div>
           </div>
