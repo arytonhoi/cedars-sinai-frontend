@@ -21,10 +21,8 @@ import {
 
 // Components
 import DepartmentList from "../components/contacts/departmentList";
-import AddDepartmentModal from "../components/contacts/addDepartmentModal";
-import EditDepartmentModal from "../components/contacts/editDepartmentModal";
-import AddContactModal from "../components/contacts/addContactModal";
-import EditContactModal from "../components/contacts/editContactModal";
+import DepartmentEditorModal from "../components/contacts/departmentEditorModal";
+import ContactEditorModal from "../components/contacts/contactEditorModal";
 
 // css styles
 import "../css/page.css";
@@ -45,25 +43,25 @@ class ContactPage extends Component {
   constructor() {
     super();
     this.state = {
+      isEditingPage: false,
       // departments
-      addingDepartment: false,
+      // addingDepartment: false,
       confirmDeleteDepartment: false,
-      targettedDepartmentId: "",
+      departmentId: "",
       departmentName: "",
       // contacts
-      targettedContactId: "",
-      addingContact: false,
+      contactDepartmentId: "",
+      contactId: "",
       contactName: "",
       contactImgUrl: "",
-      contactDepartmentId: "",
       contactPhone: "",
       contactEmail: "",
-      confirmDeleteContact: false,
+      // confirmDeleteContact: false,
       // search
       searchTerm: "",
-      // editing
-      isEditing: false,
-      visible: false,
+      // modals
+      showContactEditorModal: false,
+      showDepartmentEditorModal: false,
       // image
       isUploading: false,
       // errors
@@ -71,34 +69,30 @@ class ContactPage extends Component {
     };
   }
 
-  toggleEditing = () => {
-    this.setState({
-      isEditing: !this.state.isEditing,
-    });
-  };
-
   // images
-  handleClickImageUpload = () => {
-    const fileInputDocument = document.getElementById("imageInput");
-    fileInputDocument.click();
-  };
+  // handleClickImageUpload = () => {
+  //   const fileInputDocument = document.getElementById("imageInput");
+  //   fileInputDocument.click();
+  // };
 
   handleImageChange = (event) => {
-    const image = event.target.files[0];
+    console.log(event);
+    // const image = event.target.files[0];
+    const image = event;
     const formData = new FormData();
-    const reader = new FileReader();
-    reader.addEventListener(
-      "load",
-      () =>
-        this.setState({
-          contactImgUrl: reader.result,
-          isUploading: true,
-        }),
-      false
-    );
-    if (typeof image !== "undefined") {
-      reader.readAsDataURL(image);
-    }
+    // const reader = new FileReader();
+    // reader.addEventListener(
+    //   "load",
+    //   () =>
+    //     this.setState({
+    //       contactImgUrl: reader.result,
+    //       isUploading: true,
+    //     }),
+    //   false
+    // );
+    // if (typeof image !== "undefined") {
+    //   reader.readAsDataURL(image);
+    // }
     formData.append("image", image, image.name);
     axios
       .post(`/images`, formData)
@@ -113,176 +107,7 @@ class ContactPage extends Component {
       });
   };
 
-  // contact functions
-  handleAddNewContact = (departmentId) => {
-    this.setState({
-      addingContact: true,
-      targettedContactId: "",
-      contactName: "",
-      contactImgUrl: "",
-      contactDepartmentId: departmentId,
-      contactPhone: "",
-      contactEmail: "",
-    });
-  };
-
-  handleSubmitNewContact = (event) => {
-    event.preventDefault();
-    const newContact = {
-      name: this.state.contactName,
-      imgUrl: this.state.contactImgUrl,
-      departmentId: this.state.contactDepartmentId,
-      phone: this.state.contactPhone,
-      email: this.state.contactEmail,
-    };
-    this.props.postContact(newContact);
-    this.setState({
-      addingContact: false,
-      contactName: "",
-      contactImgUrl: "",
-      contactDepartmentId: "",
-      contactPhone: "",
-      contactEmail: "",
-      searchTerm: "",
-    });
-  };
-
-  handleEditThisContact = (contactId) => {
-    const contacts = this.props.data.contacts;
-    const contact = contacts.find((c) => c.id === contactId);
-    this.setState({
-      addingContact: false,
-      targettedContactId: contactId,
-      contactName: contact.name,
-      contactImgUrl: contact.imgUrl,
-      contactDepartmentId: contact.departmentId,
-      contactPhone: contact.phone,
-      contactEmail: contact.email,
-      confirmDeleteContact: false,
-      confirmDeleteDepartment: false,
-    });
-  };
-
-  handleSubmitContactChange = (event) => {
-    event.preventDefault();
-    const updatedContactId = this.state.targettedContactId;
-    const updatedContact = {
-      name: this.state.contactName,
-      imgUrl: this.state.contactImgUrl,
-      departmentId: this.state.contactDepartmentId,
-      phone: this.state.contactPhone,
-      email: this.state.contactEmail,
-    };
-    this.props.patchContact(updatedContactId, updatedContact);
-    this.setState({
-      targettedContactId: "",
-      confirmDeleteContact: false,
-      confirmDeleteDepartment: false,
-    });
-  };
-
-  handleCancelContactChange = (event) => {
-    this.setState({
-      targettedContactId: "",
-      addingContact: false,
-      contactName: "",
-      contactImgUrl: "",
-      contactDepartmentId: "",
-      contactPhone: "",
-      contactEmail: "",
-      confirmDeleteContact: false,
-      confirmDeleteDepartment: false,
-    });
-  };
-
-  toggleDeleteContactFlag = () => {
-    this.setState({
-      confirmDeleteContact: !this.state.confirmDeleteContact,
-    });
-  };
-
-  handleDeleteContact = (contactId) => {
-    const confirmDeleteContact = true;
-    if (confirmDeleteContact) {
-      this.props.deleteContact(contactId);
-      this.setState({
-        targettedContactId: "",
-        confirmDeleteContact: false,
-        confirmDeleteDepartment: false,
-      });
-    }
-  };
-
-  // department functions
-  handleAddNewDepartment = (event) => {
-    this.setState({
-      addingDepartment: true,
-      departmentName: "",
-    });
-  };
-
-  handleSubmitNewDepartment = (event) => {
-    event.preventDefault();
-    const newDepartment = {
-      name: this.state.departmentName,
-    };
-    this.props.postDepartment(newDepartment);
-    this.setState({
-      addingDepartment: false,
-      departmentName: "",
-    });
-  };
-
-  handleEditThisDepartment = (departmentId) => {
-    const departments = this.props.data.departments;
-    const department = departments.find((d) => d.id === departmentId);
-    this.setState({
-      targettedDepartmentId: departmentId,
-      departmentName: department.name,
-    });
-  };
-
-  handleSubmitDepartmentChange = (event) => {
-    event.preventDefault();
-    const updatedDepartmentId = this.state.targettedDepartmentId;
-    const updatedDepartment = {
-      name: this.state.departmentName,
-    };
-    this.props.patchDepartment(updatedDepartmentId, updatedDepartment);
-    this.setState({
-      targettedDepartmentId: "",
-    });
-  };
-
-  handleCancelDepartmentChange = (event) => {
-    this.setState({
-      targettedDepartmentId: "",
-      addingDepartment: false,
-      departmentName: "",
-      confirmDeleteContact: false,
-      confirmDeleteDepartment: false,
-    });
-  };
-
-  handleDeleteDepartment = (departmentId) => {
-    const confirmDeleteDepartment = true;
-    if (confirmDeleteDepartment) {
-      this.props.deleteDepartment(departmentId);
-      this.setState({
-        targettedDepartmentId: "",
-        departmentName: "",
-        confirmDeleteContact: false,
-        confirmDeleteDepartment: false,
-      });
-    }
-  };
-
-  toggleDeleteDepartmentFlag = () => {
-    this.setState({
-      confirmDeleteDepartment: !this.state.confirmDeleteDepartment,
-    });
-  };
-
+  // general form changes
   handleChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value,
@@ -291,6 +116,130 @@ class ContactPage extends Component {
     if (event.target.name === "searchTerm") {
       this.props.getSearchedContacts(event.target.value);
     }
+  };
+
+  toggleEditPage = () => {
+    this.setState({
+      isEditingPage: !this.state.isEditingPage,
+    });
+  };
+
+  // department functions
+  handleAddorEditDepartment = (departmentId = null) => {
+    this.setState({
+      showDepartmentEditorModal: true,
+    });
+
+    if (departmentId === null) {
+      this.setState({
+        departmentName: "",
+      });
+    } else {
+      const departments = this.props.data.departments;
+      const department = departments.find((d) => d.id === departmentId);
+      this.setState({
+        departmentId: departmentId,
+        departmentName: department.name,
+      });
+    }
+  };
+
+  handlePostOrPatchDepartment = (formValues) => {
+    const newDepartment = {
+      name: formValues.departmentName,
+    };
+    if (this.state.departmentId === "") {
+      // posting new department
+      this.props.postDepartment(newDepartment);
+    } else {
+      // editing exisitng department
+      this.props.patchContact(this.state.departmentId, newDepartment);
+    }
+
+    this.handleCancelAddorEditDepartment();
+  };
+
+  handleDeleteDepartment = () => {
+    this.props.deleteDepartment(this.state.departmentId);
+    this.handleCancelAddorEditDepartment();
+  };
+
+  handleCancelAddorEditDepartment = () => {
+    this.setState({
+      showDepartmentEditorModal: false,
+      departmentId: "",
+      departmentName: "",
+    });
+  };
+
+  // contact functions
+  handleAddorEditContact = (departmentId, contactId = null) => {
+    this.setState({
+      departmentId: departmentId,
+      showContactEditorModal: true,
+    });
+
+    if (contactId === null) {
+      // adding new contact
+      this.setState({
+        contactDepartmentId: departmentId,
+        contactId: "",
+        contactName: "",
+        contactImgUrl: defaultContactPic,
+        contactPhone: "",
+        contactEmail: "",
+      });
+    } else {
+      // editing existing contact
+      const contacts = this.props.data.contacts;
+      const contact = contacts.find((c) => c.id === contactId);
+      this.setState({
+        contactId: contactId,
+        contactName: contact.name,
+        contactImgUrl: contact.imgUrl,
+        contactDepartmentId: contact.departmentId,
+        contactPhone: contact.phone,
+        contactEmail: contact.email,
+      });
+    }
+  };
+
+  handlePostOrPatchContact = (formValues) => {
+    const newContact = {
+      departmentId: formValues.contactDepartmentId,
+      name: formValues.contactName,
+      phone: formValues.contactPhone,
+      email: formValues.contactEmail,
+      imgUrl: formValues.contactImgUrl,
+    };
+    console.log(newContact);
+    if (this.state.contactId === "") {
+      // posting new contact
+      this.props.postContact(newContact);
+    } else {
+      // editing exisitng contact
+      this.props.patchContact(this.state.contactId, newContact);
+    }
+
+    this.handleCancelAddorEditContact();
+  };
+
+  handleDeleteContact = () => {
+    this.props.deleteContact(this.state.contactId);
+    this.handleCancelAddorEditContact();
+  };
+
+  handleCancelAddorEditContact = () => {
+    this.setState({
+      showContactEditorModal: false,
+      departmentId: "",
+      contactId: "",
+      contactName: "",
+      contactImgUrl: "",
+      contactDepartmentId: "",
+      contactPhone: "",
+      contactEmail: "",
+    });
   };
 
   render() {
@@ -307,45 +256,6 @@ class ContactPage extends Component {
       return contactWithImg;
     });
 
-    // departments
-    // var departmentsListComponent;
-    // if (departments.length > 0) {
-    //   departmentsListComponent = departments.map((d) => {
-    //     const departmentContacts = matchingSearchContactsWithImgs.filter(
-    //       (c) => c.departmentId === d.id
-    //     );
-    //     return (
-    //       <DepartmentSection
-    //         key={d.id}
-    //         department={d}
-    //         contacts={departmentContacts}
-    //         handleEditThisDepartment={this.handleEditThisDepartment}
-    //         handleDeleteDepartment={this.handleDeleteDepartment}
-    //         handleAddNewContact={this.handleAddNewContact}
-    //         handleSubmitNewContact={this.handleSubmitNewContact}
-    //         handleEditThisContact={this.handleEditThisContact}
-    //         handleSubmitContactChange={this.handleSubmitContactChange}
-    //         handleCancelContactChange={this.handleCancelContactChange}
-    //         handleDeleteContact={this.handleDeleteContact}
-    //         handleChange={this.handleChange}
-    //         isEditing={this.state.isEditing}
-    //       />
-    //     );
-    //   }, this);
-    //   if (
-    //     !isAdmin &&
-    //     departmentsListComponent.findIndex(
-    //       (x) => x.props.contacts.length > 0
-    //     ) === -1
-    //   ) {
-    //     departmentsListComponent = "No search results were found";
-    //   }
-    // } else {
-    //   departmentsListComponent = "Zero departments found. ";
-    //   if (isAdmin) {
-    //     departmentsListComponent += "Add some more?";
-    //   }
-    // }
     return (
       <div className="page-container">
         <header className="page-header-container">
@@ -362,28 +272,29 @@ class ContactPage extends Component {
                 onChange={this.handleChange}
                 suffix={<SearchOutlined style={{ color: "rgba(0,0,0,.45)" }} />}
               />
-              {isAdmin && this.state.isEditing && (
-                <Button
-                  size={"medium"}
-                  onClick={() => this.handleAddNewDepartment()}
-                >
-                  Add Department
-                </Button>
-              )}
-              {isAdmin && !this.state.isEditing && (
+              {isAdmin && !this.state.isEditingPage && (
                 <Button
                   type="primary"
                   size={"medium"}
-                  onClick={() => this.toggleEditing()}
+                  onClick={() => this.toggleEditPage()}
                 >
                   Edit
                 </Button>
               )}
-              {isAdmin && this.state.isEditing && (
+              {isAdmin && this.state.isEditingPage && (
+                <Button
+                  size={"medium"}
+                  onClick={() => this.handleAddorEditDepartment()}
+                >
+                  Add Department
+                </Button>
+              )}
+
+              {isAdmin && this.state.isEditingPage && (
                 <Button
                   type="primary"
                   size={"medium"}
-                  onClick={() => this.toggleEditing()}
+                  onClick={() => this.toggleEditPage()}
                 >
                   Done Editing
                 </Button>
@@ -393,73 +304,54 @@ class ContactPage extends Component {
         </header>
         <Layout className="vertical-fill-layout">
           <Content className="content-card">
-            <AddDepartmentModal
-              visible={isAdmin && this.state.addingDepartment}
+            {/* <AddDepartmentModal
+              visible={isAdmin && this.state.showDepartmentEditorModal}
               departmentName={this.state.departmentName}
               handleSubmitNewDepartment={this.handleSubmitNewDepartment}
               handleCancelDepartmentChange={this.handleCancelDepartmentChange}
               handleChange={this.handleChange}
-            />
+            /> */}
 
-            <EditDepartmentModal
-              visible={isAdmin && this.state.targettedDepartmentId !== ""}
-              departmentId={this.state.targettedDepartmentId}
+            <DepartmentEditorModal
+              // flags
+              visible={isAdmin && this.state.showDepartmentEditorModal}
+              isEditingExistingDepartment={this.state.departmentId !== ""}
+              // department info
               departmentName={this.state.departmentName}
-              handleSubmitDepartmentChange={this.handleSubmitDepartmentChange}
-              handleCancelDepartmentChange={this.handleCancelDepartmentChange}
+              handlePostOrPatchDepartment={this.handlePostOrPatchDepartment}
               handleDeleteDepartment={this.handleDeleteDepartment}
-              handleChange={this.handleChange}
-              confirmDelete={this.state.confirmDeleteDepartment}
-              toggleDeleteModal={this.toggleDeleteDepartmentFlag}
+              handleCancelAddorEditDepartment={
+                this.handleCancelAddorEditDepartment
+              }
             />
 
-            <AddContactModal
-              visible={isAdmin && this.state.addingContact}
-              contactDepartmentId={this.state.contactDepartmentId}
+            <ContactEditorModal
+              // flags
+              visible={isAdmin && this.state.showContactEditorModal}
+              isEditingExistingContact={this.state.contactId !== ""}
+              // contact info
               departments={departments}
-              contactImgUrl={this.state.contactImgUrl}
-              contactPhone={this.state.contactPhone}
-              contactEmail={this.state.contactEmail}
-              isUploading={this.state.isUploading}
-              handleSubmitNewContact={this.handleSubmitNewContact}
-              handleCancelContactChange={this.handleCancelContactChange}
-              handleClickImageUpload={this.handleClickImageUpload}
-              handleImageChange={this.handleImageChange}
-              handleChange={this.handleChange}
-            />
-
-            <EditContactModal
-              visible={isAdmin && this.state.targettedContactId !== ""}
               contactDepartmentId={this.state.contactDepartmentId}
-              departments={departments}
-              contactId={this.state.targettedContactId}
               contactName={this.state.contactName}
               contactImgUrl={this.state.contactImgUrl}
               contactPhone={this.state.contactPhone}
               contactEmail={this.state.contactEmail}
-              isUploading={this.state.isUploading}
-              handleCancelContactChange={this.handleCancelContactChange}
-              handleSubmitContactChange={this.handleSubmitContactChange}
+              // form functions
+              handlePostOrPatchContact={this.handlePostOrPatchContact}
               handleDeleteContact={this.handleDeleteContact}
-              handleClickImageUpload={this.handleClickImageUpload}
+              handleCancelAddorEditContact={this.handleCancelAddorEditContact}
               handleImageChange={this.handleImageChange}
-              handleChange={this.handleChange}
-              confirmDelete={this.state.confirmDeleteContact}
-              toggleDeleteModal={this.toggleDeleteContactFlag}
             />
             <DepartmentList
+              // data
               departments={departments}
               contacts={matchingSearchContactsWithImgs}
-              handleEditThisDepartment={this.handleEditThisDepartment}
-              handleDeleteDepartment={this.handleDeleteDepartment}
-              handleAddNewContact={this.handleAddNewContact}
-              handleSubmitNewContact={this.handleSubmitNewContact}
-              handleEditThisContact={this.handleEditThisContact}
-              handleSubmitContactChange={this.handleSubmitContactChange}
-              handleCancelContactChange={this.handleCancelContactChange}
-              handleDeleteContact={this.handleDeleteContact}
-              handleChange={this.handleChange}
-              isEditing={this.state.isEditing}
+              // departments
+              handleAddorEditDepartment={this.handleAddorEditDepartment}
+              // contacts
+              handleAddorEditContact={this.handleAddorEditContact}
+              // general
+              isEditingPage={this.state.isEditingPage}
             />
           </Content>
           <Footer style={{ textAlign: "center" }}>DevelopForGood ©2020</Footer>

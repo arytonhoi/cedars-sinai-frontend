@@ -12,6 +12,7 @@ class ContactList extends Component {
   render() {
     const { credentials } = this.props.user;
     const isAdmin = credentials.isAdmin;
+    const department = this.props.department;
     const contacts = this.props.contacts;
 
     // contacts
@@ -31,10 +32,12 @@ class ContactList extends Component {
             <a href={`mailto:${c.email}`}>{c.email}</a>
           </div>
 
-          {isAdmin && this.props.isEditing && (
+          {isAdmin && this.props.isEditingPage && (
             <Button
               icon={<EditOutlined />}
-              onClick={() => this.props.handleEditThisContact(c.id)}
+              onClick={() =>
+                this.props.handleAddorEditContact(department.id, c.id)
+              }
               type="text"
             />
           )}
@@ -51,8 +54,11 @@ class ContactList extends Component {
 }
 
 ContactList.propTypes = {
-  contacts: PropTypes.array.isRequired,
   user: PropTypes.object.isRequired,
+  department: PropTypes.object.isRequired,
+  contacts: PropTypes.array.isRequired,
+  handleAddorEditContact: PropTypes.func.isRequired,
+  isEditingPage: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => {

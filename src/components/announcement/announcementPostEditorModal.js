@@ -19,7 +19,9 @@ import { Button, Form, Input, Modal } from "antd";
 
 class AnnouncementPostEditorModal extends Component {
   componentDidUpdate() {
-    this.formRef.current.resetFields();
+    if (this.formRef.current) {
+      this.formRef.current.resetFields();
+    }
   }
 
   formRef = React.createRef();

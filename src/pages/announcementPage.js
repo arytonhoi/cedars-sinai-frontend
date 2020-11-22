@@ -88,6 +88,7 @@ class AnnouncementPage extends Component {
       announcementTitle: announcement.title,
       announcementAuthor: announcement.author,
       announcementContent: announcement.content,
+      isEditing: true,
     });
   };
 
@@ -134,7 +135,7 @@ class AnnouncementPage extends Component {
       <div className="page-container">
         {isAdmin && (
           <AnnouncementPostEditorModal
-            visible={this.state.isEditing || this.state.announcementId !== ""}
+            visible={this.state.isEditing}
             isEditingExistingAnnouncement={this.state.announcementId !== ""}
             announcementTitle={this.state.announcementTitle}
             announcementAuthor={this.state.announcementAuthor}
@@ -209,13 +210,6 @@ class AnnouncementPage extends Component {
               header={
                 <header className="content-card-header">
                   <h1>Recent Announcements</h1>
-                  {/* <Button
-                    type="primary"
-                    size={"medium"}
-                    onClick={() => this.toggleEditing()}
-                  >
-                    Post New Announcement
-                  </Button> */}
                 </header>
               }
               pagination={{

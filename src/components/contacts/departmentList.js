@@ -15,40 +15,49 @@ class DepartmentList extends Component {
     const isAdmin = credentials.isAdmin;
     const departments = this.props.departments;
 
-    const departmentsListComponent = departments.map((d) => {
-      const departmentContacts = this.props.contacts.filter(
-        (c) => c.departmentId === d.id
-      );
-      return (
-        <DepartmentSection
-          key={d.id}
-          department={d}
-          contacts={departmentContacts}
-          handleEditThisDepartment={this.props.handleEditThisDepartment}
-          handleDeleteDepartment={this.props.handleDeleteDepartment}
-          handleAddNewContact={this.props.handleAddNewContact}
-          handleSubmitNewContact={this.props.handleSubmitNewContact}
-          handleEditThisContact={this.props.handleEditThisContact}
-          handleSubmitContactChange={this.props.handleSubmitContactChange}
-          handleCancelContactChange={this.props.handleCancelContactChange}
-          handleDeleteContact={this.props.handleDeleteContact}
-          handleChange={this.props.handleChange}
-          isEditing={this.props.isEditing}
-        />
-      );
-    }, this);
-
-    if (!isAdmin && this.props.contacts.length === 0) {
-      return null;
+    if (departments.length === 0) {
+      if (isAdmin) {
+        return <p>No departments yet. Add some.</p>;
+      } else {
+        return <p>No departments yet.</p>;
+      }
     } else {
+      const departmentsListComponent = departments.map((d) => {
+        const departmentContacts = this.props.contacts.filter(
+          (c) => c.departmentId === d.id
+        );
+        return (
+          <DepartmentSection
+            key={d.id}
+            // data
+            department={d}
+            contacts={departmentContacts}
+            // department functions
+            handleAddorEditDepartment={this.props.handleAddorEditDepartment}
+            // contacts
+            handleAddorEditContact={this.props.handleAddorEditContact}
+            // general
+            isEditingPage={this.props.isEditingPage}
+          />
+        );
+      }, this);
+
       return <ul>{departmentsListComponent}</ul>;
     }
   }
 }
 
 DepartmentList.propTypes = {
-  contacts: PropTypes.array.isRequired,
   user: PropTypes.object.isRequired,
+  // data
+  departments: PropTypes.array.isRequired,
+  contacts: PropTypes.array.isRequired,
+  // department functions
+  handleAddorEditDepartment: PropTypes.func.isRequired,
+  // contact functions
+  handleAddorEditContact: PropTypes.func.isRequired,
+  // general
+  isEditingPage: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => {

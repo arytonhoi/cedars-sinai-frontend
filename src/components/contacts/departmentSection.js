@@ -26,27 +26,27 @@ class DepartmentSection extends Component {
         <li className="department-item">
           <header className="content-card-header padded">
             <h1>{department.name}</h1>
-            {isAdmin && this.props.isEditing && (
+            {isAdmin && this.props.isEditingPage && (
               <Button
                 icon={<EditOutlined />}
                 onClick={() =>
-                  this.props.handleEditThisDepartment(department.id)
+                  this.props.handleAddorEditDepartment(department.id)
                 }
                 type="text"
               />
             )}
           </header>
           <ContactList
-            contacts={this.props.contacts}
             department={department}
-            isEditing={this.props.isEditing}
-            handleEditThisContact={this.props.handleEditThisContact}
+            contacts={this.props.contacts}
+            handleAddorEditContact={this.props.handleAddorEditContact}
+            isEditingPage={this.props.isEditingPage}
           />
 
-          {isAdmin && this.props.isEditing && (
+          {isAdmin && this.props.isEditingPage && (
             <footer>
               <Button
-                onClick={() => this.props.handleAddNewContact(department.id)}
+                onClick={() => this.props.handleAddorEditContact(department.id)}
                 type="dashed"
                 block
               >
@@ -61,8 +61,16 @@ class DepartmentSection extends Component {
 }
 
 DepartmentSection.propTypes = {
-  contacts: PropTypes.array.isRequired,
   user: PropTypes.object.isRequired,
+  // data
+  department: PropTypes.object.isRequired,
+  contacts: PropTypes.array.isRequired,
+  // department functions
+  handleAddorEditDepartment: PropTypes.func.isRequired,
+  // contacts
+  handleAddorEditContact: PropTypes.func.isRequired,
+  // general
+  isEditingPage: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => {
