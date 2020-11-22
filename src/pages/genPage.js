@@ -44,6 +44,7 @@ class genPage extends Component {
       editPost: false,
       editor: null,
       selectedFolders: [],
+      requestedSort: null,
       folderMoveCandidate: {start:[0,0],target:null,id:""},
       folderPosList:[[],[]]
     };
@@ -63,6 +64,7 @@ class genPage extends Component {
         preferredSort: parseInt(e.key),
       });
     }
+    this.setState({ ...this.state, requestedSort: parseInt(e.key) });
     store.dispatch({ type: SORT_SUBFOLDER, payload: parseInt(e.key) });
   };
   toggleFolderEditable = () => {
@@ -263,6 +265,7 @@ class genPage extends Component {
     if (this.state.selectedFolders.length === 1) {
       s = "";
     }
+    const menuSelector = ["Alphabetical order","Reverse alphabetical order","Most recently added","Least recently added","Most popular"]
     const pageMarkup =
       data.loading || (data.data.length === 0 && UI.errors.length === 0) ? (
         <div className="floating-component">Page loading...</div>
@@ -423,7 +426,7 @@ class genPage extends Component {
                   }
                   <Dropdown overlay={menu}>
                     <Button>
-                      Order folders by <DownOutlined />
+                      {this.state.requestedSort===null? "Order folders by" : menuSelector[this.state.requestedSort]} <DownOutlined />
                     </Button>
                   </Dropdown>
                   {
