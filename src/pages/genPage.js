@@ -612,12 +612,14 @@ class genPage extends Component {
                 <a className="em4-light" href="/resources">Resources</a>
               </span>
               { (typeof(folders) === "object" && typeof(folders.path) === "object")?
-                (folders.path.map((x, i) =>
-                    ((x.id !== "" && x.id !== "home") ?
+                (folders.path.map((x, i) =>{
+                  if(x.name.length >= 30){x.name = x.name.slice(0,30) + "..."}
+                  return (
+                    (x.id !== "" && x.id !== "home") ?
                     (<span className="em4-light" key={x.id}>{" / "}<a className="em4-light" href={x.id}>{x.name}</a></span>):
-                    (""))
+                    ("")
                   )
-                ): ("") }
+                })): ("") }
             </p>
             <div className="em2">{typeof(folders) === "object"? folders.title : "Loading..."}</div>
             </div>
