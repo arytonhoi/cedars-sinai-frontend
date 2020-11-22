@@ -1,3 +1,8 @@
+hr.folder-hr{
+  border: 1px solid #ABABAB;
+  margin: 1em 0;
+}
+
 .resources-topbar{
   background: #fff;
   padding: 1em;
@@ -5,8 +10,8 @@
   justify-content: space-between;
   align-items: flex-end;
 }
-.resources-breadcrumb{
-  color: #555 !important;
+span.em4-light:last-of-type > a{
+  color: #595959 !important;
 }
 
 .resources-topbar-right{
@@ -15,8 +20,16 @@
   align-items: center;
 }
 
+.button-holder{
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 .button-holder > .ant-btn{
-  margin-right: 0.5em;
+  margin: 0.25em !important;
 }
 
 .folder-blank > .ant-btn, .folder-blank > .add-blank{
@@ -41,7 +54,6 @@
 }
 
 .post-topbar{
-
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -51,7 +63,6 @@
   display: flex;
   position: relative;
   flex-wrap: wrap;
-  justify-content: align-left;
   width: 100%;
 }
 
@@ -60,9 +71,21 @@
   width: 100%;
   align-items: center;
   justify-content: flex-end;
-  padding-top: 0.5em;
-  padding-bottom: 1em;
+  padding-bottom: 0.89em;
+  margin-bottom: 1.71em;
+  border-bottom: 1px solid #f3f3f3;
 }
+
+.folder-editbar{
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 0.89em;
+  margin-bottom: 1.71em;
+  border-bottom: 1px solid #f3f3f3;
+}
+
 /*
 .resources-editbar{
   display:none;

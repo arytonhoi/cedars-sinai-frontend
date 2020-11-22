@@ -1,6 +1,8 @@
 import {
   //UI
   LOADING_UI,
+  LOADING_FOLDER_SEARCH,
+  STOP_LOADING_FOLDER_SEARCH,
   //STOP_LOADING_UI,
   LOADING_DATA,
   //STOP_LOADING_DATA,
@@ -39,6 +41,7 @@ import {
   DELETE_SUBFOLDER,
   SET_NAV_PATH,
   RESET_NAV_PATH,
+  SET_FOLDER_SEARCH_RES,
 } from "../types";
 import axios from "axios";
 
@@ -321,20 +324,36 @@ export const getFolder = (folderName,track) => (dispatch) => {
         type: SET_DATA,
         payload: res.data,
       });
-      dispatch({
-        type: SET_NAV_PATH,
-        payload: res.data,
-      });
       if(!isNaN(parseInt(res.data.preferredSort))){
         dispatch({
           type: SORT_SUBFOLDER,
           payload: parseInt(res.data.preferredSort),
         })
       }
+      dispatch({
+        type: SET_NAV_PATH,
+        payload: res.data,
+      });
     })
     .catch((err) => dispatch({ type: SET_ERRORS, payload: err }));
 };
-
+export const searchFolder = (searchKey) => (dispatch) => {
+  dispatch({
+    type: LOADING_FOLDER_SEARCH,
+  });
+  axios
+    .get(`/folders/search/${searchKey}`)
+    .then((res) => {
+      dispatch({
+        type: SET_FOLDER_SEARCH_RES,
+        payload: res.data,
+      });
+      dispatch({
+        type: STOP_LOADING_FOLDER_SEARCH,
+      });
+    })
+    .catch((err) => dispatch({ type: SET_ERRORS, payload: err }));
+};
 export const getNavRoute = (folderName) => (dispatch) => {
   typeof folderName === "undefined"
     ? dispatch({ type: RESET_NAV_PATH })
@@ -408,6 +427,22 @@ export const updateSubFolder = (folderName, folderDetails) => (dispatch) => {
         payload: err.response.data,
       });
     });
+};
+
+export const syncAllSubFolders = (subfolders) => (dispatch) => {
+  if(typeof(subfolders)==="object" && subfolders.length > 0){
+  subfolders.forEach( x=>{
+    axios
+      .patch(`/folders/${x.id}`, x)
+      .then()
+      .catch((err) => {
+        dispatch({
+          type: SET_ERRORS,
+          payload: err.response.data,
+        });
+      })
+    })
+  }
 };
 
 export const deleteFolder = (folderName) => (dispatch) => {

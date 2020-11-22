@@ -1,6 +1,8 @@
 import {
   LOADING_UI,
+  LOADING_FOLDER_SEARCH,
   STOP_LOADING_UI,
+  STOP_LOADING_FOLDER_SEARCH,
 
   SET_ERRORS,
   CLEAR_ERRORS,
@@ -8,6 +10,7 @@ import {
 
 const initialState = {
   loading: false,
+  loadingFolderSearch: false,
   errors: []
 };
 
@@ -41,6 +44,18 @@ export default function(state = initialState, action) {
         ...state,
         errors: [],
         loading: false
+      };
+    case LOADING_FOLDER_SEARCH:
+      return {
+        ...state,
+        errors: [],
+        loadingFolderSearch: true
+      };
+    case STOP_LOADING_FOLDER_SEARCH:
+      return {
+        ...state,
+        errors: [],
+        loadingFolderSearch: false
       };
     default:
       return state;

@@ -30,8 +30,10 @@ import {
   PATCH_SUBFOLDER,
   DELETE_SUBFOLDER,
   SORT_SUBFOLDER,
+  MOVE_SUBFOLDER,
   SET_NAV_PATH,
   RESET_NAV_PATH,
+  SET_FOLDER_SEARCH_RES,
 } from "../types";
 
 import DateHelper from "../../util/dateHelper";
@@ -39,6 +41,7 @@ import DateHelper from "../../util/dateHelper";
 const initialState = {
   loading: false,
   data: [],
+  folderSearchRes: [],
   navpath: { id: "", parent: "", children: [] },
   announcements: [],
   filteredAnnouncements: [],
@@ -261,8 +264,18 @@ export default function (state = initialState, action) {
           state.data[0].subfolders.sort((a, b) => a.visits <= b.visits);
           break;
         default:
-          state.data[0].subfolders.sort((a, b) => a.id >= b.id);
+          state.data[0].subfolders.sort((a, b) => a.index >= b.index);
           break;
+      }
+      return { ...state };
+    case MOVE_SUBFOLDER:
+      sf = state.data[0].subfolders;
+      let oldIndex = sf.findIndex((x) => x.id === action.payload.id);
+      if(oldIndex >= 0){
+        let newIndex = Math.min(Math.max(0,action.payload.newIndex), sf.length)
+        sf = sf.slice(0, oldIndex).concat(sf.slice(oldIndex + 1));
+        sf = sf.slice(0, newIndex).concat(state.data[0].subfolders[oldIndex]).concat(sf.slice(newIndex));
+        state.data[0].subfolders = sf.map((x,i)=>Object.assign(x,{"index":i}))
       }
       return { ...state };
     case SET_NAV_PATH:
@@ -287,7 +300,12 @@ export default function (state = initialState, action) {
         },
         loading: false,
       };
-
+    case SET_FOLDER_SEARCH_RES:
+      return {
+        ...state,
+        folderSearchRes: action.payload,
+        loading: false,
+      };
     // Data Handling
     case SET_DATA_ARRAY:
       return {

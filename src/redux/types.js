@@ -7,10 +7,12 @@ export const LOADING_USER = "LOADING_USER";
 // UI reducer types
 export const SET_ERRORS = "SET_ERRORS";
 export const LOADING_UI = "LOADING_UI";
+export const LOADING_FOLDER_SEARCH = "LOADING_FOLDER_SEARCH";
 export const CLEAR_ERRORS = "CLEAR_ERRORS";
 export const LOADING_DATA = "LOADING_DATA";
 export const STOP_LOADING_DATA = "STOP_LOADING_DATA";
 export const STOP_LOADING_UI = "STOP_LOADING_UI";
+export const STOP_LOADING_FOLDER_SEARCH = "STOP_LOADING_FOLDER_SEARCH";
 // Data reducer types
 // Images
 // export const POST_IMAGE = "POST_IMAGE";
@@ -37,8 +39,10 @@ export const PATCH_FOLDER = "PATCH_FOLDER";
 export const PATCH_SUBFOLDER = "PATCH_SUBFOLDER";
 export const DELETE_SUBFOLDER = "DELETE_SUBFOLDER";
 export const SORT_SUBFOLDER = "SORT_SUBFOLDER";
+export const MOVE_SUBFOLDER = "MOVE_SUBFOLDER";
 export const SET_NAV_PATH = "SET_NAV_PATH";
 export const RESET_NAV_PATH = "RESET_NAV_PATH";
+export const SET_FOLDER_SEARCH_RES = "SET_FOLDER_SEARCH_RES";
 // Data Handling
 export const SET_DATA_ARRAY = "SET_DATA_ARRAY";
 export const SET_DATA = "SET_DATA";

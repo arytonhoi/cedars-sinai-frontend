@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import "../css/genPage.css";
 import Folder from "../components/folders/Folder.js";
 import AddFolder from "../components/folders/AddFolder.js";
+import SearchResult from "../components/folders/SearchResult.js";
 
 import { Input, Menu, Dropdown, Modal, Button } from "antd";
 import { FolderFilled, ArrowLeftOutlined, RightOutlined, DownOutlined, SearchOutlined } from '@ant-design/icons';
@@ -12,12 +13,14 @@ import { connect } from "react-redux";
 import store from "../redux/store";
 import {
   getFolder,
+  searchFolder,
   deleteFolder,
   updateFolder,
   updateSubFolder,
   getNavRoute,
+  syncAllSubFolders,
 } from "../redux/actions/dataActions";
-import { SORT_SUBFOLDER } from "../redux/types";
+import { MOVE_SUBFOLDER, SORT_SUBFOLDER } from "../redux/types";
 
 // Editor
 import CKEditor from "ckeditor4-react";
@@ -35,11 +38,13 @@ class genPage extends Component {
       showRenameConfirm: false,
       showDeleteConfirm: false,
       showMoveDialog: false,
+      showSearchResults: false,
       searchKey: "",
+      positionModified: false,
       editPost: false,
       editor: null,
       selectedFolders: [],
-      folderMoveCandidate: {start:[0,0],target:null},
+      folderMoveCandidate: {start:[0,0],target:null,id:""},
       folderPosList:[[],[]]
     };
   }
@@ -107,6 +112,15 @@ class genPage extends Component {
     folders[e.target.name].title = e.target.value;
     this.setState({ ...this.state, selectedFolders: folders });
   };
+  searchFolderCallback = (e) => {
+    this.setState({showSearchResults: false, searchKey: e.target.value });
+  };
+  searchFolder = () => {
+    if(this.state.searchKey !== "" && !this.props.UI.loadingFolderSearch && !this.state.editFolders && !this.state.editPost){
+      this.props.searchFolder(this.state.searchKey)
+    }
+    this.setState({showSearchResults: true});
+  };
   renameFolders = () => {
     if (this.state.showRenameConfirm) {
       var folders = this.state.selectedFolders;
@@ -151,25 +165,32 @@ class genPage extends Component {
       selectedFolders: [],
     });
   };
-  folderDragStart = (e) => {
-    var x = document.querySelectorAll(".folder")
+  folderDragStart = (e,x) => {
+    var f = document.querySelectorAll(".folder")
     var arr = this.state.folderPosList
-    x.forEach((a)=>{arr[0].push(a.offsetLeft);arr[1].push(a.offsetTop)})
+    f.forEach((a)=>{arr[0].push(a.offsetLeft);arr[1].push(a.offsetTop)})
     arr = [arr[0].filter((v,i,a)=>a.indexOf(v)===i),arr[1].filter((v,i,a)=>a.indexOf(v)===i)]
+    arr[0][arr[0].length-1] = +Infinity
+    arr[1][arr[1].length-1] = +Infinity
     this.setState({
-      folderMoveCandidate:{start:[e.clientX,e.clientY],target:e.currentTarget},
+      positionModified: true,
+      folderMoveCandidate:{start:[e.clientX,e.clientY],target:e.currentTarget,id:x.id},
       folderPosList:arr
     })
   }
   folderDragEnd = (e) => {
-    var x = this.state.folderMoveCandidate
+    var f = this.state.folderMoveCandidate
+    var targetSize = [e.target.clientWidth, e.target.clientHeight]
     var arr = this.state.folderPosList
-    var final = [x.target.offsetLeft+e.clientX-x.start[0],x.target.offsetTop+e.clientY-x.start[1]]
+    var final = [f.target.offsetLeft+e.clientX-f.start[0]-(targetSize[0]/2),f.target.offsetTop+e.clientY-f.start[1]-(targetSize[1]/2)]
     var pos = [Math.max(arr[0].findIndex(x=>x>final[0])),Math.max(arr[1].findIndex(x=>x>final[1]))]
-    //pos= pos[0] + pos[1]*arr[0].length
-    console.log(arr,final, pos)
+    pos = pos[0] + pos[1]*arr[0].length - 1
+    store.dispatch({ type: MOVE_SUBFOLDER, payload: {"id":f.id,"newIndex":pos} });
+    this.props.updateFolder(this.state.pagename, {
+      preferredSort: -1,
+    });
     this.setState({
-      folderMoveCandidate:{start:[0,0],target:null},
+      folderMoveCandidate:{start:[0,0],target:null,id:""},
       folderPosList:[[],[]]
     })
   }
@@ -186,6 +207,14 @@ class genPage extends Component {
       }
     }
   };
+  exitFolderEditMode = () => { 
+    console.log(this.props.data.data[0].subfolders);
+    if(this.state.positionModified){
+      this.props.syncAllSubFolders(this.props.data.data[0].subfolders);
+      this.setState({ positionModified: false, })
+    }
+    this.toggleFolderEditable()
+  }
   updateEditor = (event) => {
     this.setState({ ...this.state, editor: event.editor.getData() });
   };
@@ -208,8 +237,6 @@ class genPage extends Component {
     this.togglePostEditable();
   };
   render() {
-//console.log(this.props.data)
-//console.log(this.state)
     const { UI, data, user } = this.props;
     const pageName = this.props.match.params.pageName;
     const folders = data.data[0];
@@ -241,7 +268,7 @@ class genPage extends Component {
         <div className="floating-component">Page loading...</div>
       ) : UI.errors.length > 0 ? (
         <div className="floating-component">{UI.errors[0].statusText}</div>
-      ) : this.state.searchKey === "" ? (
+      ) : (this.state.searchKey === "" || !this.state.showSearchResults || this.state.editFolders || this.state.editPost) ? (
         <div>
           {this.state.editFolders ? (
             <div className="resources-editbar noselect">
@@ -368,11 +395,10 @@ class genPage extends Component {
           <div className="floating-component">
             {folders.subfolders.length > 0 ? (
               <div className="folder-topbar noselect">
-                <h3>Contents</h3>
-                <div>
+                <div className="folder-editbar button-holder">
                   {
-                    (user.credentials.isAdmin && this.state.editFolders)?
-                    (<span className="button-holder">
+                    (user.credentials.isAdmin && this.state.editFolders && this.state.selectedFolders.length > 0)?
+                    (<>
                     <Button
                       disabled={this.state.selectedFolders.length === 0}
                       type="danger"
@@ -392,7 +418,7 @@ class genPage extends Component {
                     >
                       Rename {this.state.selectedFolders.length} Folder{s}
                     </Button>
-                    </span>):
+                    </>):
                     ("")
                   }
                   <Dropdown overlay={menu}>
@@ -409,23 +435,23 @@ class genPage extends Component {
                   }
                   {
                     user.credentials.isAdmin && this.state.editFolders && !this.state.editPost ?
-                    (<span className="button-holder">
+                    (<>
                       <Button
                         type="primary"
-                        style={{ background: "green", borderColor: "green"}}
-                        onClick={this.toggleFolderEditable}
+                        style={{ background: "#52C41A", borderColor: "#52C41A"}}
+                        onClick={this.exitFolderEditMode}
                       >
                         Finish Editing
                       </Button>
-                    </span>):
+                    </>):
                     ("")
                   }
               </div>
               </div>
             ) : user.credentials.isAdmin ? (
               <div className="folder-blank noselect">
-                <h3>It seems like there are no subfolders</h3>
-                <h4>You can create subfolders under any folder.</h4>
+                <h3 className="em2">It seems like there are no subfolders</h3>
+                <h4 className="em3">You can create subfolders under any folder.</h4>
                 <AddFolder target={pageName} format={1} />
               </div>
             ) : (
@@ -442,7 +468,7 @@ class genPage extends Component {
               {folders.subfolders.length > 0
                 ? folders.subfolders.map((x, i) => (
                     <Folder
-                      onMouseDown={this.folderDragStart}
+                      onMouseDown={(e)=>this.folderDragStart(e,x)}
                       onMouseUp={this.folderDragEnd}
                       key={x.id}
                       label={x.title}
@@ -461,13 +487,13 @@ class genPage extends Component {
             (folders.content === "" || folders.subfolders.length < 1) ? (
               ""
             ) : (
-              <hr />
+              <hr className="folder-hr"/>
             )}
             {user.credentials.isAdmin &&
             !this.state.editPost &&
             !this.state.editFolders &&
             folders.content !== "" ? (
-              <div className="post-topbar noselect">
+              <div className="noselect post-editbar button-holder">
                 <Button type="primary" onClick={this.togglePostEditable}>
                   Edit Post
                 </Button>
@@ -480,10 +506,10 @@ class genPage extends Component {
               !this.state.editPost &&
               !this.state.editFolders ? (
                 <div className="folder-blank noselect">
-                  <h3>It seems like there is no post for this folder yet.</h3>
-                  <h4>Start by creating the post.</h4>
+                  <h3 className="em2">It seems like there is no post for this folder yet.</h3>
+                  <h4 className="em3">Start by creating the post.</h4>
                   <Button type="primary" onClick={this.togglePostEditable}>
-                    Edit Post
+                    Begin Post
                   </Button>
                 </div>
               ) : (
@@ -495,18 +521,16 @@ class genPage extends Component {
             {this.state.editPost ? (
               <>
                 <div className="post-editbar noselect">
-                  <span className="button-holder">
+                  <div className="button-holder">
                     <Button type="danger" onClick={this.clearPost}>
-                      Delete Contents
+                      Delete entire post
                     </Button>
-                  </span>
-                  <span className="button-holder">
                     <Button onClick={this.maybeShowPostCancelConfirm}>
                       Cancel
                     </Button>
                     <Button
                       type="primary"
-                      style={{ background: "green", borderColor: "green" }}
+                      style={{ background: "#52C41A", borderColor: "#52C41A" }}
                       disabled={
                         this.state.editor === null || this.state.editor === ""
                       }
@@ -514,7 +538,7 @@ class genPage extends Component {
                     >
                       Save Changes
                     </Button>
-                  </span>
+                  </div>
                   <Modal
                     className="center"
                     title={"Cancel changes to your post?"}
@@ -547,20 +571,7 @@ class genPage extends Component {
                   config={{
                     disallowedContent: "script embed *[on*]",
                     removeButtons: "",
-                    toolbar: [
-                      {
-                        name: "Basic",
-                        items: [
-                          "Bold",
-                          "Italic",
-                          "Underline",
-                          "Superscript",
-                          "Subscript",
-                          "Link",
-                          "Image",
-                        ],
-                      },
-                    ],
+                    height: "38vh"
                   }}
                 />
               </>
@@ -570,9 +581,24 @@ class genPage extends Component {
           </div>
         </div>
       ):("");
-      const searchMarkup = 
-        (this.state.searchKey !== "") ?
-        (<div className= "floating-component">Search Markup</div>): ("")
+      var searchMarkup = () => 
+        (this.props.data.folderSearchRes.length > 0 && !this.props.UI.loadingFolderSearch) ?
+        (<div className= "floating-component">
+          <h3 className= "em2">
+            Search Results for '{this.state.searchKey}'
+          </h3>
+          {this.props.data.folderSearchRes.map((x,i)=><SearchResult key={i} data={x} searchKey={this.state.searchKey}/>)}
+        </div>):(this.props.UI.loadingFolderSearch)?
+        (<div className= "floating-component">
+          <h3 className= "em2">
+            Searching for results...
+          </h3>
+        </div>):
+        (<div className= "floating-component">
+          <h3 className= "em2">
+            No results for '{this.state.searchKey}' were found
+          </h3>
+        </div>)
       
     return (
       <>
@@ -580,12 +606,12 @@ class genPage extends Component {
             <div>
             <h5>
               <span>
-                <a className="resources-breadcrumb" href="/resources">Resources</a>
+                <a className="em4-light" href="/resources">Resources</a>
               </span>
               { (typeof(folders) === "object" && typeof(folders.path) === "object")?
                 (folders.path.map((x, i) =>
                     ((x.id !== "" && x.id !== "home") ?
-                    (<span key={x.id}>{" / "}<a href={x.id}>{x.name}</a></span>):
+                    (<span className="em4-light" key={x.id}>{" / "}<a className="em4-light" href={x.id}>{x.name}</a></span>):
                     (""))
                   )
                 ): ("") }
@@ -593,21 +619,22 @@ class genPage extends Component {
             <h3>{typeof(folders) === "object"? folders.title : "Loading..."}</h3>
             </div>
             <div className="resources-topbar-right">
-              <Input className="no-padding" suffix={<SearchOutlined />} placeholder="Search resources by name" />
-              <Button type="primary">Search</Button>
+              <Input onKeyUp={this.searchFolderCallback} disabled={this.state.editFolders || this.state.editPost} className="no-padding" suffix={<SearchOutlined />} placeholder="Search resources by name" />
+              <Button type="primary" disabled={this.state.editFolders || this.state.editPost} onClick={this.searchFolder} >Search</Button>
             </div>
           </div>
-        {pageMarkup}
-        {searchMarkup}
+        {(this.state.searchKey === "" || !this.state.showSearchResults || this.state.editFolders || this.state.editPost) ? pageMarkup : searchMarkup()}
       </>);
   }
 }
 
 genPage.propTypes = {
   getFolder: PropTypes.func.isRequired,
+  searchFolder: PropTypes.func.isRequired,
   deleteFolder: PropTypes.func.isRequired,
   updateFolder: PropTypes.func.isRequired,
   updateSubFolder: PropTypes.func.isRequired,
+  syncAllSubFolders: PropTypes.func.isRequired,
   getNavRoute: PropTypes.func.isRequired,
   data: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
@@ -623,8 +650,10 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   getFolder,
+  searchFolder,
   updateFolder,
   updateSubFolder,
   deleteFolder,
   getNavRoute,
+  syncAllSubFolders,
 })(genPage);

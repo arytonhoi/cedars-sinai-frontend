@@ -29,6 +29,9 @@ input {
   padding: 0.25em 2em 0.25em 0.5em !important;
 }
 
+.ant-input-affix-wrapper, .ant-dropdown-trigger{
+  margin-right: 0.5em !important;
+}
 /* UI */
 .noselect {
   -webkit-touch-callout: none;
@@ -55,7 +58,7 @@ label,
 .floating-component {
   display: block;
   margin: 2em;
-  padding: 2em 3em;
+  padding: 2em 1.71em;
   background: #fff;
   border-radius: 0.5em;
 }
@@ -71,6 +74,26 @@ label,
   display: block;
   color: red;
   font-size: 0.85em;
+}
+
+.em2{
+  font-weight: 700;
+  font-size: 1.5em !important;
+}
+.em3{
+  font-weight: 400;
+  font-size: 1em;
+  color: #7E7E7E !important;
+}
+.em4-light{
+  font-weight: 400;
+  font-size: 1em;
+  color: #8C8C8C !important;
+}
+.em4-dark{
+  font-weight: 400;
+  font-size: 1em;
+  color: #595959 !important;
 }
 /* Positioning */
 .center {
