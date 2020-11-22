@@ -5,25 +5,57 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import DepartmentSection from "./departmentSection";
 
-// class
+// styles
 import "./contacts.css";
 import "../../css/page.css";
+
+// antd
+import { Button, Empty } from "antd";
 
 class DepartmentList extends Component {
   render() {
     const { credentials } = this.props.user;
     const isAdmin = credentials.isAdmin;
     const departments = this.props.departments;
+    const contacts = this.props.contacts;
+    const searchTerm = this.props.searchTerm;
 
     if (departments.length === 0) {
-      if (isAdmin) {
-        return <p>No departments yet. Add some.</p>;
-      } else {
-        return <p>No departments yet.</p>;
-      }
+      return (
+        <Empty
+          style={{ margin: "auto" }}
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description={<span>No departments</span>}
+        >
+          {isAdmin && !this.props.isEditingPage && (
+            <Button
+              type="dashed"
+              onClick={() => this.props.handleAddorEditDepartment()}
+            >
+              Add department
+            </Button>
+          )}
+        </Empty>
+      );
+    } else if (
+      contacts.length === 0 &&
+      departments.length > 0 &&
+      searchTerm !== ""
+    ) {
+      return (
+        <Empty
+          style={{ margin: "auto" }}
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description={
+            <span>
+              No contacts matched <br /> "{searchTerm}"
+            </span>
+          }
+        />
+      );
     } else {
       const departmentsListComponent = departments.map((d) => {
-        const departmentContacts = this.props.contacts.filter(
+        const departmentContacts = contacts.filter(
           (c) => c.departmentId === d.id
         );
         return (
@@ -58,6 +90,7 @@ DepartmentList.propTypes = {
   handleAddorEditContact: PropTypes.func.isRequired,
   // general
   isEditingPage: PropTypes.bool.isRequired,
+  searchTerm: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => {

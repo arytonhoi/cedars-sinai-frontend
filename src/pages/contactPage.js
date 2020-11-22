@@ -109,12 +109,13 @@ class ContactPage extends Component {
 
   // general form changes
   handleChange = (event) => {
+    const value = event.target.value.trim();
     this.setState({
-      [event.target.name]: event.target.value,
+      [event.target.name]: value,
     });
 
     if (event.target.name === "searchTerm") {
-      this.props.getSearchedContacts(event.target.value);
+      this.props.getSearchedContacts(value);
     }
   };
 
@@ -129,7 +130,7 @@ class ContactPage extends Component {
     this.setState({
       showDepartmentEditorModal: true,
     });
-
+    console.log(departmentId);
     if (departmentId === null) {
       this.setState({
         departmentName: "",
@@ -153,7 +154,7 @@ class ContactPage extends Component {
       this.props.postDepartment(newDepartment);
     } else {
       // editing exisitng department
-      this.props.patchContact(this.state.departmentId, newDepartment);
+      this.props.patchDepartment(this.state.departmentId, newDepartment);
     }
 
     this.handleCancelAddorEditDepartment();
@@ -304,14 +305,6 @@ class ContactPage extends Component {
         </header>
         <Layout className="vertical-fill-layout">
           <Content className="content-card">
-            {/* <AddDepartmentModal
-              visible={isAdmin && this.state.showDepartmentEditorModal}
-              departmentName={this.state.departmentName}
-              handleSubmitNewDepartment={this.handleSubmitNewDepartment}
-              handleCancelDepartmentChange={this.handleCancelDepartmentChange}
-              handleChange={this.handleChange}
-            /> */}
-
             <DepartmentEditorModal
               // flags
               visible={isAdmin && this.state.showDepartmentEditorModal}
@@ -352,6 +345,7 @@ class ContactPage extends Component {
               handleAddorEditContact={this.handleAddorEditContact}
               // general
               isEditingPage={this.state.isEditingPage}
+              searchTerm={this.state.searchTerm}
             />
           </Content>
           <Footer style={{ textAlign: "center" }}>DevelopForGood ©2020</Footer>

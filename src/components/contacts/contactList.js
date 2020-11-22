@@ -48,7 +48,19 @@ class ContactList extends Component {
     return contacts.length !== 0 ? (
       <ul>{contactsListComponent}</ul>
     ) : (
-      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      <Empty
+        image={Empty.PRESENTED_IMAGE_SIMPLE}
+        description={<span>No contacts</span>}
+      >
+        {!this.props.isEditingPage && (
+          <Button
+            type="dashed"
+            onClick={() => this.props.handleAddorEditContact(department.id)}
+          >
+            Add contact
+          </Button>
+        )}
+      </Empty>
     );
   }
 }
