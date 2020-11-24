@@ -1,26 +1,27 @@
 import {
   LOADING_UI,
   SET_UNAUTHENTICATED,
-
   SET_USER,
   LOADING_USER,
-
   SET_ERRORS,
   CLEAR_ERRORS,
-
 } from "../types";
 import axios from "axios";
+
+const setAuthorizationHeader = () => {
+  localStorage.setItem("hasValidCookie", true);
+};
 
 export const loginUser = (userData, history) => (dispatch) => {
   dispatch({ type: LOADING_UI });
   axios
     .post("/login", userData)
     .then((res) => {
-      //console.log(res.data);
-      setAuthorizationHeader(res.data.token);
+      setAuthorizationHeader();
       dispatch(getUserData());
       dispatch({ type: CLEAR_ERRORS });
       history.push("/");
+      window.location.href = "./";
     })
     .catch((err) => {
       dispatch({
@@ -31,9 +32,16 @@ export const loginUser = (userData, history) => (dispatch) => {
 };
 
 export const logoutUser = () => (dispatch) => {
-  localStorage.removeItem("FBIdToken");
-  delete axios.defaults.headers.common["Authorization"];
+  localStorage.removeItem("hasValidCookie");
   dispatch({ type: SET_UNAUTHENTICATED });
+  // axios
+  //   .post("/logout")
+  //   .then((res) => {
+  //     // localStorage.removeItem("hasValidCookie");
+  //     localStorage.setItem("hasValidCookie", false);
+  //     dispatch({ type: SET_UNAUTHENTICATED });
+  //   })
+  //   .catch((err) => console.log(err));
 };
 
 export const getUserData = () => (dispatch) => {
@@ -46,7 +54,12 @@ export const getUserData = () => (dispatch) => {
         payload: res.data,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      localStorage.removeItem("hasValidCookie");
+      dispatch({ type: SET_UNAUTHENTICATED });
+      // window.location.href = "/";
+    });
 };
 
 export const uploadImage = (formData) => (dispatch) => {
@@ -67,11 +80,4 @@ export const editUserDetails = (userDetails) => (dispatch) => {
       dispatch(getUserData());
     })
     .catch((err) => console.log(err));
-};
-
-const setAuthorizationHeader = (token) => {
-  const FBIdToken = `Bearer ${token}`;
-  localStorage.setItem("FBIdToken", FBIdToken);
-  axios.defaults.headers.common["Authorization"] = FBIdToken;
-  window.location.href = "./";
 };

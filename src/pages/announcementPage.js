@@ -240,12 +240,22 @@ class AnnouncementPage extends Component {
                     <h3>{announcement.author}</h3>
                     <h3>{announcement.createdAt.toString("MM/dd/yy")}</h3>
                   </header>
-                  <div className="announcement-content-holder"> 
-                  <input type="checkbox" className="announcement-toggle" id={"cb"+announcement.id} />
-                  <div className="announcement-ckeditor-content"
-                    dangerouslySetInnerHTML={{ __html: announcement.content }}
-                  />
-                  <label htmlFor={"cb"+announcement.id} className="announcement-show-more noselect clickable" >Show More</label>
+                  <div className="announcement-content-holder">
+                    <input
+                      type="checkbox"
+                      className="announcement-toggle"
+                      id={"cb" + announcement.id}
+                    />
+                    <div
+                      className="announcement-ckeditor-content"
+                      dangerouslySetInnerHTML={{ __html: announcement.content }}
+                    />
+                    <label
+                      htmlFor={"cb" + announcement.id}
+                      className="announcement-show-more noselect clickable"
+                    >
+                      Show More
+                    </label>
                   </div>
                 </List.Item>
               )}

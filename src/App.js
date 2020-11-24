@@ -20,7 +20,6 @@ import { Layout } from "antd";
 // Utils
 //import themeObject from "./util/configs/theme";
 import AuthRoute from "./util/jsx/AuthRoute";
-import JWT from "./util/jwt.js";
 import axios from "axios";
 
 // Pages
@@ -31,20 +30,38 @@ import logout from "./pages/logout";
 import announcementPage from "./pages/announcementPage";
 import contactPage from "./pages/contactPage";
 
+axios.defaults.withCredentials = true;
 axios.defaults.baseURL =
-  "https://us-central1-fir-db-d2d47.cloudfunctions.net/api";
+  // "https://us-central1-fir-db-d2d47.cloudfunctions.net/api";
+  // "http://localhost:5000/fir-db-d2d47/us-central1/api";
+  "https://fir-db-d2d47.web.app/api";
+// "http://localhost:5000/api";
 
 // Authentication
-const token = localStorage.FBIdToken;
-if (token) {
-  const decodedToken = new JWT(token).parse.payload;
-  if (decodedToken.exp * 1000 < Date.now()) {
-    store.dispatch(logoutUser());
-  } else {
+// const token = localStorage.FBIdToken;
+// if (token) {
+//   const decodedToken = new JWT(token).parse.payload;
+//   if (decodedToken.exp * 1000 < Date.now()) {
+//     store.dispatch(logoutUser());
+//   } else {
+//     store.dispatch({ type: SET_AUTHENTICATED });
+//     axios.defaults.headers.common["Authorization"] = token;
+//     store.dispatch(getUserData());
+//   }
+// }
+
+const hasValidCookie = localStorage.hasValidCookie;
+if (hasValidCookie) {
+  try {
+    console.log(localStorage.hasValidCookie);
     store.dispatch({ type: SET_AUTHENTICATED });
-    axios.defaults.headers.common["Authorization"] = token;
     store.dispatch(getUserData());
+  } catch (err) {
+    store.dispatch(logoutUser());
+    console.log(err);
   }
+} else {
+  store.dispatch(logoutUser());
 }
 
 class App extends Component {

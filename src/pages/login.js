@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 // MUI Stuff
 import "../css/login.css";
 import { Form, Button, Spin } from "antd";
-import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons"
+import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 // Redux stuff
 import { connect } from "react-redux";
 import { loginUser } from "../redux/actions/userActions";
@@ -27,7 +27,7 @@ class login extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     const userData = {
-      username: ["admin","staff"][this.state.uid],
+      username: ["admin", "staff"][this.state.uid],
       password: this.state.password,
     };
     this.props.loginUser(userData, this.props.history);
@@ -35,7 +35,7 @@ class login extends Component {
   handleChange = (event) => {
     this.setState({
       ...this.state,
-      uid: (this.state.uid+1)%2,
+      uid: (this.state.uid + 1) % 2,
     });
   };
   handleTextChange = (event) => {
@@ -55,8 +55,12 @@ class login extends Component {
     const { errors } = this.state;
     return (
       <div className="noselect">
-        <div className="logo-box" >
-          <img className="logo" src={process.env.PUBLIC_URL + '/logo.png'} alt=""/>
+        <div className="logo-box">
+          <img
+            className="logo"
+            src={process.env.PUBLIC_URL + "/logo.png"}
+            alt=""
+          />
         </div>
         <Form className="login-form center" onSubmit={this.handleSubmit}>
           <p className="login-title">OR Education Portal</p>
@@ -64,7 +68,7 @@ class login extends Component {
             className="ant-form-row-login"
             label="Enter Password:"
             name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
+            rules={[{ required: true, message: "Please input your password!" }]}
           >
             <div className="pw-field-wrapper">
               <input
@@ -75,7 +79,7 @@ class login extends Component {
                 style={{
                   padding: "0 0",
                   borderRadius: "2px",
-                  border: "1px solid #D9D9D9"
+                  border: "1px solid #D9D9D9",
                 }}
                 value={this.state.password}
                 onChange={this.handleTextChange}
@@ -84,27 +88,30 @@ class login extends Component {
                 className="pw-toggle valign noselect"
                 onClick={this.togglePwField}
               >
-                {(this.state.showPw)?(<EyeInvisibleOutlined style={{ fontSize: "1.2em" }} />):
-                (<EyeOutlined style={{ fontSize: "1.2em" }} />)}
+                {this.state.showPw ? (
+                  <EyeInvisibleOutlined style={{ fontSize: "1.2em" }} />
+                ) : (
+                  <EyeOutlined style={{ fontSize: "1.2em" }} />
+                )}
               </span>
             </div>
           </Form.Item>
           <Button
             type="primary"
             variant="contained"
-            style={{width: "100%"}}
+            style={{ width: "100%" }}
             className="login-button"
-            disabled={loading || this.state.password===""}
+            disabled={loading || this.state.password === ""}
             onClick={this.handleSubmit}
           >
             Sign in
-            {loading && (<Spin className="button-spinner halign" />)}
+            {loading && <Spin className="button-spinner halign" />}
           </Button>
-          <p className="errors pw-errors noselect">{
-            (errors.length > 0)?(errors.pop().general):(<br/>)
-          }</p>
+          <p className="errors pw-errors noselect">
+            {errors.length > 0 ? errors.pop().general : <br />}
+          </p>
           <div className="noselect select-user" onClick={this.handleChange}>
-            Sign in as {["staff","admin"][this.state.uid]} instead
+            Sign in as {["staff", "admin"][this.state.uid]} instead
           </div>
         </Form>
       </div>
@@ -128,7 +135,4 @@ const mapActionsToProps = {
   loginUser,
 };
 
-export default connect(
-  mapStateToProps,
-  mapActionsToProps
-)(login);
+export default connect(mapStateToProps, mapActionsToProps)(login);

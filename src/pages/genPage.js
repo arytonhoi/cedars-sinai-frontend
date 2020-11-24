@@ -7,7 +7,13 @@ import AddFolder from "../components/folders/AddFolder.js";
 import SearchResult from "../components/folders/SearchResult.js";
 
 import { Input, Menu, Dropdown, Modal, Button } from "antd";
-import { FolderFilled, ArrowLeftOutlined, RightOutlined, DownOutlined, SearchOutlined } from '@ant-design/icons';
+import {
+  FolderFilled,
+  ArrowLeftOutlined,
+  RightOutlined,
+  DownOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 
 import { connect } from "react-redux";
 import store from "../redux/store";
@@ -45,8 +51,8 @@ class genPage extends Component {
       editor: null,
       selectedFolders: [],
       requestedSort: null,
-      folderMoveCandidate: {start:[0,0],target:null,id:""},
-      folderPosList:[[],[]]
+      folderMoveCandidate: { start: [0, 0], target: null, id: "" },
+      folderPosList: [[], []],
     };
   }
   componentDidMount() {
@@ -54,12 +60,12 @@ class genPage extends Component {
     if (typeof pageName !== "string" || pageName === "") {
       pageName = "home";
     }
-    this.props.getFolder(pageName,true);
+    this.props.getFolder(pageName, true);
     this.setState({ ...this.state, pagename: pageName });
-//console.log(this.props)
+    //console.log(this.props)
   }
   sortSubfolders = (e) => {
-    if(this.state.editFolders && this.props.user.credentials.isAdmin){
+    if (this.state.editFolders && this.props.user.credentials.isAdmin) {
       this.props.updateFolder(this.state.pagename, {
         preferredSort: parseInt(e.key),
       });
@@ -115,13 +121,18 @@ class genPage extends Component {
     this.setState({ ...this.state, selectedFolders: folders });
   };
   searchFolderCallback = (e) => {
-    this.setState({showSearchResults: false, searchKey: e.target.value });
+    this.setState({ showSearchResults: false, searchKey: e.target.value });
   };
   searchFolder = () => {
-    if(this.state.searchKey !== "" && !this.props.UI.loadingFolderSearch && !this.state.editFolders && !this.state.editPost){
-      this.props.searchFolder(this.state.searchKey)
+    if (
+      this.state.searchKey !== "" &&
+      !this.props.UI.loadingFolderSearch &&
+      !this.state.editFolders &&
+      !this.state.editPost
+    ) {
+      this.props.searchFolder(this.state.searchKey);
     }
-    this.setState({showSearchResults: true});
+    this.setState({ showSearchResults: true });
   };
   renameFolders = () => {
     if (this.state.showRenameConfirm) {
@@ -149,7 +160,7 @@ class genPage extends Component {
       var folders = this.state.selectedFolders;
       if (folders.length >= 0) {
         folders.map((x) => {
-          if(this.props.data.navpath.id !== x.id){
+          if (this.props.data.navpath.id !== x.id) {
             this.toggleSelect(null, x);
             this.props.updateSubFolder(x.id, {
               parent: this.props.data.navpath.id,
@@ -167,35 +178,54 @@ class genPage extends Component {
       selectedFolders: [],
     });
   };
-  folderDragStart = (e,x) => {
-    var f = document.querySelectorAll(".folder")
-    var arr = this.state.folderPosList
-    f.forEach((a)=>{arr[0].push(a.offsetLeft);arr[1].push(a.offsetTop)})
-    arr = [arr[0].filter((v,i,a)=>a.indexOf(v)===i),arr[1].filter((v,i,a)=>a.indexOf(v)===i)]
-    arr[0][arr[0].length-1] = +Infinity
-    arr[1][arr[1].length-1] = +Infinity
+  folderDragStart = (e, x) => {
+    var f = document.querySelectorAll(".folder");
+    var arr = this.state.folderPosList;
+    f.forEach((a) => {
+      arr[0].push(a.offsetLeft);
+      arr[1].push(a.offsetTop);
+    });
+    arr = [
+      arr[0].filter((v, i, a) => a.indexOf(v) === i),
+      arr[1].filter((v, i, a) => a.indexOf(v) === i),
+    ];
+    arr[0][arr[0].length - 1] = +Infinity;
+    arr[1][arr[1].length - 1] = +Infinity;
     this.setState({
       positionModified: true,
-      folderMoveCandidate:{start:[e.clientX,e.clientY],target:e.currentTarget,id:x.id},
-      folderPosList:arr
-    })
-  }
+      folderMoveCandidate: {
+        start: [e.clientX, e.clientY],
+        target: e.currentTarget,
+        id: x.id,
+      },
+      folderPosList: arr,
+    });
+  };
   folderDragEnd = (e) => {
-    var f = this.state.folderMoveCandidate
-    var targetSize = [e.target.clientWidth, e.target.clientHeight]
-    var arr = this.state.folderPosList
-    var final = [f.target.offsetLeft+e.clientX-f.start[0]-(targetSize[0]/2),f.target.offsetTop+e.clientY-f.start[1]-(targetSize[1]/2)]
-    var pos = [Math.max(arr[0].findIndex(x=>x>final[0])),Math.max(arr[1].findIndex(x=>x>final[1]))]
-    pos = pos[0] + pos[1]*arr[0].length - 1
-    store.dispatch({ type: MOVE_SUBFOLDER, payload: {"id":f.id,"newIndex":pos} });
+    var f = this.state.folderMoveCandidate;
+    var targetSize = [e.target.clientWidth, e.target.clientHeight];
+    var arr = this.state.folderPosList;
+    var final = [
+      f.target.offsetLeft + e.clientX - f.start[0] - targetSize[0] / 2,
+      f.target.offsetTop + e.clientY - f.start[1] - targetSize[1] / 2,
+    ];
+    var pos = [
+      Math.max(arr[0].findIndex((x) => x > final[0])),
+      Math.max(arr[1].findIndex((x) => x > final[1])),
+    ];
+    pos = pos[0] + pos[1] * arr[0].length - 1;
+    store.dispatch({
+      type: MOVE_SUBFOLDER,
+      payload: { id: f.id, newIndex: pos },
+    });
     this.props.updateFolder(this.state.pagename, {
       preferredSort: -1,
     });
     this.setState({
-      folderMoveCandidate:{start:[0,0],target:null,id:""},
-      folderPosList:[[],[]]
-    })
-  }
+      folderMoveCandidate: { start: [0, 0], target: null, id: "" },
+      folderPosList: [[], []],
+    });
+  };
   deleteFolders = () => {
     this.setState({
       ...this.state,
@@ -209,14 +239,14 @@ class genPage extends Component {
       }
     }
   };
-  exitFolderEditMode = () => { 
+  exitFolderEditMode = () => {
     console.log(this.props.data.data[0].subfolders);
-    if(this.state.positionModified){
+    if (this.state.positionModified) {
       this.props.syncAllSubFolders(this.props.data.data[0].subfolders);
-      this.setState({ positionModified: false, })
+      this.setState({ positionModified: false });
     }
-    this.toggleFolderEditable()
-  }
+    this.toggleFolderEditable();
+  };
   updateEditor = (event) => {
     this.setState({ ...this.state, editor: event.editor.getData() });
   };
@@ -243,35 +273,38 @@ class genPage extends Component {
     const pageName = this.props.match.params.pageName;
     const folders = data.data[0];
     const menu = (
-      <Menu onClick={(e)=>(this.sortSubfolders(e))}>
-        <Menu.Item key="0">
-          Alphabetical order
-        </Menu.Item>
-        <Menu.Item key="1">
-          Reverse alphabetical order
-        </Menu.Item>
-        <Menu.Item key="2">
-          Most recently added
-        </Menu.Item>
-        <Menu.Item key="3">
-          Least recently added
-        </Menu.Item>
-        <Menu.Item key="4">
-          Most popular
-        </Menu.Item>
+      <Menu onClick={(e) => this.sortSubfolders(e)}>
+        <Menu.Item key="0">Alphabetical order</Menu.Item>
+        <Menu.Item key="1">Reverse alphabetical order</Menu.Item>
+        <Menu.Item key="2">Most recently added</Menu.Item>
+        <Menu.Item key="3">Least recently added</Menu.Item>
+        <Menu.Item key="4">Most popular</Menu.Item>
       </Menu>
     );
     var s = "s";
     if (this.state.selectedFolders.length === 1) {
       s = "";
     }
-    const menuSelector = ["Alphabetical order","Reverse alphabetical order","Most recently added","Least recently added","Most popular"]
+    const menuSelector = [
+      "Alphabetical order",
+      "Reverse alphabetical order",
+      "Most recently added",
+      "Least recently added",
+      "Most popular",
+    ];
     const pageMarkup =
       data.loading || (data.data.length === 0 && UI.errors.length === 0) ? (
-        <div className="floating-component noselect padding-normal">Page loading...</div>
+        <div className="floating-component noselect padding-normal">
+          Page loading...
+        </div>
       ) : UI.errors.length > 0 ? (
-        <div className="floating-componentnoselect  padding-normal">{UI.errors[0].statusText}</div>
-      ) : (this.state.searchKey === "" || !this.state.showSearchResults || this.state.editFolders || this.state.editPost) ? (
+        <div className="floating-componentnoselect  padding-normal">
+          {UI.errors[0].statusText}
+        </div>
+      ) : this.state.searchKey === "" ||
+        !this.state.showSearchResults ||
+        this.state.editFolders ||
+        this.state.editPost ? (
         <div>
           {this.state.editFolders ? (
             <div className="resources-editbar noselect">
@@ -336,60 +369,82 @@ class genPage extends Component {
               <Modal
                 className="move-dialog center noselect"
                 title={
-                  (data.navpath.parent==="")?
-                  ("Move to " + data.navpath.title):
-                  (<div className="move-modal-top">
-                    <ArrowLeftOutlined
-                      onClick={()=>this.props.getNavRoute(data.navpath.parent)} /> 
-                    <span>{"Move to " + data.navpath.title}</span>
-                  </div>)
+                  data.navpath.parent === "" ? (
+                    "Move to " + data.navpath.title
+                  ) : (
+                    <div className="move-modal-top">
+                      <ArrowLeftOutlined
+                        onClick={() =>
+                          this.props.getNavRoute(data.navpath.parent)
+                        }
+                      />
+                      <span>{"Move to " + data.navpath.title}</span>
+                    </div>
+                  )
                 }
                 visible={this.state.showMoveDialog}
-                onCancel={() =>
-                  {this.toggleStateFlag("showMoveDialog");this.props.getNavRoute()}}
+                onCancel={() => {
+                  this.toggleStateFlag("showMoveDialog");
+                  this.props.getNavRoute();
+                }}
                 footer={[
                   <Button
                     key="1"
-                    onClick={() => 
-                      {this.toggleStateFlag("showMoveDialog");this.props.getNavRoute()}}
+                    onClick={() => {
+                      this.toggleStateFlag("showMoveDialog");
+                      this.props.getNavRoute();
+                    }}
                   >
                     Cancel
                   </Button>,
-                  <Button key="2" type="primary" onClick={this.moveFolders} disabled={data.navpath.id === data.data[0].id}>
+                  <Button
+                    key="2"
+                    type="primary"
+                    onClick={this.moveFolders}
+                    disabled={data.navpath.id === data.data[0].id}
+                  >
                     {"Move Folder" + s + " Here"}
                   </Button>,
                 ]}
               >
-                {
-                  (data.navpath.children.length===0)?
-                  (<div className="navpath-list-empty">
+                {data.navpath.children.length === 0 ? (
+                  <div className="navpath-list-empty">
                     <i>This folder has no subfolders</i>
-                  </div>):
-                  (data.navpath.children.map( (x,i)=>
-                    (this.state.selectedFolders.findIndex(p=>(p.id===x.id)) === -1)?
-                    (<div className="navpath-list navpath-list-enabled" key={x.id}
-                      onClick={()=>this.props.getNavRoute(x.id)}
-                     >
-                      <span className="navpath-list-left">
-                        <FolderFilled/>
-                        {x.title}
-                      </span>
-                      <span className="navpath-list-right">
-                        <RightOutlined />
-                      </span>
-                    </div>):
-                    (<div className="navpath-list navpath-list-disabled" key={x.id}>
-                      <span className="navpath-list-left">
-                        <FolderFilled/>
-                        {x.title}
-                      </span>
-                      <span className="navpath-list-right">
-                        <RightOutlined />
-                      </span>
-                    </div>
+                  </div>
+                ) : (
+                  data.navpath.children.map((x, i) =>
+                    this.state.selectedFolders.findIndex(
+                      (p) => p.id === x.id
+                    ) === -1 ? (
+                      <div
+                        className="navpath-list navpath-list-enabled"
+                        key={x.id}
+                        onClick={() => this.props.getNavRoute(x.id)}
+                      >
+                        <span className="navpath-list-left">
+                          <FolderFilled />
+                          {x.title}
+                        </span>
+                        <span className="navpath-list-right">
+                          <RightOutlined />
+                        </span>
+                      </div>
+                    ) : (
+                      <div
+                        className="navpath-list navpath-list-disabled"
+                        key={x.id}
+                      >
+                        <span className="navpath-list-left">
+                          <FolderFilled />
+                          {x.title}
+                        </span>
+                        <span className="navpath-list-right">
+                          <RightOutlined />
+                        </span>
+                      </div>
                     )
-                  ))
-                }
+                  )
+                )}
               </Modal>
             </div>
           ) : (
@@ -399,62 +454,80 @@ class genPage extends Component {
             {folders.subfolders.length > 0 ? (
               <div className="folder-topbar noselect">
                 <div className="folder-editbar button-holder">
-                  {
-                    (user.credentials.isAdmin && this.state.editFolders && this.state.selectedFolders.length > 0)?
-                    (<>
-                    <Button
-                      disabled={this.state.selectedFolders.length === 0}
-                      type="danger"
-                      onClick={() => this.toggleStateFlag("showDeleteConfirm")}
-                    >
-                      Delete {this.state.selectedFolders.length} Folder{s}
-                    </Button>
-                    <Button
-                      disabled={this.state.selectedFolders.length === 0}
-                      onClick={() => this.toggleStateFlag("showMoveDialog")}
-                    >
-                      Move {this.state.selectedFolders.length} Folder{s}
-                    </Button>
-                    <Button
-                      disabled={this.state.selectedFolders.length === 0}
-                      onClick={() => this.toggleStateFlag("showRenameConfirm")}
-                    >
-                      Rename {this.state.selectedFolders.length} Folder{s}
-                    </Button>
-                    </>):
-                    ("")
-                  }
+                  {user.credentials.isAdmin &&
+                  this.state.editFolders &&
+                  this.state.selectedFolders.length > 0 ? (
+                    <>
+                      <Button
+                        disabled={this.state.selectedFolders.length === 0}
+                        type="danger"
+                        onClick={() =>
+                          this.toggleStateFlag("showDeleteConfirm")
+                        }
+                      >
+                        Delete {this.state.selectedFolders.length} Folder{s}
+                      </Button>
+                      <Button
+                        disabled={this.state.selectedFolders.length === 0}
+                        onClick={() => this.toggleStateFlag("showMoveDialog")}
+                      >
+                        Move {this.state.selectedFolders.length} Folder{s}
+                      </Button>
+                      <Button
+                        disabled={this.state.selectedFolders.length === 0}
+                        onClick={() =>
+                          this.toggleStateFlag("showRenameConfirm")
+                        }
+                      >
+                        Rename {this.state.selectedFolders.length} Folder{s}
+                      </Button>
+                    </>
+                  ) : (
+                    ""
+                  )}
                   <Dropdown overlay={menu}>
                     <Button>
-                      {this.state.requestedSort===null? "Order folders by" : menuSelector[this.state.requestedSort]} <DownOutlined />
+                      {this.state.requestedSort === null
+                        ? "Order folders by"
+                        : menuSelector[this.state.requestedSort]}{" "}
+                      <DownOutlined />
                     </Button>
                   </Dropdown>
-                  {
-                    user.credentials.isAdmin && !this.state.editFolders && !this.state.editPost ?
-                    (<Button type="primary" onClick={this.toggleFolderEditable}>
+                  {user.credentials.isAdmin &&
+                  !this.state.editFolders &&
+                  !this.state.editPost ? (
+                    <Button type="primary" onClick={this.toggleFolderEditable}>
                       Edit Folders
-                    </Button>):
-                    ("")
-                  }
-                  {
-                    user.credentials.isAdmin && this.state.editFolders && !this.state.editPost ?
-                    (<>
+                    </Button>
+                  ) : (
+                    ""
+                  )}
+                  {user.credentials.isAdmin &&
+                  this.state.editFolders &&
+                  !this.state.editPost ? (
+                    <>
                       <Button
                         type="primary"
-                        style={{ background: "#52C41A", borderColor: "#52C41A"}}
+                        style={{
+                          background: "#52C41A",
+                          borderColor: "#52C41A",
+                        }}
                         onClick={this.exitFolderEditMode}
                       >
                         Finish Editing
                       </Button>
-                    </>):
-                    ("")
-                  }
-              </div>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                </div>
               </div>
             ) : user.credentials.isAdmin ? (
               <div className="folder-blank noselect">
                 <h3 className="em2">It seems like there are no subfolders</h3>
-                <h4 className="em3">You can create subfolders under any folder.</h4>
+                <h4 className="em3">
+                  You can create subfolders under any folder.
+                </h4>
                 <AddFolder target={pageName} format={1} />
               </div>
             ) : (
@@ -471,7 +544,7 @@ class genPage extends Component {
               {folders.subfolders.length > 0
                 ? folders.subfolders.map((x, i) => (
                     <Folder
-                      onMouseDown={(e)=>this.folderDragStart(e,x)}
+                      onMouseDown={(e) => this.folderDragStart(e, x)}
                       onMouseUp={this.folderDragEnd}
                       key={x.id}
                       label={x.title}
@@ -490,7 +563,7 @@ class genPage extends Component {
             (folders.content === "" || folders.subfolders.length < 1) ? (
               ""
             ) : (
-              <hr className="folder-hr"/>
+              <hr className="folder-hr" />
             )}
             {user.credentials.isAdmin &&
             !this.state.editPost &&
@@ -509,7 +582,9 @@ class genPage extends Component {
               !this.state.editPost &&
               !this.state.editFolders ? (
                 <div className="folder-blank noselect">
-                  <h3 className="em2">It seems like there is no post for this folder yet.</h3>
+                  <h3 className="em2">
+                    It seems like there is no post for this folder yet.
+                  </h3>
                   <h4 className="em3">Start by creating the post.</h4>
                   <Button type="primary" onClick={this.togglePostEditable}>
                     Begin Post
@@ -546,7 +621,9 @@ class genPage extends Component {
                     className="center"
                     title={"Cancel changes to your post?"}
                     visible={this.state.showPostCancelConfirm}
-                    onCancel={() => this.toggleStateFlag("showPostCancelConfirm")}
+                    onCancel={() =>
+                      this.toggleStateFlag("showPostCancelConfirm")
+                    }
                     footer={[
                       <Button
                         key="1"
@@ -568,68 +645,107 @@ class genPage extends Component {
                     This will remove all new changes made to your post.
                   </Modal>
                 </div>
-                <div className="folder-post"><CKEditor
-                  data={folders.content}
-                  onChange={this.updateEditor}
-                  config={{
-                    disallowedContent: "script embed *[on*]",
-                    removeButtons: "",
-                    height: "38vh"
-                  }}
-                /></div>
+                <div className="folder-post">
+                  <CKEditor
+                    data={folders.content}
+                    onChange={this.updateEditor}
+                    config={{
+                      disallowedContent: "script embed *[on*]",
+                      removeButtons: "",
+                      height: "38vh",
+                    }}
+                  />
+                </div>
               </>
             ) : (
               <div className="folder-post">{parse(folders.content)}</div>
             )}
           </div>
         </div>
-      ):("");
-      var searchMarkup = () => 
-        (this.props.data.folderSearchRes.length > 0 && !this.props.UI.loadingFolderSearch) ?
-        (<div className= "floating-component">
-          <h3 className= "em2 padding-normal">
+      ) : (
+        ""
+      );
+    var searchMarkup = () =>
+      this.props.data.folderSearchRes.length > 0 &&
+      !this.props.UI.loadingFolderSearch ? (
+        <div className="floating-component">
+          <h3 className="em2 padding-normal">
             Search Results for '{this.state.searchKey}'
           </h3>
-          {this.props.data.folderSearchRes.map((x,i)=><SearchResult key={i} data={x} searchKey={this.state.searchKey}/>)}
-        </div>):(this.props.UI.loadingFolderSearch)?
-        (<div className= "floating-component">
-          <h3 className= "em2 padding-normal">
-            Searching for results...
-          </h3>
-        </div>):
-        (<div className= "floating-component">
-          <h3 className= "em2 padding-normal">
+          {this.props.data.folderSearchRes.map((x, i) => (
+            <SearchResult key={i} data={x} searchKey={this.state.searchKey} />
+          ))}
+        </div>
+      ) : this.props.UI.loadingFolderSearch ? (
+        <div className="floating-component">
+          <h3 className="em2 padding-normal">Searching for results...</h3>
+        </div>
+      ) : (
+        <div className="floating-component">
+          <h3 className="em2 padding-normal">
             No results for '{this.state.searchKey}' were found
           </h3>
-        </div>)
-      
+        </div>
+      );
+
     return (
       <>
-          <div className="resources-topbar noselect">
-            <div>
+        <div className="resources-topbar noselect">
+          <div>
             <p>
               <span>
-                <a className="em4-light" href="/resources">Resources</a>
+                <a className="em4-light" href="/resources">
+                  Resources
+                </a>
               </span>
-              { (typeof(folders) === "object" && typeof(folders.path) === "object")?
-                (folders.path.map((x, i) =>{
-                  if(x.name.length >= 30){x.name = x.name.slice(0,30) + "..."}
-                  return (
-                    (x.id !== "" && x.id !== "home") ?
-                    (<span className="em4-light" key={x.id}>{" / "}<a className="em4-light" href={x.id}>{x.name}</a></span>):
-                    ("")
-                  )
-                })): ("") }
+              {typeof folders === "object" && typeof folders.path === "object"
+                ? folders.path.map((x, i) => {
+                    if (x.name.length >= 30) {
+                      x.name = x.name.slice(0, 30) + "...";
+                    }
+                    return x.id !== "" && x.id !== "home" ? (
+                      <span className="em4-light" key={x.id}>
+                        {" / "}
+                        <a className="em4-light" href={x.id}>
+                          {x.name}
+                        </a>
+                      </span>
+                    ) : (
+                      ""
+                    );
+                  })
+                : ""}
             </p>
-            <div className="em2">{typeof(folders) === "object"? folders.title : "Loading..."}</div>
-            </div>
-            <div className="resources-topbar-right">
-              <Input onKeyUp={this.searchFolderCallback} onSubmit={this.searchFolder} disabled={this.state.editFolders || this.state.editPost} className="resources-search no-padding" suffix={<SearchOutlined />} placeholder="Search resources by name" />
-              <Button type="primary" disabled={this.state.editFolders || this.state.editPost} onClick={this.searchFolder} >Search</Button>
+            <div className="em2">
+              {typeof folders === "object" ? folders.title : "Loading..."}
             </div>
           </div>
-        {(this.state.searchKey === "" || !this.state.showSearchResults || this.state.editFolders || this.state.editPost) ? pageMarkup : searchMarkup()}
-      </>);
+          <div className="resources-topbar-right">
+            <Input
+              onKeyUp={this.searchFolderCallback}
+              onSubmit={this.searchFolder}
+              disabled={this.state.editFolders || this.state.editPost}
+              className="resources-search no-padding"
+              suffix={<SearchOutlined />}
+              placeholder="Search resources by name"
+            />
+            <Button
+              type="primary"
+              disabled={this.state.editFolders || this.state.editPost}
+              onClick={this.searchFolder}
+            >
+              Search
+            </Button>
+          </div>
+        </div>
+        {this.state.searchKey === "" ||
+        !this.state.showSearchResults ||
+        this.state.editFolders ||
+        this.state.editPost
+          ? pageMarkup
+          : searchMarkup()}
+      </>
+    );
   }
 }
 
