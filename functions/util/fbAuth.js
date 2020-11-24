@@ -45,7 +45,7 @@ module.exports = FBAuth = (req, res, next) => {
   let sessionCookie;
   try {
     console.log(req.cookies);
-    sessionCookie = req.cookies.session;
+    sessionCookie = req.cookies.__session;
   } catch (err) {
     console.error("Authentication cookie not provided");
     return res.status(403).json({ error: "Unauthorized" });

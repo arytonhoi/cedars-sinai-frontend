@@ -31,10 +31,7 @@ import announcementPage from "./pages/announcementPage";
 import contactPage from "./pages/contactPage";
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL =
-  // "https://us-central1-fir-db-d2d47.cloudfunctions.net/api";
-  // "http://localhost:5000/fir-db-d2d47/us-central1/api";
-  "https://fir-db-d2d47.web.app/api";
+axios.defaults.baseURL = "https://fir-db-d2d47.web.app/api";
 // "http://localhost:5000/api";
 
 // Authentication

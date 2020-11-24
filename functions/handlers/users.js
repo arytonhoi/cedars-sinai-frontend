@@ -104,7 +104,7 @@ exports.login = (req, res) => {
               secure: false, // set to true for HTTPS, false for HTTP
               // Domain: "us-central1-fir-db-d2d47.cloudfunctions.net",
             };
-            res.cookie("session", sessionCookie, options);
+            res.cookie("__session", sessionCookie, options);
             return res.status(200).json({ status: "Login successful" });
           });
       });
