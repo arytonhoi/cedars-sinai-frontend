@@ -16,7 +16,11 @@ const {
 } = require("./handlers/users");
 const FieldValue = admin.firestore.FieldValue;
 
-const { postImage } = require("./handlers/images");
+const {
+  getBannerImage,
+  patchBannerImage,
+  postImage,
+} = require("./handlers/images");
 
 const {
   getAllFolders,
@@ -62,7 +66,9 @@ app.get("/api/user", FBAuth, getAuthenticatedUser);
 app.patch("/api/user/password", FBAuth, updatePassword);
 
 // image routes
-app.post("/images", FBAuth, postImage);
+app.post("/api/images", FBAuth, postImage);
+app.get("/api/banners/:pageName", FBAuth, getBannerImage);
+app.patch("/api/banners/:pageName", FBAuth, patchBannerImage);
 
 // folder routes
 app.get("/api/folders", FBAuth, getAllFolders);

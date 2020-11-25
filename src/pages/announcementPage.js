@@ -16,8 +16,7 @@ import AnnouncementPostEditorModal from "../components/announcement/announcement
 
 // css styles
 import "../css/page.css";
-import "../css/input.css";
-// import "../css/textContent.css";
+import "../css/ckeditor.css";
 import "../components/announcement/announcement.css";
 
 // Ant design
@@ -164,13 +163,15 @@ class AnnouncementPage extends Component {
               alt="bg"
               src="https://firebasestorage.googleapis.com/v0/b/fir-db-d2d47.appspot.com/o/cedars_sinai_pic_1.png?alt=media&token=8370797b-7650-49b7-8b3a-9997fab0c32c"
             />
+            <div className="img-banner-mask"></div>
+            <h1>Welcome Admin</h1>
+            <Button>Change picture</Button>
           </Content>
           <div
             style={{
               position: "relative",
-              bottom: "-15px",
-              display: "flex",
-              justifyContent: "flex-end",
+              bottom: "-4px",
+              marginTop: "16px",
             }}
           >
             <Button
@@ -181,8 +182,8 @@ class AnnouncementPage extends Component {
               Post New Announcement
             </Button>
           </div>
-          <Content className="content-card">
-            <div className="content-card-header padded">
+          <Content className="content-card padded-top-24">
+            <div className="content-card-header margin-24">
               <Input
                 style={{ width: 400 }}
                 // size="small"
@@ -250,7 +251,7 @@ class AnnouncementPage extends Component {
                     <h3>{announcement.author}</h3>
                     <h3>{announcement.createdAt.toString("MM/dd/yy")}</h3>
                   </header>
-                  <div className="announcement-content">
+                  <div className="announcement-content-container">
                     <input
                       type="checkbox"
                       className="announcement-expand-toggle-checkbox"
@@ -265,7 +266,7 @@ class AnnouncementPage extends Component {
                           element.className = element.className + " overflowed";
                         }
                       }}
-                      className="ckeditor-content"
+                      className="announcement-content ckeditor-content"
                       dangerouslySetInnerHTML={{ __html: announcement.content }}
                     />
                     <span className="announcement-expand-toggle">
