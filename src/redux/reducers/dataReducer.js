@@ -78,7 +78,7 @@ export default function (state = initialState, action) {
     // Images
     case GET_BANNER_IMAGE:
       let bannerImgObj = action.payload;
-      let updatedBannerImgs = this.state.bannerImgs;
+      let updatedBannerImgs = state.bannerImgs;
       updatedBannerImgs[bannerImgObj.pageName] = bannerImgObj.imgUrl;
       return {
         ...state,
@@ -87,7 +87,7 @@ export default function (state = initialState, action) {
 
     case PATCH_BANNER_IMAGE:
       bannerImgObj = action.payload;
-      updatedBannerImgs = this.state.bannerImgs;
+      updatedBannerImgs = state.bannerImgs;
       updatedBannerImgs[bannerImgObj.pageName] = bannerImgObj.imgUrl;
       return {
         ...state,

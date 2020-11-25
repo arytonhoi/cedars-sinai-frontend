@@ -51,7 +51,7 @@ class AnnouncementPage extends Component {
 
   componentDidMount() {
     this.props.getAnnouncements();
-    this.props.getBannerImage();
+    this.props.getBannerImage("announcements");
   }
 
   // input change handlers
