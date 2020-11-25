@@ -29,7 +29,8 @@ import logout from "./pages/logout";
 import announcementPage from "./pages/announcementPage";
 import contactPage from "./pages/contactPage";
 
-axios.defaults.withCredentials = !(window.location.hostname === "localhost");
+// axios.defaults.withCredentials = !(window.location.hostname === "localhost");
+axios.defaults.withCredentials = true;
 window.location.hostname === "localhost"
   ? (axios.defaults.baseURL = "http://localhost:5000/api")
   : (axios.defaults.baseURL = "https://fir-db-d2d47.web.app/api");
