@@ -4,7 +4,7 @@ const FieldValue = admin.firestore.FieldValue;
 
 // util functions
 function getFolderPath(folderPathsMap, folderId) {
-  folderPath = [];
+  const folderPath = [];
   let currentFolderId = folderId;
   while (currentFolderId !== "") {
     let folderPathsMapContent = folderPathsMap[currentFolderId];
@@ -53,37 +53,40 @@ exports.searchFolders = (req, res) => {
     .get()
     .then((data) => {
       let folders = [];
-      folderPathsMapRef.get().then(fpmr=>{
-        fpmrd = fpmr.data()
-        data.forEach((doc) => {
-          let folder = doc.data();
-          folder.id = doc.id;
-          folder.path = getFolderPath(fpmrd, folder.id);
-          let relevanceCount = 0;
-          let titleMatchesArray = folder.title.match(regex);
-          let contentMatchesArray = folder.content.match(regex);
-          if (titleMatchesArray !== null) {
-            relevanceCount += 2 * titleMatchesArray.length;
-          }
-          if (contentMatchesArray !== null) {
-            relevanceCount += contentMatchesArray.length;
-          }
-        
-          if (relevanceCount !== 0) {
-            folder.relevanceCount = relevanceCount;
-            folders.push(folder);
-          }
+      folderPathsMapRef
+        .get()
+        .then((fpmr) => {
+          const fpmrd = fpmr.data();
+          data.forEach((doc) => {
+            let folder = doc.data();
+            folder.id = doc.id;
+            folder.path = getFolderPath(fpmrd, folder.id);
+            let relevanceCount = 0;
+            let titleMatchesArray = folder.title.match(regex);
+            let contentMatchesArray = folder.content.match(regex);
+            if (titleMatchesArray !== null) {
+              relevanceCount += 2 * titleMatchesArray.length;
+            }
+            if (contentMatchesArray !== null) {
+              relevanceCount += contentMatchesArray.length;
+            }
+
+            if (relevanceCount !== 0) {
+              folder.relevanceCount = relevanceCount;
+              folders.push(folder);
+            }
+          });
+        })
+        .then((x) => {
+          folders.sort((a, b) =>
+            a.relevanceCount < b.relevanceCount
+              ? 1
+              : b.relevanceCount < a.relevanceCount
+              ? -1
+              : 0
+          );
+          return res.json(folders);
         });
-      }).then(x=>{
-        folders.sort((a, b) =>
-          a.relevanceCount < b.relevanceCount
-            ? 1
-            : b.relevanceCount < a.relevanceCount
-            ? -1
-            : 0
-        );
-        return res.json(folders)
-      })
     })
     .catch((err) => {
       console.error(err);
@@ -93,7 +96,7 @@ exports.searchFolders = (req, res) => {
 
 // get single folder
 exports.getFolder = (req, res) => {
-//   return res.status(400).json({ error: req.query });
+  //   return res.status(400).json({ error: req.query });
   if (req.method !== "GET") {
     return res.status(400).json({ error: "Method not allowed" });
   }
@@ -107,10 +110,10 @@ exports.getFolder = (req, res) => {
       folderData = doc.data();
       folderData.id = doc.id;
       // maybe increment folder contents
-      if(typeof(req.query.i)==="string"){
+      if (typeof req.query.i === "string") {
         db.doc(`/folders/${req.params.folderId}`).update({
-          visits: admin.firestore.FieldValue.increment(1)
-        })
+          visits: admin.firestore.FieldValue.increment(1),
+        });
       }
       // get all folder contents
       return db
@@ -230,31 +233,47 @@ exports.updateOneFolder = (req, res) => {
   try {
     req = fixFormat(req);
   } catch (e) {
-    return res.status(400).json({ error: err.code });
+    return res.status(400).json({ error: e.code });
   }
-  if(Object.keys(req.body).length > 0){
+  if (Object.keys(req.body).length > 0) {
     try {
       const folderToUpdate = req.params.folderId;
       const updatedFolderContents = {
         ...req.body,
-        lastModified: new Date().toISOString()
+        lastModified: new Date().toISOString(),
       };
-      var updatedFolderPathObj = {}
-      if(typeof(req.body.parent)==="string"||typeof(req.body.parent)==="number"){
-        updatedFolderPathObj.parentId = req.body.parent
+      var updatedFolderPathObj = {};
+      if (
+        typeof req.body.parent === "string" ||
+        typeof req.body.parent === "number"
+      ) {
+        updatedFolderPathObj.parentId = req.body.parent;
       }
-      if(typeof(req.body.title)==="string"||typeof(req.body.title)==="number"){
-        updatedFolderPathObj.name = req.body.title
+      if (
+        typeof req.body.title === "string" ||
+        typeof req.body.title === "number"
+      ) {
+        updatedFolderPathObj.name = req.body.title;
       }
       const folderRef = db.doc(`/folders/${folderToUpdate}`);
       const folderPathsMapRef = db.collection("paths").doc("folders");
       const batch = db.batch();
       batch.update(folderRef, updatedFolderContents);
-      if(typeof(req.body.parent)==="string"||typeof(req.body.parent)==="number"){
-        batch.update(folderPathsMapRef, {[`${folderToUpdate}.parentId`]: req.body.parent})
+      if (
+        typeof req.body.parent === "string" ||
+        typeof req.body.parent === "number"
+      ) {
+        batch.update(folderPathsMapRef, {
+          [`${folderToUpdate}.parentId`]: req.body.parent,
+        });
       }
-      if(typeof(req.body.title)==="string"||typeof(req.body.title)==="number"){
-        batch.update(folderPathsMapRef, {[`${folderToUpdate}.name`]: req.body.title})
+      if (
+        typeof req.body.title === "string" ||
+        typeof req.body.title === "number"
+      ) {
+        batch.update(folderPathsMapRef, {
+          [`${folderToUpdate}.name`]: req.body.title,
+        });
       }
       return batch.commit().then(() => {
         return res.json({ message: "Folder updated successfully." });
@@ -263,7 +282,7 @@ exports.updateOneFolder = (req, res) => {
       console.error(err);
       return res.status(500).json({ error: err.code });
     }
-  }else{
+  } else {
     return res.json({ message: "No changes were made." });
   }
 };

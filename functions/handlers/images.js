@@ -56,3 +56,37 @@ exports.postImage = (req, res) => {
   });
   busboy.end(req.rawBody);
 };
+
+exports.getBannerImage = (req, res) => {
+  if (req.method !== "GET") {
+    return res.status(400).json({ error: "Method not allowed" });
+  }
+
+  db.doc(`/banners/${req.params.pageName}`)
+    .get()
+    .then((doc) => {
+      if (!doc.exists) {
+        return res.status(404).json({ error: "Banner page not found" });
+      }
+      return res.json(doc.data());
+    });
+};
+
+exports.patchBannerImage = (req, res) => {
+  if (req.method !== "PATCH") {
+    return res.status(400).json({ error: "Method not allowed" });
+  }
+
+  const updatedBannerImgObj = { imgUrl: req.body.imgUrl };
+  db.doc(`/banners/${req.params.pageName}`)
+    .update(updatedBannerImgObj)
+    .then(() => {
+      return res.json({
+        message: `${req.params.pageName} page banner image updated successfully`,
+      });
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+};
