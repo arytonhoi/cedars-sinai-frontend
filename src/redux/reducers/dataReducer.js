@@ -6,6 +6,9 @@ import {
   SET_DATA,
   POST_DATA,
   DELETE_DATA,
+  // Images
+  GET_BANNER_IMAGE,
+  PATCH_BANNER_IMAGE,
   // Announcements
   SET_ANNOUNCEMENTS,
   POST_ANNOUNCEMENT,
@@ -38,6 +41,9 @@ import {
 
 import DateHelper from "../../util/dateHelper";
 
+const loadingBannerImgUrl = `https://firebasestorage.googleapis.com/v0/b/fir-db-d2d47.appspot.com/o/
+cedars_sinai_pic_1.png?alt=media&token=8370797b-7650-49b7-8b3a-9997fab0c32c`;
+
 const initialState = {
   loading: false,
   data: [],
@@ -49,6 +55,9 @@ const initialState = {
   contacts: [],
   matchingSearchContacts: [],
   uploadedImageUrl: "",
+  bannerImgs: {
+    announcements: loadingBannerImgUrl,
+  },
 };
 
 var index;
@@ -65,6 +74,24 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
+      };
+    // Images
+    case GET_BANNER_IMAGE:
+      let bannerImgObj = action.payload;
+      let updatedBannerImgs = this.state.bannerImgs;
+      updatedBannerImgs[bannerImgObj.pageName] = bannerImgObj.imgUrl;
+      return {
+        ...state,
+        bannerImgs: updatedBannerImgs,
+      };
+
+    case PATCH_BANNER_IMAGE:
+      bannerImgObj = action.payload;
+      updatedBannerImgs = this.state.bannerImgs;
+      updatedBannerImgs[bannerImgObj.pageName] = bannerImgObj.imgUrl;
+      return {
+        ...state,
+        bannerImgs: updatedBannerImgs,
       };
     // Announcements
     case SET_ANNOUNCEMENTS:
@@ -245,37 +272,53 @@ export default function (state = initialState, action) {
     case SORT_SUBFOLDER:
       switch (parseInt(action.payload)) {
         case 0:
-          state.data[0].subfolders.sort(
-            (a, b) => (a.title.toUpperCase() >= b.title.toUpperCase())? (1):(-1)
+          state.data[0].subfolders.sort((a, b) =>
+            a.title.toUpperCase() >= b.title.toUpperCase() ? 1 : -1
           );
           break;
         case 1:
-          state.data[0].subfolders.sort(
-            (a, b) => (a.title.toUpperCase() < b.title.toUpperCase())? (1):(-1)
+          state.data[0].subfolders.sort((a, b) =>
+            a.title.toUpperCase() < b.title.toUpperCase() ? 1 : -1
           );
           break;
         case 2:
-          state.data[0].subfolders.sort((a, b) => (a.createdAt < b.createdAt)? (1):(-1));
+          state.data[0].subfolders.sort((a, b) =>
+            a.createdAt < b.createdAt ? 1 : -1
+          );
           break;
         case 3:
-          state.data[0].subfolders.sort((a, b) => (a.createdAt >= b.createdAt)? (1):(-1));
+          state.data[0].subfolders.sort((a, b) =>
+            a.createdAt >= b.createdAt ? 1 : -1
+          );
           break;
         case 4:
-          state.data[0].subfolders.sort((a, b) => (a.visits <= b.visits)? (1):(-1));
+          state.data[0].subfolders.sort((a, b) =>
+            a.visits <= b.visits ? 1 : -1
+          );
           break;
         default:
-          state.data[0].subfolders.sort((a, b) => (a.index >= b.index)? (1):(-1));
+          state.data[0].subfolders.sort((a, b) =>
+            a.index >= b.index ? 1 : -1
+          );
           break;
       }
       return { ...state };
     case MOVE_SUBFOLDER:
       sf = state.data[0].subfolders;
       let oldIndex = sf.findIndex((x) => x.id === action.payload.id);
-      if(oldIndex >= 0){
-        let newIndex = Math.min(Math.max(0,action.payload.newIndex), sf.length)
+      if (oldIndex >= 0) {
+        let newIndex = Math.min(
+          Math.max(0, action.payload.newIndex),
+          sf.length
+        );
         sf = sf.slice(0, oldIndex).concat(sf.slice(oldIndex + 1));
-        sf = sf.slice(0, newIndex).concat(state.data[0].subfolders[oldIndex]).concat(sf.slice(newIndex));
-        state.data[0].subfolders = sf.map((x,i)=>Object.assign(x,{"index":i}))
+        sf = sf
+          .slice(0, newIndex)
+          .concat(state.data[0].subfolders[oldIndex])
+          .concat(sf.slice(newIndex));
+        state.data[0].subfolders = sf.map((x, i) =>
+          Object.assign(x, { index: i })
+        );
       }
       return { ...state };
     case SET_NAV_PATH:

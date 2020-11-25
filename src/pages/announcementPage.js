@@ -9,6 +9,8 @@ import {
   patchAnnouncement,
   postAnnouncement,
   getFilteredAnnouncements,
+  getBannerImage,
+  patchBannerImage,
 } from "../redux/actions/dataActions";
 
 // components
@@ -28,6 +30,8 @@ class AnnouncementPage extends Component {
   constructor() {
     super();
     this.state = {
+      // banner img
+      bannerImgUrl: "",
       // announcement inputs
       announcementId: "",
       announcementTitle: "",
@@ -47,6 +51,7 @@ class AnnouncementPage extends Component {
 
   componentDidMount() {
     this.props.getAnnouncements();
+    this.props.getBannerImage();
   }
 
   // input change handlers
@@ -62,7 +67,7 @@ class AnnouncementPage extends Component {
     console.log(element.offsetHeight);
 
     if (element && this && !this.state.elementHeight) {
-      // need to check that we haven't already set the height or we'll create an infinite render loop
+      // need to check that we haven't already set the height or we'll create an infinite loop
       this.setState({ elementHeight: element.clientHeight });
       console.log(element.clientHeight);
     }
@@ -140,7 +145,7 @@ class AnnouncementPage extends Component {
   render() {
     const { credentials } = this.props.user;
     const isAdmin = credentials.isAdmin;
-    const { filteredAnnouncements } = this.props.data;
+    const { bannerImgs, filteredAnnouncements } = this.props.data;
     const maxAnnouncementPreviewHeight = 300;
 
     return (
@@ -159,10 +164,7 @@ class AnnouncementPage extends Component {
         )}
         <Layout className="vertical-fill-layout">
           <Content className="content-card img-banner">
-            <img
-              alt="bg"
-              src="https://firebasestorage.googleapis.com/v0/b/fir-db-d2d47.appspot.com/o/cedars_sinai_pic_1.png?alt=media&token=8370797b-7650-49b7-8b3a-9997fab0c32c"
-            />
+            <img alt="bg" src={bannerImgs.announcements} />
             <div className="img-banner-mask"></div>
             <h1>Welcome Admin</h1>
             <Button>Change picture</Button>
@@ -303,6 +305,8 @@ AnnouncementPage.propTypes = {
   patchAnnouncement: PropTypes.func.isRequired,
   deleteAnnouncement: PropTypes.func.isRequired,
   getFilteredAnnouncements: PropTypes.func.isRequired,
+  getBannerImage: PropTypes.func.isRequired,
+  patchBannerImage: PropTypes.func.isRequired,
   data: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
 };
@@ -320,4 +324,6 @@ export default connect(mapStateToProps, {
   patchAnnouncement,
   deleteAnnouncement,
   getFilteredAnnouncements,
+  getBannerImage,
+  patchBannerImage,
 })(AnnouncementPage);
