@@ -42,6 +42,7 @@ class AnnouncementPage extends Component {
       },
       // announcement editor modal
       isEditing: false,
+      elementHeight: "",
     };
   }
 
@@ -56,6 +57,17 @@ class AnnouncementPage extends Component {
     });
     console.log(this.state);
   };
+
+  getHeight(element) {
+    console.log(element.clientHeight);
+    console.log(element.offsetHeight);
+
+    if (element && this && !this.state.elementHeight) {
+      // need to check that we haven't already set the height or we'll create an infinite render loop
+      this.setState({ elementHeight: element.clientHeight });
+      console.log(element.clientHeight);
+    }
+  }
 
   handleFilterChange = (event) => {
     const updatedFilter = this.state.filter;
@@ -130,6 +142,7 @@ class AnnouncementPage extends Component {
     const { credentials } = this.props.user;
     const isAdmin = credentials.isAdmin;
     const { filteredAnnouncements } = this.props.data;
+    const maxAnnouncementPreviewHeight = 300;
 
     return (
       <div className="page-container">
@@ -220,10 +233,7 @@ class AnnouncementPage extends Component {
               }}
               dataSource={filteredAnnouncements}
               renderItem={(announcement) => (
-                <List.Item
-                  key={announcement.id}
-                  className="announcement-item collapsed"
-                >
+                <List.Item key={announcement.id} className="announcement-item">
                   <header className="announcement-header">
                     <span className="announcement-title">
                       <h1>{announcement.title}</h1>
@@ -240,22 +250,40 @@ class AnnouncementPage extends Component {
                     <h3>{announcement.author}</h3>
                     <h3>{announcement.createdAt.toString("MM/dd/yy")}</h3>
                   </header>
-                  <div className="announcement-content-holder">
+                  <div className="announcement-content">
                     <input
                       type="checkbox"
-                      className="announcement-toggle"
-                      id={"cb" + announcement.id}
+                      className="announcement-expand-toggle-checkbox"
+                      id={announcement.id + "-expand-checkbox"}
                     />
                     <div
-                      className="announcement-ckeditor-content"
+                      ref={(element) => {
+                        if (
+                          element &&
+                          element.clientHeight > maxAnnouncementPreviewHeight
+                        ) {
+                          element.className = element.className + " overflowed";
+                        }
+                      }}
+                      className="ckeditor-content"
                       dangerouslySetInnerHTML={{ __html: announcement.content }}
                     />
-                    <label
-                      htmlFor={"cb" + announcement.id}
-                      className="announcement-show-more noselect clickable"
-                    >
-                      Show More
-                    </label>
+                    <span className="announcement-expand-toggle">
+                      <label
+                        htmlFor={announcement.id + "-expand-checkbox"}
+                        className="ant-btn"
+                      >
+                        Show more
+                      </label>
+                    </span>
+                    <span className="announcement-collapse-toggle">
+                      <label
+                        htmlFor={announcement.id + "-expand-checkbox"}
+                        className="ant-btn"
+                      >
+                        Show less
+                      </label>
+                    </span>
                   </div>
                 </List.Item>
               )}

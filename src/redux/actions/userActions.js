@@ -31,19 +31,6 @@ export const loginUser = (userData, history) => (dispatch) => {
     });
 };
 
-export const logoutUser = () => (dispatch) => {
-  localStorage.removeItem("hasValidCookie");
-  dispatch({ type: SET_UNAUTHENTICATED });
-  // axios
-  //   .post("/logout")
-  //   .then((res) => {
-  //     // localStorage.removeItem("hasValidCookie");
-  //     localStorage.setItem("hasValidCookie", false);
-  //     dispatch({ type: SET_UNAUTHENTICATED });
-  //   })
-  //   .catch((err) => console.log(err));
-};
-
 export const getUserData = () => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
@@ -58,8 +45,19 @@ export const getUserData = () => (dispatch) => {
       console.log(err);
       localStorage.removeItem("hasValidCookie");
       dispatch({ type: SET_UNAUTHENTICATED });
-      // window.location.href = "/";
     });
+};
+
+export const logoutUser = () => (dispatch) => {
+  localStorage.removeItem("hasValidCookie");
+  dispatch({ type: SET_UNAUTHENTICATED });
+  axios
+    .post("/logout")
+    .then((res) => {
+      localStorage.removeItem("hasValidCookie");
+      dispatch({ type: SET_UNAUTHENTICATED });
+    })
+    .catch((err) => console.log(err));
 };
 
 export const uploadImage = (formData) => (dispatch) => {

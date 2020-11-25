@@ -9,10 +9,7 @@ import { clearErrors } from "../../redux/actions/dataActions";
 import CKEditor from "ckeditor4-react";
 
 // styles
-// import "./PostAnn.css";
-// import "../../css/textContent.css";
 import "../../css/modal.css";
-// import "../../css/layout.css";
 
 // Antd
 import { Button, Form, Input, Modal } from "antd";
@@ -107,7 +104,7 @@ class AnnouncementPostEditorModal extends Component {
               }}
               rules={[{ required: true, message: "Please add some content." }]}
             >
-              {/* <CKEditor
+              <CKEditor
                 // onChange={() => {
                 //   console.log(
                 //     this.formRef.current.getFieldValue("announcementContent")
@@ -119,7 +116,7 @@ class AnnouncementPostEditorModal extends Component {
                   disallowedContent: "script embed *[on*]",
                   removeButtons: "",
                 }}
-              /> */}
+              />
             </Form.Item>
           </Form>
         </div>

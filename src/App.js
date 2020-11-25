@@ -18,7 +18,6 @@ import "./css/text.css";
 import { Layout } from "antd";
 
 // Utils
-//import themeObject from "./util/configs/theme";
 import AuthRoute from "./util/jsx/AuthRoute";
 import axios from "axios";
 
@@ -31,37 +30,20 @@ import announcementPage from "./pages/announcementPage";
 import contactPage from "./pages/contactPage";
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL =
-  // "https://us-central1-fir-db-d2d47.cloudfunctions.net/api";
-  // "http://localhost:5000/fir-db-d2d47/us-central1/api";
-  "https://fir-db-d2d47.web.app/api";
-// "http://localhost:5000/api";
+window.location.hostname === "localhost"
+  ? (axios.defaults.baseURL = "http://localhost:5000/api")
+  : (axios.defaults.baseURL = "https://fir-db-d2d47.web.app/api");
 
 // Authentication
-// const token = localStorage.FBIdToken;
-// if (token) {
-//   const decodedToken = new JWT(token).parse.payload;
-//   if (decodedToken.exp * 1000 < Date.now()) {
-//     store.dispatch(logoutUser());
-//   } else {
-//     store.dispatch({ type: SET_AUTHENTICATED });
-//     axios.defaults.headers.common["Authorization"] = token;
-//     store.dispatch(getUserData());
-//   }
-// }
-
 const hasValidCookie = localStorage.hasValidCookie;
 if (hasValidCookie) {
   try {
-    console.log(localStorage.hasValidCookie);
     store.dispatch({ type: SET_AUTHENTICATED });
     store.dispatch(getUserData());
   } catch (err) {
-    store.dispatch(logoutUser());
     console.log(err);
+    store.dispatch(logoutUser());
   }
-} else {
-  store.dispatch(logoutUser());
 }
 
 class App extends Component {
@@ -98,7 +80,10 @@ class App extends Component {
       return (
         <Provider store={store}>
           <Router>
-            <Route component={login} />
+            <Route exact path="*">
+              <Redirect to="/login" />
+            </Route>
+            <Route exact path="/login" component={login} />
           </Router>
         </Provider>
       );
