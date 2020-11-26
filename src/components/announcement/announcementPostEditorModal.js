@@ -15,54 +15,92 @@ import "../../css/modal.css";
 import { Button, Form, Input, Modal } from "antd";
 
 class AnnouncementPostEditorModal extends Component {
+  constructor() {
+    super();
+    this.state = {
+      isDeleting: false,
+    };
+  }
+
   componentDidUpdate() {
     if (this.formRef.current) {
       this.formRef.current.resetFields();
     }
   }
 
+  toggleDeleting = (event) => {
+    this.setState({
+      isDeleting: !this.state.isDeleting,
+    });
+  };
+
   formRef = React.createRef();
 
   render() {
     return (
       <Modal
+        className="modal"
         title="Post New Announcement"
         visible={this.props.visible}
         centered={true}
         width={1000}
         closable={false}
-        footer={[
-          <Button
-            className="left-align"
-            danger
-            type="primary"
-            key="delete"
-            onClick={() => {
-              this.props.handleDeleteThisAnnouncement();
-              this.formRef.current.resetFields();
-            }}
-          >
-            Delete
-          </Button>,
-          <Button
-            key="back"
-            onClick={() => {
-              this.props.handleCancelEditAnnouncement();
-              this.formRef.current.resetFields();
-            }}
-          >
-            Cancel
-          </Button>,
-          <Button
-            key="submit"
-            type="primary"
-            variant="contained"
-            form="announcementPostEditorForm"
-            htmlType="submit"
-          >
-            {this.props.isEditingExistingAnnouncement ? "Save changes" : "Post"}
-          </Button>,
-        ]}
+        footer={
+          this.state.isDeleting
+            ? [
+                <h3 className="modal-delete-confirmation">
+                  Delete announcement?
+                </h3>,
+                <span className="modal-footer-filler"></span>,
+                <Button key="back" onClick={this.toggleDeleting}>
+                  Cancel
+                </Button>,
+                <Button
+                  key="submit"
+                  type="danger"
+                  onClick={() => {
+                    this.props.handleDeleteThisAnnouncement();
+                    this.formRef.current.resetFields();
+                    this.toggleDeleting();
+                  }}
+                >
+                  Delete
+                </Button>,
+              ]
+            : [
+                this.props.isEditingExistingAnnouncement ? (
+                  <Button
+                    danger
+                    type="primary"
+                    key="delete"
+                    onClick={this.toggleDeleting}
+                  >
+                    Delete
+                  </Button>
+                ) : null,
+                <span className="modal-footer-filler"></span>,
+                <Button
+                  key="back"
+                  onClick={() => {
+                    this.props.handleCancelEditAnnouncement();
+                    this.formRef.current.resetFields();
+                  }}
+                >
+                  Cancel
+                </Button>,
+                <Button
+                  key="submit"
+                  type="primary"
+                  variant="contained"
+                  form="announcementPostEditorForm"
+                  htmlType="submit"
+                >
+                  {this.props.isEditingExistingAnnouncement
+                    ? "Save changes"
+                    : "Post"}
+                </Button>,
+              ]
+        }
       >
         <div style={{ marginTop: "-15px", marginBottom: "-15px" }}>
           <Form

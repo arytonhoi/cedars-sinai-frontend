@@ -1,14 +1,6 @@
 /* ============================================================================================== */
 /* ANNOUNCEMENT LIST STYLES */
 /* ============================================================================================== */
-.announcement-list .ant-list-header {
-  padding: 0;
-}
-
-.announcement-list .content-card-header {
-  margin: 20px 24px;
-}
-
 .announcement-list .ant-pagination {
   text-align: center;
   margin-bottom: 15px;
@@ -24,7 +16,7 @@
 .ant-list-lg .ant-list-item.announcement-item {
   position: relative;
   padding: 20px 0;
-  margin: 0 24px;
+  /* margin: 0 24px; */
 }
 
 .announcement-header {

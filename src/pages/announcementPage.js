@@ -15,6 +15,7 @@ import {
 
 // components
 import AnnouncementPostEditorModal from "../components/announcement/announcementPostEditorModal.js";
+// import BannerImgEditorModal from "../components/announcement/bannerImgEditorModal.js";
 
 // css styles
 import "../css/page.css";
@@ -30,8 +31,6 @@ class AnnouncementPage extends Component {
   constructor() {
     super();
     this.state = {
-      // banner img
-      bannerImgUrl: "",
       // announcement inputs
       announcementId: "",
       announcementTitle: "",
@@ -162,6 +161,14 @@ class AnnouncementPage extends Component {
             handleDeleteThisAnnouncement={this.handleDeleteThisAnnouncement}
           />
         )}
+        {/* {isAdmin && (
+          <BannerImgEditorModal
+            visible={this.state.isEditingBannerImg}
+            bannerImgUrl={bannerImgs.announcements}
+            handleCancelPatchBannerImg={}
+            handlePatchBannerImg={}
+          />
+        )} */}
         <Layout className="vertical-fill-layout">
           <Content className="content-card img-banner">
             <img alt="bg" src={bannerImgs.announcements} />
@@ -184,50 +191,50 @@ class AnnouncementPage extends Component {
               Post New Announcement
             </Button>
           </div>
-          <Content className="content-card padded-top-24">
-            <div className="content-card-header margin-24">
-              <Input
-                style={{ width: 400 }}
-                // size="small"
-                id="searchTerm"
-                name="searchTerm"
-                type="text"
-                placeholder="Search by keyword"
-                value={this.state.searchTerm}
-                onChange={this.handleFilterChange}
-                suffix={
-                  <SearchOutlined
-                    className="search-input-icon"
-                    style={{ color: "rgba(0,0,0,.45)" }}
-                  />
-                }
-              />
-              <Dropdown
-                overlay={
-                  <Menu onClick={this.handleAgeFilterChange}>
-                    <Menu.Item key="259200000">Recently Added</Menu.Item>
-                    <Menu.Item key="86400000">Last 24 Hours</Menu.Item>
-                    <Menu.Item key="604800000">Last Week</Menu.Item>
-                    <Menu.Item key="2678400000">Last Month</Menu.Item>
-                    <Menu.Item key="Infinity">Everything</Menu.Item>
-                  </Menu>
-                }
-              >
-                <Button>
-                  Filter by date <DownOutlined />
-                </Button>
-              </Dropdown>
+          <Content className="content-card">
+            <div className="content-card-header">
+              <div className="header-row">
+                <Input
+                  style={{ width: 400 }}
+                  // size="small"
+                  id="searchTerm"
+                  name="searchTerm"
+                  type="text"
+                  placeholder="Search by keyword"
+                  value={this.state.searchTerm}
+                  onChange={this.handleFilterChange}
+                  suffix={
+                    <SearchOutlined
+                      className="search-input-icon"
+                      style={{ color: "rgba(0,0,0,.45)" }}
+                    />
+                  }
+                />
+                <Dropdown
+                  overlay={
+                    <Menu onClick={this.handleAgeFilterChange}>
+                      <Menu.Item key="259200000">Recently Added</Menu.Item>
+                      <Menu.Item key="86400000">Last 24 Hours</Menu.Item>
+                      <Menu.Item key="604800000">Last Week</Menu.Item>
+                      <Menu.Item key="2678400000">Last Month</Menu.Item>
+                      <Menu.Item key="Infinity">Everything</Menu.Item>
+                    </Menu>
+                  }
+                >
+                  <Button>
+                    Filter by date <DownOutlined />
+                  </Button>
+                </Dropdown>
+              </div>
+              <div className="header-row">
+                <h1>Recent Announcements</h1>
+              </div>
             </div>
 
             <List
-              className="announcement-list"
+              className="content-card-list announcement-list"
               itemLayout="vertical"
               size="large"
-              header={
-                <header className="content-card-header">
-                  <h1>Recent Announcements</h1>
-                </header>
-              }
               pagination={{
                 onChange: (page) => {
                   console.log(page);

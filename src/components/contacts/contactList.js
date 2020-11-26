@@ -19,28 +19,30 @@ class ContactList extends Component {
     const contactsListComponent = contacts.map((c) => {
       return (
         <li key={c.id} className="contact-item">
-          <div className="contact-item-info name">
-            {c.imgUrl !== "" && <Avatar src={c.imgUrl} />}
-            <h1 className="bold">{c.name}</h1>
-          </div>
-          <div className="contact-item-info phone">
-            <PhoneOutlined />
-            <p>{c.phone}</p>
-          </div>
-          <div className="contact-item-info email">
-            <MailOutlined />
-            <a href={`mailto:${c.email}`}>{c.email}</a>
-          </div>
+          <div className="contact-item-content">
+            <div className="contact-item-info name">
+              {c.imgUrl !== "" && <Avatar src={c.imgUrl} />}
+              <h1>{c.name}</h1>
+            </div>
+            <div className="contact-item-info phone">
+              <PhoneOutlined />
+              <p>{c.phone}</p>
+            </div>
+            <div className="contact-item-info email">
+              <MailOutlined />
+              <a href={`mailto:${c.email}`}>{c.email}</a>
+            </div>
 
-          {isAdmin && this.props.isEditingPage && (
-            <Button
-              icon={<EditOutlined />}
-              onClick={() =>
-                this.props.handleAddorEditContact(department.id, c.id)
-              }
-              type="text"
-            />
-          )}
+            {isAdmin && this.props.isEditingPage && (
+              <Button
+                icon={<EditOutlined />}
+                onClick={() =>
+                  this.props.handleAddorEditContact(department.id, c.id)
+                }
+                type="text"
+              />
+            )}
+          </div>
         </li>
       );
     }, this);
