@@ -72,14 +72,20 @@ class SideNav extends Component {
           <Menu.Item key="contacts" icon={<ContactsOutlined />}>
             <Link to="/contacts">Contact</Link>
           </Menu.Item>
-          {isAdmin && (
+          {/* {isAdmin && (
             <Menu.Item key="billing" icon={<CreditCardOutlined />}>
               <Link to="/contacts">Billing</Link>
+            </Menu.Item>
+          )} */}
+          {isAdmin && (
+            <Menu.Item key="admins" icon={<CreditCardOutlined />}>
+              <Link to="/admins">Admin Settings</Link>
             </Menu.Item>
           )}
           <Menu.Item key="logout" icon={<LogoutOutlined />}>
             <Link to="/logout">Logout</Link>
           </Menu.Item>
+
         </Menu>
       </Sider>
     );

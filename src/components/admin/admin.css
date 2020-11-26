@@ -1,0 +1,23 @@
+.passwordComponent {
+  padding-top: 17px;
+  margin-bottom: 20px;
+}
+
+.passwordHeader {
+  padding: 0 16px;
+  position: relative;
+}
+
+.passwordHeader h2 {
+  display: inline-block;
+}
+
+
+.passwordAreas {
+  width: 100%;
+  padding: 11px 16px;
+}
+
+.passwordSubItemsHeader{
+  font-weight: bold;
+}

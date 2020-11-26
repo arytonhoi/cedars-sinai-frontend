@@ -30,9 +30,12 @@ import login from "./pages/login";
 import logout from "./pages/logout";
 import announcementPage from "./pages/announcementPage";
 import contactPage from "./pages/contactPage";
+import admin from "./pages/adminPage";
 
-axios.defaults.baseURL =
-  "https://us-central1-fir-db-d2d47.cloudfunctions.net/api";
+// axios.defaults.baseURL =
+//   "https://us-central1-fir-db-d2d47.cloudfunctions.net/api";
+
+axios.defaults.baseURL = "http://localhost:5000/fir-db-d2d47/us-central1/api";
 
 // Authentication
 const token = localStorage.FBIdToken;
@@ -70,6 +73,7 @@ class App extends Component {
                   <Route exact path="/calendar" component={announcementPage} />
                   <Route exact path="/contacts" component={contactPage} />
                   <Route exact path="/logout" component={logout} />
+                  <Route exact path="/admins" component={admin} />
                   <Route path="/resources/:pageName" component={genPage} />
                 </Switch>
               </Layout>
