@@ -6,8 +6,9 @@ import {
 } from "../redux/actions/dataActions";
 
 // css styles
-import "../css/layout.css";
+//import "../css/layout.css";
 import "../css/input.css";
+import "../css/page.css";
 import "../css/calendar.css";
 
 // Ant design
@@ -26,29 +27,28 @@ class Calendar extends Component {
       errors: {},
     };
   }
-
   
   render() {
     //const { credentials } = this.props.user;
     //const isAdmin = credentials.isAdmin;
    
     return (
-      <div className="container">
-        <header className="page-header">
-          <div className="page-header-title">
+      <div className="page-container">
+        <header className="page-header-container">
+          <div className="page-header-main-items">
             <h1>Calendar</h1>
             <Button 
             type="primary"
-            variant="contained"
-            style={{width: "100%"}}
             className="edit-button"
+            onClick = {(e) => {e.preventDefault();
+              window.open("https://calendar.google.com/calendar/u/0/r?cid=joe.hwangg@gmail.com&cid=en.usa%23holiday@group.v.calendar.google.com")}}
             >
-              Edit
+              Edit Calendar
             </Button>
           </div>
         </header>
         <Layout className="vertical-fill-layout">
-          <Content className="content-container" >
+          <Content className="content-card" >
             <div className ="google-calendar"> 
             <iframe title = "Google Calendar"src="https://calendar.google.com/calendar/embed?height=760&amp;wkst=1&amp;bgcolor=%23ffffff&amp;ctz=America%2FLos_Angeles&amp;src=am9lLmh3YW5nZ0BnbWFpbC5jb20&amp;src=ZW4udXNhI2hvbGlkYXlAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&amp;color=%237986CB&amp;color=%237986CB&amp;showTitle=0" style={{border:'solid 1px #777'}} width="1000" height="760" frameborder="0" scrolling="no"></iframe>
             </div>
