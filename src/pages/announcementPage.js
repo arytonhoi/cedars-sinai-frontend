@@ -176,21 +176,23 @@ class AnnouncementPage extends Component {
             <h1>Welcome Admin</h1>
             <Button>Change picture</Button>
           </Content>
-          <div
-            style={{
-              position: "relative",
-              bottom: "-4px",
-              marginTop: "16px",
-            }}
-          >
-            <Button
-              type="primary"
-              size={"medium"}
-              onClick={() => this.toggleEditing()}
+          {isAdmin && (
+            <div
+              style={{
+                position: "relative",
+                bottom: "-4px",
+                marginTop: "16px",
+              }}
             >
-              Post New Announcement
-            </Button>
-          </div>
+              <Button
+                type="primary"
+                size={"medium"}
+                onClick={() => this.toggleEditing()}
+              >
+                Post New Announcement
+              </Button>
+            </div>
+          )}
           <Content className="content-card">
             <div className="content-card-header">
               <div className="header-row">
