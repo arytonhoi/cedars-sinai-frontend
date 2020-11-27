@@ -61,6 +61,9 @@ const {
   updateOneContact,
 } = require("./handlers/contacts");
 
+const {
+  getDBContents
+} = require("./handlers/backup");
 // Create and Deploy Your First Cloud Functions
 // https://firebase.google.com/docs/functions/write-firebase-functions
 
@@ -78,6 +81,9 @@ app.patch("/api/user/password", FBAuth, updatePassword);
 app.post("/api/images", FBAuth, postImage);
 app.get("/api/banners/:pageName", FBAuth, getBannerImage);
 app.patch("/api/banners/:pageName", FBAuth, patchBannerImage);
+
+// backup routes
+app.get("/api/backup", FBAuth, getDBContents);
 
 // folder routes
 app.get("/api/folders", FBAuth, getAllFolders);

@@ -136,8 +136,8 @@ class genPage extends Component {
       !this.state.editPost
     ) {
       this.props.searchFolder(this.state.searchKey);
+      this.setState({ showSearchResults: true });
     }
-    this.setState({ showSearchResults: true });
   };
   renameFolders = () => {
     if (this.state.showRenameConfirm) {

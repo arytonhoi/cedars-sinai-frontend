@@ -63,7 +63,7 @@ exports.getAllFolders = (req, res) => {
     });
 };
 
-// temporary serach
+// temporary search
 exports.searchFolders = (req, res) => {
   if (req.method !== "GET") {
     return res.status(400).json({ error: "Method not allowed" });
