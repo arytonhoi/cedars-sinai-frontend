@@ -121,7 +121,12 @@ class genPage extends Component {
     this.setState({ ...this.state, selectedFolders: folders });
   };
   searchFolderCallback = (e) => {
-    this.setState({ showSearchResults: false, searchKey: e.target.value });
+    if(e.keyCode===13){
+      e.preventDefault()
+      this.searchFolder()
+    }else{
+      this.setState({ showSearchResults: false, searchKey: e.target.value });
+    }
   };
   searchFolder = () => {
     if (
@@ -673,7 +678,7 @@ class genPage extends Component {
             Search Results for '{this.state.searchKey}'
           </h3>
           {this.props.data.folderSearchRes.map((x, i) => (
-            <SearchResult key={i} data={x} searchKey={this.state.searchKey} />
+            <SearchResult key={i} data={x} />
           ))}
         </div>
       ) : this.props.UI.loadingFolderSearch ? (

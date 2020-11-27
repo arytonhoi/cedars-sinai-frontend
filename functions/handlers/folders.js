@@ -16,6 +16,30 @@ function getFolderPath(folderPathsMap, folderId) {
   return folderPath;
 }
 
+function compressSearchString(string, searchKey){
+  let stripHTMLRegex = new RegExp(
+    `<\\/? *[a-zA-Z0-9]+( *[a-zA-Z0-9]+ *= *['"].+?['"])* *\\/? *>`,
+    "gi"
+  );
+  let findMatchStringRegex = new RegExp(
+    `(((\\w+\\W+){5}|^.*?)[^ ]*${searchKey}[^ ]*((\\W+\\w+){5}|.*?$))`,
+    "gim"
+  );
+  let boldMatchStringRegex = new RegExp(`${searchKey}`, "gi");
+  string = string.replace(stripHTMLRegex, "");
+  var matches = string.match(findMatchStringRegex);
+  if (matches === null) {
+    matches = string.split(" ").slice(0, 20).join(" ");
+    if (string !== matches) {
+      matches += "...";
+    }
+  }else{
+    matches = matches.map((x) =>
+      ( " ..." + x.replace( boldMatchStringRegex, `<b>${searchKey}</b>`) + "... " )
+    ).join("")
+  }
+  return matches
+}
 // get all folders in database
 exports.getAllFolders = (req, res) => {
   if (req.method !== "GET") {
@@ -64,6 +88,7 @@ exports.searchFolders = (req, res) => {
             let relevanceCount = 0;
             let titleMatchesArray = folder.title.match(regex);
             let contentMatchesArray = folder.content.match(regex);
+            folder.content = compressSearchString(folder.content, searchTerm)
             if (titleMatchesArray !== null) {
               relevanceCount += 2 * titleMatchesArray.length;
             }
