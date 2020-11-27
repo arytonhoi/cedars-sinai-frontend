@@ -255,6 +255,9 @@ exports.deleteFolder = (req, res) => {
 };
 
 exports.updateOneFolder = (req, res) => {
+  if(req.user.isAdmin){
+    return res.status(403).json({ error: "Only admins can update folders." });
+  }
   try {
     req = fixFormat(req);
   } catch (e) {
