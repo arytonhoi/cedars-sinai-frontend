@@ -6,7 +6,7 @@ exports.getDBContents = (req, res) => {
   }
   var database = {}
   db.listCollections().then( all =>
-    Promise.allSettled(
+    Promise.all(
       all.map(col => 
         db.collection(col.id)
         .get()
