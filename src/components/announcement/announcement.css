@@ -1,14 +1,6 @@
 /* ============================================================================================== */
 /* ANNOUNCEMENT LIST STYLES */
 /* ============================================================================================== */
-.ant-list.announcement-list {
-  padding: 0 16px;
-}
-
-.announcement-list .content-card-header {
-  padding: 0 4px;
-}
-
 .announcement-list .ant-pagination {
   text-align: center;
   margin-bottom: 15px;
@@ -23,7 +15,8 @@
 /* ============================================================================================== */
 .ant-list-lg .ant-list-item.announcement-item {
   position: relative;
-  padding: 18px 4px;
+  padding: 20px 0;
+  /* margin: 0 24px; */
 }
 
 .announcement-header {
@@ -35,14 +28,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: -10px;
+  height: 22px;
 }
 
 .announcement-header h1,
 .announcement-header h3 {
   display: inline-block;
   margin-bottom: 0;
-  /* line-height: 0.5em; */
+  line-height: 22px;
 }
 
 .announcement-header h1 {
@@ -53,32 +46,33 @@
 
 .announcement-header h3 {
   font-size: 12px;
-  font-weight: 400;
-  color: gray;
+  font-weight: 300;
+  color: #595959;
   display: inline-block;
   margin-right: 1em;
 }
 
-.announcement-item {
-  /* background: #fff; */
+.announcement-header .anticon {
+  color: #8c8c8c;
 }
 
-.announcement-content-holder {
+.announcement-content-container-holder {
   position: relative;
 }
 
-.announcement-content {
+.announcement-content-container {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.ckeditor-content {
+.announcement-content {
   width: 100%;
+  color: #595959;
 }
 
 /* Handling Item Collapse */
-.ckeditor-content.overflowed {
+.announcement-content.overflowed {
   max-height: 400px;
   overflow: hidden;
 }
@@ -94,6 +88,11 @@
   text-align: center;
 }
 
+.announcement-expand-toggle label,
+.announcement-collapse-toggle label {
+  color: grey;
+}
+
 .announcement-expand-toggle {
   position: absolute;
   bottom: 0;
@@ -107,7 +106,7 @@
   padding-top: 10px;
 }
 
-.ckeditor-content.overflowed ~ .announcement-expand-toggle {
+.announcement-content.overflowed ~ .announcement-expand-toggle {
   display: block;
 }
 
@@ -119,7 +118,8 @@
   display: block;
 }
 
-.announcement-expand-toggle-checkbox:checked ~ .ckeditor-content.overflowed {
+.announcement-expand-toggle-checkbox:checked
+  ~ .announcement-content.overflowed {
   max-height: 1600px;
   overflow: scroll;
 }

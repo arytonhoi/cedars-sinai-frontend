@@ -16,6 +16,8 @@ export const STOP_LOADING_FOLDER_SEARCH = "STOP_LOADING_FOLDER_SEARCH";
 // Data reducer types
 // Images
 // export const POST_IMAGE = "POST_IMAGE";
+export const GET_BANNER_IMAGE = "GET_BANNER_IMAGE";
+export const PATCH_BANNER_IMAGE = "PATCH_BANNER_IMAGE";
 // Announcements
 export const SET_ANNOUNCEMENTS = "SET_ANNOUNCEMENTS";
 export const POST_ANNOUNCEMENT = "POST_ANNOUNCEMENT";

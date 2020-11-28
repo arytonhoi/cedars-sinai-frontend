@@ -43,10 +43,9 @@ const { admin, db } = require("./admin");
 // cookie
 module.exports = FBAuth = (req, res, next) => {
   let sessionCookie;
-  try {
-    console.log(req.cookies);
-    sessionCookie = req.cookies["__session"];
-  } catch (err) {
+  console.log(req.cookies);
+  sessionCookie = req.cookies["__session"];
+  if(sessionCookie === undefined){
     console.error("Authentication cookie not provided");
     return res.status(403).json({ error: "Unauthorized" });
   }

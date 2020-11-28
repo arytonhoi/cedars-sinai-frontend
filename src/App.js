@@ -30,10 +30,11 @@ import announcementPage from "./pages/announcementPage";
 import contactPage from "./pages/contactPage";
 import calendarPage from "./pages/calendarPage";
 
-axios.defaults.withCredentials = !(window.location.hostname === "localhost");
+// axios.defaults.withCredentials = !(window.location.hostname === "localhost");
+axios.defaults.withCredentials = true;
 window.location.hostname === "localhost"
   ? (axios.defaults.baseURL = "http://localhost:5000/api")
-  : (axios.defaults.baseURL = "https://fir-db-d2d47.web.app/api");
+  : (axios.defaults.baseURL = "/api");
 
 // Authentication
 const hasValidCookie = localStorage.hasValidCookie;

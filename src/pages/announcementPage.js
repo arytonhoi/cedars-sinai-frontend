@@ -9,15 +9,17 @@ import {
   patchAnnouncement,
   postAnnouncement,
   getFilteredAnnouncements,
+  getBannerImage,
+  patchBannerImage,
 } from "../redux/actions/dataActions";
 
 // components
 import AnnouncementPostEditorModal from "../components/announcement/announcementPostEditorModal.js";
+// import BannerImgEditorModal from "../components/announcement/bannerImgEditorModal.js";
 
 // css styles
 import "../css/page.css";
-import "../css/input.css";
-// import "../css/textContent.css";
+import "../css/ckeditor.css";
 import "../components/announcement/announcement.css";
 
 // Ant design
@@ -48,6 +50,7 @@ class AnnouncementPage extends Component {
 
   componentDidMount() {
     this.props.getAnnouncements();
+    this.props.getBannerImage("announcements");
   }
 
   // input change handlers
@@ -63,7 +66,7 @@ class AnnouncementPage extends Component {
     console.log(element.offsetHeight);
 
     if (element && this && !this.state.elementHeight) {
-      // need to check that we haven't already set the height or we'll create an infinite render loop
+      // need to check that we haven't already set the height or we'll create an infinite loop
       this.setState({ elementHeight: element.clientHeight });
       console.log(element.clientHeight);
     }
@@ -141,7 +144,7 @@ class AnnouncementPage extends Component {
   render() {
     const { credentials } = this.props.user;
     const isAdmin = credentials.isAdmin;
-    const { filteredAnnouncements } = this.props.data;
+    const { bannerImgs, filteredAnnouncements } = this.props.data;
     const maxAnnouncementPreviewHeight = 300;
 
     return (
@@ -158,73 +161,82 @@ class AnnouncementPage extends Component {
             handleDeleteThisAnnouncement={this.handleDeleteThisAnnouncement}
           />
         )}
+        {/* {isAdmin && (
+          <BannerImgEditorModal
+            visible={this.state.isEditingBannerImg}
+            bannerImgUrl={bannerImgs.announcements}
+            handleCancelPatchBannerImg={}
+            handlePatchBannerImg={}
+          />
+        )} */}
         <Layout className="vertical-fill-layout">
           <Content className="content-card img-banner">
-            <img
-              alt="bg"
-              src="https://firebasestorage.googleapis.com/v0/b/fir-db-d2d47.appspot.com/o/cedars_sinai_pic_1.png?alt=media&token=8370797b-7650-49b7-8b3a-9997fab0c32c"
-            />
+            <img alt="bg" src={bannerImgs.announcements} />
+            <div className="img-banner-mask"></div>
+            <h1>Welcome Admin</h1>
+            <Button>Change picture</Button>
           </Content>
-          <div
-            style={{
-              position: "relative",
-              bottom: "-15px",
-              display: "flex",
-              justifyContent: "flex-end",
-            }}
-          >
-            <Button
-              type="primary"
-              size={"medium"}
-              onClick={() => this.toggleEditing()}
+          {isAdmin && (
+            <div
+              style={{
+                position: "relative",
+                bottom: "-4px",
+                marginTop: "16px",
+              }}
             >
-              Post New Announcement
-            </Button>
-          </div>
-          <Content className="content-card">
-            <div className="content-card-header padded">
-              <Input
-                style={{ width: 400 }}
-                // size="small"
-                id="searchTerm"
-                name="searchTerm"
-                type="text"
-                placeholder="Search by keyword"
-                value={this.state.searchTerm}
-                onChange={this.handleFilterChange}
-                suffix={
-                  <SearchOutlined
-                    className="search-input-icon"
-                    style={{ color: "rgba(0,0,0,.45)" }}
-                  />
-                }
-              />
-              <Dropdown
-                overlay={
-                  <Menu onClick={this.handleAgeFilterChange}>
-                    <Menu.Item key="259200000">Recently Added</Menu.Item>
-                    <Menu.Item key="86400000">Last 24 Hours</Menu.Item>
-                    <Menu.Item key="604800000">Last Week</Menu.Item>
-                    <Menu.Item key="2678400000">Last Month</Menu.Item>
-                    <Menu.Item key="Infinity">Everything</Menu.Item>
-                  </Menu>
-                }
+              <Button
+                type="primary"
+                size={"medium"}
+                onClick={() => this.toggleEditing()}
               >
-                <Button>
-                  Filter by date <DownOutlined />
-                </Button>
-              </Dropdown>
+                Post New Announcement
+              </Button>
+            </div>
+          )}
+          <Content className="content-card">
+            <div className="content-card-header">
+              <div className="header-row">
+                <Input
+                  style={{ width: 400 }}
+                  // size="small"
+                  id="searchTerm"
+                  name="searchTerm"
+                  type="text"
+                  placeholder="Search by keyword"
+                  value={this.state.searchTerm}
+                  onChange={this.handleFilterChange}
+                  suffix={
+                    <SearchOutlined
+                      className="search-input-icon"
+                      style={{ color: "rgba(0,0,0,.45)" }}
+                    />
+                  }
+                />
+                <Dropdown
+                  overlay={
+                    <Menu onClick={this.handleAgeFilterChange}>
+                      <Menu.Item key="259200000">Recently Added</Menu.Item>
+                      <Menu.Item key="86400000">Last 24 Hours</Menu.Item>
+                      <Menu.Item key="604800000">Last Week</Menu.Item>
+                      <Menu.Item key="2678400000">Last Month</Menu.Item>
+                      <Menu.Item key="Infinity">Everything</Menu.Item>
+                    </Menu>
+                  }
+                >
+                  <Button>
+                    Filter by date <DownOutlined />
+                  </Button>
+                </Dropdown>
+              </div>
+              <div className="header-row">
+                <h1>Recent Announcements</h1>
+              </div>
             </div>
 
             <List
-              className="announcement-list"
+              className="content-card-list announcement-list"
               itemLayout="vertical"
               size="large"
-              header={
-                <header className="content-card-header">
-                  <h1>Recent Announcements</h1>
-                </header>
-              }
               pagination={{
                 onChange: (page) => {
                   console.log(page);
@@ -250,7 +262,7 @@ class AnnouncementPage extends Component {
                     <h3>{announcement.author}</h3>
                     <h3>{announcement.createdAt.toString("MM/dd/yy")}</h3>
                   </header>
-                  <div className="announcement-content">
+                  <div className="announcement-content-container">
                     <input
                       type="checkbox"
                       className="announcement-expand-toggle-checkbox"
@@ -265,7 +277,7 @@ class AnnouncementPage extends Component {
                           element.className = element.className + " overflowed";
                         }
                       }}
-                      className="ckeditor-content"
+                      className="announcement-content ckeditor-content"
                       dangerouslySetInnerHTML={{ __html: announcement.content }}
                     />
                     <span className="announcement-expand-toggle">
@@ -302,6 +314,8 @@ AnnouncementPage.propTypes = {
   patchAnnouncement: PropTypes.func.isRequired,
   deleteAnnouncement: PropTypes.func.isRequired,
   getFilteredAnnouncements: PropTypes.func.isRequired,
+  getBannerImage: PropTypes.func.isRequired,
+  patchBannerImage: PropTypes.func.isRequired,
   data: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
 };
@@ -319,4 +333,6 @@ export default connect(mapStateToProps, {
   patchAnnouncement,
   deleteAnnouncement,
   getFilteredAnnouncements,
+  getBannerImage,
+  patchBannerImage,
 })(AnnouncementPage);

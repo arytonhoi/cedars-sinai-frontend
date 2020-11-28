@@ -16,6 +16,8 @@ import {
   DELETE_DATA,
   // Images
   // POST_IMAGE,
+  GET_BANNER_IMAGE,
+  PATCH_BANNER_IMAGE,
   // Announcements
   SET_ANNOUNCEMENTS,
   POST_ANNOUNCEMENT,
@@ -44,6 +46,29 @@ import {
   SET_FOLDER_SEARCH_RES,
 } from "../types";
 import axios from "axios";
+
+// Images
+export const getBannerImage = (pageName) => (dispatch) => {
+  return axios.get(`/banners/${pageName}`).then((res) => {
+    const bannerImgObj = res.data;
+    bannerImgObj.pageName = pageName;
+    dispatch({
+      type: GET_BANNER_IMAGE,
+      payload: bannerImgObj,
+    });
+  });
+};
+
+export const patchBannerImage = (pageName, newImgUrlObj) => (dispatch) => {
+  return axios.patch(`/banners/${pageName}`, newImgUrlObj).then((res) => {
+    const bannerImgObj = { pageName: pageName, imgUrl: newImgUrlObj };
+
+    dispatch({
+      type: PATCH_BANNER_IMAGE,
+      payload: bannerImgObj,
+    });
+  });
+};
 
 // Announcements
 export const getAnnouncements = () => (dispatch) => {
@@ -88,18 +113,14 @@ export const patchAnnouncement = (
   updatedAnnnouncement
 ) => (dispatch) => {
   // dispatch({ type: LOADING_UI });
-  console.log(updatedAnnnouncementId);
-  console.log(updatedAnnnouncement);
   axios
     .patch(`/announcements/${updatedAnnnouncementId}`, updatedAnnnouncement)
     .then((res) => {
       updatedAnnnouncement.id = updatedAnnnouncementId;
-      console.log("yay");
       dispatch({
         type: PATCH_ANNOUNCEMENT,
         payload: updatedAnnnouncement,
       });
-      console.log("yay2");
       // dispatch(clearErrors());
     })
     .catch((err) => {
@@ -315,20 +336,24 @@ export const getAllFolders = () => (dispatch) => {
       });
     });
 };
-export const getFolder = (folderName,track) => (dispatch) => {
+export const getFolder = (folderName, track) => (dispatch) => {
   dispatch({ type: LOADING_DATA });
   axios
-    .get(`/folders/${folderName}?${(typeof(track) !== "undefined" && track===true)?"i":""}`)
+    .get(
+      `/folders/${folderName}?${
+        typeof track !== "undefined" && track === true ? "i" : ""
+      }`
+    )
     .then((res) => {
       dispatch({
         type: SET_DATA,
         payload: res.data,
       });
-      if(!isNaN(parseInt(res.data.preferredSort))){
+      if (!isNaN(parseInt(res.data.preferredSort))) {
         dispatch({
           type: SORT_SUBFOLDER,
           payload: parseInt(res.data.preferredSort),
-        })
+        });
       }
       dispatch({
         type: SET_NAV_PATH,
@@ -430,18 +455,18 @@ export const updateSubFolder = (folderName, folderDetails) => (dispatch) => {
 };
 
 export const syncAllSubFolders = (subfolders) => (dispatch) => {
-  if(typeof(subfolders)==="object" && subfolders.length > 0){
-  subfolders.forEach( x=>{
-    axios
-      .patch(`/folders/${x.id}`, x)
-      .then()
-      .catch((err) => {
-        dispatch({
-          type: SET_ERRORS,
-          payload: err.response.data,
+  if (typeof subfolders === "object" && subfolders.length > 0) {
+    subfolders.forEach((x) => {
+      axios
+        .patch(`/folders/${x.id}`, x)
+        .then()
+        .catch((err) => {
+          dispatch({
+            type: SET_ERRORS,
+            payload: err.response.data,
+          });
         });
-      })
-    })
+    });
   }
 };
 
