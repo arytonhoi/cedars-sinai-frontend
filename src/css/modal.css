@@ -24,8 +24,12 @@
   margin-bottom: 2px;
 }
 
-.modal-form.ant-form-vertical .ant-row.ant-form-item {
+.modal-form.ant-form-vertical .ant-form-item {
   margin: 16px 0 0 0;
+}
+
+.modal-form.ant-form-vertical .ant-form-item:first-of-type {
+  margin-top: 0;
 }
 
 .modal-form .ant-col {
