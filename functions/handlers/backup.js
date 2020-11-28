@@ -49,6 +49,7 @@ exports.patchDBContents = (req, res) => {
         if(dkeys.length > 0){
           if(dkeys.length >= 500){
             var c = [...dkeys]
+            dkeys = []
             while(c.length > 0){dkeys.push(c.slice(0,500));c=c.slice(500)}
           }else{
             dkeys= [dkeys]
