@@ -176,7 +176,7 @@ exports.getFolder = (req, res) => {
 exports.createFolder = (req, res) => {
   console.log(req.user.isAdmin);
   if (!req.user.isAdmin) {
-    return res.status(403).json({ error: "Unauthorized" });
+    return res.status(403).json({ error: "Only admins can create folders." });
   } else if (req.method !== "POST") {
     return res.status(400).json({ error: "Method not allowed" });
   }
@@ -230,7 +230,7 @@ exports.createFolder = (req, res) => {
 
 exports.deleteFolder = (req, res) => {
   if (!req.user.isAdmin) {
-    return res.status(403).json({ error: "Unathorized" });
+    return res.status(403).json({ error: "Only admins can delete folders." });
   }
   const batch = db.batch();
   const folderRef = db.doc(`/folders/${req.params.folderId}`);
@@ -261,7 +261,7 @@ exports.updateOneFolder = (req, res) => {
   try {
     req = fixFormat(req);
   } catch (e) {
-    return res.status(400).json({ error: e.code });
+    return res.status(400).json({ error: "Incorrect JSON format" });
   }
   if (Object.keys(req.body).length > 0) {
     try {
