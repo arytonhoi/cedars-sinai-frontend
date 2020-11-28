@@ -14,6 +14,8 @@
 /functions/util/config.js
 /functions/*.log
 /functions/node_modules
+firebase-debug.log
+
 
 # misc
 .DS_Store

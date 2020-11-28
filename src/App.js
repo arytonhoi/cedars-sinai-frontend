@@ -28,7 +28,7 @@ import login from "./pages/login";
 import logout from "./pages/logout";
 import announcementPage from "./pages/announcementPage";
 import contactPage from "./pages/contactPage";
-import calendar from "./pages/calendar";
+import calendarPage from "./pages/calendarPage";
 
 axios.defaults.withCredentials = !(window.location.hostname === "localhost");
 window.location.hostname === "localhost"
@@ -61,9 +61,13 @@ class App extends Component {
                   <Route exact path="/">
                     <Redirect to="/announcements" />
                   </Route>
-                  <Route exact path="/announcements"component={announcementPage} />
+                  <Route
+                    exact
+                    path="/announcements"
+                    component={announcementPage}
+                  />
                   <Route exact path="/resources" component={genPage} />
-                  <Route exact path="/calendar" component={calendar} />
+                  <Route exact path="/calendar" component={calendarPage} />
                   <Route exact path="/contacts" component={contactPage} />
                   <Route exact path="/logout" component={logout} />
                   <Route path="/resources/:pageName" component={genPage} />
