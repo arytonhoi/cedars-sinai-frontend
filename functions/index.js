@@ -1,9 +1,18 @@
 const functions = require("firebase-functions");
 const express = require("express");
 const app = express();
-const cors = require("cors");
+//const cors = require("cors");
 const cookies = require("cookie-parser");
-app.use(cors());
+//app.use(cors());
+app.use((req, res, next) => {
+if(req.headers.origin === undefined){req.headers.origin = "*"}
+//console.log(req.headers.origin)
+    res.append('Access-Control-Allow-Credentials', 'true');
+    res.append('Access-Control-Allow-Origin', req.headers.origin);
+    res.append('Access-Control-Allow-Headers', 'Content-Type');
+    res.append('Vary','Origin');
+    next();
+});
 app.use(cookies());
 
 const FBAuth = require("./util/fbAuth");
@@ -52,6 +61,9 @@ const {
   updateOneContact,
 } = require("./handlers/contacts");
 
+const {
+  getDBContents
+} = require("./handlers/backup");
 // Create and Deploy Your First Cloud Functions
 // https://firebase.google.com/docs/functions/write-firebase-functions
 
@@ -69,6 +81,9 @@ app.patch("/api/user/password", FBAuth, updatePassword);
 app.post("/api/images", FBAuth, postImage);
 app.get("/api/banners/:pageName", FBAuth, getBannerImage);
 app.patch("/api/banners/:pageName", FBAuth, patchBannerImage);
+
+// backup routes
+app.get("/api/backup", FBAuth, getDBContents);
 
 // folder routes
 app.get("/api/folders", FBAuth, getAllFolders);
