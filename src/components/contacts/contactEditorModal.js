@@ -60,8 +60,10 @@ class ContactEditorModal extends Component {
         footer={
           this.state.isDeleting
             ? [
-                <h3 className="modal-delete-confirmation">Delete contact?</h3>,
-                <span className="modal-footer-filler"></span>,
+                <h3 className="modal-delete-confirmation" key="message">
+                  Delete contact?
+                </h3>,
+                <span className="modal-footer-filler" key="space"></span>,
                 <Button key="back" onClick={this.toggleDeleting}>
                   Cancel
                 </Button>,
