@@ -658,16 +658,33 @@ class genPage extends Component {
         ) : (
           ""
         )
+    const nullMarkup =
+        (!data.loading && data.data.length === 0 && UI.errors.length === 0)? (
+          <div className="floating-component folder-blank noselect">
+            <h3 className="em2">It looks like this folder does not exist.</h3>
+            <h4 className="em3">
+              Go back?
+            </h4>
+            <Button type="primary"><a href="/resources/">Take me back</a></Button>
+          </div>
+        ) : (
+          ""
+        )
+console.log(UI)
     const pageMarkup =
-      (data.loading || (data.data.length === 0 && UI.errors.length === 0)) ? (
+      (data.loading && data.data.length === 0 && UI.errors.length === 0) ? (
         <div className="folder-loading center noselect padding-normal">
           <Spin indicator={spinner} />
           <p className="em4-light">Loading page...</p>
         </div>
-      ) : UI.errors.length > 0 ? (
-        <div className="floating-component noselect padding-normal">
-          {UI.errors[0].statusText}
-        </div>
+      ) : (UI.errors.length > 0 || data.data.length === 0) ? (
+          <div className="floating-component folder-blank noselect">
+            <h3 className="em2">We could not load this folder</h3>
+            <h4 className="em3">
+              Go back?
+            </h4>
+            <Button type="primary"><a href="/resources/">Take me back</a></Button>
+          </div>
       ) : this.state.searchKey === "" ||
         !this.state.showSearchResults ? (
         <>
@@ -731,7 +748,7 @@ class genPage extends Component {
                 : ""}
             </p>
             <div className="em2">
-              {typeof folders === "object" ? folders.title : "Loading..."}
+              {(UI.errors.length === 0 && data.loading) ? ("Loading...") : (typeof(folders) === "object" ? folders.title : "Error")}
             </div>
           </div>
           <div className="resources-topbar-right">
