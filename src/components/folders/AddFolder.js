@@ -3,7 +3,7 @@ import "./Folder.css";
 import "./AddFolder.css";
 //import PropTypes from "prop-types";
 
-import { Form, Modal, Input, Button } from "antd";
+import { Modal, Input, Button } from "antd";
 
 // Redux stuff
 import { connect } from "react-redux";

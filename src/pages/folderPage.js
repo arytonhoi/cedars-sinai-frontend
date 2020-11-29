@@ -5,8 +5,9 @@ import "../css/genPage.css";
 import Folder from "../components/folders/Folder.js";
 import AddFolder from "../components/folders/AddFolder.js";
 import SearchResult from "../components/folders/SearchResult.js";
+import CIcon from "../images/icon.png"
 
-import { Input, Menu, Dropdown, Modal, Button } from "antd";
+import { Input, Menu, Dropdown, Modal, Button, Spin } from "antd";
 import {
   FolderFilled,
   ArrowLeftOutlined,
@@ -121,10 +122,10 @@ class genPage extends Component {
     this.setState({ ...this.state, selectedFolders: folders });
   };
   searchFolderCallback = (e) => {
-    if (e.keyCode === 13) {
-      e.preventDefault();
-      this.searchFolder();
-    } else {
+    if(e.keyCode===13){
+      e.preventDefault()
+      this.searchFolder()
+    }else{
       this.setState({ showSearchResults: false, searchKey: e.target.value });
     }
   };
@@ -274,6 +275,7 @@ class genPage extends Component {
     this.togglePostEditable();
   };
   render() {
+    const spinner = <img className="spin spin-large" alt="" src={CIcon} />;
     const { UI, data, user } = this.props;
     const pageName = this.props.match.params.pageName;
     const folders = data.data[0];
@@ -473,6 +475,7 @@ class genPage extends Component {
       (<div className="floating-component">
         {folders.subfolders.length > 0 ? (
           <div className="folder-topbar noselect">
+            <span className="em2">Folders</span>
             <div className="folder-editbar button-holder">
               {user.credentials.isAdmin &&
               this.state.editFolders &&
@@ -666,8 +669,9 @@ class genPage extends Component {
         )
     const pageMarkup =
       (data.loading || (data.data.length === 0 && UI.errors.length === 0)) ? (
-        <div className="floating-component noselect padding-normal">
-          Page loading...
+        <div className="folder-loading center noselect padding-normal">
+          <Spin indicator={spinner} />
+          <p className="em4-light">Loading page...</p>
         </div>
       ) : UI.errors.length > 0 ? (
         <div className="floating-component noselect padding-normal">
