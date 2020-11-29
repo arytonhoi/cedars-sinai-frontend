@@ -88,6 +88,7 @@ class genPage extends Component {
       ...this.state,
       selectedFolders: [],
       editor: null,
+      editFolders: false,
       editPost: !this.state.editPost && this.props.user.credentials.isAdmin,
       showPostCancelConfirm: false,
     });
@@ -473,7 +474,7 @@ class genPage extends Component {
     const foldersMarkup = 
       (!data.loading && data.data.length > 0 && UI.errors.length === 0)?
       (<div className="floating-component">
-        {folders.subfolders.length > 0 ? (
+        {(folders.subfolders.length > 0 || this.state.editFolders) ? (
           <div className="folder-topbar noselect">
             <span className="em2">Folders</span>
             <div className="folder-editbar button-holder">
@@ -517,29 +518,21 @@ class genPage extends Component {
                 </Button>
               </Dropdown>
               {user.credentials.isAdmin &&
-              !this.state.editFolders &&
               !this.state.editPost ? (
+                this.state.editFolders ?
+                <Button
+                  type="primary"
+                  style={{
+                    background: "#52C41A",
+                    borderColor: "#52C41A",
+                  }}
+                  onClick={this.exitFolderEditMode}
+                >
+                  Finish Editing
+                </Button> :
                 <Button type="primary" onClick={this.toggleFolderEditable}>
                   Edit Folders
                 </Button>
-              ) : (
-                ""
-              )}
-              {user.credentials.isAdmin &&
-              this.state.editFolders &&
-              !this.state.editPost ? (
-                <>
-                  <Button
-                    type="primary"
-                    style={{
-                      background: "#52C41A",
-                      borderColor: "#52C41A",
-                    }}
-                    onClick={this.exitFolderEditMode}
-                  >
-                    Finish Editing
-                  </Button>
-                </>
               ) : (
                 ""
               )}
@@ -558,8 +551,7 @@ class genPage extends Component {
         )}
         <div className="folder-holder">
           {user.credentials.isAdmin &&
-          this.state.editFolders &&
-          folders.subfolders.length > 0 ? (
+          this.state.editFolders ? (
             <AddFolder target={pageName} format={0} />
           ) : (
             ""
@@ -600,8 +592,7 @@ class genPage extends Component {
             )}
             {folders.content === "" ? (
               user.credentials.isAdmin &&
-              !this.state.editPost &&
-              !this.state.editFolders ? (
+              !this.state.editPost ? (
                 <div className="folder-blank noselect">
                   <h3 className="em2">
                     It seems like there is no post for this folder yet.
