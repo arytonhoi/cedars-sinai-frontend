@@ -1,6 +1,6 @@
 .google-calendar {
-  padding: 70px;
-  margin:0 auto;
+  padding: 2em;
+  position: relative;
   display: flex;
   justify-content: center;
 }

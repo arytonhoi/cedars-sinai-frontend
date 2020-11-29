@@ -670,7 +670,6 @@ class genPage extends Component {
         ) : (
           ""
         )
-console.log(UI)
     const pageMarkup =
       (data.loading && data.data.length === 0 && UI.errors.length === 0) ? (
         <div className="folder-loading center noselect padding-normal">
