@@ -115,7 +115,7 @@ class DepartmentEditorModal extends Component {
             rules={[
               { required: true, message: "Department name cannot be blank." },
             ]}
-            // label="Department Name"
+            label="Name"
           >
             <Input
               id="departmentName"
