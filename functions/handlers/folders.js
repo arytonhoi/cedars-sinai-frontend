@@ -174,7 +174,6 @@ exports.getFolder = (req, res) => {
 
 // create folder
 exports.createFolder = (req, res) => {
-  console.log(req.user.isAdmin);
   if (!req.user.isAdmin) {
     return res.status(403).json({ error: "Only admins can create folders." });
   } else if (req.method !== "POST") {
@@ -255,7 +254,7 @@ exports.deleteFolder = (req, res) => {
 };
 
 exports.updateOneFolder = (req, res) => {
-  if(req.user.isAdmin){
+  if(!req.user.isAdmin){
     return res.status(403).json({ error: "Only admins can update folders." });
   }
   try {
