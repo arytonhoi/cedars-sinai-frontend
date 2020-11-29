@@ -3,8 +3,7 @@ import "./Folder.css";
 import "./AddFolder.css";
 //import PropTypes from "prop-types";
 
-import { Input, Button } from "antd";
-import { CloseOutlined } from "@ant-design/icons";
+import { Form, Modal, Input, Button } from "antd";
 
 // Redux stuff
 import { connect } from "react-redux";
@@ -80,43 +79,37 @@ class AddFolder extends Component {
             <span className="">Create a folder</span>
           </Button>
         )}
-        {this.state.showCreateModal ? (
-          <form className="folder-create-bg" onSubmit={this.handleSubmit}>
-            <div className="folder-create center">
-              <div className="folder-create-topbar">
-                <span>Create New Folder</span>
-                <CloseOutlined onClick={this.toggleCreateModal} />
-              </div>
-              <div className="folder-create-middlebar">
-                <Input
-                  className="folder-create-input"
-                  type="text"
-                  name="title"
-                  placeholder="Name"
-                  maxLength="256"
-                  onChange={this.handleChange}
-                />
-                <span className="errors">
-                  {this.state.errors.length > 0
-                    ? this.state.errors.pop().general
-                    : ""}
-                </span>
-              </div>
-              <div className="folder-create-endbar">
-                <Button onClick={this.toggleCreateModal}>Cancel</Button>
-                <Button
-                  type="primary"
-                  onClick={this.handleSubmit}
-                  disabled={this.state.folder.title.length <= 0}
-                >
-                  Create
-                </Button>
-              </div>
-            </div>
-          </form>
-        ) : (
-          ""
-        )}
+        <Modal
+          className="center"
+          title="Create New Folder"
+          visible={this.state.showCreateModal}
+          onCancel={() => this.toggleStateFlag("showDeleteConfirm")}
+          footer={[
+            <Button key="1" onClick={this.toggleCreateModal}>Cancel</Button>,
+            <Button
+              key="2"
+              type="primary"
+              onClick={this.handleSubmit}
+              disabled={this.state.folder.title.length <= 0}
+            >
+              Create
+            </Button>
+          ]}
+        >
+          <Input
+            className="folder-create-input"
+            type="text"
+            name="title"
+            placeholder="Name"
+            maxLength="64"
+            onChange={this.handleChange}
+          />
+          <span className="errors">
+            {this.state.errors.length > 0
+              ? this.state.errors.pop().general
+              : ""}
+          </span>
+        </Modal>
       </div>
     );
   }

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 // MUI Stuff
 import "../css/login.css";
-import { Form, Button, Spin } from "antd";
+import { Form, Input, Button, Spin } from "antd";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 // Redux stuff
 import { connect } from "react-redux";
@@ -71,7 +71,7 @@ class login extends Component {
             rules={[{ required: true, message: "Please input your password!" }]}
           >
             <div className="pw-field-wrapper">
-              <input
+              <Input
                 id="password"
                 name="password"
                 className="pw-input"
