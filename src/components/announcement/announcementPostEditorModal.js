@@ -40,7 +40,7 @@ class AnnouncementPostEditorModal extends Component {
     return (
       <Modal
         className="modal"
-        title="Post New Announcement"
+        title="Post new announcement"
         visible={this.props.visible}
         centered={true}
         width={1000}
@@ -48,10 +48,10 @@ class AnnouncementPostEditorModal extends Component {
         footer={
           this.state.isDeleting
             ? [
-                <h3 className="modal-delete-confirmation">
+                <h3 className="modal-delete-confirmation" key="message">
                   Delete announcement?
                 </h3>,
-                <span className="modal-footer-filler"></span>,
+                <span className="modal-footer-filler" key="space"></span>,
                 <Button key="back" onClick={this.toggleDeleting}>
                   Cancel
                 </Button>,
@@ -78,7 +78,7 @@ class AnnouncementPostEditorModal extends Component {
                     Delete
                   </Button>
                 ) : null,
-                <span className="modal-footer-filler"></span>,
+                <span className="modal-footer-filler" key="space"></span>,
                 <Button
                   key="back"
                   onClick={() => {
@@ -121,17 +121,23 @@ class AnnouncementPostEditorModal extends Component {
             <Form.Item
               name="announcementTitle"
               rules={[{ required: true, message: "Please input a title." }]}
+              label="Title"
             >
-              <Input name="announcementTitle" type="text" placeholder="Title" />
+              <Input
+                name="announcementTitle"
+                type="text"
+                placeholder="ex: Week 2 Announcements"
+              />
             </Form.Item>
             <Form.Item
               name="announcementAuthor"
               rules={[{ required: true, message: "Please input your name." }]}
+              label="Author"
             >
               <Input
                 name="announcementAuthor"
                 type="text"
-                placeholder="Author"
+                placeholder="ex: Krystal"
               />
             </Form.Item>
             <Form.Item
@@ -143,11 +149,6 @@ class AnnouncementPostEditorModal extends Component {
               rules={[{ required: true, message: "Please add some content." }]}
             >
               <CKEditor
-                // onChange={() => {
-                //   console.log(
-                //     this.formRef.current.getFieldValue("announcementContent")
-                //   );
-                // }}
                 data={this.props.announcementContent}
                 style={{ marginBottom: "15px" }}
                 config={{
