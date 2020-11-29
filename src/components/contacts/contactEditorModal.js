@@ -90,7 +90,7 @@ class ContactEditorModal extends Component {
                     Delete
                   </Button>
                 ) : null,
-                <span className="modal-footer-filler"></span>,
+                <span className="modal-footer-filler" key="space"></span>,
                 <Button
                   key="back"
                   onClick={() => {
