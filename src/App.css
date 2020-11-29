@@ -29,8 +29,9 @@ input {
   padding: 0.25em 2em 0.25em 0.5em !important;
 }
 
-.ant-input-affix-wrapper, .ant-dropdown-trigger{
-  margin-right: 0.5em !important;
+.ant-input-affix-wrapper,
+.ant-dropdown-trigger {
+  margin-right: 0.5em;
 }
 /* UI */
 .noselect {
@@ -79,26 +80,26 @@ label,
   font-size: 0.85em;
 }
 
-.padding-normal{
+.padding-normal {
   padding-left: 1.71em;
   padding-right: 1.71em;
 }
 
-.em2{
+.em2 {
   font-weight: 700;
   font-size: 1.5em !important;
 }
-.em3{
+.em3 {
   font-weight: 400;
   font-size: 1em;
-  color: #7E7E7E !important;
+  color: #7e7e7e !important;
 }
-.em4-light{
+.em4-light {
   font-weight: 400;
   font-size: 1em;
-  color: #8C8C8C !important;
+  color: #8c8c8c !important;
 }
-.em4-dark{
+.em4-dark {
   font-weight: 400;
   font-size: 1em;
   color: #595959 !important;

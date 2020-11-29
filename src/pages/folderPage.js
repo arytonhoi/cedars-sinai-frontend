@@ -121,10 +121,10 @@ class genPage extends Component {
     this.setState({ ...this.state, selectedFolders: folders });
   };
   searchFolderCallback = (e) => {
-    if(e.keyCode===13){
-      e.preventDefault()
-      this.searchFolder()
-    }else{
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      this.searchFolder();
+    } else {
       this.setState({ showSearchResults: false, searchKey: e.target.value });
     }
   };

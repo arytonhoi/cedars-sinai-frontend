@@ -23,11 +23,12 @@ import axios from "axios";
 
 // Pages
 import SideNav from "./components/layout/sideNav";
-import genPage from "./pages/genPage";
+import genPage from "./pages/folderPage";
 import login from "./pages/login";
 import logout from "./pages/logout";
 import announcementPage from "./pages/announcementPage";
 import contactPage from "./pages/contactPage";
+import calendarPage from "./pages/calendarPage";
 
 // axios.defaults.withCredentials = !(window.location.hostname === "localhost");
 axios.defaults.withCredentials = true;
@@ -67,7 +68,7 @@ class App extends Component {
                     component={announcementPage}
                   />
                   <Route exact path="/resources" component={genPage} />
-                  <Route exact path="/calendar" component={announcementPage} />
+                  <Route exact path="/calendar" component={calendarPage} />
                   <Route exact path="/contacts" component={contactPage} />
                   <Route exact path="/logout" component={logout} />
                   <Route path="/resources/:pageName" component={genPage} />

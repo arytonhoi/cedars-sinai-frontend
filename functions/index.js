@@ -5,14 +5,16 @@ const app = express();
 const cookies = require("cookie-parser");
 //app.use(cors());
 app.use((req, res, next) => {
-if(req.headers.origin === undefined){req.headers.origin = "*"}
-//console.log(req.headers.origin)
-    res.append('Access-Control-Allow-Credentials', 'true');
-    res.append('Access-Control-Allow-Origin', req.headers.origin);
-    res.append('Access-Control-Allow-Headers', 'Content-Type');
-    res.append('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PATCH, DELETE');
-    res.append('Vary','Origin');
-    next();
+  if (req.headers.origin === undefined) {
+    req.headers.origin = "*";
+  }
+  //console.log(req.headers.origin)
+  res.append("Access-Control-Allow-Credentials", "true");
+  res.append("Access-Control-Allow-Origin", req.headers.origin);
+  res.append("Access-Control-Allow-Headers", "Content-Type");
+  res.append('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PATCH, DELETE');
+  res.append("Vary", "Origin");
+  next();
 });
 app.use(cookies());
 
@@ -62,10 +64,7 @@ const {
   updateOneContact,
 } = require("./handlers/contacts");
 
-const {
-  getDBContents,
-  patchDBContents
-} = require("./handlers/backup");
+const { getDBContents, patchDBContents } = require("./handlers/backup");
 // Create and Deploy Your First Cloud Functions
 // https://firebase.google.com/docs/functions/write-firebase-functions
 

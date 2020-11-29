@@ -38,8 +38,8 @@ class DepartmentEditorModal extends Component {
         className="modal"
         title={
           this.props.isEditingExistingDepartment
-            ? "Edit Department Info"
-            : "Add New Department"
+            ? "Edit department"
+            : "Add department"
         }
         visible={this.props.visible}
         centered={true}
@@ -47,10 +47,10 @@ class DepartmentEditorModal extends Component {
         footer={
           this.state.isDeleting
             ? [
-                <h3 className="modal-delete-confirmation">
+                <h3 className="modal-delete-confirmation" key="message">
                   Delete department and its contacts?
                 </h3>,
-                <span className="modal-footer-filler"></span>,
+                <span className="modal-footer-filler" key="space"></span>,
                 <Button key="back" onClick={this.toggleDeleting}>
                   Cancel
                 </Button>,
@@ -77,7 +77,7 @@ class DepartmentEditorModal extends Component {
                     Delete
                   </Button>
                 ) : null,
-                <span className="modal-footer-filler"></span>,
+                <span key="space" className="modal-footer-filler"></span>,
                 <Button
                   key="back"
                   onClick={this.props.handleCancelAddorEditDepartment}
@@ -115,7 +115,7 @@ class DepartmentEditorModal extends Component {
             rules={[
               { required: true, message: "Department name cannot be blank." },
             ]}
-            label="Department Name"
+            label="Name"
           >
             <Input
               id="departmentName"
