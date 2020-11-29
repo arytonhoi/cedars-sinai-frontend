@@ -25,14 +25,15 @@ class calendarPage extends Component {
   }
 
   render() {
-    //const { credentials } = this.props.user;
-    //const isAdmin = credentials.isAdmin;
+    const { credentials } = this.props.user;
+    const isAdmin = credentials.isAdmin;
 
     return (
       <div className="page-container">
         <header className="page-header-container">
           <div className="page-header-main-items">
             <h1>Calendar</h1>
+{isAdmin?
             <Button
               type="primary"
               className="edit-button"
@@ -44,7 +45,8 @@ class calendarPage extends Component {
               }}
             >
               Edit Calendar
-            </Button>
+            </Button>:""
+}
           </div>
         </header>
         <Layout className="vertical-fill-layout">
