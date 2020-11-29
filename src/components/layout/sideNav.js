@@ -8,11 +8,10 @@ import { Layout, Menu } from "antd";
 import {
   CalendarOutlined,
   ContactsOutlined,
-  CreditCardOutlined,
   FolderOpenOutlined,
   LogoutOutlined,
   NotificationOutlined,
-  // SettingOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 
 // Styles
@@ -73,7 +72,7 @@ class SideNav extends Component {
             <Link to="/contacts">Contacts</Link>
           </Menu.Item>
           {isAdmin && (
-            <Menu.Item key="billing" icon={<CreditCardOutlined />}>
+            <Menu.Item key="billing" icon={<SettingOutlined />}>
               <Link to="/contacts">Admin Settings</Link>
             </Menu.Item>
           )}

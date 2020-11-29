@@ -63,7 +63,9 @@ class login extends Component {
           />
         </div>
         <Form className="login-form center" onSubmit={this.handleSubmit}>
-          <p className="login-title">OR Education Portal</p>
+          <p className="login-title">
+            {`OR Education Portal${this.state.uid === 0 ? " (Admin)" : ""}`}
+          </p>
           <Form.Item
             className="ant-form-row-login"
             label="Enter Password:"
