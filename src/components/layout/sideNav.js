@@ -70,11 +70,11 @@ class SideNav extends Component {
             <Link to="/calendar">Calendar</Link>
           </Menu.Item>
           <Menu.Item key="contacts" icon={<ContactsOutlined />}>
-            <Link to="/contacts">Contact</Link>
+            <Link to="/contacts">Contacts</Link>
           </Menu.Item>
           {isAdmin && (
             <Menu.Item key="billing" icon={<CreditCardOutlined />}>
-              <Link to="/contacts">Billing</Link>
+              <Link to="/contacts">Admin Settings</Link>
             </Menu.Item>
           )}
           <Menu.Item key="logout" icon={<LogoutOutlined />}>

@@ -23,7 +23,7 @@ import axios from "axios";
 
 // Pages
 import SideNav from "./components/layout/sideNav";
-import genPage from "./pages/genPage";
+import genPage from "./pages/folderPage";
 import login from "./pages/login";
 import logout from "./pages/logout";
 import announcementPage from "./pages/announcementPage";
