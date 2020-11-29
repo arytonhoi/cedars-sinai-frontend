@@ -27,7 +27,7 @@ import {
   getNavRoute,
   syncAllSubFolders,
 } from "../redux/actions/dataActions";
-import { MOVE_SUBFOLDER, SORT_SUBFOLDER } from "../redux/types";
+import { MOVE_SUBFOLDER, SORT_SUBFOLDER, DELETE_SUBFOLDER } from "../redux/types";
 
 // Editor
 import CKEditor from "ckeditor4-react";
@@ -171,9 +171,8 @@ class genPage extends Component {
             this.toggleSelect(null, x);
             this.props.updateSubFolder(x.id, {
               parent: this.props.data.navpath.id,
-              title: x.title,
-              content: x.content,
             });
+            store.dispatch({ type: DELETE_SUBFOLDER, payload: x.id });
           }
           return 0;
         });
