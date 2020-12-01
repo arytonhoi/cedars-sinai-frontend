@@ -16,7 +16,7 @@ import {
 // components
 import AnnouncementPostEditorModal from "../components/announcement/announcementPostEditorModal.js";
 import AnnouncementList from "../components/announcement/announcementList.js";
-// import BannerImgEditorModal from "../components/announcement/bannerImgEditorModal.js";
+import BannerImgEditorModal from "../components/announcement/bannerImgEditorModal.js";
 
 // css styles
 import "../css/page.css";
@@ -46,6 +46,8 @@ class AnnouncementPage extends Component {
       // announcement editor modal
       isEditing: false,
       elementHeight: "",
+      // banner img
+      isEditingBannerImg: false,
     };
   }
 
@@ -62,16 +64,16 @@ class AnnouncementPage extends Component {
     console.log(this.state);
   };
 
-  getHeight(element) {
-    console.log(element.clientHeight);
-    console.log(element.offsetHeight);
+  // getHeight(element) {
+  //   console.log(element.clientHeight);
+  //   console.log(element.offsetHeight);
 
-    if (element && this && !this.state.elementHeight) {
-      // need to check that we haven't already set the height or we'll create an infinite loop
-      this.setState({ elementHeight: element.clientHeight });
-      console.log(element.clientHeight);
-    }
-  }
+  //   if (element && this && !this.state.elementHeight) {
+  //     // need to check that we haven't already set the height or we'll create an infinite loop
+  //     this.setState({ elementHeight: element.clientHeight });
+  //     console.log(element.clientHeight);
+  //   }
+  // }
 
   handleFilterChange = (event) => {
     const updatedFilter = this.state.filter;
@@ -98,6 +100,7 @@ class AnnouncementPage extends Component {
     });
   };
 
+  // announcement editor functions
   handleEditThisAnnouncement = (announcement) => {
     this.setState({
       announcementId: announcement.id,
@@ -142,6 +145,27 @@ class AnnouncementPage extends Component {
     this.handleCancelEditAnnouncement();
   };
 
+  // banner editor functions
+  handleEditBannerImg = () => {
+    this.setState({
+      isEditingBannerImg: true,
+    });
+  };
+
+  handlePatchBannerImg = (formValues) => {
+    const newImgUrlObj = {
+      imgUrl: formValues.bannerImgUrl,
+    };
+    this.props.patchBannerImage("announcements", newImgUrlObj);
+    this.handleCancelEditBannerImg();
+  };
+
+  handleCancelEditBannerImg = () => {
+    this.setState({
+      isEditingBannerImg: false,
+    });
+  };
+
   render() {
     const { credentials } = this.props.user;
     const isAdmin = credentials.isAdmin;
@@ -161,20 +185,20 @@ class AnnouncementPage extends Component {
             handleDeleteThisAnnouncement={this.handleDeleteThisAnnouncement}
           />
         )}
-        {/* {isAdmin && (
+        {isAdmin && (
           <BannerImgEditorModal
             visible={this.state.isEditingBannerImg}
             bannerImgUrl={bannerImgs.announcements}
-            handleCancelPatchBannerImg={}
-            handlePatchBannerImg={}
+            handlePatchBannerImg={this.handlePatchBannerImg}
+            handleCancelEditBannerImg={this.handleCancelEditBannerImg}
           />
-        )} */}
+        )}
         <Layout className="vertical-fill-layout">
           <Content className="content-card img-banner">
             <img alt="bg" src={bannerImgs.announcements} />
             <div className="img-banner-mask"></div>
             <h1>Welcome Admin</h1>
-            <Button>Change picture</Button>
+            <Button onClick={this.handleEditBannerImg}>Change picture</Button>
           </Content>
           {isAdmin && (
             <div
@@ -198,7 +222,6 @@ class AnnouncementPage extends Component {
               <div className="header-row">
                 <Input
                   style={{ width: 400 }}
-                  // size="small"
                   id="searchTerm"
                   name="searchTerm"
                   type="text"
@@ -246,13 +269,16 @@ class AnnouncementPage extends Component {
 }
 
 AnnouncementPage.propTypes = {
+  // announcements
   getAnnouncements: PropTypes.func.isRequired,
   postAnnouncement: PropTypes.func.isRequired,
   patchAnnouncement: PropTypes.func.isRequired,
   deleteAnnouncement: PropTypes.func.isRequired,
   getFilteredAnnouncements: PropTypes.func.isRequired,
+  // banners
   getBannerImage: PropTypes.func.isRequired,
   patchBannerImage: PropTypes.func.isRequired,
+  // generic
   data: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
 };

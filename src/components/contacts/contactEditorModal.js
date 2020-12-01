@@ -48,7 +48,7 @@ class ContactEditorModal extends Component {
   render() {
     return (
       <Modal
-        className="modal"
+        className="modal-form"
         title={
           this.props.isEditingExistingContact
             ? "Edit contact"

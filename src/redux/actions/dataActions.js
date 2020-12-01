@@ -61,11 +61,11 @@ export const getBannerImage = (pageName) => (dispatch) => {
 
 export const patchBannerImage = (pageName, newImgUrlObj) => (dispatch) => {
   return axios.patch(`/banners/${pageName}`, newImgUrlObj).then((res) => {
-    const bannerImgObj = { pageName: pageName, imgUrl: newImgUrlObj };
+    newImgUrlObj.pageName = pageName;
 
     dispatch({
       type: PATCH_BANNER_IMAGE,
-      payload: bannerImgObj,
+      payload: newImgUrlObj,
     });
   });
 };
@@ -455,17 +455,14 @@ export const updateSubFolder = (folderName, folderDetails) => (dispatch) => {
 };
 
 export const syncAllSubFolders = (subfolders) => (dispatch) => {
-
   if (typeof subfolders === "object" && subfolders.length > 0) {
     subfolders.forEach((x) => {
-      axios
-        .patch(`/folders/${x.id}`, {index: x.index})
-        .catch((err) => {
-          dispatch({
-            type: SET_ERRORS,
-            payload: err.response.data,
-          });
+      axios.patch(`/folders/${x.id}`, { index: x.index }).catch((err) => {
+        dispatch({
+          type: SET_ERRORS,
+          payload: err.response.data,
         });
+      });
     });
   }
 };

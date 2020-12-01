@@ -102,7 +102,7 @@ class AnnouncementPostEditorModal extends Component {
               ]
         }
       >
-        <div style={{ marginTop: "-15px", marginBottom: "-15px" }}>
+        <div>
           <Form
             className="modal-form"
             id="announcementPostEditorForm"
