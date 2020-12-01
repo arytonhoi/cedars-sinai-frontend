@@ -25,14 +25,15 @@ class calendarPage extends Component {
   }
 
   render() {
-    //const { credentials } = this.props.user;
-    //const isAdmin = credentials.isAdmin;
+    const { credentials } = this.props.user;
+    const isAdmin = credentials.isAdmin;
 
     return (
       <div className="page-container">
         <header className="page-header-container">
           <div className="page-header-main-items">
             <h1>Calendar</h1>
+{isAdmin?
             <Button
               type="primary"
               className="edit-button"
@@ -44,7 +45,8 @@ class calendarPage extends Component {
               }}
             >
               Edit Calendar
-            </Button>
+            </Button>:""
+}
           </div>
         </header>
         <Layout className="vertical-fill-layout">
@@ -53,9 +55,7 @@ class calendarPage extends Component {
               <iframe
                 title="Google Calendar"
                 src="https://calendar.google.com/calendar/embed?height=760&amp;wkst=1&amp;bgcolor=%23ffffff&amp;ctz=America%2FLos_Angeles&amp;src=am9lLmh3YW5nZ0BnbWFpbC5jb20&amp;src=ZW4udXNhI2hvbGlkYXlAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&amp;color=%237986CB&amp;color=%237986CB&amp;showTitle=0"
-                style={{ border: "solid 1px #777" }}
-                width="1000"
-                height="760"
+                style={{ border: "solid 1px #777", width: "100%", height: "100vh" }}
                 frameborder="0"
                 scrolling="no"
               ></iframe>

@@ -455,11 +455,11 @@ export const updateSubFolder = (folderName, folderDetails) => (dispatch) => {
 };
 
 export const syncAllSubFolders = (subfolders) => (dispatch) => {
+
   if (typeof subfolders === "object" && subfolders.length > 0) {
     subfolders.forEach((x) => {
       axios
-        .patch(`/folders/${x.id}`, x)
-        .then()
+        .patch(`/folders/${x.id}`, {index: x.index})
         .catch((err) => {
           dispatch({
             type: SET_ERRORS,

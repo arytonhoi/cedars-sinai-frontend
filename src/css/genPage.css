@@ -103,20 +103,12 @@ span.em4-light:last-of-type > a{
   padding: 0 1.71em;
 }
 
-/*
-.resources-editbar{
-  display:none;
-  background: #fff;
-  position: fixed;
-  z-index: 3;
-  width: 100%;
-  right: 0;
-  bottom: 0;
+.folder-loading{
   display: flex;
-  justify-content: space-between;
-  padding: 1em;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
-*/
 .move-dialog > .ant-modal-content > .ant-modal-body{
   padding: 0;
 }

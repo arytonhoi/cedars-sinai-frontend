@@ -3,8 +3,10 @@ import PropTypes from "prop-types";
 
 // MUI Stuff
 import "../css/login.css";
-import { Form, Button, Spin } from "antd";
+import { Form, Input, Button, Spin } from "antd";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
+import CIcon from "../images/icon.png";
+
 // Redux stuff
 import { connect } from "react-redux";
 import { loginUser } from "../redux/actions/userActions";
@@ -49,6 +51,7 @@ class login extends Component {
     });
   };
   render() {
+    const spinner = <img className="spin" alt="" src={CIcon} />;
     const {
       UI: { loading },
     } = this.props;
@@ -73,7 +76,7 @@ class login extends Component {
             rules={[{ required: true, message: "Please input your password!" }]}
           >
             <div className="pw-field-wrapper">
-              <input
+              <Input
                 id="password"
                 name="password"
                 className="pw-input"
@@ -107,7 +110,7 @@ class login extends Component {
             onClick={this.handleSubmit}
           >
             Sign in
-            {loading && <Spin className="button-spinner halign" />}
+            {loading && <Spin className="button-spinner halign" indicator={spinner} />}
           </Button>
           <p className="errors pw-errors noselect">
             {errors.length > 0 ? errors.pop().general : <br />}

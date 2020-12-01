@@ -5,8 +5,9 @@ import "../css/genPage.css";
 import Folder from "../components/folders/Folder.js";
 import AddFolder from "../components/folders/AddFolder.js";
 import SearchResult from "../components/folders/SearchResult.js";
+import CIcon from "../images/icon.png"
 
-import { Input, Menu, Dropdown, Modal, Button } from "antd";
+import { Input, Menu, Dropdown, Modal, Button, Spin } from "antd";
 import {
   FolderFilled,
   ArrowLeftOutlined,
@@ -26,7 +27,7 @@ import {
   getNavRoute,
   syncAllSubFolders,
 } from "../redux/actions/dataActions";
-import { MOVE_SUBFOLDER, SORT_SUBFOLDER } from "../redux/types";
+import { MOVE_SUBFOLDER, SORT_SUBFOLDER, DELETE_SUBFOLDER } from "../redux/types";
 
 // Editor
 import CKEditor from "ckeditor4-react";
@@ -87,6 +88,7 @@ class genPage extends Component {
       ...this.state,
       selectedFolders: [],
       editor: null,
+      editFolders: false,
       editPost: !this.state.editPost && this.props.user.credentials.isAdmin,
       showPostCancelConfirm: false,
     });
@@ -121,10 +123,10 @@ class genPage extends Component {
     this.setState({ ...this.state, selectedFolders: folders });
   };
   searchFolderCallback = (e) => {
-    if (e.keyCode === 13) {
-      e.preventDefault();
-      this.searchFolder();
-    } else {
+    if(e.keyCode===13){
+      e.preventDefault()
+      this.searchFolder()
+    }else{
       this.setState({ showSearchResults: false, searchKey: e.target.value });
     }
   };
@@ -169,9 +171,8 @@ class genPage extends Component {
             this.toggleSelect(null, x);
             this.props.updateSubFolder(x.id, {
               parent: this.props.data.navpath.id,
-              title: x.title,
-              content: x.content,
             });
+            store.dispatch({ type: DELETE_SUBFOLDER, payload: x.id });
           }
           return 0;
         });
@@ -245,7 +246,7 @@ class genPage extends Component {
     }
   };
   exitFolderEditMode = () => {
-    console.log(this.props.data.data[0].subfolders);
+    //console.log(this.props.data.data[0].subfolders);
     if (this.state.positionModified) {
       this.props.syncAllSubFolders(this.props.data.data[0].subfolders);
       this.setState({ positionModified: false });
@@ -274,6 +275,7 @@ class genPage extends Component {
     this.togglePostEditable();
   };
   render() {
+    const spinner = <img className="spin spin-large" alt="" src={CIcon} />;
     const { UI, data, user } = this.props;
     const pageName = this.props.match.params.pageName;
     const folders = data.data[0];
@@ -286,6 +288,7 @@ class genPage extends Component {
         <Menu.Item key="4">Most popular</Menu.Item>
       </Menu>
     );
+//console.log(folders)
     var s = "s";
     if (this.state.selectedFolders.length === 1) {
       s = "";
@@ -297,279 +300,283 @@ class genPage extends Component {
       "Least recently added",
       "Most popular",
     ];
-    const pageMarkup =
-      data.loading || (data.data.length === 0 && UI.errors.length === 0) ? (
-        <div className="floating-component noselect padding-normal">
-          Page loading...
-        </div>
-      ) : UI.errors.length > 0 ? (
-        <div className="floating-componentnoselect  padding-normal">
-          {UI.errors[0].statusText}
-        </div>
-      ) : this.state.searchKey === "" ||
-        !this.state.showSearchResults ||
-        this.state.editFolders ||
-        this.state.editPost ? (
-        <div>
-          {this.state.editFolders ? (
-            <div className="resources-editbar noselect">
-              <Modal
-                className="center"
-                title="Are you sure?"
-                visible={this.state.showDeleteConfirm}
-                onCancel={() => this.toggleStateFlag("showDeleteConfirm")}
-                footer={[
-                  <Button
-                    key="1"
-                    onClick={() => this.toggleStateFlag("showDeleteConfirm")}
-                  >
-                    No
-                  </Button>,
-                  <Button key="2" type="danger" onClick={this.deleteFolders}>
-                    Yes, delete folder{s}
-                  </Button>,
-                ]}
-              >
-                Deleting{" "}
-                {this.state.selectedFolders.map((x, i, a) =>
-                  a.length === 1
-                    ? "'" + x.title + "'"
-                    : a.length - i === 1
-                    ? " and '" + x.title + "'"
-                    : i < a.length - 2
-                    ? "'" + x.title + "', "
-                    : "'" + x.title + "' "
-                )}{" "}
-                will remove all contents, including files and subfolders within
-                the folder{s}. This action is irreversible.
-              </Modal>
-              <Modal
-                className="center"
-                title={"Rename folder" + s}
-                visible={this.state.showRenameConfirm}
-                onCancel={() => this.toggleStateFlag("showRenameConfirm")}
-                footer={[
-                  <Button
-                    key="1"
-                    onClick={() => this.toggleStateFlag("showRenameConfirm")}
-                  >
-                    Cancel
-                  </Button>,
-                  <Button key="2" type="primary" onClick={this.renameFolders}>
-                    Rename
-                  </Button>,
-                ]}
-              >
-                {this.state.selectedFolders.map((x, i, a) => (
-                  <input
-                    key={i}
-                    className="full-width"
-                    type="text"
-                    value={x.title}
-                    name={i}
-                    onChange={this.renameFolderCallback}
-                  />
-                ))}
-              </Modal>
-              <Modal
-                className="move-dialog center noselect"
-                title={
-                  data.navpath.parent === "" ? (
-                    "Move to " + data.navpath.title
-                  ) : (
-                    <div className="move-modal-top">
-                      <ArrowLeftOutlined
-                        onClick={() =>
-                          this.props.getNavRoute(data.navpath.parent)
-                        }
-                      />
-                      <span>{"Move to " + data.navpath.title}</span>
-                    </div>
-                  )
-                }
-                visible={this.state.showMoveDialog}
-                onCancel={() => {
-                  this.toggleStateFlag("showMoveDialog");
-                  this.props.getNavRoute();
-                }}
-                footer={[
-                  <Button
-                    key="1"
-                    onClick={() => {
-                      this.toggleStateFlag("showMoveDialog");
-                      this.props.getNavRoute();
-                    }}
-                  >
-                    Cancel
-                  </Button>,
-                  <Button
-                    key="2"
-                    type="primary"
-                    onClick={this.moveFolders}
-                    disabled={data.navpath.id === data.data[0].id}
-                  >
-                    {"Move Folder" + s + " Here"}
-                  </Button>,
-                ]}
-              >
-                {data.navpath.children.length === 0 ? (
-                  <div className="navpath-list-empty">
-                    <i>This folder has no subfolders</i>
-                  </div>
-                ) : (
-                  data.navpath.children.map((x, i) =>
-                    this.state.selectedFolders.findIndex(
-                      (p) => p.id === x.id
-                    ) === -1 ? (
-                      <div
-                        className="navpath-list navpath-list-enabled"
-                        key={x.id}
-                        onClick={() => this.props.getNavRoute(x.id)}
-                      >
-                        <span className="navpath-list-left">
-                          <FolderFilled />
-                          {x.title}
-                        </span>
-                        <span className="navpath-list-right">
-                          <RightOutlined />
-                        </span>
-                      </div>
-                    ) : (
-                      <div
-                        className="navpath-list navpath-list-disabled"
-                        key={x.id}
-                      >
-                        <span className="navpath-list-left">
-                          <FolderFilled />
-                          {x.title}
-                        </span>
-                        <span className="navpath-list-right">
-                          <RightOutlined />
-                        </span>
-                      </div>
-                    )
-                  )
-                )}
-              </Modal>
+    const modalsMarkup =
+      (user.credentials.isAdmin && !data.loading && data.data.length > 0 && UI.errors.length === 0) ?
+      (<div className="resources-editbar noselect">
+        <Modal
+          className="center"
+          title="Are you sure?"
+          visible={this.state.showDeleteConfirm}
+          onCancel={() => this.toggleStateFlag("showDeleteConfirm")}
+          footer={[
+            <Button
+              key="1"
+              onClick={() => this.toggleStateFlag("showDeleteConfirm")}
+            >
+              No
+            </Button>,
+            <Button key="2" type="danger" onClick={this.deleteFolders}>
+              Yes, delete folder{s}
+            </Button>,
+          ]}
+        >
+          Deleting{" "}
+          {this.state.selectedFolders.map((x, i, a) =>
+            a.length === 1
+              ? "'" + x.title + "'"
+              : a.length - i === 1
+              ? " and '" + x.title + "'"
+              : i < a.length - 2
+              ? "'" + x.title + "', "
+              : "'" + x.title + "' "
+          )}{" "}
+          will remove all contents, including files and subfolders within
+          the folder{s}. This action is irreversible.
+        </Modal>
+        <Modal
+          className="center"
+          title={"Rename folder" + s}
+          visible={this.state.showRenameConfirm}
+          onCancel={() => this.toggleStateFlag("showRenameConfirm")}
+          footer={[
+            <Button
+              key="1"
+              onClick={() => this.toggleStateFlag("showRenameConfirm")}
+            >
+              Cancel
+            </Button>,
+            <Button key="2" type="primary" onClick={this.renameFolders}>
+              Rename
+            </Button>,
+          ]}
+        >
+          {this.state.selectedFolders.map((x, i, a) => (
+            <input
+              key={i}
+              maxLength="64"
+              className="full-width"
+              type="text"
+              value={x.title}
+              name={i}
+              onChange={this.renameFolderCallback}
+            />
+          ))}
+        </Modal>
+        <Modal
+          className="move-dialog center noselect"
+          title={
+            data.navpath.parent === "" ? (
+              "Move to " + data.navpath.title
+            ) : (
+              <div className="move-modal-top">
+                <ArrowLeftOutlined
+                  onClick={() =>
+                    this.props.getNavRoute(data.navpath.parent)
+                  }
+                />
+                <span>{"Move to " + data.navpath.title}</span>
+              </div>
+            )
+          }
+          visible={this.state.showMoveDialog}
+          onCancel={() => {
+            this.toggleStateFlag("showMoveDialog");
+            this.props.getNavRoute();
+          }}
+          footer={[
+            <Button
+              key="1"
+              onClick={() => {
+                this.toggleStateFlag("showMoveDialog");
+                this.props.getNavRoute();
+              }}
+            >
+              Cancel
+            </Button>,
+            <Button
+              key="2"
+              type="primary"
+              onClick={this.moveFolders}
+              disabled={data.navpath.id === data.data[0].id}
+            >
+              {"Move Folder" + s + " Here"}
+            </Button>,
+          ]}
+        >
+          {data.navpath.children.length === 0 ? (
+            <div className="navpath-list-empty">
+              <i>This folder has no subfolders</i>
             </div>
           ) : (
-            ""
-          )}
-          <div className="floating-component">
-            {folders.subfolders.length > 0 ? (
-              <div className="folder-topbar noselect">
-                <div className="folder-editbar button-holder">
-                  {user.credentials.isAdmin &&
-                  this.state.editFolders &&
-                  this.state.selectedFolders.length > 0 ? (
-                    <>
-                      <Button
-                        disabled={this.state.selectedFolders.length === 0}
-                        type="danger"
-                        onClick={() =>
-                          this.toggleStateFlag("showDeleteConfirm")
-                        }
-                      >
-                        Delete {this.state.selectedFolders.length} Folder{s}
-                      </Button>
-                      <Button
-                        disabled={this.state.selectedFolders.length === 0}
-                        onClick={() => this.toggleStateFlag("showMoveDialog")}
-                      >
-                        Move {this.state.selectedFolders.length} Folder{s}
-                      </Button>
-                      <Button
-                        disabled={this.state.selectedFolders.length === 0}
-                        onClick={() =>
-                          this.toggleStateFlag("showRenameConfirm")
-                        }
-                      >
-                        Rename {this.state.selectedFolders.length} Folder{s}
-                      </Button>
-                    </>
-                  ) : (
-                    ""
-                  )}
-                  <Dropdown overlay={menu}>
-                    <Button>
-                      {this.state.requestedSort === null
-                        ? "Order folders by"
-                        : menuSelector[this.state.requestedSort]}{" "}
-                      <DownOutlined />
-                    </Button>
-                  </Dropdown>
-                  {user.credentials.isAdmin &&
-                  !this.state.editFolders &&
-                  !this.state.editPost ? (
-                    <Button type="primary" onClick={this.toggleFolderEditable}>
-                      Edit Folders
-                    </Button>
-                  ) : (
-                    ""
-                  )}
-                  {user.credentials.isAdmin &&
-                  this.state.editFolders &&
-                  !this.state.editPost ? (
-                    <>
-                      <Button
-                        type="primary"
-                        style={{
-                          background: "#52C41A",
-                          borderColor: "#52C41A",
-                        }}
-                        onClick={this.exitFolderEditMode}
-                      >
-                        Finish Editing
-                      </Button>
-                    </>
-                  ) : (
-                    ""
-                  )}
+            data.navpath.children.map((x, i) =>
+              this.state.selectedFolders.findIndex(
+                (p) => p.id === x.id
+              ) === -1 ? (
+                <div
+                  className="navpath-list navpath-list-enabled"
+                  key={x.id}
+                  onClick={() => this.props.getNavRoute(x.id)}
+                >
+                  <span className="navpath-list-left">
+                    <FolderFilled />
+                    {x.title}
+                  </span>
+                  <span className="navpath-list-right">
+                    <RightOutlined />
+                  </span>
                 </div>
-              </div>
-            ) : user.credentials.isAdmin ? (
-              <div className="folder-blank noselect">
-                <h3 className="em2">It seems like there are no subfolders</h3>
-                <h4 className="em3">
-                  You can create subfolders under any folder.
-                </h4>
-                <AddFolder target={pageName} format={1} />
-              </div>
-            ) : (
-              ""
-            )}
-            <div className="folder-holder">
+              ) : (
+                <div
+                  className="navpath-list navpath-list-disabled"
+                  key={x.id}
+                >
+                  <span className="navpath-list-left">
+                    <FolderFilled />
+                    {x.title}
+                  </span>
+                  <span className="navpath-list-right">
+                    <RightOutlined />
+                  </span>
+                </div>
+              )
+            )
+          )}
+        </Modal>
+        <Modal
+          className="center"
+          title={"Cancel changes to your post?"}
+          visible={this.state.showPostCancelConfirm}
+          onCancel={() =>
+            this.toggleStateFlag("showPostCancelConfirm")
+          }
+          footer={[
+            <Button
+              key="1"
+              onClick={() =>
+                this.toggleStateFlag("showPostCancelConfirm")
+              }
+            >
+              No
+            </Button>,
+            <Button
+              key="2"
+              type="primary"
+              onClick={this.togglePostEditable}
+            >
+              Yes, Cancel Changes
+            </Button>,
+          ]}
+        >
+          This will remove all new changes made to your post.
+        </Modal>
+      </div>) : ("")
+    const foldersMarkup = 
+      (!data.loading && data.data.length > 0 && UI.errors.length === 0)?
+      (<div className="floating-component">
+        {(folders.subfolders.length > 0 || this.state.editFolders) ? (
+          <div className="folder-topbar noselect">
+            <span className="em2">Folders</span>
+            <div className="folder-editbar button-holder">
               {user.credentials.isAdmin &&
               this.state.editFolders &&
-              folders.subfolders.length > 0 ? (
-                <AddFolder target={pageName} format={0} />
+              this.state.selectedFolders.length > 0 ? (
+                <>
+                  <Button
+                    disabled={this.state.selectedFolders.length === 0}
+                    type="danger"
+                    onClick={() =>
+                      this.toggleStateFlag("showDeleteConfirm")
+                    }
+                  >
+                    Delete {this.state.selectedFolders.length} Folder{s}
+                  </Button>
+                  <Button
+                    disabled={this.state.selectedFolders.length === 0}
+                    onClick={() => this.toggleStateFlag("showMoveDialog")}
+                  >
+                    Move {this.state.selectedFolders.length} Folder{s}
+                  </Button>
+                  <Button
+                    disabled={this.state.selectedFolders.length === 0}
+                    onClick={() =>
+                      this.toggleStateFlag("showRenameConfirm")
+                    }
+                  >
+                    Rename {this.state.selectedFolders.length} Folder{s}
+                  </Button>
+                </>
               ) : (
                 ""
               )}
-              {folders.subfolders.length > 0
-                ? folders.subfolders.map((x, i) => (
-                    <Folder
-                      onMouseDown={(e) => this.folderDragStart(e, x)}
-                      onMouseUp={this.folderDragEnd}
-                      key={x.id}
-                      label={x.title}
-                      href={
-                        user.credentials.isAdmin && this.state.editFolders
-                          ? (e) => this.toggleSelect(e, x)
-                          : this.state.editPost
-                          ? () => 0
-                          : x.id
-                      }
-                    />
-                  ))
-                : ""}
+              <Dropdown overlay={menu}>
+                <Button>
+                  {this.state.requestedSort === null
+                    ? "Order folders by"
+                    : menuSelector[this.state.requestedSort]}{" "}
+                  <DownOutlined />
+                </Button>
+              </Dropdown>
+              {user.credentials.isAdmin &&
+              !this.state.editPost ? (
+                this.state.editFolders ?
+                <Button
+                  type="primary"
+                  style={{
+                    background: "#52C41A",
+                    borderColor: "#52C41A",
+                  }}
+                  onClick={this.exitFolderEditMode}
+                >
+                  Finish Editing
+                </Button> :
+                <Button type="primary" onClick={this.toggleFolderEditable}>
+                  Edit Folders
+                </Button>
+              ) : (
+                ""
+              )}
             </div>
-            {!user.credentials.isAdmin &&
-            (folders.content === "" || folders.subfolders.length < 1) ? (
-              ""
-            ) : (
-              <hr className="folder-hr" />
-            )}
+          </div>
+        ) : user.credentials.isAdmin ? (
+          <div className="folder-blank noselect">
+            <h3 className="em2">It seems like there are no subfolders</h3>
+            <h4 className="em3">
+              You can create subfolders under any folder.
+            </h4>
+            <AddFolder target={pageName} format={1} />
+          </div>
+        ) : (
+          ""
+        )}
+        <div className="folder-holder">
+          {user.credentials.isAdmin &&
+          this.state.editFolders ? (
+            <AddFolder target={pageName} format={0} />
+          ) : (
+            ""
+          )}
+          {folders.subfolders.length > 0
+            ? folders.subfolders.map((x, i) => (
+                <Folder
+                  onMouseDown={(e) => this.folderDragStart(e, x)}
+                  onMouseUp={this.folderDragEnd}
+                  key={x.id}
+                  label={x.title}
+                  href={
+                    user.credentials.isAdmin && this.state.editFolders
+                      ? (e) => this.toggleSelect(e, x)
+                      : this.state.editPost
+                      ? () => 0
+                      : x.id
+                  }
+                />
+              ))
+            : ""}
+        </div>
+      </div>):("")
+    const postMarkup =
+    (!data.loading && data.data.length > 0 && UI.errors.length === 0)?
+    (<div className="floating-component">
             {user.credentials.isAdmin &&
             !this.state.editPost &&
             !this.state.editFolders &&
@@ -584,8 +591,7 @@ class genPage extends Component {
             )}
             {folders.content === "" ? (
               user.credentials.isAdmin &&
-              !this.state.editPost &&
-              !this.state.editFolders ? (
+              !this.state.editPost ? (
                 <div className="folder-blank noselect">
                   <h3 className="em2">
                     It seems like there is no post for this folder yet.
@@ -622,33 +628,6 @@ class genPage extends Component {
                       Save Changes
                     </Button>
                   </div>
-                  <Modal
-                    className="center"
-                    title={"Cancel changes to your post?"}
-                    visible={this.state.showPostCancelConfirm}
-                    onCancel={() =>
-                      this.toggleStateFlag("showPostCancelConfirm")
-                    }
-                    footer={[
-                      <Button
-                        key="1"
-                        onClick={() =>
-                          this.toggleStateFlag("showPostCancelConfirm")
-                        }
-                      >
-                        No
-                      </Button>,
-                      <Button
-                        key="2"
-                        type="primary"
-                        onClick={this.togglePostEditable}
-                      >
-                        Yes, Cancel Changes
-                      </Button>,
-                    ]}
-                  >
-                    This will remove all new changes made to your post.
-                  </Modal>
                 </div>
                 <div className="folder-post">
                   <CKEditor
@@ -665,8 +644,53 @@ class genPage extends Component {
             ) : (
               <div className="folder-post">{parse(folders.content)}</div>
             )}
+          </div>):("")
+    const userBlankState =
+        (!data.loading && data.data.length > 0 && UI.errors.length === 0)? (
+          <div className="floating-component folder-blank noselect">
+            <h3 className="em2">It looks like there is nothing in this folder.</h3>
+            <h4 className="em3">
+              Go back?
+            </h4>
+            <Button type="primary"><a href={"/resources/"+folders.parent}>Take me back</a></Button>
           </div>
+        ) : (
+          ""
+        )
+    const nullMarkup =
+        (!data.loading && data.data.length === 0 && UI.errors.length === 0)? (
+          <div className="floating-component folder-blank noselect">
+            <h3 className="em2">It looks like this folder does not exist.</h3>
+            <h4 className="em3">
+              Go back?
+            </h4>
+            <Button type="primary"><a href="/resources/">Take me back</a></Button>
+          </div>
+        ) : (
+          ""
+        )
+    const pageMarkup =
+      (data.loading && data.data.length === 0 && UI.errors.length === 0) ? (
+        <div className="folder-loading center noselect padding-normal">
+          <Spin indicator={spinner} />
+          <p className="em4-light">Loading page...</p>
         </div>
+      ) : (UI.errors.length > 0 || data.data.length === 0) ? (
+          <div className="floating-component folder-blank noselect">
+            <h3 className="em2">We could not load this folder</h3>
+            <h4 className="em3">
+              Go back?
+            </h4>
+            <Button type="primary"><a href="/resources/">Take me back</a></Button>
+          </div>
+      ) : this.state.searchKey === "" ||
+        !this.state.showSearchResults ? (
+        <>
+          {modalsMarkup}
+          {folders.subfolders.length > 0 || user.credentials.isAdmin ? foldersMarkup : ""}
+          {folders.content !== "" || user.credentials.isAdmin ? postMarkup : ""}
+          {folders.content === "" && folders.subfolders.length === 0 && !user.credentials.isAdmin ? userBlankState : ""}
+        </>
       ) : (
         ""
       );
@@ -722,7 +746,7 @@ class genPage extends Component {
                 : ""}
             </p>
             <div className="em2">
-              {typeof folders === "object" ? folders.title : "Loading..."}
+              {(UI.errors.length === 0 && data.loading) ? ("Loading...") : (typeof(folders) === "object" ? folders.title : "Error")}
             </div>
           </div>
           <div className="resources-topbar-right">
@@ -743,12 +767,14 @@ class genPage extends Component {
             </Button>
           </div>
         </div>
+        <div className="floating-component-parent">
         {this.state.searchKey === "" ||
         !this.state.showSearchResults ||
         this.state.editFolders ||
         this.state.editPost
           ? pageMarkup
           : searchMarkup()}
+        </div>
       </>
     );
   }
