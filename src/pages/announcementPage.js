@@ -64,17 +64,6 @@ class AnnouncementPage extends Component {
     console.log(this.state);
   };
 
-  // getHeight(element) {
-  //   console.log(element.clientHeight);
-  //   console.log(element.offsetHeight);
-
-  //   if (element && this && !this.state.elementHeight) {
-  //     // need to check that we haven't already set the height or we'll create an infinite loop
-  //     this.setState({ elementHeight: element.clientHeight });
-  //     console.log(element.clientHeight);
-  //   }
-  // }
-
   handleFilterChange = (event) => {
     const updatedFilter = this.state.filter;
     updatedFilter[event.target.name] = event.target.value;
@@ -197,10 +186,10 @@ class AnnouncementPage extends Component {
           <Content className="content-card img-banner">
             <img alt="bg" src={bannerImgs.announcements} />
             <div className="img-banner-mask"></div>
-            <h1>Welcome Admin</h1>
+            <h1>{isAdmin ? "Welcome Admin" : "Welcome"}</h1>
             <Button onClick={this.handleEditBannerImg}>Change picture</Button>
           </Content>
-          {isAdmin && (
+          {/* {isAdmin && (
             <div
               style={{
                 position: "relative",
@@ -216,10 +205,10 @@ class AnnouncementPage extends Component {
                 Post New Announcement
               </Button>
             </div>
-          )}
+          )} */}
           <Content className="content-card">
             <div className="content-card-header">
-              <div className="header-row">
+              {/* <div className="header-row">
                 <Input
                   style={{ width: 400 }}
                   id="searchTerm"
@@ -250,9 +239,51 @@ class AnnouncementPage extends Component {
                     Filter by date <DownOutlined />
                   </Button>
                 </Dropdown>
-              </div>
+              </div> */}
+
               <div className="header-row">
                 <h1>Recent Announcements</h1>
+                <span className="page-header-interactive-items">
+                  <Input
+                    style={{ width: 400 }}
+                    id="searchTerm"
+                    name="searchTerm"
+                    type="text"
+                    placeholder="Search by keyword"
+                    value={this.state.searchTerm}
+                    onChange={this.handleFilterChange}
+                    suffix={
+                      <SearchOutlined
+                        className="search-input-icon"
+                        style={{ color: "rgba(0,0,0,.45)" }}
+                      />
+                    }
+                  />
+                  <Dropdown
+                    overlay={
+                      <Menu onClick={this.handleAgeFilterChange}>
+                        <Menu.Item key="259200000">Recently Added</Menu.Item>
+                        <Menu.Item key="86400000">Last 24 Hours</Menu.Item>
+                        <Menu.Item key="604800000">Last Week</Menu.Item>
+                        <Menu.Item key="2678400000">Last Month</Menu.Item>
+                        <Menu.Item key="Infinity">Everything</Menu.Item>
+                      </Menu>
+                    }
+                  >
+                    <Button>
+                      Filter by date <DownOutlined />
+                    </Button>
+                  </Dropdown>
+                  {isAdmin && (
+                    <Button
+                      type="primary"
+                      size={"medium"}
+                      onClick={() => this.toggleEditing()}
+                    >
+                      Post New Announcement
+                    </Button>
+                  )}
+                </span>
               </div>
             </div>
             <AnnouncementList
