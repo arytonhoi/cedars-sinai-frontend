@@ -8,6 +8,7 @@
 
 # production
 /build
+/production
 
 # firebase
 .firebase/*
