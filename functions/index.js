@@ -64,6 +64,14 @@ const {
   updateOneContact,
 } = require("./handlers/contacts");
 
+const {
+  getCalendar,
+  editCalendar,
+  deleteCalendar,
+  createCalendar,
+  getCalendarList,
+} = require("./handlers/calendar");
+
 const { getDBContents, patchDBContents } = require("./handlers/backup");
 // Create and Deploy Your First Cloud Functions
 // https://firebase.google.com/docs/functions/write-firebase-functions
@@ -110,6 +118,13 @@ app.get("/api/contacts", FBAuth, getAllContacts);
 app.post("/api/contacts", FBAuth, postOneContact);
 app.delete("/api/contacts/:contactId", FBAuth, deleteOneContact);
 app.patch("/api/contacts/:contactId", FBAuth, updateOneContact);
+
+// announcement routes
+app.get("/api/calendar", getCalendarList);
+app.get("/api/calendar/:calendarId", getCalendar);
+app.post("/api/calendar", createCalendar);
+app.patch("/api/calendar/:calendarId", editCalendar);
+app.delete("/api/calendar/:calendarId", deleteCalendar);
 
 exports.onDepartmentDelete = functions.firestore
   .document("/departments/{departmentId}")

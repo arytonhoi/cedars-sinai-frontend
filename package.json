@@ -15,6 +15,7 @@
     "firebase": "^7.21.0",
     "firebase-admin": "^8.10.0",
     "firebase-functions": "^3.11.0",
+    "googleapis": "^65.0.0",
     "html-react-parser": "^0.14.1",
     "http-proxy-middleware": "^1.0.5",
     "react": "^16.8.4",
@@ -41,9 +42,11 @@
     "deploy": "./deploy.sh",
     "logs": "firebase functions:log",
     "deploy-prd": "./deploy.sh prd",
-    "deploy-dev": "./deploy.sh dev"
+    "deploy-dev": "./deploy.sh dev",
+    "null": "echo ''"
   },
-  "pre-commit": [
+  "precommit": [
+    "null"
   ],
   "eslintConfig": {
     "extends": "react-app"
