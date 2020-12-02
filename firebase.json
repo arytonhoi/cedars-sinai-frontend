@@ -1,7 +1,7 @@
 {
   "hosting": [
     {
-      "site": "cedars-prod",
+      "site": "cedars-prd",
       "public": "production",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
       "rewrites": [
@@ -13,7 +13,7 @@
       ]
     },
     {
-      "site": "cedars-testing",
+      "site": "cedars-dev",
       "public": "build",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
       "rewrites": [
