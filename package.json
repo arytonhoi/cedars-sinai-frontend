@@ -45,7 +45,7 @@
     "null": "echo 1"
   },
   "pre-commit": [
-    "test"
+    "null"
   ],
   "eslintConfig": {
     "extends": "react-app"
