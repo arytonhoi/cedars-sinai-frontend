@@ -35,6 +35,68 @@ exports.getCalendarList = (req, res) => {
   )
 }
 
+//Change calendar permissions
+exports.getCalendarAcl = (req, res) => {
+  if (!req.user.isAdmin) {
+    return res.status(403).json({ error: "Only admins can view calendar permissions." });
+  }
+  if (req.method !== "GET") {
+    return res.status(400).json({ error: "Method not allowed" });
+  }
+  api.acl.list({calendarId : req.params.calendarId}).then( cal =>{
+    console.log(cal);
+    res.json(cal.data.items);
+  }).catch( err =>
+    {
+      try{
+        res.status(err.response.status).json(
+          {'error':err.response.data.error,'general':`Cannot retrieve ACL list for ${req.params.calendarId}`}
+        )
+      }catch(e){
+        res.status(500).json(
+          {'general':`Cannot retrieve ACL list for ${req.params.calendarId}. Server did not provide error message.`}
+        )
+      }
+    }
+  )
+}
+
+exports.addCalendarAcl = (req, res) => {
+  if (!req.user.isAdmin) {
+    return res.status(403).json({ error: "Only admins can add calendar permissions." });
+  }
+  if (req.method !== "POST") {
+    return res.status(400).json({ error: "Method not allowed" });
+  }
+  try {
+    req = fixFormat(req);
+  } catch (e) {
+    return res.status(400).json({ error: "Invalid JSON." });
+  }
+  api.acl.insert({
+    calendarId : req.params.calendarId,
+    requestBody : {
+      scope: {type: "user", "value": req.body.user},
+      role: req.body.role
+    }
+  }).then( cal =>{
+    console.log(cal);
+    res.json(cal.data);
+  }).catch( err =>
+    {
+      try{
+        res.status(err.response.status).json(
+          {'error':err.response.data.error,'general':`Cannot create ACL rule for ${req.params.calendarId}`}
+        )
+      }catch(e){
+        res.status(500).json(
+          {'general':`Cannot create ACL rule for ${req.params.calendarId}. Server did not provide error message.`}
+        )
+      }
+    }
+  )
+}
+
 //Returns a calendar.
 exports.getCalendar = (req, res) => {
   if (req.method !== "GET") {
@@ -54,7 +116,7 @@ exports.getCalendar = (req, res) => {
 
 //Creates a calendar  
 exports.createCalendar = (req, res) => {
-  if (false && !req.user.isAdmin) {
+  if (!req.user.isAdmin) {
     return res.status(403).json({ error: "Only admins can create calendars." });
   }
   try {
@@ -91,7 +153,7 @@ exports.createCalendar = (req, res) => {
          
 // Updates a calendar  
 exports.editCalendar = (req, res) => {
-  if (false && !req.user.isAdmin) {
+  if (!req.user.isAdmin) {
     return res.status(403).json({ error: "Only admins can create calendars." });
   }
   try {
@@ -127,7 +189,7 @@ exports.editCalendar = (req, res) => {
 
 // Deletes a calendar  
 exports.deleteCalendar = (req, res) => {
-  if (false && !req.user.isAdmin) {
+  if (!req.user.isAdmin) {
     return res.status(403).json({ error: "Only admins can create calendars." });
   }
   if (req.params.calendarId === "" || req.params.calendarId === undefined) {

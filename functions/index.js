@@ -70,6 +70,8 @@ const {
   deleteCalendar,
   createCalendar,
   getCalendarList,
+  getCalendarAcl,
+  addCalendarAcl,
 } = require("./handlers/calendar");
 
 const {
@@ -126,7 +128,9 @@ app.patch("/api/contacts/:contactId", FBAuth, updateOneContact);
 // calendar routes
 app.get("/api/calendar", FBAuth, getCalendarList);
 app.get("/api/calendar/:calendarId", FBAuth, getCalendar);
+app.get("/api/calendar/:calendarId/access", FBAuth, getCalendarAcl);
 app.post("/api/calendar", FBAuth, createCalendar);
+app.post("/api/calendar/:calendarId/access", FBAuth, addCalendarAcl);
 app.patch("/api/calendar/:calendarId", FBAuth, editCalendar);
 app.delete("/api/calendar/:calendarId", FBAuth, deleteCalendar);
 
