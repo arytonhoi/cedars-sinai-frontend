@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 
 // Redux stuff
 import { connect } from "react-redux";
-import { deleteAnnounce, clearErrors } from "../../redux/actions/dataActions";
 import ContactList from "./contactList";
 
 // Ant design
@@ -11,60 +10,74 @@ import { Button } from "antd";
 import { EditOutlined } from "@ant-design/icons";
 
 // class
-import "./department.css";
+import "./contacts.css";
+import "../../css/page.css";
 
 class DepartmentSection extends Component {
   render() {
     const { credentials } = this.props.user;
     const isAdmin = credentials.isAdmin;
     const department = this.props.department;
+    const contacts = this.props.contacts;
 
-    if (!isAdmin && this.props.contacts.length === 0) {
+    if (
+      (contacts.length === 0 && this.props.searchTerm !== "") ||
+      (!isAdmin && contacts.length === 0)
+    ) {
       return null;
     } else {
       return (
-        <div className="departmentComponent">
-          <header className="departmentHeader">
-            <h2>{department.name}</h2>
-            {isAdmin && this.props.isEditing && (
-              <div className="departmentAndContactButton">
+        <li className="department-item">
+          <header className="content-card-header">
+            <div className="header-row">
+              <h1>{department.name}</h1>
+              {isAdmin && this.props.isEditingPage && (
                 <Button
                   icon={<EditOutlined />}
                   onClick={() =>
-                    this.props.handleEditThisDepartment(department.id)
+                    this.props.handleAddorEditDepartment(department.id)
                   }
                   type="text"
                 />
-              </div>
-            )}
+              )}
+            </div>
           </header>
           <ContactList
-            contacts={this.props.contacts}
             department={department}
-            isEditing={this.props.isEditing}
-            handleEditThisContact={this.props.handleEditThisContact}
+            contacts={contacts}
+            handleAddorEditContact={this.props.handleAddorEditContact}
+            isEditingPage={this.props.isEditingPage}
           />
 
-          {isAdmin && this.props.isEditing && (
-            <footer className="addContactFooter">
+          {isAdmin && this.props.isEditingPage && (
+            <footer>
               <Button
-                onClick={() => this.props.handleAddNewContact(department.id)}
+                onClick={() => this.props.handleAddorEditContact(department.id)}
                 type="dashed"
                 block
               >
-                + Add New Contact
+                + Add new contact
               </Button>
             </footer>
           )}
-        </div>
+        </li>
       );
     }
   }
 }
 
 DepartmentSection.propTypes = {
-  contacts: PropTypes.array.isRequired,
   user: PropTypes.object.isRequired,
+  // data
+  department: PropTypes.object.isRequired,
+  contacts: PropTypes.array.isRequired,
+  // department functions
+  handleAddorEditDepartment: PropTypes.func.isRequired,
+  // contacts
+  handleAddorEditContact: PropTypes.func.isRequired,
+  // general
+  isEditingPage: PropTypes.bool.isRequired,
+  searchTerm: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -73,6 +86,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { deleteAnnounce, clearErrors })(
-  DepartmentSection
-);
+export default connect(mapStateToProps, {})(DepartmentSection);

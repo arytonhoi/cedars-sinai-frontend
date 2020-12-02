@@ -2,7 +2,8 @@
   margin: 0.5em;
   border-radius: 0.5em;
   padding: 0.25em 1em;
-  width: calc( 30% - 2em);
+  width: calc( 25% - 1em);
+  min-width: 5em;
   display: flex;
   align-items: center;
 }
@@ -12,16 +13,21 @@
 }
 .folder-normal{
   color: black;
-  border: 1px solid gray;
+  border: 1px solid #C4C4C4;
 }
 .folder-normal:hover{
   background: #f3f3f3;
 }
 
+.folder-label{
+  max-height: 1.5em;
+  overflow: hidden;
+  word-wrap: anywhere;
+}
 .folder-selected{
   background: #e9f0fd;
-  border: 1px solid #4b7ad1;
-  color: #4b7ad1;
+  border: 1px solid #3068cb;
+  color: #3068cb;
   cursor: pointer;
 }
 .folder-selected:hover{

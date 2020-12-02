@@ -13,7 +13,11 @@ class Folder extends Component {
     const { label, href } = this.props
     if(typeof(href)==="function"){
       return(
-        <div className="folder folder-normal noselect" onClick={href}>
+        <div className="folder clickable folder-normal noselect"
+          onClick={href}
+          onMouseDown={this.props.onMouseDown}
+          onMouseUp={this.props.onMouseUp}
+        >
           <div className="folder-link">
             <span className="folder-logo-icon">
               <FolderFilled />

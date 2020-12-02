@@ -7,10 +7,17 @@
     "@material-ui/icons": "^3.0.2",
     "antd": "^4.8.0",
     "axios": "^0.18.0",
+    "busboy": "^0.3.1",
     "ckeditor4": "^4.15.0",
     "ckeditor4-react": "^1.2.0",
+    "cookie-parser": "^1.4.5",
     "dayjs": "^1.8.11",
+    "firebase": "^7.21.0",
+    "firebase-admin": "^8.10.0",
+    "firebase-functions": "^3.11.0",
     "html-react-parser": "^0.14.1",
+    "http-proxy-middleware": "^1.0.5",
+    "precommit": "^1.2.2",
     "react": "^16.8.4",
     "react-app-polyfill": "^1.0.6",
     "react-dom": "^16.8.4",
@@ -21,11 +28,18 @@
     "redux-thunk": "^2.3.0",
     "reinstall": "^2.0.0"
   },
+  "devDependencies": {
+    "firebase-functions-test": "^0.2.0"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "deploy": "firebase deploy --only functions,hosting",
+    "logs": "firebase functions:log"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -36,5 +50,5 @@
     "ie >= 9",
     "not op_mini all"
   ],
-  "proxy": "https://us-central1-fir-db-d2d47.cloudfunctions.net/api"
+  "proxy": "https://fir-db-d2d47.web.app/api"
 }

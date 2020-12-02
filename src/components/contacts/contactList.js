@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 
 // Redux stuff
 import { connect } from "react-redux";
-import { deleteAnnounce, clearErrors } from "../../redux/actions/dataActions";
 
 // Ant design
 import { Avatar, Button, Empty } from "antd";
@@ -13,48 +12,67 @@ class ContactList extends Component {
   render() {
     const { credentials } = this.props.user;
     const isAdmin = credentials.isAdmin;
+    const department = this.props.department;
     const contacts = this.props.contacts;
 
     // contacts
     const contactsListComponent = contacts.map((c) => {
       return (
-        <li key={c.id} className="contactRow">
-          <div className="contactImg">
-            {c.imgUrl !== "" && <Avatar src={c.imgUrl} />}
-          </div>
-          <h1 className="contactName">{c.name}</h1>
-          <div className="contactPhone">
-            <PhoneOutlined />
-            <p>{c.phone}</p>
-          </div>
-          <span className="contactEmail">
-            <MailOutlined />
-            {/* <p href={`mailto:${c.email}`}>{c.email}</p> */}
-            <a href={`mailto:${c.email}`}>{c.email}</a>
-          </span>
+        <li key={c.id} className="contact-item">
+          <div className="contact-item-content">
+            <div className="contact-item-info name">
+              {c.imgUrl !== "" && <Avatar src={c.imgUrl} />}
+              <h1>{c.name}</h1>
+            </div>
+            <div className="contact-item-info phone">
+              <PhoneOutlined />
+              <p>{c.phone}</p>
+            </div>
+            <div className="contact-item-info email">
+              <MailOutlined />
+              <a href={`mailto:${c.email}`}>{c.email}</a>
+            </div>
 
-          {isAdmin && this.props.isEditing && (
-            <Button
-              icon={<EditOutlined />}
-              onClick={() => this.props.handleEditThisContact(c.id)}
-              type="text"
-            />
-          )}
+            {isAdmin && this.props.isEditingPage && (
+              <Button
+                icon={<EditOutlined />}
+                onClick={() =>
+                  this.props.handleAddorEditContact(department.id, c.id)
+                }
+                type="text"
+              />
+            )}
+          </div>
         </li>
       );
     }, this);
 
     return contacts.length !== 0 ? (
-      <ul className="contactList">{contactsListComponent}</ul>
+      <ul>{contactsListComponent}</ul>
     ) : (
-      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      <Empty
+        image={Empty.PRESENTED_IMAGE_SIMPLE}
+        description={<span>No contacts</span>}
+      >
+        {!this.props.isEditingPage && (
+          <Button
+            type="dashed"
+            onClick={() => this.props.handleAddorEditContact(department.id)}
+          >
+            Add contact
+          </Button>
+        )}
+      </Empty>
     );
   }
 }
 
 ContactList.propTypes = {
-  contacts: PropTypes.array.isRequired,
   user: PropTypes.object.isRequired,
+  department: PropTypes.object.isRequired,
+  contacts: PropTypes.array.isRequired,
+  handleAddorEditContact: PropTypes.func.isRequired,
+  isEditingPage: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -63,6 +81,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { deleteAnnounce, clearErrors })(
-  ContactList
-);
+export default connect(mapStateToProps, {})(ContactList);

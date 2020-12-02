@@ -1,16 +1,28 @@
 {
-  "hosting": {
-    "public": "build",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
-  }
+  "hosting": [
+    {
+      "site": "cedars-prd",
+      "public": "production",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "app" },
+        {
+          "source": "!/@(api)/**",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    {
+      "site": "cedars-dev",
+      "public": "build",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "app" },
+        {
+          "source": "!/@(api)/**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  ]
 }

@@ -6,10 +6,15 @@ import {
   SET_DATA,
   POST_DATA,
   DELETE_DATA,
+  // Images
+  GET_BANNER_IMAGE,
+  PATCH_BANNER_IMAGE,
   // Announcements
   SET_ANNOUNCEMENTS,
   POST_ANNOUNCEMENT,
+  PATCH_ANNOUNCEMENT,
   DELETE_ANNOUNCEMENT,
+  FILTER_ANNOUNCEMENTS,
   // Departments
   SET_DEPARTMENTS,
   PATCH_DEPARTMENT,
@@ -28,21 +33,36 @@ import {
   PATCH_SUBFOLDER,
   DELETE_SUBFOLDER,
   SORT_SUBFOLDER,
+  MOVE_SUBFOLDER,
   SET_NAV_PATH,
   RESET_NAV_PATH,
+  SET_FOLDER_SEARCH_RES,
 } from "../types";
+
+import DateHelper from "../../util/dateHelper";
+
+const loadingBannerImgUrl = `https://firebasestorage.googleapis.com/v0/b/fir-db-d2d47.appspot.com/o/
+cedars_sinai_pic_1.png?alt=media&token=8370797b-7650-49b7-8b3a-9997fab0c32c`;
 
 const initialState = {
   loading: false,
   data: [],
-  navpath: {id:"",parent:"",children:[]},
+  folderSearchRes: [],
+  navpath: { id: "", parent: "", children: [] },
   announcements: [],
+  filteredAnnouncements: [],
   departments: [],
   contacts: [],
   matchingSearchContacts: [],
   uploadedImageUrl: "",
+  bannerImgs: {
+    announcements: loadingBannerImgUrl,
+  },
 };
 
+var index;
+
+// export functions
 export default function (state = initialState, action) {
   switch (action.type) {
     case LOADING_DATA:
@@ -55,33 +75,97 @@ export default function (state = initialState, action) {
         ...state,
         loading: false,
       };
-    // Imagess
-    // case POST_IMAGE:
-    //   console.log(action.payload);
-    //   return {
-    //     ...state,
-    //     uploadedImageUrl: action.payload.imgUrl,
-    //   };
-    // Announcements
-    case SET_ANNOUNCEMENTS:
+    // Images
+    case GET_BANNER_IMAGE:
+      let bannerImgObj = action.payload;
+      let updatedBannerImgs = state.bannerImgs;
+      updatedBannerImgs[bannerImgObj.pageName] = bannerImgObj.imgUrl;
       return {
         ...state,
-        announcements: action.payload,
+        bannerImgs: updatedBannerImgs,
+      };
+
+    case PATCH_BANNER_IMAGE:
+      bannerImgObj = action.payload;
+      updatedBannerImgs = state.bannerImgs;
+      updatedBannerImgs[bannerImgObj.pageName] = bannerImgObj.imgUrl;
+      return {
+        ...state,
+        bannerImgs: updatedBannerImgs,
+      };
+    // Announcements
+    case SET_ANNOUNCEMENTS:
+      const announcements = action.payload;
+      announcements.forEach((a) => {
+        a.createdAt = new DateHelper(a.createdAt);
+        a.createdAtTimestamp = a.createdAt.getTimestamp();
+        return a;
+      });
+      return {
+        ...state,
+        announcements: announcements,
+        filteredAnnouncements: announcements,
         loading: false,
       };
     case POST_ANNOUNCEMENT:
+      const newAnnouncement = action.payload;
+      newAnnouncement.createdAt = new DateHelper(newAnnouncement.createdAt);
+      newAnnouncement.createdAtTimestamp = newAnnouncement.createdAt.getTimestamp();
+      const postedAnnouncements = [newAnnouncement, ...state.announcements];
       return {
         ...state,
-        announcements: [action.payload, ...state.announcements],
+        announcements: postedAnnouncements,
+        filteredAnnouncements: postedAnnouncements,
+        loading: false,
+      };
+    case PATCH_ANNOUNCEMENT:
+      const updatedAnnouncement = action.payload;
+      console.log(updatedAnnouncement);
+      const updatedAnnouncements = state.announcements.map((a) => {
+        if (a.id === updatedAnnouncement.id) {
+          updatedAnnouncement.createdAt = a.createdAt;
+          return updatedAnnouncement;
+        } else {
+          return a;
+        }
+      });
+      console.log(updatedAnnouncements);
+      return {
+        ...state,
+        announcements: updatedAnnouncements,
+        filteredAnnouncements: updatedAnnouncements,
         loading: false,
       };
     case DELETE_ANNOUNCEMENT:
-      let index = state.announcements.findIndex(
-        (x) => x.announcementId === action.payload
-      );
-      state.announcements.splice(index, 1);
+      const deletedAnnouncementId = action.payload;
       return {
         ...state,
+        announcements: state.announcements.filter(
+          (a) => a.id !== deletedAnnouncementId
+        ),
+        filteredAnnouncements: state.filteredAnnouncements.filter(
+          (a) => a.id !== deletedAnnouncementId
+        ),
+        loading: false,
+      };
+    case FILTER_ANNOUNCEMENTS:
+      const filters = action.payload;
+      const announcementSearchTerm = filters.searchTerm;
+      const oldestAnnouncementTimestamp = filters.oldestAnnouncementTimestamp;
+      const now = new Date().getTime();
+      return {
+        ...state,
+        filteredAnnouncements: state.announcements.filter(
+          (a) =>
+            now - a.createdAtTimestamp < oldestAnnouncementTimestamp &&
+            (announcementSearchTerm.trim() === "" ||
+              a.title
+                .toLowerCase()
+                .includes(announcementSearchTerm.trim().toLowerCase()) ||
+              a.content
+                .toLowerCase()
+                .includes(announcementSearchTerm.trim().toLowerCase()))
+        ),
       };
     // departments
     case SET_DEPARTMENTS:
@@ -147,21 +231,22 @@ export default function (state = initialState, action) {
       const updatedDeleteContacts = state.contacts.filter(
         (contact) => contact.id !== deletedContactId
       );
+      const updatedSearchDeleteContacts = state.matchingSearchContacts.filter(
+        (contact) => contact.id !== deletedContactId
+      );
       return {
         ...state,
         contacts: updatedDeleteContacts,
-        matchingSearchContacts: updatedDeleteContacts,
+        matchingSearchContacts: updatedSearchDeleteContacts,
         loading: false,
       };
     case SEARCH_CONTACTS:
       const searchTerm = action.payload;
-      const matchingSearchContacts = state.contacts.filter((contact) =>
-        contact.name.toLowerCase().includes(searchTerm.trim().toLowerCase())
-      );
-
       return {
         ...state,
-        matchingSearchContacts: matchingSearchContacts,
+        matchingSearchContacts: state.contacts.filter((contact) =>
+          contact.name.toLowerCase().includes(searchTerm.trim().toLowerCase())
+        ),
         loading: false,
       };
     // Folders
@@ -169,52 +254,81 @@ export default function (state = initialState, action) {
       state.data[0].subfolders.push(action.payload);
       return { ...state };
     case PATCH_FOLDER:
-      state.data[0] = Object.assign({}, state.data[0], action.payload);
+      state.data[0] = Object.assign(state.data[0], action.payload);
       return { ...state };
     case PATCH_SUBFOLDER:
       let sf = state.data[0].subfolders;
       index = sf.findIndex((x) => x.id === action.payload.id);
-      if(action.payload.patch){
-        sf[index] = Object.assign({}, sf[index], action.payload.patch);
+      if (action.payload.patch && index >= 0) {
+        sf[index] = Object.assign(sf[index], action.payload.patch);
       }
       state.data[0].subfolders = sf;
       return { ...state };
     case DELETE_SUBFOLDER:
       sf = state.data[0].subfolders;
       index = sf.findIndex((x) => x.id === action.payload);
-      state.data[0].subfolders = sf.slice(0,index).concat(sf.slice(index+1))
-      return {...state};
+      state.data[0].subfolders = sf.slice(0, index).concat(sf.slice(index + 1));
+      return { ...state };
     case SORT_SUBFOLDER:
-      switch(parseInt(action.payload)){
+      switch (parseInt(action.payload)) {
         case 0:
-        state.data[0].subfolders.sort((a,b)=>
-          (a.title.toUpperCase()>=b.title.toUpperCase())
-        )
-        break;
+          state.data[0].subfolders.sort((a, b) =>
+            a.title.toUpperCase() >= b.title.toUpperCase() ? 1 : -1
+          );
+          break;
         case 1:
-        state.data[0].subfolders.sort((a,b)=>
-          (a.title.toUpperCase()<b.title.toUpperCase())
-        )
-        break;
+          state.data[0].subfolders.sort((a, b) =>
+            a.title.toUpperCase() < b.title.toUpperCase() ? 1 : -1
+          );
+          break;
         case 2:
-        state.data[0].subfolders.sort((a,b)=>(a.createdAt<b.createdAt))
-        break;
+          state.data[0].subfolders.sort((a, b) =>
+            a.createdAt < b.createdAt ? 1 : -1
+          );
+          break;
         case 3:
-        state.data[0].subfolders.sort((a,b)=>(a.createdAt>=b.createdAt))
-        break;
+          state.data[0].subfolders.sort((a, b) =>
+            a.createdAt >= b.createdAt ? 1 : -1
+          );
+          break;
+        case 4:
+          state.data[0].subfolders.sort((a, b) =>
+            a.visits <= b.visits ? 1 : -1
+          );
+          break;
         default:
-        state.data[0].subfolders.sort((a,b)=>(a.id>=b.id))
-        break;
+          state.data[0].subfolders.sort((a, b) =>
+            a.index >= b.index ? 1 : -1
+          );
+          break;
       }
-      return {...state};
+      return { ...state };
+    case MOVE_SUBFOLDER:
+      sf = state.data[0].subfolders;
+      let oldIndex = sf.findIndex((x) => x.id === action.payload.id);
+      if (oldIndex >= 0) {
+        let newIndex = Math.min(
+          Math.max(0, action.payload.newIndex),
+          sf.length
+        );
+        sf = sf.slice(0, oldIndex).concat(sf.slice(oldIndex + 1));
+        sf = sf
+          .slice(0, newIndex)
+          .concat(state.data[0].subfolders[oldIndex])
+          .concat(sf.slice(newIndex));
+        state.data[0].subfolders = sf.map((x, i) =>
+          Object.assign(x, { index: i })
+        );
+      }
+      return { ...state };
     case SET_NAV_PATH:
       return {
         ...state,
         navpath: {
-          id:action.payload.id,
-          title:action.payload.title,
-          parent:action.payload.parent,
-          children:action.payload.subfolders
+          id: action.payload.id,
+          title: action.payload.title,
+          parent: action.payload.parent,
+          children: action.payload.subfolders,
         },
         loading: false,
       };
@@ -222,14 +336,19 @@ export default function (state = initialState, action) {
       return {
         ...state,
         navpath: {
-          id:state.data[0].id,
-          title:state.data[0].title,
-          parent:state.data[0].parent,
-          children:state.data[0].subfolders
+          id: state.data[0].id,
+          title: state.data[0].title,
+          parent: state.data[0].parent,
+          children: state.data[0].subfolders,
         },
         loading: false,
       };
-
+    case SET_FOLDER_SEARCH_RES:
+      return {
+        ...state,
+        folderSearchRes: action.payload,
+        loading: false,
+      };
     // Data Handling
     case SET_DATA_ARRAY:
       return {

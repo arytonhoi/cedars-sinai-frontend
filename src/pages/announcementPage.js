@@ -1,129 +1,315 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import "../css/annPage.css";
 
-import { Menu, Dropdown, Button} from 'antd';
-import { SearchOutlined, DownOutlined } from '@ant-design/icons';
-
+// redux
 import { connect } from "react-redux";
-import { getAnnouncements } from "../redux/actions/dataActions";
-import Announcement from "../components/announcement/Announcement.js";
-import PostAnn from "../components/announcement/PostAnn.js";
-import DateHelper from "../util/dateHelper.js";
+import {
+  deleteAnnouncement,
+  getAnnouncements,
+  patchAnnouncement,
+  postAnnouncement,
+  getFilteredAnnouncements,
+  getBannerImage,
+  patchBannerImage,
+} from "../redux/actions/dataActions";
 
-class home extends Component {
+// components
+import AnnouncementPostEditorModal from "../components/announcement/announcementPostEditorModal.js";
+import AnnouncementList from "../components/announcement/announcementList.js";
+import BannerImgEditorModal from "../components/announcement/bannerImgEditorModal.js";
+
+// css styles
+import "../css/page.css";
+import "../css/ckeditor.css";
+import "../components/announcement/announcement.css";
+
+// Ant design
+import { Button, Dropdown, Input, Layout, Menu } from "antd";
+import { DownOutlined, SearchOutlined } from "@ant-design/icons";
+const { Content, Footer } = Layout;
+
+class AnnouncementPage extends Component {
   constructor() {
     super();
     this.state = {
-      searchKey : "",
-      maxAge : 7776000000
-    }
-  };
+      // announcement inputs
+      announcementId: "",
+      announcementTitle: "",
+      announcementAuthor: "",
+      announcementContent: "",
+      // search and filter
+      filteredAnnouncements: [],
+      filter: {
+        searchTerm: "",
+        oldestAnnouncementTimestamp: 7776000000,
+      },
+      // announcement editor modal
+      isEditing: false,
+      elementHeight: "",
+      // banner img
+      isEditingBannerImg: false,
+    };
+  }
+
   componentDidMount() {
     this.props.getAnnouncements();
+    this.props.getBannerImage("announcements");
   }
-  filterByAge = (e) => {
-    this.setState({...this.state, maxAge:e.key})
-  }
-  filterByText = (e) => {
-    this.setState({...this.state, searchKey:e.target.value})
-  }
+
+  // input change handlers
+  handleChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value,
+    });
+    console.log(this.state);
+  };
+
+  handleFilterChange = (event) => {
+    const updatedFilter = this.state.filter;
+    updatedFilter[event.target.name] = event.target.value;
+    this.setState({
+      filter: updatedFilter,
+    });
+    this.props.getFilteredAnnouncements(updatedFilter);
+  };
+
+  handleAgeFilterChange = (event) => {
+    const updatedFilter = this.state.filter;
+    updatedFilter.oldestAnnouncementTimestamp = event.key;
+    this.setState({
+      filter: updatedFilter,
+    });
+    this.props.getFilteredAnnouncements(updatedFilter);
+  };
+
+  // form handlers
+  toggleEditing = () => {
+    this.setState({
+      isEditing: !this.state.isEditing,
+    });
+  };
+
+  // announcement editor functions
+  handleEditThisAnnouncement = (announcement) => {
+    this.setState({
+      announcementId: announcement.id,
+      announcementTitle: announcement.title,
+      announcementAuthor: announcement.author,
+      announcementContent: announcement.content,
+      isEditing: true,
+    });
+  };
+
+  handleCancelEditAnnouncement = () => {
+    this.setState({
+      announcementId: "",
+      announcementTitle: "",
+      announcementAuthor: "",
+      announcementContent: "",
+      isEditing: false,
+    });
+  };
+
+  handlePostOrPatchAnnouncement = (formValues) => {
+    const newAnnouncement = {
+      title: formValues.announcementTitle,
+      author: formValues.announcementAuthor,
+      content: formValues.announcementContent,
+      isPinned: false,
+    };
+
+    if (this.state.announcementId === "") {
+      // posting new announcement
+      this.props.postAnnouncement(newAnnouncement);
+    } else {
+      // editing exisitng announcement
+      this.props.patchAnnouncement(this.state.announcementId, newAnnouncement);
+    }
+
+    this.handleCancelEditAnnouncement();
+  };
+
+  handleDeleteThisAnnouncement = () => {
+    this.props.deleteAnnouncement(this.state.announcementId);
+    this.handleCancelEditAnnouncement();
+  };
+
+  // banner editor functions
+  handleEditBannerImg = () => {
+    this.setState({
+      isEditingBannerImg: true,
+    });
+  };
+
+  handlePatchBannerImg = (formValues) => {
+    const newImgUrlObj = {
+      imgUrl: formValues.bannerImgUrl,
+    };
+    this.props.patchBannerImage("announcements", newImgUrlObj);
+    this.handleCancelEditBannerImg();
+  };
+
+  handleCancelEditBannerImg = () => {
+    this.setState({
+      isEditingBannerImg: false,
+    });
+  };
+
   render() {
-    const menu = (
-      <Menu onClick={this.filterByAge}>
-        <Menu.Item key="259200000">
-          Recently Added
-        </Menu.Item>
-        <Menu.Item key="2678400000">
-          Last Month
-        </Menu.Item>
-        <Menu.Item key="604800000">
-          Last Week
-        </Menu.Item>
-        <Menu.Item key="86400000">
-          Last 24 Hours
-        </Menu.Item>
-      </Menu>
-    );
-    var { maxAge, searchKey }  = this.state
     const { credentials } = this.props.user;
     const isAdmin = credentials.isAdmin;
-    const { announcements } = this.props.data;
-    // let announcementsMarkup = announcements.map((a) => (
-    //   // <li key={a.announcementId}>
-    //   //   <h1>{a.title}</h1>
-    //   //   <h3>{a.author}</h3>
-    //   //   <p>{a.content}</p>
-    //   // </li>
-    // ));
-//console.log(announcements)
-    const now = new Date().getTime();
-    announcements.sort((a, b) => {
-      a.createdAt = new DateHelper(a.createdAt);
-      a.createdTs = a.createdAt.getTimestamp();
-      b.createdAt = new DateHelper(b.createdAt);
-      b.createdTs = b.createdAt.getTimestamp();
-      return a.createdTs < b.createdTs;
-    });
-    const [pinned, unpinned] = announcements.reduce(
-      ([p, f], e) => (e.isPinned ? [[...p, e], f] : [p, [...f, e]]),
-      [[], []]
-    );
-    //console.log( pinned);
-    let pinnedAnn = pinned.map((x) =>
-      isAdmin || now > x.createdTs ? (
-        <Announcement
-          key={x.id}
-          index={x.id}
-          what={x}
-          showUntil={maxAge}
-          searchKey={searchKey}
-          admin={isAdmin}
-        />
-      ) : (
-        ""
-      )
-    );
-    let unpinnedAnn = unpinned.map((x) =>
-      isAdmin || (now > x.createdTs) ? (
-        <Announcement
-          key={x.id}
-          index={x.id}
-          what={x}
-          showUntil={maxAge}
-          searchKey={searchKey}
-          admin={isAdmin}
-        />
-      ) : (
-        ""
-      )
-    );
+    const { bannerImgs, filteredAnnouncements } = this.props.data;
+
     return (
-      <div>
-        {isAdmin ? <h3>Welcome Back, Admin</h3> : ""}
-        {isAdmin ? <PostAnn /> : ""}
-        <div className="floating-component shadow">
-          <div className="ann-navbar">
-            <div className="ann-navbar-search">
-              <input type="text" onChange={this.filterByText} placeholder="Search by keyword" />
-              <SearchOutlined className="ann-navbar-search-icon valign"/>
-            </div>
-            <Dropdown overlay={menu}>
-              <Button>
-                Filter by date <DownOutlined />
+      <div className="page-container">
+        {isAdmin && (
+          <AnnouncementPostEditorModal
+            visible={this.state.isEditing}
+            isEditingExistingAnnouncement={this.state.announcementId !== ""}
+            announcementTitle={this.state.announcementTitle}
+            announcementAuthor={this.state.announcementAuthor}
+            announcementContent={this.state.announcementContent}
+            handlePostOrPatchAnnouncement={this.handlePostOrPatchAnnouncement}
+            handleCancelEditAnnouncement={this.handleCancelEditAnnouncement}
+            handleDeleteThisAnnouncement={this.handleDeleteThisAnnouncement}
+          />
+        )}
+        {isAdmin && (
+          <BannerImgEditorModal
+            visible={this.state.isEditingBannerImg}
+            bannerImgUrl={bannerImgs.announcements}
+            handlePatchBannerImg={this.handlePatchBannerImg}
+            handleCancelEditBannerImg={this.handleCancelEditBannerImg}
+          />
+        )}
+        <Layout className="vertical-fill-layout">
+          <Content className="content-card img-banner">
+            <img alt="bg" src={bannerImgs.announcements} />
+            <div className="img-banner-mask"></div>
+            <h1>{isAdmin ? "Welcome Admin" : "Welcome"}</h1>
+            <Button onClick={this.handleEditBannerImg}>Change picture</Button>
+          </Content>
+          {/* {isAdmin && (
+            <div
+              style={{
+                position: "relative",
+                bottom: "-4px",
+                marginTop: "16px",
+              }}
+            >
+              <Button
+                type="primary"
+                size={"medium"}
+                onClick={() => this.toggleEditing()}
+              >
+                Post New Announcement
               </Button>
-            </Dropdown>
-          </div>
-          {pinnedAnn}
-          {unpinnedAnn}
-        </div>
+            </div>
+          )} */}
+          <Content className="content-card">
+            <div className="content-card-header">
+              {/* <div className="header-row">
+                <Input
+                  style={{ width: 400 }}
+                  id="searchTerm"
+                  name="searchTerm"
+                  type="text"
+                  placeholder="Search by keyword"
+                  value={this.state.searchTerm}
+                  onChange={this.handleFilterChange}
+                  suffix={
+                    <SearchOutlined
+                      className="search-input-icon"
+                      style={{ color: "rgba(0,0,0,.45)" }}
+                    />
+                  }
+                />
+                <Dropdown
+                  overlay={
+                    <Menu onClick={this.handleAgeFilterChange}>
+                      <Menu.Item key="259200000">Recently Added</Menu.Item>
+                      <Menu.Item key="86400000">Last 24 Hours</Menu.Item>
+                      <Menu.Item key="604800000">Last Week</Menu.Item>
+                      <Menu.Item key="2678400000">Last Month</Menu.Item>
+                      <Menu.Item key="Infinity">Everything</Menu.Item>
+                    </Menu>
+                  }
+                >
+                  <Button>
+                    Filter by date <DownOutlined />
+                  </Button>
+                </Dropdown>
+              </div> */}
+
+              <div className="header-row">
+                <h1>Recent Announcements</h1>
+                <span className="page-header-interactive-items">
+                  <Input
+                    style={{ width: 400 }}
+                    id="searchTerm"
+                    name="searchTerm"
+                    type="text"
+                    placeholder="Search by keyword"
+                    value={this.state.searchTerm}
+                    onChange={this.handleFilterChange}
+                    suffix={
+                      <SearchOutlined
+                        className="search-input-icon"
+                        style={{ color: "rgba(0,0,0,.45)" }}
+                      />
+                    }
+                  />
+                  <Dropdown
+                    overlay={
+                      <Menu onClick={this.handleAgeFilterChange}>
+                        <Menu.Item key="259200000">Recently Added</Menu.Item>
+                        <Menu.Item key="86400000">Last 24 Hours</Menu.Item>
+                        <Menu.Item key="604800000">Last Week</Menu.Item>
+                        <Menu.Item key="2678400000">Last Month</Menu.Item>
+                        <Menu.Item key="Infinity">Everything</Menu.Item>
+                      </Menu>
+                    }
+                  >
+                    <Button>
+                      Filter by date <DownOutlined />
+                    </Button>
+                  </Dropdown>
+                  {isAdmin && (
+                    <Button
+                      type="primary"
+                      size={"medium"}
+                      onClick={() => this.toggleEditing()}
+                    >
+                      Post New Announcement
+                    </Button>
+                  )}
+                </span>
+              </div>
+            </div>
+            <AnnouncementList
+              announcements={filteredAnnouncements}
+              filter={this.state.filter}
+              handleEditThisAnnouncement={this.handleEditThisAnnouncement}
+            />
+          </Content>
+          <Footer style={{ textAlign: "center" }}>DevelopForGood ©2020</Footer>
+        </Layout>
       </div>
     );
   }
 }
 
-home.propTypes = {
+AnnouncementPage.propTypes = {
+  // announcements
   getAnnouncements: PropTypes.func.isRequired,
+  postAnnouncement: PropTypes.func.isRequired,
+  patchAnnouncement: PropTypes.func.isRequired,
+  deleteAnnouncement: PropTypes.func.isRequired,
+  getFilteredAnnouncements: PropTypes.func.isRequired,
+  // banners
+  getBannerImage: PropTypes.func.isRequired,
+  patchBannerImage: PropTypes.func.isRequired,
+  // generic
   data: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
 };
@@ -135,4 +321,12 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { getAnnouncements })(home);
+export default connect(mapStateToProps, {
+  getAnnouncements,
+  postAnnouncement,
+  patchAnnouncement,
+  deleteAnnouncement,
+  getFilteredAnnouncements,
+  getBannerImage,
+  patchBannerImage,
+})(AnnouncementPage);

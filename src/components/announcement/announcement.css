@@ -1,0 +1,125 @@
+/* ============================================================================================== */
+/* ANNOUNCEMENT LIST STYLES */
+/* ============================================================================================== */
+.announcement-list .ant-pagination {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.announcement-list .ant-pagination li:last-child {
+  margin-bottom: 0;
+}
+
+/* ============================================================================================== */
+/* ANNOUNCEMENT ITEM STYLES */
+/* ============================================================================================== */
+.ant-list-lg .ant-list-item.announcement-item {
+  position: relative;
+  padding: 20px 0;
+  /* margin: 0 24px; */
+}
+
+.announcement-header {
+  padding: 0;
+  margin-bottom: 8px;
+}
+
+.announcement-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 22px;
+}
+
+.announcement-header h1,
+.announcement-header h3 {
+  display: inline-block;
+  margin-bottom: 0;
+  line-height: 22px;
+}
+
+.announcement-header h1 {
+  font-size: 14px;
+  font-weight: 500;
+  color: #595959;
+}
+
+.announcement-header h3 {
+  font-size: 12px;
+  font-weight: 300;
+  color: #595959;
+  display: inline-block;
+  margin-right: 1em;
+}
+
+.announcement-header .anticon {
+  color: #8c8c8c;
+}
+
+.announcement-content-container-holder {
+  position: relative;
+}
+
+.announcement-content-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.announcement-content {
+  width: 100%;
+  color: #595959;
+}
+
+/* Handling Item Collapse */
+.announcement-content.overflowed {
+  max-height: 400px;
+  overflow: hidden;
+}
+
+.announcement-expand-toggle-checkbox {
+  display: none;
+}
+
+.announcement-expand-toggle,
+.announcement-collapse-toggle {
+  display: none;
+  width: 100%;
+  text-align: center;
+}
+
+.announcement-expand-toggle label,
+.announcement-collapse-toggle label {
+  color: grey;
+}
+
+.announcement-expand-toggle {
+  position: absolute;
+  bottom: 0;
+  padding: 100px 0 10px 0;
+  background-image: linear-gradient(rgba(255, 255, 255, 0), white);
+}
+
+.announcement-collapse-toggle {
+  display: none;
+  position: relative;
+  padding-top: 10px;
+}
+
+.announcement-content.overflowed ~ .announcement-expand-toggle {
+  display: block;
+}
+
+.announcement-expand-toggle-checkbox:checked ~ .announcement-expand-toggle {
+  display: none;
+}
+
+.announcement-expand-toggle-checkbox:checked ~ .announcement-collapse-toggle {
+  display: block;
+}
+
+.announcement-expand-toggle-checkbox:checked
+  ~ .announcement-content.overflowed {
+  max-height: 1600px;
+  overflow: scroll;
+}

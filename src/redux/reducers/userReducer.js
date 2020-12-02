@@ -1,7 +1,6 @@
 import {
   SET_AUTHENTICATED,
   SET_UNAUTHENTICATED,
-
   SET_USER,
   LOADING_USER,
 } from "../types";

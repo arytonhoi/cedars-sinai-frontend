@@ -1,0 +1,17 @@
+.google-calendar {
+  padding: 2em;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.edit-button {
+  
+  /*position: absolute;
+  right: 10px;*/
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 1em;
+
+}
