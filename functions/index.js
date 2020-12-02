@@ -124,11 +124,11 @@ app.delete("/api/contacts/:contactId", FBAuth, deleteOneContact);
 app.patch("/api/contacts/:contactId", FBAuth, updateOneContact);
 
 // calendar routes
-app.get("/api/calendar", getCalendarList);
-app.get("/api/calendar/:calendarId", getCalendar);
-app.post("/api/calendar", createCalendar);
-app.patch("/api/calendar/:calendarId", editCalendar);
-app.delete("/api/calendar/:calendarId", deleteCalendar);
+app.get("/api/calendar", FBAuth, getCalendarList);
+app.get("/api/calendar/:calendarId", FBAuth, getCalendar);
+app.post("/api/calendar", FBAuth, createCalendar);
+app.patch("/api/calendar/:calendarId", FBAuth, editCalendar);
+app.delete("/api/calendar/:calendarId", FBAuth, deleteCalendar);
 
 
 // email routes
