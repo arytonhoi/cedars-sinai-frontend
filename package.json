@@ -41,11 +41,9 @@
     "deploy": "./deploy.sh",
     "logs": "firebase functions:log",
     "deploy-prd": "./deploy.sh prd",
-    "deploy-dev": "./deploy.sh dev",
-    "null": "echo 1"
+    "deploy-dev": "./deploy.sh dev"
   },
   "pre-commit": [
-    "null"
   ],
   "eslintConfig": {
     "extends": "react-app"
