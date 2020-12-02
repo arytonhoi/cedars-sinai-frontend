@@ -1,10 +1,9 @@
 const { admin, db } = require("../util/admin");
 const { fixFormat } = require("../util/shim");
 
-const firebaseConfig = require("../util/config");
+const { firebaseConfig } = require("../util/config");
 const firebase = require("firebase");
 firebase.initializeApp(firebaseConfig);
-
 const { validateLoginData } = require("../util/validators");
 
 // log user in (token)
