@@ -68,7 +68,6 @@ class ContactPage extends Component {
   }
 
   handleImageChange = (event) => {
-    console.log(event);
     // const image = event.target.files[0];
     const image = event;
     const formData = new FormData();
@@ -204,7 +203,6 @@ class ContactPage extends Component {
       email: formValues.contactEmail,
       imgUrl: formValues.contactImgUrl,
     };
-    console.log(newContact);
     if (this.state.contactId === "") {
       // posting new contact
       this.props.postContact(newContact);

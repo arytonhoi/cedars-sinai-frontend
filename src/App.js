@@ -22,13 +22,14 @@ import AuthRoute from "./util/jsx/AuthRoute";
 import axios from "axios";
 
 // Pages
-import SideNav from "./components/layout/sideNav";
+import AdminPage from "./pages/adminPage";
+import announcementPage from "./pages/announcementPage";
+import calendarPage from "./pages/calendarPage";
+import contactPage from "./pages/contactPage";
 import genPage from "./pages/folderPage";
 import login from "./pages/login";
 import logout from "./pages/logout";
-import announcementPage from "./pages/announcementPage";
-import contactPage from "./pages/contactPage";
-import calendarPage from "./pages/calendarPage";
+import SideNav from "./components/layout/sideNav";
 
 // axios.defaults.withCredentials = !(window.location.hostname === "localhost");
 axios.defaults.withCredentials = true;
@@ -71,7 +72,7 @@ class App extends Component {
                   <Route exact path="/calendar" component={calendarPage} />
                   <Route exact path="/contacts" component={contactPage} />
                   <Route exact path="/logout" component={logout} />
-                  <Route exact path="/admins" component={admin} />
+                  <Route exact path="/admins" component={AdminPage} />
                   <Route path="/resources/:pageName" component={genPage} />
                 </Switch>
               </Layout>

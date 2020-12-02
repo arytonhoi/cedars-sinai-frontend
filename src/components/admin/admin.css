@@ -12,12 +12,11 @@
   display: inline-block;
 }
 
-
 .passwordAreas {
   width: 100%;
   padding: 11px 16px;
 }
 
-.passwordSubItemsHeader{
+.passwordSubItemsHeader {
   font-weight: bold;
 }

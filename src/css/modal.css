@@ -1,7 +1,32 @@
 /* ============================================================================================== */
-/* MODAL CONTENT STYLES */
+/* FORM CONTENT STYLES */
 /* ============================================================================================== */
+.page-form-container {
+  display: inline-block;
+  margin-right: 96px;
+}
+
+.page-form-container:last-of-type {
+  margin-right: 0;
+}
+
+.page-form-container.max-30 {
+  width: 280px;
+}
+
+.page-form-container .page-form-header {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* ============================================================================================== */
+/* MODAL AND FORM CONTENT STYLES */
+/* ============================================================================================== */
+
 .modal-form
+  .ant-form-item-label
+  > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::after,
+.page-form
   .ant-form-item-label
   > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::after {
   display: inline-block;
@@ -15,24 +40,31 @@
 
 .modal-form
   .ant-form-item-label
+  > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before,
+.page-form
+  .ant-form-item-label
   > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
   display: none;
 }
 
-.modal-form.ant-form-vertical .ant-col.ant-form-item-label {
+.modal-form.ant-form-vertical .ant-col.ant-form-item-label,
+.page-form.ant-form-vertical .ant-col.ant-form-item-label {
   padding: 0;
   margin-bottom: 2px;
 }
 
-.modal-form.ant-form-vertical .ant-form-item {
+.modal-form.ant-form-vertical .ant-form-item,
+.page-form.ant-form-vertical .ant-form-item {
   margin: 16px 0 0 0;
 }
 
-.modal-form.ant-form-vertical .ant-form-item:first-of-type {
+.modal-form.ant-form-vertical .ant-form-item:first-of-type,
+.page-form.ant-form-vertical .ant-form-item:first-of-type {
   margin-top: 0;
 }
 
-.modal-form .ant-col {
+.modal-form .ant-col,
+.page-form .ant-col {
   width: 100%;
 }
 
