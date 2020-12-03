@@ -66,9 +66,10 @@
   padding: 24px;
 }
 
-.padded-content .horizontal {
+.padded-content.horizontal {
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
 }
 
 .content-card.img-banner {

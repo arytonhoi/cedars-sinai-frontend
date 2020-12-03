@@ -17,6 +17,7 @@
 .page-form-container .page-form-header {
   font-size: 16px;
   font-weight: 500;
+  text-transform: capitalize;
 }
 
 /* ============================================================================================== */

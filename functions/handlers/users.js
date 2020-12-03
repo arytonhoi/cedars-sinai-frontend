@@ -169,7 +169,7 @@ exports.getAuthenticatedUser = (req, res) => {
     });
 };
 
-// change user password
+// change user passwordgit
 exports.updatePassword = (req, res) => {
   try {
     req = fixFormat(req);

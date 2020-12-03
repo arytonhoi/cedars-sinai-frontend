@@ -3,6 +3,7 @@ import {
   SET_UNAUTHENTICATED,
   SET_USER,
   LOADING_USER,
+  PATCH_PASSWORD,
 } from "../types";
 
 const initialState = {
@@ -28,6 +29,8 @@ export default function (state = initialState, action) {
         loading: false,
         credentials: action.payload,
       };
+    case PATCH_PASSWORD:
+      return state;
     case LOADING_USER:
       return {
         ...state,

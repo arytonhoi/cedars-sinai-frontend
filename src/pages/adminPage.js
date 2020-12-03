@@ -1,4 +1,3 @@
-import { Layout } from "antd";
 import React, { Component } from "react";
 
 // Redux
@@ -9,23 +8,13 @@ import { connect } from "react-redux";
 import "../css/page.css";
 
 // Components
-// import PasswordChangeSection from "../components/admin/passwordChangeSection";
 import PasswordEditorForm from "../components/admin/passwordEditorForm";
-import BillingSection from "../components/admin/billingSection";
 
 // Ant design
+import { Empty, Layout } from "antd";
 const { Content, Footer } = Layout;
 
 class AdminPage extends Component {
-  constructor() {
-    super();
-    this.state = {
-      currentPassword: "123456",
-      newPassword: "",
-      confirmPassword: "",
-    };
-  }
-
   render() {
     return (
       <div className="page-container">
@@ -42,13 +31,22 @@ class AdminPage extends Component {
               </div>
             </div>
             <div className="padded-content horizontal">
-              <PasswordEditorForm title="Admin" />
-              <PasswordEditorForm title="Staff" />
+              <PasswordEditorForm targettedUser="admin" />
+              <PasswordEditorForm targettedUser="staff" />
             </div>
           </Content>
 
           <Content className="content-card">
-            <BillingSection />
+            <div className="content-card-header">
+              <div className="header-row">
+                <h1>Billing Information</h1>
+              </div>
+            </div>
+            <Empty
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              description={<span>Section in progress</span>}
+              style={{ margin: "148px 0" }}
+            ></Empty>
           </Content>
           <Footer style={{ textAlign: "center" }}>DevelopForGood ©2020</Footer>
         </Layout>

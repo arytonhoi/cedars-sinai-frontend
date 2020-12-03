@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 // Redux stuff
 import { connect } from "react-redux";
+import { patchUserPassword } from "../../redux/actions/userActions";
 
 // css
 import "../../css/modal.css";
@@ -30,15 +31,27 @@ class PasswordEditorForm extends Component {
     });
   };
 
+  handlePatchNewPassword = (formValues) => {
+    const reqBody = {
+      username: this.props.targettedUser,
+      currentPassword: formValues.currentPassword,
+      newPassword: formValues.newPassword,
+    };
+
+    console.log(reqBody);
+    // this.props.patchUserPassword(reqBody);
+  };
+
   formRef = React.createRef();
 
   render() {
+    const targettedUser = this.props.targettedUser;
     return (
       <div className="page-form-container max-30">
-        <h2 className="page-form-header">{this.props.title}</h2>
+        <h2 className="page-form-header">{targettedUser}</h2>
         <Form
           className="page-form"
-          id="departmentEditorForm"
+          id={`departmentEditorForm-${targettedUser}`}
           layout="vertical"
           ref={this.formRef}
           initialValues={{
@@ -47,33 +60,39 @@ class PasswordEditorForm extends Component {
             confirmPassword: "",
           }}
           onFinish={(formValues) => {
-            // this.props.handlePostOrPatchDepartment(formValues);
-            this.formRef.current.resetFields();
+            this.handlePatchNewPassword(formValues);
+            // this.formRef.current.resetFields();
           }}
         >
           <Form.Item
             name="currentPassword"
             rules={[
-              { required: true, message: "Current password cannot be blank" },
+              {
+                required: true,
+                message: "Please input your current password.",
+              },
             ]}
             label="Current password"
           >
-            <Input
-              id="currentPassword"
+            <Input.Password
+              id={`currentPassword-${targettedUser}`}
               name="currentPassword"
               type="text"
-              // placeholder="ex: Managers"
             />
           </Form.Item>
           <Form.Item
             name="newPassword"
             rules={[
-              { required: true, message: "Current password cannot be blank" },
+              { required: true, message: "Please input your new password." },
+              {
+                min: 6,
+                message: "Password must be at least 6 characters.",
+              },
             ]}
-            label="Name"
+            label="New password"
           >
             <Input
-              id="newPassword"
+              id={`newPassword-${targettedUser}`}
               name="newPassword"
               type="text"
               // placeholder="ex: Managers"
@@ -81,13 +100,30 @@ class PasswordEditorForm extends Component {
           </Form.Item>
           <Form.Item
             name="confirmPassword"
+            label="Confirm password"
+            dependencies={["newPassword"]}
+            hasFeedback
             rules={[
-              { required: true, message: "Current password cannot be blank" },
+              {
+                required: true,
+                message: "Please confirm your password.",
+              },
+
+              ({ getFieldValue }) => ({
+                validator(rule, value) {
+                  if (!value || getFieldValue("newPassword") === value) {
+                    return Promise.resolve();
+                  }
+
+                  return Promise.reject(
+                    "The two passwords that you entered do not match."
+                  );
+                },
+              }),
             ]}
-            label="Name"
           >
             <Input
-              id="confirmPassword"
+              id={`confirmPassword-${targettedUser}`}
               name="confirmPassword"
               type="text"
               // placeholder="ex: Managers"
@@ -106,7 +142,8 @@ class PasswordEditorForm extends Component {
 
 PasswordEditorForm.propTypes = {
   user: PropTypes.object.isRequired,
-  title: PropTypes.string.isRequired,
+  targettedUser: PropTypes.string.isRequired,
+  patchUserPassword: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -115,4 +152,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, {})(PasswordEditorForm);
+export default connect(mapStateToProps, {
+  patchUserPassword,
+})(PasswordEditorForm);
