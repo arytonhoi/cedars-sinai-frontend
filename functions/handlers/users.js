@@ -102,7 +102,6 @@ exports.login = (req, res) => {
               maxAge: expiresIn,
               httpOnly: true,
               secure: false, // set to true for HTTPS, false for HTTP
-              // Domain: "us-central1-fir-db-d2d47.cloudfunctions.net",
             };
             res.cookie("__session", sessionCookie, options);
             return res.status(200).json({ status: "Login successful" });
@@ -187,15 +186,17 @@ exports.updatePassword = (req, res) => {
   // turn username into email
   const user = {
     email: req.body.username.concat("@email.com"),
-    oldPassword: req.body.oldPassword,
+    currentPassword: req.body.currentPassword,
     newPassword: req.body.newPassword,
   };
 
   firebase
     .auth()
-    .signInWithEmailAndPassword(user.email, user.oldPassword)
+    .signInWithEmailAndPassword(user.email, user.currentPassword)
     .then((resUser) => {
-      console.log(`${user.email}, ${user.oldPassword}, ${user.newPassword}`);
+      console.log(
+        `${user.email}, ${user.currentPassword}, ${user.newPassword}`
+      );
       firebase
         .auth()
         .currentUser.updatePassword(user.newPassword)
