@@ -9,7 +9,7 @@ import { patchUserPassword } from "../../redux/actions/userActions";
 import "../../css/modal.css";
 
 // Ant Design
-import { Button, Input, Form } from "antd";
+import { Alert, Button, Input, Form } from "antd";
 
 class PasswordEditorForm extends Component {
   constructor() {
@@ -56,10 +56,7 @@ class PasswordEditorForm extends Component {
     return (
       <div className="page-form-container max-30">
         <h2 className="page-form-header">{targettedUser}</h2>
-        {patchUserPasswordErrors &&
-          patchUserPasswordErrors.user === this.props.targettedUser && (
-            <p>{patchUserPasswordErrors.message}</p>
-          )}
+
         <Form
           className="page-form"
           id={`departmentEditorForm-${targettedUser}`}
@@ -140,6 +137,18 @@ class PasswordEditorForm extends Component {
               // placeholder="ex: Managers"
             />
           </Form.Item>
+          {/* <Form.Item> */}
+          {patchUserPasswordErrors &&
+            patchUserPasswordErrors.user === this.props.targettedUser && (
+              <Alert
+                style={{ marginTop: "15px" }}
+                message={patchUserPasswordErrors.message}
+                type="error"
+                showIcon
+                closable
+              />
+            )}
+          {/* </Form.Item> */}
           <Form.Item>
             <Button type="primary" htmlType="submit">
               Change password
