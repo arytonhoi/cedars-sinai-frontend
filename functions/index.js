@@ -78,6 +78,10 @@ const {
   sendEmail
 } = require("./handlers/email");
 
+const {
+  fetchWhois
+} = require("./handlers/website");
+
 const { getDBContents, patchDBContents } = require("./handlers/backup");
 // Create and Deploy Your First Cloud Functions
 // https://firebase.google.com/docs/functions/write-firebase-functions
@@ -137,6 +141,10 @@ app.delete("/api/calendar/:calendarId", FBAuth, deleteCalendar);
 
 // email routes
 app.post("/api/email", FBAuth, sendEmail);
+
+// whois routes
+app.get("/api/whois", FBAuth, fetchWhois);
+app.get("/api/whois/:domain", FBAuth, fetchWhois);
 
 exports.onDepartmentDelete = functions.firestore
   .document("/departments/{departmentId}")
