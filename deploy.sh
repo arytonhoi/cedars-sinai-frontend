@@ -1,13 +1,14 @@
-if [[ ${1:0:4} == "prd" ]]
+#!/bin/bash
+if [[ $1 == "prd" ]]
   then
-    npm run build
+    react-scripts build
     rm -r ./production
     mv ./build ./production
-    firebase-deploy --only hosting:cedars-prd,functions:cedars-prd
-elif [[ ${1:0:4} == "dev" ]]
+    firebase deploy --only hosting:cedars-prd,functions:cedars-prd
+elif [[ $1 == "dev" ]]
   then
-    npm run build
-    firebase-deploy --only hosting:cedars-dev,functions:cedars-dev
+    react-scripts build
+    firebase deploy --only hosting:cedars-dev,functions:cedars-dev
 else
   echo "Usage: deploy.sh [TARGET] where target is either 'prd' or 'dev'."
 fi
