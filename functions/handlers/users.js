@@ -138,7 +138,7 @@ exports.updatePassword = (req, res) => {
     returnFormattedHttpError(
       res,
       400,
-      "Incorrect JSON. Required fields are username, currentPassword, newPassword.",
+      "Incorrect JSON. Required fields are username, currentPassword, newPassword",
       err
     );
   }
@@ -151,13 +151,13 @@ exports.updatePassword = (req, res) => {
         .auth()
         .currentUser.updatePassword(user.newPassword)
         .then(() => {
-          return res.json({ message: "Password updated successfully." });
+          return res.json({ message: "Password updated successfully" });
         })
         .catch((err) => {
           returnFormattedHttpError(res, 500, err.message, err);
         });
     })
     .catch((err) => {
-      returnFormattedHttpError(res, 403, err.message, err);
+      returnFormattedHttpError(res, 403, "Current password incorrect", err);
     });
 };

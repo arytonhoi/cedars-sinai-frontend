@@ -3,59 +3,53 @@ import {
   LOADING_FOLDER_SEARCH,
   STOP_LOADING_UI,
   STOP_LOADING_FOLDER_SEARCH,
-
   SET_ERRORS,
   CLEAR_ERRORS,
-} from '../types';
+} from "../types";
 
 const initialState = {
   loading: false,
   loadingFolderSearch: false,
-  errors: []
+  errors: null,
 };
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   switch (action.type) {
     case SET_ERRORS:
-      if(typeof(action.payload.general)==="undefined" &&
-         typeof(action.payload.error)!=="undefined"){
-        state.errors.push({"general":action.payload.error})
-      }else{
-        state.errors.push(action.payload)
-      }
+      console.log(action.payload);
       return {
         ...state,
-        loading: false,
+        errors: action.payload,
       };
     case CLEAR_ERRORS:
       return {
         ...state,
-        errors: [],
+        errors: null,
         loading: false,
       };
     case LOADING_UI:
       return {
         ...state,
         errors: [],
-        loading: true
+        loading: true,
       };
     case STOP_LOADING_UI:
       return {
         ...state,
         errors: [],
-        loading: false
+        loading: false,
       };
     case LOADING_FOLDER_SEARCH:
       return {
         ...state,
         errors: [],
-        loadingFolderSearch: true
+        loadingFolderSearch: true,
       };
     case STOP_LOADING_FOLDER_SEARCH:
       return {
         ...state,
         errors: [],
-        loadingFolderSearch: false
+        loadingFolderSearch: false,
       };
     default:
       return state;

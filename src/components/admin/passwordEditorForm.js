@@ -16,6 +16,7 @@ class PasswordEditorForm extends Component {
     super();
     this.state = {
       isDeleting: false,
+      errors: {},
     };
   }
 
@@ -25,11 +26,17 @@ class PasswordEditorForm extends Component {
     }
   }
 
-  toggleDeleting = () => {
-    this.setState({
-      isDeleting: !this.state.isDeleting,
-    });
-  };
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.ui.errors) {
+      this.setState({ errors: nextProps.ui.errors });
+    }
+  }
+
+  // toggleDeleting = () => {
+  //   this.setState({
+  //     isDeleting: !this.state.isDeleting,
+  //   });
+  // };
 
   handlePatchNewPassword = (formValues) => {
     const reqBody = {
@@ -38,8 +45,7 @@ class PasswordEditorForm extends Component {
       newPassword: formValues.newPassword,
     };
 
-    console.log(reqBody);
-    // this.props.patchUserPassword(reqBody);
+    this.props.patchUserPassword(reqBody);
   };
 
   formRef = React.createRef();
@@ -49,6 +55,9 @@ class PasswordEditorForm extends Component {
     return (
       <div className="page-form-container max-30">
         <h2 className="page-form-header">{targettedUser}</h2>
+        {this.state.errors.patchUserPassword && (
+          <p>{this.state.errors.patchUserPassword.message}</p>
+        )}
         <Form
           className="page-form"
           id={`departmentEditorForm-${targettedUser}`}
@@ -149,6 +158,7 @@ PasswordEditorForm.propTypes = {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
+    ui: state.ui,
   };
 };
 

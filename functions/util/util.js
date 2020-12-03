@@ -12,7 +12,7 @@ exports.formatReqBody = (req, res) => {
     req.body = JSON.parse(req.rawBody.toString());
     return req;
   } catch (err) {
-    return this.returnFormattedHttpError(res, 400, "Invalid JSON.", err);
+    return this.returnFormattedHttpError(res, 400, "Invalid JSON", err);
   }
 };
 
@@ -21,7 +21,7 @@ exports.validateUserIsAdmin = (req, res) => {
     this.returnFormattedHttpError(
       res,
       403,
-      "User not nauthorized to call this endpoint."
+      "User not nauthorized to call this endpoint"
     );
   }
 };
