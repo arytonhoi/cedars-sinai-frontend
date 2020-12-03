@@ -52,12 +52,14 @@ class PasswordEditorForm extends Component {
 
   render() {
     const targettedUser = this.props.targettedUser;
+    const patchUserPasswordErrors = this.state.errors.patchUserPassword;
     return (
       <div className="page-form-container max-30">
         <h2 className="page-form-header">{targettedUser}</h2>
-        {this.state.errors.patchUserPassword && (
-          <p>{this.state.errors.patchUserPassword.message}</p>
-        )}
+        {patchUserPasswordErrors &&
+          patchUserPasswordErrors.user === this.props.targettedUser && (
+            <p>{patchUserPasswordErrors.message}</p>
+          )}
         <Form
           className="page-form"
           id={`departmentEditorForm-${targettedUser}`}
@@ -70,7 +72,7 @@ class PasswordEditorForm extends Component {
           }}
           onFinish={(formValues) => {
             this.handlePatchNewPassword(formValues);
-            // this.formRef.current.resetFields();
+            this.formRef.current.resetFields();
           }}
         >
           <Form.Item

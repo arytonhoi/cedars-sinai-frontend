@@ -80,6 +80,7 @@ export const patchUserPassword = (reqBody) => (dispatch) => {
       const error = {
         patchUserPassword: err.response.data,
       };
+      error.patchUserPassword.user = reqBody.username;
       dispatch({
         type: SET_ERRORS,
         payload: error,
