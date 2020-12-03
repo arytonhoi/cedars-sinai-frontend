@@ -1,5 +1,5 @@
 const { db } = require("../util/admin");
-const { fixFormat } = require("../util/shim");
+const { formatReqBody } = require("../util/util");
 
 // get all announcements in database
 exports.getAllAnnouncements = (req, res) => {
@@ -27,7 +27,7 @@ exports.getAllAnnouncements = (req, res) => {
 // create file
 exports.postOneAnnouncement = (req, res) => {
   try {
-    req = fixFormat(req);
+    req = formatReqBody(req);
   } catch (e) {
     return res.status(400).json({ error: "Invalid JSON." });
   }
@@ -92,7 +92,7 @@ exports.deleteOneAnnouncement = (req, res) => {
 
 exports.updateOneAnnouncement = (req, res) => {
   try {
-    req = fixFormat(req);
+    req = formatReqBody(req);
   } catch (e) {
     return res.status(400).json({ error: "Invalid JSON." });
   }

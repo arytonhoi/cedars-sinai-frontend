@@ -1,5 +1,5 @@
 const { admin, db } = require("../util/admin");
-const { fixFormat } = require("../util/shim");
+const { formatReqBody } = require("../util/util");
 
 // upload a thumbnail image
 exports.postImage = (req, res) => {

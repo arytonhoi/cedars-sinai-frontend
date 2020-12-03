@@ -1,5 +1,5 @@
 const { admin, db } = require("../util/admin");
-const { fixFormat } = require("../util/shim");
+const { formatReqBody } = require("../util/util");
 const FieldValue = admin.firestore.FieldValue;
 
 // util functions
@@ -16,7 +16,7 @@ function getFolderPath(folderPathsMap, folderId) {
   return folderPath;
 }
 
-function compressSearchString(string, searchKey){
+function compressSearchString(string, searchKey) {
   let stripHTMLRegex = new RegExp(
     `<\\/? *[a-zA-Z0-9]+( *[a-zA-Z0-9]+ *= *['"].+?['"])* *\\/? *>`,
     "gi"
@@ -33,12 +33,17 @@ function compressSearchString(string, searchKey){
     if (string !== matches) {
       matches += "...";
     }
-  }else{
-    matches = matches.map((x) =>
-      ( " ..." + x.replace( boldMatchStringRegex, `<b>${searchKey}</b>`) + "... " )
-    ).join("")
+  } else {
+    matches = matches
+      .map(
+        (x) =>
+          " ..." +
+          x.replace(boldMatchStringRegex, `<b>${searchKey}</b>`) +
+          "... "
+      )
+      .join("");
   }
-  return matches
+  return matches;
 }
 // get all folders in database
 exports.getAllFolders = (req, res) => {
@@ -88,7 +93,7 @@ exports.searchFolders = (req, res) => {
             let relevanceCount = 0;
             let titleMatchesArray = folder.title.match(regex);
             let contentMatchesArray = folder.content.match(regex);
-            folder.content = compressSearchString(folder.content, searchTerm)
+            folder.content = compressSearchString(folder.content, searchTerm);
             if (titleMatchesArray !== null) {
               relevanceCount += 2 * titleMatchesArray.length;
             }
@@ -180,7 +185,7 @@ exports.createFolder = (req, res) => {
     return res.status(400).json({ error: "Method not allowed" });
   }
   try {
-    req = fixFormat(req);
+    req = formatReqBody(req);
   } catch (e) {
     return res.status(400).json({ error: "Invalid JSON." });
   }
@@ -254,11 +259,11 @@ exports.deleteFolder = (req, res) => {
 };
 
 exports.updateOneFolder = (req, res) => {
-  if(!req.user.isAdmin){
+  if (!req.user.isAdmin) {
     return res.status(403).json({ error: "Only admins can update folders." });
   }
   try {
-    req = fixFormat(req);
+    req = formatReqBody(req);
   } catch (e) {
     return res.status(400).json({ error: "Incorrect JSON format" });
   }

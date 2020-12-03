@@ -1,5 +1,5 @@
 const { db } = require("../util/admin");
-const { fixFormat } = require("../util/shim");
+const { formatReqBody } = require("../util/util");
 
 // get all contacts in database
 exports.getAllContacts = (req, res) => {
@@ -26,7 +26,7 @@ exports.getAllContacts = (req, res) => {
 // create file
 exports.postOneContact = (req, res) => {
   try {
-    req = fixFormat(req);
+    req = formatReqBody(req);
   } catch (e) {
     return res.status(400).json({ error: "Invalid JSON." });
   }
@@ -91,7 +91,7 @@ exports.deleteOneContact = (req, res) => {
 
 exports.updateOneContact = (req, res) => {
   try {
-    req = fixFormat(req);
+    req = formatReqBody(req);
   } catch (e) {
     return res.status(400).json({ error: "Invalid JSON." });
   }

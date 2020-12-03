@@ -1,5 +1,5 @@
 const { db } = require("../util/admin");
-const { fixFormat } = require("../util/shim");
+const { formatReqBody } = require("../util/util");
 
 // get all departments in database
 exports.getAllDepartments = (req, res) => {
@@ -26,7 +26,7 @@ exports.getAllDepartments = (req, res) => {
 // create file
 exports.postOneDepartment = (req, res) => {
   try {
-    req = fixFormat(req);
+    req = formatReqBody(req);
   } catch (e) {
     return res.status(400).json({ error: "Invalid JSON." });
   }
@@ -89,7 +89,7 @@ exports.deleteOneDepartment = (req, res) => {
 
 exports.updateOneDepartment = (req, res) => {
   try {
-    req = fixFormat(req);
+    req = formatReqBody(req);
   } catch (e) {
     return res.status(400).json({ error: "Invalid JSON." });
   }

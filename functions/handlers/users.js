@@ -1,5 +1,9 @@
 const { admin, db } = require("../util/admin");
-const { fixFormat } = require("../util/shim");
+const {
+  formatReqBody,
+  validateUserIsAdmin,
+  returnFormattedHttpError,
+} = require("../util/util");
 
 const firebaseConfig = require("../util/config");
 const firebase = require("firebase");
@@ -7,61 +11,10 @@ firebase.initializeApp(firebaseConfig);
 
 const { validateLoginData } = require("../util/validators");
 
-// log user in (token)
-// exports.login = (req, res) => {
-//   try {
-//     req = fixFormat(req);
-//   } catch (e) {
-//     return res.status(400).json({ error: "Invalid JSON." });
-//   }
-//   var user = {
-//     email: "",
-//     password: "",
-//   };
-//   // turn username into email
-//   try {
-//     user = {
-//       email: req.body.username.toString().concat("@email.com"),
-//       password: req.body.password.toString(),
-//     };
-//   } catch (e) {
-//     return res.status(400).json({
-//       error: "Incomplete JSON, username and password fields required.",
-//     });
-//   }
-//   // validate data
-//   const { valid, errors } = validateLoginData(user);
-//   if (!valid) return res.status(400).json(errors);
-
-//   firebase
-//     .auth()
-//     .signInWithEmailAndPassword(user.email, user.password)
-//     .then((data) => {
-//       return data.user.getIdToken();
-//     })
-//     .then((token) => {
-//       return res.json({ token });
-//     })
-//     .catch((err) => {
-//       console.error(err);
-//       if (err.code === "auth/wrong-password") {
-//         return res
-//           .status(403)
-//           .json({ general: "Wrong password, please try again" });
-//       } else if (err.code === "auth/user-not-found") {
-//         return res
-//           .status(403)
-//           .json({ general: "Wrong username, please try again" });
-//       } else {
-//         return res.status(500).json({ error: err.code });
-//       }
-//     });
-// };
-
 // log user in (cookie)
 exports.login = (req, res) => {
   try {
-    req = fixFormat(req);
+    req = formatReqBody(req);
   } catch (e) {
     return res.status(400).json({ error: "Invalid JSON." });
   }
@@ -152,7 +105,6 @@ exports.logout = (req, res) => {
 // get own user details
 exports.getAuthenticatedUser = (req, res) => {
   let userData = {};
-  console.log("hi");
   db.doc(`/users/${req.user.userId}`)
     .get()
     .then((doc) => {
@@ -171,45 +123,41 @@ exports.getAuthenticatedUser = (req, res) => {
 
 // change user passwordgit
 exports.updatePassword = (req, res) => {
-  try {
-    req = fixFormat(req);
-  } catch (e) {
-    return res.status(400).json({ error: "Invalid JSON." });
-  }
-
-  if (!req.user.isAdmin) {
-    return res
-      .status(403)
-      .json({ error: "User unauthorized to change account password" });
-  }
+  req = formatReqBody(req);
+  validateUserIsAdmin(req, res);
 
   // turn username into email
-  const user = {
-    email: req.body.username.concat("@email.com"),
-    currentPassword: req.body.currentPassword,
-    newPassword: req.body.newPassword,
-  };
+  let user;
+  try {
+    user = {
+      email: req.body.username.concat("@email.com"),
+      currentPassword: req.body.currentPassword,
+      newPassword: req.body.newPassword,
+    };
+  } catch (err) {
+    returnFormattedHttpError(
+      res,
+      400,
+      "Incorrect JSON. Required fields are username, currentPassword, newPassword.",
+      err
+    );
+  }
 
   firebase
     .auth()
     .signInWithEmailAndPassword(user.email, user.currentPassword)
     .then((resUser) => {
-      console.log(
-        `${user.email}, ${user.currentPassword}, ${user.newPassword}`
-      );
       firebase
         .auth()
         .currentUser.updatePassword(user.newPassword)
-        .then(function () {
-          return res.json({ message: "Password updated successfully " });
+        .then(() => {
+          return res.json({ message: "Password updated successfully." });
         })
-        .catch(function (err) {
-          console.error(err);
-          return res.status(500).json({ error: err });
+        .catch((err) => {
+          returnFormattedHttpError(res, 500, err.message, err);
         });
     })
-    .catch(function (err) {
-      console.error(err);
-      return res.status(500).json({ error: err });
+    .catch((err) => {
+      returnFormattedHttpError(res, 403, err.message, err);
     });
 };
