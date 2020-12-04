@@ -8,7 +8,10 @@ import {
   SET_ERRORS,
   CLEAR_ERRORS,
 } from "../types";
+
 import axios from "axios";
+
+import { notification } from "antd";
 
 const setAuthorizationHeader = () => {
   localStorage.setItem("hasValidCookie", true);
@@ -75,6 +78,11 @@ export const patchUserPassword = (reqBody) => (dispatch) => {
         payload: res.data,
       });
       dispatch(clearErrors());
+      // return `${reqBody.username} account password successfully changed!`;
+      notification["success"]({
+        message: "Success!",
+        description: "Password changed successfully!",
+      });
     })
     .catch((err) => {
       const error = {

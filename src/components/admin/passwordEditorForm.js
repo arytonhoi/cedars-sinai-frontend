@@ -9,13 +9,12 @@ import { patchUserPassword } from "../../redux/actions/userActions";
 import "../../css/modal.css";
 
 // Ant Design
-import { Alert, Button, Input, Form } from "antd";
+import { Alert, Button, Input, Form, notification } from "antd";
 
 class PasswordEditorForm extends Component {
   constructor() {
     super();
     this.state = {
-      isDeleting: false,
       errors: {},
     };
   }
@@ -27,16 +26,10 @@ class PasswordEditorForm extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.ui.errors) {
-      this.setState({ errors: nextProps.ui.errors });
+    if (nextProps.UI.errors) {
+      this.setState({ errors: nextProps.UI.errors });
     }
   }
-
-  // toggleDeleting = () => {
-  //   this.setState({
-  //     isDeleting: !this.state.isDeleting,
-  //   });
-  // };
 
   handlePatchNewPassword = (formValues) => {
     const reqBody = {
@@ -46,6 +39,12 @@ class PasswordEditorForm extends Component {
     };
 
     this.props.patchUserPassword(reqBody);
+  };
+
+  showNotification = (type, message) => {
+    notification[type]({
+      message: `${message}`,
+    });
   };
 
   formRef = React.createRef();
@@ -103,7 +102,7 @@ class PasswordEditorForm extends Component {
               id={`newPassword-${targettedUser}`}
               name="newPassword"
               type="text"
-              // placeholder="ex: Managers"
+              placeholder="At least 6 characters"
             />
           </Form.Item>
           <Form.Item
@@ -134,10 +133,8 @@ class PasswordEditorForm extends Component {
               id={`confirmPassword-${targettedUser}`}
               name="confirmPassword"
               type="text"
-              // placeholder="ex: Managers"
             />
           </Form.Item>
-          {/* <Form.Item> */}
           {patchUserPasswordErrors &&
             patchUserPasswordErrors.user === this.props.targettedUser && (
               <Alert
@@ -148,7 +145,6 @@ class PasswordEditorForm extends Component {
                 closable
               />
             )}
-          {/* </Form.Item> */}
           <Form.Item>
             <Button type="primary" htmlType="submit">
               Change password
@@ -169,7 +165,7 @@ PasswordEditorForm.propTypes = {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    ui: state.ui,
+    UI: state.UI,
   };
 };
 

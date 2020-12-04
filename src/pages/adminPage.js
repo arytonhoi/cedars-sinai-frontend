@@ -11,7 +11,7 @@ import "../css/page.css";
 import PasswordEditorForm from "../components/admin/passwordEditorForm";
 
 // Ant design
-import { Empty, Layout } from "antd";
+import { Alert, Empty, Layout } from "antd";
 const { Content, Footer } = Layout;
 
 class AdminPage extends Component {
@@ -38,6 +38,14 @@ class AdminPage extends Component {
                 <div className="padded-content horizontal">
                   <PasswordEditorForm targettedUser="admin" />
                   <PasswordEditorForm targettedUser="staff" />
+                </div>
+                <div className="padded-content">
+                  <Alert
+                    style={{ display: "inline-block" }}
+                    type="warning"
+                    message="Changing an account's password will logout everyone using that account."
+                    showIcon
+                  />
                 </div>
               </Content>
               <Content className="content-card">
