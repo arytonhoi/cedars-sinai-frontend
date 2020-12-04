@@ -16,6 +16,9 @@ const { Content, Footer } = Layout;
 
 class AdminPage extends Component {
   render() {
+    const { credentials } = this.props.user;
+    const isAdmin = credentials.isAdmin;
+
     return (
       <div className="page-container">
         <header className="page-header-container">
@@ -24,30 +27,43 @@ class AdminPage extends Component {
           </div>
         </header>
         <Layout className="vertical-fill-layout">
-          <Content className="content-card">
-            <div className="content-card-header">
-              <div className="header-row">
-                <h1>Change Passwords</h1>
-              </div>
+          {isAdmin ? (
+            <div>
+              <Content className="content-card">
+                <div className="content-card-header">
+                  <div className="header-row">
+                    <h1>Change Passwords</h1>
+                  </div>
+                </div>
+                <div className="padded-content horizontal">
+                  <PasswordEditorForm targettedUser="admin" />
+                  <PasswordEditorForm targettedUser="staff" />
+                </div>
+              </Content>
+              <Content className="content-card">
+                <div className="content-card-header">
+                  <div className="header-row">
+                    <h1>Billing Information</h1>
+                  </div>
+                </div>
+                <Empty
+                  image={Empty.PRESENTED_IMAGE_SIMPLE}
+                  description={<span>Section in progress</span>}
+                  style={{ margin: "148px 0" }}
+                />
+              </Content>{" "}
             </div>
-            <div className="padded-content horizontal">
-              <PasswordEditorForm targettedUser="admin" />
-              <PasswordEditorForm targettedUser="staff" />
-            </div>
-          </Content>
-
-          <Content className="content-card">
-            <div className="content-card-header">
-              <div className="header-row">
-                <h1>Billing Information</h1>
-              </div>
-            </div>
-            <Empty
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description={<span>Section in progress</span>}
-              style={{ margin: "148px 0" }}
-            ></Empty>
-          </Content>
+          ) : (
+            <Content className="content-card">
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description={
+                  <span>Staff accounts cannot view the Admin page.</span>
+                }
+                style={{ margin: "148px 0" }}
+              />
+            </Content>
+          )}
           <Footer style={{ textAlign: "center" }}>DevelopForGood ©2020</Footer>
         </Layout>
       </div>
