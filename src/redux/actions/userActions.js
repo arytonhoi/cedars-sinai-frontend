@@ -58,13 +58,12 @@ export const getUserData = () => (dispatch) => {
 };
 
 export const logoutUser = () => (dispatch) => {
-  localStorage.removeItem("hasValidCookie");
-  dispatch({ type: SET_UNAUTHENTICATED });
   axios
     .post("/logout")
     .then((res) => {
       localStorage.removeItem("hasValidCookie");
       dispatch({ type: SET_UNAUTHENTICATED });
+      window.location.href = "./login";
     })
     .catch((err) => console.log(err));
 };
@@ -78,11 +77,23 @@ export const patchUserPassword = (reqBody) => (dispatch) => {
         payload: res.data,
       });
       dispatch(clearErrors());
-      // return `${reqBody.username} account password successfully changed!`;
-      notification["success"]({
-        message: "Success!",
-        description: "Password changed successfully!",
-      });
+      if (reqBody.username === "admin") {
+        notification["success"]({
+          message: "Success!",
+          description: "Password changed successfully! Logging out... ",
+        });
+        setTimeout(function () {
+          localStorage.removeItem("hasValidCookie");
+          dispatch({ type: SET_UNAUTHENTICATED });
+          window.location.href = "./login";
+        }, 3000);
+      } else {
+        notification["success"]({
+          message: "Success!",
+          description:
+            "Password changed successfully! Staff will need to re-login.",
+        });
+      }
     })
     .catch((err) => {
       const error = {
