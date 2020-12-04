@@ -7,8 +7,8 @@ if [[ $1 == "prd" ]]
     firebase deploy --only hosting:cedars-prd,functions:cedars-prd
 elif [[ $1 == "dev" ]]
   then
-    react-scripts build
-    firebase deploy --only hosting:cedars-dev,functions:cedars-dev
+    npm run build
+    firebase deploy --only hosting:cedars-dev,functions
 else
   echo "Usage: deploy.sh [TARGET] where target is either 'prd' or 'dev'."
 fi
