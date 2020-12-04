@@ -35,13 +35,13 @@ class AdminPage extends Component {
                     <h1>Change Passwords</h1>
                   </div>
                 </div>
-                <div className="padded-content horizontal">
-                  <PasswordEditorForm targettedUser="admin" />
-                  <PasswordEditorForm targettedUser="staff" />
-                </div>
                 <div className="padded-content">
+                  <div className="horizontal">
+                    <PasswordEditorForm targettedUser="admin" />
+                    <PasswordEditorForm targettedUser="staff" />
+                  </div>
                   <Alert
-                    style={{ display: "inline-block" }}
+                    style={{ display: "inline-block", marginTop: "24px" }}
                     type="warning"
                     message="Changing an account's password will logout everyone using that account."
                     showIcon
