@@ -10,7 +10,7 @@ import {
 const initialState = {
   loading: false,
   loadingFolderSearch: false,
-  errors: null,
+  errors: {},
 };
 
 export default function (state = initialState, action) {
@@ -24,7 +24,7 @@ export default function (state = initialState, action) {
     case CLEAR_ERRORS:
       return {
         ...state,
-        errors: null,
+        errors: {},
         loading: false,
       };
     case LOADING_UI:

@@ -27,7 +27,8 @@
   background-color: white;
 }
 
-.page-header-main-items {
+.page-header-main-items,
+.page-header-secondary-items {
   position: relative;
   display: flex;
   justify-content: space-between;
@@ -142,6 +143,10 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
+}
+
+.padded-content-card-content {
+  padding: 24px;
 }
 
 .content-card ul {
