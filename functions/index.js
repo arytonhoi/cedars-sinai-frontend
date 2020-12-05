@@ -12,7 +12,10 @@ app.use((req, res, next) => {
   res.append("Access-Control-Allow-Credentials", "true");
   res.append("Access-Control-Allow-Origin", req.headers.origin);
   res.append("Access-Control-Allow-Headers", "Content-Type");
-  res.append('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PATCH, DELETE');
+  res.append(
+    "Access-Control-Allow-Methods",
+    "POST, GET, OPTIONS, PATCH, DELETE"
+  );
   res.append("Vary", "Origin");
   next();
 });
@@ -74,7 +77,7 @@ exports.app = functions.https.onRequest(app);
 
 // user routes
 app.post("/api/login", login);
-app.post("/api/logout", logout);
+app.post("/api/logout", FBAuth, logout);
 app.get("/api/user", FBAuth, getAuthenticatedUser);
 app.patch("/api/user/password", FBAuth, updatePassword);
 

@@ -81,7 +81,8 @@ exports.login = (req, res) => {
 exports.logout = (req, res) => {
   let sessionCookie;
   try {
-    sessionCookie = req.cookies.session;
+    sessionCookie = req.cookies.__session;
+    console.log(sessionCookie);
   } catch (err) {
     console.error("Authentication cookie not provided");
     return res.status(403).json({ error: "Unauthorized" });
