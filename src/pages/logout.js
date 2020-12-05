@@ -7,8 +7,8 @@ import { logoutUser } from "../redux/actions/userActions";
 class logout extends Component {
   render() {
     store.dispatch(logoutUser());
-    window.location.href = "/";
-    return "";
+    // window.location.href = "/";
+    return null;
   }
 }
 
