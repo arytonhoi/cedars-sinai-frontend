@@ -46,20 +46,12 @@ class genPage extends Component {
     super();
     this.state = {
       pagename: "",
-      editFolders: false,
+      isEditingFolders: false,
       showPostCancelConfirm: false,
-      showRenameConfirm: false,
-      showDeleteConfirm: false,
-      showMoveDialog: false,
       showSearchResults: false,
       searchKey: "",
-      positionModified: false,
-      editPost: false,
+      isEditingPost: false,
       editor: null,
-      selectedFolders: [],
-      requestedSort: null,
-      folderMoveCandidate: { start: [0, 0], target: null, id: "" },
-      folderPosList: [[], []],
     };
   }
   componentDidMount() {
@@ -71,21 +63,20 @@ class genPage extends Component {
     this.setState({ ...this.state, pagename: pageName });
     //console.log(this.props)
   }
-  sortSubfolders = (e) => {
-    if (this.state.editFolders && this.props.user.credentials.isAdmin) {
-      this.props.updateFolder(this.state.pagename, {
-        preferredSort: parseInt(e.key),
-      });
-    }
-    this.setState({ ...this.state, requestedSort: parseInt(e.key) });
-    store.dispatch({ type: SORT_SUBFOLDER, payload: parseInt(e.key) });
-  };
-  toggleFolderEditable = () => {
-    console.log("toggleFolderEditable");
+  // sortSubfolders = (e) => {
+  //   if (this.state.isEditingFolders && this.props.user.credentials.isAdmin) {
+  //     this.props.updateFolder(this.state.pagename, {
+  //       preferredSort: parseInt(e.key),
+  //     });
+  //   }
+  //   this.setState({ ...this.state, requestedSort: parseInt(e.key) });
+  //   store.dispatch({ type: SORT_SUBFOLDER, payload: parseInt(e.key) });
+  // };
+  toggleEditingFolders = () => {
+    console.log("toggleEditingFolders");
     this.setState({
-      selectedFolders: [],
       editor: null,
-      editFolders: !this.state.editFolders,
+      isEditingFolders: !this.state.isEditingFolders,
     });
   };
   togglePostEditable = () => {
@@ -93,8 +84,9 @@ class genPage extends Component {
       ...this.state,
       selectedFolders: [],
       editor: null,
-      editFolders: false,
-      editPost: !this.state.editPost && this.props.user.credentials.isAdmin,
+      isEditingFolders: false,
+      isEditingPost:
+        !this.state.isEditingPost && this.props.user.credentials.isAdmin,
       showPostCancelConfirm: false,
     });
   };
@@ -122,11 +114,11 @@ class genPage extends Component {
   //   }
   //   this.setState({ ...this.state, selectedFolders: folders });
   // };
-  renameFolderCallback = (e) => {
-    var folders = this.state.selectedFolders;
-    folders[e.target.name].title = e.target.value;
-    this.setState({ ...this.state, selectedFolders: folders });
-  };
+  // renameFolderCallback = (e) => {
+  //   var folders = this.state.selectedFolders;
+  //   folders[e.target.name].title = e.target.value;
+  //   this.setState({ ...this.state, selectedFolders: folders });
+  // };
   searchFolderCallback = (e) => {
     if (e.keyCode === 13) {
       e.preventDefault();
@@ -139,70 +131,14 @@ class genPage extends Component {
     if (
       this.state.searchKey !== "" &&
       !this.props.UI.loadingFolderSearch &&
-      !this.state.editFolders &&
-      !this.state.editPost
+      !this.state.isEditingFolders &&
+      !this.state.isEditingPost
     ) {
       this.props.searchFolder(this.state.searchKey);
       this.setState({ showSearchResults: true });
     }
   };
-  renameFolders = () => {
-    if (this.state.showRenameConfirm) {
-      var folders = this.state.selectedFolders;
-      if (folders.length >= 0) {
-        folders.map((x) => {
-          this.toggleSelect(null, x);
-          this.props.updateSubFolder(x.id, {
-            parent: x.parent,
-            title: x.title,
-            content: x.content,
-          });
-          return 0;
-        });
-      }
-    }
-    this.setState({
-      ...this.state,
-      showRenameConfirm: false,
-      selectedFolders: [],
-    });
-  };
-  // moveFolders = () => {
-  //   if (this.state.showMoveDialog) {
-  //     var folders = this.state.selectedFolders;
-  //     if (folders.length >= 0) {
-  //       folders.map((x) => {
-  //         if (this.props.data.navpath.id !== x.id) {
-  //           this.toggleSelect(null, x);
-  //           this.props.updateSubFolder(x.id, {
-  //             parent: this.props.data.navpath.id,
-  //           });
-  //           store.dispatch({ type: DELETE_SUBFOLDER, payload: x.id });
-  //         }
-  //         return 0;
-  //       });
-  //     }
-  //   }
-  //   this.setState({
-  //     ...this.state,
-  //     showMoveDialog: false,
-  //     selectedFolders: [],
-  //   });
-  // };
 
-  // deleteFolders = () => {
-  //   this.setState({
-  //     ...this.state,
-  //     showDeleteConfirm: false,
-  //     selectedFolders: [],
-  //   });
-  //   if (this.state.showDeleteConfirm) {
-  //     let folders = this.state.selectedFolders;
-  //     if (folders.length >= 0) {
-  //       folders.map((x) => this.props.deleteFolder(x.id));
-  //     }
-  //   }
-  // };
   updateEditor = (event) => {
     this.setState({ ...this.state, editor: event.editor.getData() });
   };
@@ -231,20 +167,10 @@ class genPage extends Component {
     const pageName = this.props.match.params.pageName;
     const folders = data.data[0];
     UI.errors.folderErrors = [];
-    const menu = (
-      <Menu onClick={(e) => this.sortSubfolders(e)}>
-        <Menu.Item key="0">Alphabetical order</Menu.Item>
-        <Menu.Item key="1">Reverse alphabetical order</Menu.Item>
-        <Menu.Item key="2">Most recently added</Menu.Item>
-        <Menu.Item key="3">Least recently added</Menu.Item>
-        <Menu.Item key="4">Most popular</Menu.Item>
-      </Menu>
-    );
-    var s = "s";
-    if (this.state.selectedFolders.length === 1) {
-      s = "";
-    }
-    //console.log(folders)
+    let s = "s";
+    // if (this.state.selectedFolders.length === 1) {
+    //   s = "";
+    // }
 
     const modalsMarkup =
       user.credentials.isAdmin &&
@@ -252,142 +178,6 @@ class genPage extends Component {
       data.data.length > 0 &&
       UI.errors.folderErrors.length === 0 ? (
         <div className="resources-editbar noselect">
-          <Modal
-            className="center"
-            title="Are you sure?"
-            visible={this.state.showDeleteConfirm}
-            onCancel={() => this.toggleStateFlag("showDeleteConfirm")}
-            footer={[
-              <Button
-                key="1"
-                onClick={() => this.toggleStateFlag("showDeleteConfirm")}
-              >
-                No
-              </Button>,
-              <Button key="2" type="danger" onClick={this.deleteFolders}>
-                Yes, delete folder{s}
-              </Button>,
-            ]}
-          >
-            Deleting{" "}
-            {this.state.selectedFolders.map((x, i, a) =>
-              a.length === 1
-                ? "'" + x.title + "'"
-                : a.length - i === 1
-                ? " and '" + x.title + "'"
-                : i < a.length - 2
-                ? "'" + x.title + "', "
-                : "'" + x.title + "' "
-            )}{" "}
-            will remove all contents, including files and subfolders within the
-            folder{s}. This action is irreversible.
-          </Modal>
-          <Modal
-            className="center"
-            title={"Rename folder" + s}
-            visible={this.state.showRenameConfirm}
-            onCancel={() => this.toggleStateFlag("showRenameConfirm")}
-            footer={[
-              <Button
-                key="1"
-                onClick={() => this.toggleStateFlag("showRenameConfirm")}
-              >
-                Cancel
-              </Button>,
-              <Button key="2" type="primary" onClick={this.renameFolders}>
-                Rename
-              </Button>,
-            ]}
-          >
-            {this.state.selectedFolders.map((x, i, a) => (
-              <input
-                key={i}
-                maxLength="64"
-                className="full-width"
-                type="text"
-                value={x.title}
-                name={i}
-                onChange={this.renameFolderCallback}
-              />
-            ))}
-          </Modal>
-          <Modal
-            className="move-dialog center noselect"
-            title={
-              data.navpath.parent === "" ? (
-                "Move to " + data.navpath.title
-              ) : (
-                <div className="move-modal-top">
-                  <ArrowLeftOutlined
-                    onClick={() => this.props.getNavRoute(data.navpath.parent)}
-                  />
-                  <span>{"Move to " + data.navpath.title}</span>
-                </div>
-              )
-            }
-            visible={this.state.showMoveDialog}
-            onCancel={() => {
-              this.toggleStateFlag("showMoveDialog");
-              this.props.getNavRoute();
-            }}
-            footer={[
-              <Button
-                key="1"
-                onClick={() => {
-                  this.toggleStateFlag("showMoveDialog");
-                  this.props.getNavRoute();
-                }}
-              >
-                Cancel
-              </Button>,
-              <Button
-                key="2"
-                type="primary"
-                onClick={this.moveFolders}
-                disabled={data.navpath.id === data.data[0].id}
-              >
-                {"Move Folder" + s + " Here"}
-              </Button>,
-            ]}
-          >
-            {data.navpath.children.length === 0 ? (
-              <div className="navpath-list-empty">
-                <i>This folder has no subfolders</i>
-              </div>
-            ) : (
-              data.navpath.children.map((x, i) =>
-                this.state.selectedFolders.findIndex((p) => p.id === x.id) ===
-                -1 ? (
-                  <div
-                    className="navpath-list navpath-list-enabled"
-                    key={x.id}
-                    onClick={() => this.props.getNavRoute(x.id)}
-                  >
-                    <span className="navpath-list-left">
-                      <FolderFilled />
-                      {x.title}
-                    </span>
-                    <span className="navpath-list-right">
-                      <RightOutlined />
-                    </span>
-                  </div>
-                ) : (
-                  <div
-                    className="navpath-list navpath-list-disabled"
-                    key={x.id}
-                  >
-                    <span className="navpath-list-left">
-                      <FolderFilled />
-                      {x.title}
-                    </span>
-                    <span className="navpath-list-right">
-                      <RightOutlined />
-                    </span>
-                  </div>
-                )
-              )
-            )}
-          </Modal>
           <Modal
             className="center"
             title={"Cancel changes to your post?"}
@@ -459,35 +249,27 @@ class genPage extends Component {
       ) : this.state.searchKey === "" || !this.state.showSearchResults ? (
         <>
           {modalsMarkup}
-          {/* {(folders.subfolders.length > 0 || user.credentials.isAdmin) &&
-            foldersMarkup} */}
-          {(folders.subfolders.length > 0 || user.credentials.isAdmin) && (
-            <FoldersCard
-              editFolders={this.state.editFolders}
-              editPost={this.state.editPost}
-              exitFolderEditMode={this.exitFolderEditMode}
-              folderDragEnd={this.folderDragEnd}
-              folderDragStart={this.folderDragStart}
-              folders={folders}
-              pageName={this.pagename}
-              requestedSort={this.state.requestedSort}
-              selectedFolders={this.state.selectedFolders}
-              sortSubfolders={this.sortSubfolders}
-              toggleFolderEditable={this.toggleFolderEditable}
-              // toggleSelect={this.toggleSelect}
-              // showMoveDialog={this.state.showMoveDialog}
-            />
-          )}
+          <FoldersCard
+            // flags
+            isEditingFolders={this.state.isEditingFolders}
+            isEditingPost={this.state.isEditingPost}
+            // data
+            folders={folders}
+            pageName={this.pagename}
+            // functions
+            exitFolderEditMode={this.exitFolderEditMode}
+            toggleEditingFolders={this.toggleEditingFolders}
+          />
           {(folders.content !== "" || user.credentials.isAdmin) && (
             <FolderPostCard
               folders={folders}
-              editPost={this.state.editPost}
+              editPost={this.state.isEditingPost}
               clearPost={this.clearPost}
               maybeShowPostCancelConfirm={this.maybeShowPostCancelConfirm}
               editor={this.state.editor}
               saveEditorChanges={this.saveEditorChanges}
               togglePostEditable={this.togglePostEditable}
-              toggleFolderEditable={this.toggleFolderEditable}
+              toggleEditingFolders={this.toggleEditingFolders}
               updateEditor={this.updateEditor}
             />
           )}
@@ -561,14 +343,18 @@ class genPage extends Component {
               <Input
                 onKeyUp={this.searchFolderCallback}
                 onSubmit={this.searchFolder}
-                disabled={this.state.editFolders || this.state.editPost}
+                disabled={
+                  this.state.isEditingFolders || this.state.isEditingPost
+                }
                 className="resources-search no-padding"
                 suffix={<SearchOutlined />}
                 placeholder="Search resources by name"
               />
               <Button
                 type="primary"
-                disabled={this.state.editFolders || this.state.editPost}
+                disabled={
+                  this.state.isEditingFolders || this.state.isEditingPost
+                }
                 onClick={this.searchFolder}
               >
                 Search
@@ -579,8 +365,8 @@ class genPage extends Component {
         <Layout className="vertical-fill-layout">
           {this.state.searchKey === "" ||
           !this.state.showSearchResults ||
-          this.state.editFolders ||
-          this.state.editPost
+          this.state.isEditingFolders ||
+          this.state.isEditingPost
             ? pageMarkup
             : searchMarkup()}
           <Footer style={{ textAlign: "center" }}>DevelopForGood ©2020</Footer>

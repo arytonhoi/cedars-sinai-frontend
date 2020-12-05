@@ -3,132 +3,89 @@ import PropTypes from "prop-types";
 
 // Redux stuff
 import { connect } from "react-redux";
-import store from "../../redux/store";
-import {
-  getFolder,
-  searchFolder,
-  deleteFolder,
-  updateFolder,
-  updateSubFolder,
-  getNavRoute,
-  syncAllSubFolders,
-} from "../../redux/actions/dataActions";
-import {
-  MOVE_SUBFOLDER,
-  SORT_SUBFOLDER,
-  DELETE_SUBFOLDER,
-} from "../../redux/types";
-
-// components
-import AddFolder from "./AddFolder.js";
-import Folder from "./Folder.js";
 
 // css
-import "../../css/page.css";
-import "../../css/genPage.css";
+import "../../css/modal.css";
 
 // Ant Design
-import {
-  ArrowLeftOutlined,
-  FolderFilled,
-  RightOutlined,
-} from "@ant-design/icons";
-import { Button, Dropdown, Layout, Modal } from "antd";
-const { Content } = Layout;
+import { Button, Form, Input, Modal } from "antd";
 
 class RenameFolderModal extends Component {
   constructor() {
     super();
     this.state = {
-      selectedFolders: [],
-      positionModified: false,
-      folderMoveCandidate: { start: [0, 0], target: null, id: "" },
-      folderPosList: [[], []],
       errors: {},
     };
   }
 
+  componentDidUpdate() {
+    if (this.formRef.current) {
+      this.formRef.current.resetFields();
+    }
+  }
+  formRef = React.createRef();
+
   render() {
-    const { credentials } = this.props.user;
-    const { navpath } = this.props.data;
-    // const isAdmin = credentials.isAdmin;
-    const folders = this.props.data.data;
+    let folder;
+    if (this.props.selectedFolders[0]) {
+      folder = this.props.selectedFolders[0];
+    } else {
+      folder = {
+        title: "",
+      };
+    }
 
     return (
       <Modal
-        className="move-dialog center noselect"
-        title={
-          navpath.parent === "" ? (
-            "Move to " + navpath.title
-          ) : (
-            <div className="move-modal-top">
-              <ArrowLeftOutlined
-                onClick={() => this.props.getNavRoute(navpath.parent)}
-              />
-              <span>{"Move to " + navpath.title}</span>
-            </div>
-          )
-        }
+        className="modal"
+        title={"Rename folder"}
         visible={this.props.visible}
-        // onCancel={() => {
-        //   this.toggleStateFlag("showMoveDialog");
-        //   this.props.getNavRoute();
-        // }}
         footer={[
+          <span className="modal-footer-filler" key="space"></span>,
           <Button
-            key="1"
-            onClick={() => {
-              this.props.toggleShowModal("showMoveFolderModal");
-              this.props.getNavRoute();
-            }}
+            key="back"
+            onClick={() => this.toggleStateFlag("showRenameFolderModal")}
           >
             Cancel
           </Button>,
           <Button
-            key="2"
+            key="submit"
             type="primary"
-            onClick={this.props.moveFolders}
-            disabled={navpath.id === folders[0].id}
+            form="renameFolderForm"
+            htmlType="submit"
           >
-            {/* {"Move Folder" + s + " Here"} */}
-            "Move Folder Here"
+            Rename
           </Button>,
         ]}
       >
-        {navpath.children.length === 0 ? (
-          <div className="navpath-list-empty">
-            <i>This folder has no subfolders</i>
-          </div>
-        ) : (
-          navpath.children.map((x, i) =>
-            this.props.selectedFolders.findIndex((p) => p.id === x.id) ===
-            -1 ? (
-              <div
-                className="navpath-list navpath-list-enabled"
-                key={x.id}
-                onClick={() => this.props.getNavRoute(x.id)}
-              >
-                <span className="navpath-list-left">
-                  <FolderFilled />
-                  {x.title}
-                </span>
-                <span className="navpath-list-right">
-                  <RightOutlined />
-                </span>
-              </div>
-            ) : (
-              <div className="navpath-list navpath-list-disabled" key={x.id}>
-                <span className="navpath-list-left">
-                  <FolderFilled />
-                  {x.title}
-                </span>
-                <span className="navpath-list-right">
-                  <RightOutlined />
-                </span>
-              </div>
-            )
-          )
-        )}
+        <Form
+          className="modal-form"
+          id="renameFolderForm"
+          layout="vertical"
+          ref={this.formRef}
+          initialValues={{
+            folderTitle: folder.title,
+          }}
+          onFinish={(formValues) => {
+            this.props.renameFolders(formValues);
+            this.formRef.current.resetFields();
+          }}
+        >
+          <Form.Item
+            name="folderTitle"
+            rules={[
+              { required: true, message: "Folder name cannot be blank." },
+            ]}
+            label="Name"
+          >
+            <Input
+              id="folderTitle"
+              name="folderTitle"
+              type="text"
+              placeholder="ex: Equipment"
+            />
+          </Form.Item>
+        </Form>
       </Modal>
     );
   }
@@ -137,7 +94,6 @@ class RenameFolderModal extends Component {
 RenameFolderModal.propTypes = {
   user: PropTypes.object.isRequired,
   UI: PropTypes.object.isRequired,
-  folders: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -148,12 +104,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, {
-  getFolder,
-  searchFolder,
-  deleteFolder,
-  updateFolder,
-  updateSubFolder,
-  getNavRoute,
-  syncAllSubFolders,
-})(RenameFolderModal);
+export default connect(mapStateToProps, {})(RenameFolderModal);

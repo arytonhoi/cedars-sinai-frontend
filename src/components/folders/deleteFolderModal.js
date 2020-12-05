@@ -3,61 +3,30 @@ import PropTypes from "prop-types";
 
 // Redux stuff
 import { connect } from "react-redux";
-import store from "../../redux/store";
-import {
-  getFolder,
-  searchFolder,
-  deleteFolder,
-  updateFolder,
-  updateSubFolder,
-  getNavRoute,
-  syncAllSubFolders,
-} from "../../redux/actions/dataActions";
-import {
-  MOVE_SUBFOLDER,
-  SORT_SUBFOLDER,
-  DELETE_SUBFOLDER,
-} from "../../redux/types";
-
-// components
-import AddFolder from "./AddFolder.js";
-import Folder from "./Folder.js";
 
 // css
-import "../../css/page.css";
-import "../../css/genPage.css";
+import "../../css/modal.css";
 
 // Ant Design
-import {
-  ArrowLeftOutlined,
-  FolderFilled,
-  RightOutlined,
-} from "@ant-design/icons";
-import { Button, Dropdown, Layout, Modal } from "antd";
-const { Content } = Layout;
+import { Button, Modal } from "antd";
 
 class DeleteFolderModal extends Component {
   constructor() {
     super();
     this.state = {
-      selectedFolders: [],
-      positionModified: false,
-      folderMoveCandidate: { start: [0, 0], target: null, id: "" },
-      folderPosList: [[], []],
       errors: {},
     };
   }
 
   render() {
-    // const { credentials } = this.props.user;
-    // const { navpath } = this.props.data;
-    // const isAdmin = credentials.isAdmin;
-    // const folders = this.props.data.data;
-    const s = "s";
+    let s = "s";
+    if (this.props.selectedFolders.length === 1) {
+      s = "";
+    }
 
     return (
       <Modal
-        className="center"
+        className="modal"
         title="Are you sure?"
         visible={this.props.visible}
         footer={[
@@ -92,7 +61,6 @@ class DeleteFolderModal extends Component {
 DeleteFolderModal.propTypes = {
   user: PropTypes.object.isRequired,
   UI: PropTypes.object.isRequired,
-  folders: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -103,12 +71,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, {
-  getFolder,
-  searchFolder,
-  deleteFolder,
-  updateFolder,
-  updateSubFolder,
-  getNavRoute,
-  syncAllSubFolders,
-})(DeleteFolderModal);
+export default connect(mapStateToProps, {})(DeleteFolderModal);

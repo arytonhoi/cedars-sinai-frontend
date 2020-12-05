@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 
 // Redux stuff
 import { connect } from "react-redux";
-import store from "../../redux/store";
 import {
   getFolder,
   searchFolder,
@@ -13,15 +12,6 @@ import {
   getNavRoute,
   syncAllSubFolders,
 } from "../../redux/actions/dataActions";
-import {
-  MOVE_SUBFOLDER,
-  SORT_SUBFOLDER,
-  DELETE_SUBFOLDER,
-} from "../../redux/types";
-
-// components
-import AddFolder from "./AddFolder.js";
-import Folder from "./Folder.js";
 
 // css
 import "../../css/page.css";
@@ -33,26 +23,23 @@ import {
   FolderFilled,
   RightOutlined,
 } from "@ant-design/icons";
-import { Button, Dropdown, Layout, Modal } from "antd";
-const { Content } = Layout;
+import { Button, Modal } from "antd";
 
-class FoldersCard extends Component {
+class MoveFolderModal extends Component {
   constructor() {
     super();
     this.state = {
-      selectedFolders: [],
-      positionModified: false,
-      folderMoveCandidate: { start: [0, 0], target: null, id: "" },
-      folderPosList: [[], []],
       errors: {},
     };
   }
 
   render() {
-    // const { credentials } = this.props.user;
     const { navpath } = this.props.data;
-    // const isAdmin = credentials.isAdmin;
     const folders = this.props.data.data;
+    let s = "s";
+    if (this.props.selectedFolders.length === 1) {
+      s = "";
+    }
 
     return (
       <Modal
@@ -70,10 +57,6 @@ class FoldersCard extends Component {
           )
         }
         visible={this.props.visible}
-        // onCancel={() => {
-        //   this.toggleStateFlag("showMoveDialog");
-        //   this.props.getNavRoute();
-        // }}
         footer={[
           <Button
             key="1"
@@ -90,8 +73,7 @@ class FoldersCard extends Component {
             onClick={this.props.moveFolders}
             disabled={navpath.id === folders[0].id}
           >
-            {/* {"Move Folder" + s + " Here"} */}
-            "Move Folder Here"
+            {"Move Folder" + s + " Here"}
           </Button>,
         ]}
       >
@@ -134,10 +116,9 @@ class FoldersCard extends Component {
   }
 }
 
-FoldersCard.propTypes = {
+MoveFolderModal.propTypes = {
   user: PropTypes.object.isRequired,
   UI: PropTypes.object.isRequired,
-  folders: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -156,4 +137,4 @@ export default connect(mapStateToProps, {
   updateSubFolder,
   getNavRoute,
   syncAllSubFolders,
-})(FoldersCard);
+})(MoveFolderModal);

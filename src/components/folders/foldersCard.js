@@ -14,9 +14,9 @@ import {
   syncAllSubFolders,
 } from "../../redux/actions/dataActions";
 import {
+  DELETE_SUBFOLDER,
   MOVE_SUBFOLDER,
   SORT_SUBFOLDER,
-  DELETE_SUBFOLDER,
 } from "../../redux/types";
 
 // components
@@ -24,14 +24,14 @@ import AddFolder from "./AddFolder.js";
 import Folder from "./Folder.js";
 import MoveFolderModal from "./moveFolderModal.js";
 import DeleteFolderModal from "./deleteFolderModal.js";
-// import RenameFolderModal from "./renameFolderModal.js";
+import RenameFolderModal from "./renameFolderModal.js";
 
 // css
 import "../../css/page.css";
 
 // Ant Design
 import { DownOutlined } from "@ant-design/icons";
-import { Button, Dropdown, Layout, Menu } from "antd";
+import { Button, Dropdown, Empty, Layout, Menu } from "antd";
 const { Content } = Layout;
 
 class FoldersCard extends Component {
@@ -43,10 +43,12 @@ class FoldersCard extends Component {
       showDeleteFolderModal: false,
       showRenameFolderModal: false,
       // selecting folders
-      selectedFolders: [],
-      positionModified: false,
       folderMoveCandidate: { start: [0, 0], target: null, id: "" },
       folderPosList: [[], []],
+      positionModified: false,
+      selectedFolders: [],
+      // sorting folders
+      requestedSort: null,
       // errors
       errors: {},
     };
@@ -61,7 +63,23 @@ class FoldersCard extends Component {
     });
   };
 
-  // action functions
+  // folder editing action functions
+  renameFolders = (formValues) => {
+    console.log(formValues);
+    var folder = this.state.selectedFolders[0];
+    this.toggleSelect(null, folder);
+    this.props.updateSubFolder(folder.id, {
+      parent: folder.parent,
+      title: formValues.folderTitle,
+      content: folder.content,
+    });
+    this.setState({
+      ...this.state,
+      showRenameFolderModal: false,
+      selectedFolders: [],
+    });
+  };
+
   moveFolders = () => {
     let folders = this.state.selectedFolders;
     if (folders.length >= 0) {
@@ -92,17 +110,26 @@ class FoldersCard extends Component {
     });
   };
 
-  // editing mode toggle functions
+  // mode toggle functions
   exitFolderEditMode = () => {
     console.log(this.props.folders.subfolders);
     if (this.state.positionModified) {
       this.props.syncAllSubFolders(this.props.folders.subfolders);
       this.setState({ positionModified: false });
     }
-    this.props.toggleFolderEditable();
+    this.props.toggleEditingFolders();
   };
 
-  // other folder functions
+  // sort functions
+  sortSubfolders = (e) => {
+    if (this.props.isEditingFolders && this.props.user.credentials.isAdmin) {
+      this.props.updateFolder(this.state.pagename, {
+        preferredSort: parseInt(e.key),
+      });
+    }
+    this.setState({ requestedSort: parseInt(e.key) });
+    store.dispatch({ type: SORT_SUBFOLDER, payload: parseInt(e.key) });
+  };
 
   // drag folder functions
   toggleSelect = (e, x) => {
@@ -171,11 +198,13 @@ class FoldersCard extends Component {
 
   render() {
     const { credentials } = this.props.user;
-    const { navpath } = this.props.data;
+    // const { navpath } = this.props.data;
     const isAdmin = credentials.isAdmin;
     const folders = this.props.folders;
+    // folders.subfolders = [];
+
     const menu = (
-      <Menu onClick={(e) => this.props.sortSubfolders(e)}>
+      <Menu onClick={(e) => this.sortSubfolders(e)}>
         <Menu.Item key="0">Alphabetical order</Menu.Item>
         <Menu.Item key="1">Reverse alphabetical order</Menu.Item>
         <Menu.Item key="2">Most recently added</Menu.Item>
@@ -205,6 +234,12 @@ class FoldersCard extends Component {
           selectedFolders={this.state.selectedFolders}
           toggleShowModal={this.toggleShowModal}
         />
+        <RenameFolderModal
+          visible={this.state.showRenameFolderModal}
+          renameFolders={this.renameFolders}
+          selectedFolders={this.state.selectedFolders}
+          toggleShowModal={this.toggleShowModal}
+        />
         <DeleteFolderModal
           visible={this.state.showDeleteFolderModal}
           deleteFolders={this.deleteFolders}
@@ -212,15 +247,15 @@ class FoldersCard extends Component {
           toggleShowModal={this.toggleShowModal}
         />
         <Content className="content-card">
-          {folders.subfolders.length > 0 || this.props.editFolders ? (
-            <div className="content-card-header">
-              <div className="header-row">
-                <h1>Folders</h1>
-                <span className="page-header-interactive-items">
-                  {isAdmin &&
-                  this.props.editFolders &&
-                  this.state.selectedFolders.length > 0 ? (
-                    <>
+          <div className="content-card-header">
+            <div className="header-row">
+              <h1>Folders</h1>
+              <span className="page-header-interactive-items">
+                {isAdmin &&
+                  !this.props.isEditingPost &&
+                  this.props.isEditingFolders &&
+                  this.state.selectedFolders.length > 0 && (
+                    <span>
                       <Button
                         disabled={this.state.selectedFolders.length === 0}
                         type="danger"
@@ -246,79 +281,81 @@ class FoldersCard extends Component {
                       >
                         Rename {this.state.selectedFolders.length} Folder{s}
                       </Button>
-                    </>
-                  ) : (
-                    ""
+                    </span>
                   )}
-                  <Dropdown overlay={menu}>
-                    <Button>
-                      {this.props.requestedSort === null
-                        ? "Order folders by"
-                        : menuSelector[this.props.requestedSort]}{" "}
-                      <DownOutlined />
+                <Dropdown overlay={menu}>
+                  <Button>
+                    {this.state.requestedSort === null
+                      ? "Order folders by"
+                      : menuSelector[this.state.requestedSort]}{" "}
+                    <DownOutlined />
+                  </Button>
+                </Dropdown>
+                {isAdmin &&
+                  !this.props.isEditingPost &&
+                  (this.props.isEditingFolders ? (
+                    <Button
+                      type="primary"
+                      style={{
+                        background: "#52C41A",
+                        borderColor: "#52C41A",
+                      }}
+                      onClick={this.exitFolderEditMode}
+                    >
+                      Finish Editing
                     </Button>
-                  </Dropdown>
-                  {isAdmin && !this.props.editPost ? (
-                    this.props.editFolders ? (
-                      <Button
-                        type="primary"
-                        style={{
-                          background: "#52C41A",
-                          borderColor: "#52C41A",
-                        }}
-                        onClick={this.exitFolderEditMode}
-                      >
-                        Finish Editing
-                      </Button>
-                    ) : (
-                      <Button
-                        type="primary"
-                        onClick={this.props.toggleFolderEditable}
-                      >
-                        Edit Folders
-                      </Button>
-                    )
                   ) : (
-                    ""
-                  )}
-                </span>
-              </div>
+                    <Button
+                      type="primary"
+                      onClick={this.props.toggleEditingFolders}
+                    >
+                      Edit Folders
+                    </Button>
+                  ))}
+              </span>
             </div>
-          ) : isAdmin ? (
-            <div className="folder-blank noselect">
-              <h3 className="em2">It seems like there are no subfolders</h3>
-              <h4 className="em3">
-                You can create subfolders under any folder.
-              </h4>
-              <AddFolder target={this.props.pageName} format={1} />
+          </div>
+          {folders.subfolders.length > 0 ? (
+            // <div className="folder-holder">
+            <div className="padded-content wrapped-content">
+              {isAdmin && this.props.isEditingFolders && (
+                <AddFolder target={this.props.pageName} format={0} />
+              )}
+              {folders.subfolders.map((x, i) => (
+                <Folder
+                  onMouseDown={(e) => this.folderDragStart(e, x)}
+                  onMouseUp={this.folderDragEnd}
+                  key={x.id}
+                  label={x.title}
+                  href={
+                    isAdmin && this.props.isEditingFolders
+                      ? (e) => this.toggleSelect(e, x)
+                      : this.props.isEditingPost
+                      ? () => 0
+                      : x.id
+                  }
+                />
+              ))}
             </div>
           ) : (
-            ""
+            <div>
+              {isAdmin ? (
+                <div className="padded-content">
+                  <h3 className="em2">It seems like there are no subfolders</h3>
+                  <h4 className="em3">
+                    You can create subfolders under any folder.
+                  </h4>
+                  <AddFolder target={this.props.pageName} format={1} />
+                </div>
+              ) : (
+                <Empty
+                  style={{ margin: "48px auto" }}
+                  image={Empty.PRESENTED_IMAGE_SIMPLE}
+                  description={<span>No folders yet</span>}
+                />
+              )}
+            </div>
           )}
-          <div className="folder-holder">
-            {isAdmin && this.props.editFolders ? (
-              <AddFolder target={this.props.pageName} format={0} />
-            ) : (
-              ""
-            )}
-            {folders.subfolders.length > 0
-              ? folders.subfolders.map((x, i) => (
-                  <Folder
-                    onMouseDown={(e) => this.folderDragStart(e, x)}
-                    onMouseUp={this.folderDragEnd}
-                    key={x.id}
-                    label={x.title}
-                    href={
-                      isAdmin && this.props.editFolders
-                        ? (e) => this.toggleSelect(e, x)
-                        : this.props.editPost
-                        ? () => 0
-                        : x.id
-                    }
-                  />
-                ))
-              : ""}
-          </div>
         </Content>
       </div>
     );

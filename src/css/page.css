@@ -67,6 +67,12 @@
   padding: 24px;
 }
 
+.content-card .wrapped-content {
+  display: flex;
+  position: relative;
+  flex-wrap: wrap;
+}
+
 .padded-content .row {
   display: flex;
   flex-direction: row;
