@@ -36,7 +36,7 @@ class AdminPage extends Component {
                   </div>
                 </div>
                 <div className="padded-content">
-                  <div className="horizontal">
+                  <div className="row">
                     <PasswordEditorForm targettedUser="admin" />
                     <PasswordEditorForm targettedUser="staff" />
                   </div>
