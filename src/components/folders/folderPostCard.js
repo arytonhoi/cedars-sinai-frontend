@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 // Redux stuff
 import { connect } from "react-redux";
-import { patchUserPassword } from "../../redux/actions/userActions";
+import { patchFolder } from "../../redux/actions/dataActions";
 
 // components
 import CKEditor from "ckeditor4-react";
@@ -15,31 +15,100 @@ import "../../css/page.css";
 import parse from "html-react-parser";
 
 // Ant Design
-import { Button, Layout } from "antd";
+import { Button, Layout, Modal } from "antd";
 const { Content } = Layout;
 
 class FolderPostCard extends Component {
   constructor() {
     super();
     this.state = {
+      // editor
+
+      editor: null,
+      // modals
+      showPostCancelConfirm: false,
       errors: {},
     };
   }
 
+  // toggles
+  toggleEditingPost = () => {
+    this.setState({
+      editor: null,
+      showPostCancelConfirm: false,
+    });
+    this.props.toggleEditingPost();
+  };
+
+  maybeShowPostCancelConfirm = () => {
+    this.state.editor === null
+      ? this.toggleEditingPost()
+      : this.setState({
+          showPostCancelConfirm: true,
+        });
+  };
+
+  // update functions
+  updateEditor = (event) => {
+    this.setState({ editor: event.editor.getData() });
+  };
+
+  // action functions
+  saveEditorChanges = () => {
+    if (this.state.editor !== null) {
+      const updatedFolder = this.props.folder;
+      updatedFolder.content = this.state.editor;
+      this.props.patchFolder(this.props.pagename, updatedFolder);
+    }
+    this.toggleEditingPost();
+  };
+
+  clearPost = () => {
+    const updatedFolder = this.props.folder;
+    updatedFolder.content = "";
+    this.props.patchFolder(this.props.pagename, updatedFolder);
+    this.toggleEditingPost();
+  };
+
   render() {
     const { credentials } = this.props.user;
     const isAdmin = credentials.isAdmin;
-    const folders = this.props.folders;
+    const folder = this.props.folder;
 
     return (
       <Content className="content-card">
+        <Modal
+          className="center"
+          title={"Cancel changes to your post?"}
+          visible={this.state.showPostCancelConfirm}
+          footer={[
+            <Button
+              key="cancel"
+              onClick={() => this.setState({ showPostCancelConfirm: false })}
+            >
+              No
+            </Button>,
+            <Button
+              key="submit"
+              type="primary"
+              onClick={() => {
+                this.setState({ showPostCancelConfirm: false });
+                this.props.toggleEditingPost();
+              }}
+            >
+              Yes, Cancel Changes
+            </Button>,
+          ]}
+        >
+          This will remove all new changes made to your post.
+        </Modal>
         {isAdmin && (
           <div className="content-card-header">
             <div className="header-row">
               <span key="space" />
-              {this.props.editPost ? (
+              {this.props.isEditingPost ? (
                 <span className="page-header-interactive-items">
-                  <Button type="danger" onClick={this.props.clearPost}>
+                  <Button type="danger" onClick={this.clearPost}>
                     Delete entire post
                   </Button>
                   <Button onClick={this.maybeShowPostCancelConfirm}>
@@ -51,10 +120,10 @@ class FolderPostCard extends Component {
                       background: "#52C41A",
                       borderColor: "#52C41A",
                     }}
-                    disabled={
-                      this.props.editor === null || this.props.editor === ""
-                    }
-                    onClick={this.props.saveEditorChanges}
+                    // disabled={
+                    //   this.state.editor === null || this.state.editor === ""
+                    // }
+                    onClick={this.saveEditorChanges}
                   >
                     Save Changes
                   </Button>
@@ -63,7 +132,8 @@ class FolderPostCard extends Component {
                 <span className="page-header-interactive-items">
                   <Button
                     type="primary"
-                    onClick={this.props.togglePostEditable}
+                    disabled={this.props.isEditingFolders}
+                    onClick={this.props.toggleEditingPost}
                   >
                     Edit Post
                   </Button>
@@ -73,28 +143,28 @@ class FolderPostCard extends Component {
           </div>
         )}
         <div className="padded-content-card-content">
-          {this.props.editPost ? (
+          {this.props.isEditingPost ? (
             <CKEditor
-              data={folders.content}
-              onChange={this.props.updateEditor}
+              data={folder.content}
+              onChange={this.updateEditor}
               config={{
                 disallowedContent: "script embed *[on*]",
                 removeButtons: "",
                 height: "38vh",
               }}
             />
-          ) : folders.content === "" ? (
+          ) : folder.content === "" ? (
             <div className="folder-blank noselect">
               <h3 className="em2">
                 It seems like there is no post for this folder yet.
               </h3>
               <h4 className="em3">Start by creating the post.</h4>
-              <Button type="primary" onClick={this.props.togglePostEditable}>
+              <Button type="primary" onClick={this.props.toggleEditingPost}>
                 Begin Post
               </Button>
             </div>
           ) : (
-            <div>{parse(folders.content)}</div>
+            <div>{parse(folder.content)}</div>
           )}
         </div>
       </Content>
@@ -105,7 +175,6 @@ class FolderPostCard extends Component {
 FolderPostCard.propTypes = {
   user: PropTypes.object.isRequired,
   UI: PropTypes.object.isRequired,
-  folders: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -116,5 +185,5 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
-  patchUserPassword,
+  patchFolder,
 })(FolderPostCard);

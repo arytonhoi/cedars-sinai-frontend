@@ -22,8 +22,8 @@ import {
   getFolder,
   searchFolder,
   deleteFolder,
-  updateFolder,
-  updateSubFolder,
+  patchFolder,
+  patchSubfolder,
   getNavRoute,
   syncAllSubFolders,
 } from "../redux/actions/dataActions";
@@ -39,7 +39,7 @@ import CKEditor from "ckeditor4-react";
 //HTML handling
 import parse from "html-react-parser";
 
-class genPage extends Component {
+class FolderPage extends Component {
   constructor() {
     super();
     this.state = {
@@ -71,7 +71,7 @@ class genPage extends Component {
   }
   sortSubfolders = (e) => {
     if (this.state.editFolders && this.props.user.credentials.isAdmin) {
-      this.props.updateFolder(this.state.pagename, {
+      this.props.patchFolder(this.state.pagename, {
         preferredSort: parseInt(e.key),
       });
     }
@@ -145,13 +145,13 @@ class genPage extends Component {
       this.setState({ showSearchResults: true });
     }
   };
-  renameFolders = () => {
+  renameFolder = () => {
     if (this.state.showRenameConfirm) {
       var folders = this.state.selectedFolders;
       if (folders.length >= 0) {
         folders.map((x) => {
           this.toggleSelect(null, x);
-          this.props.updateSubFolder(x.id, {
+          this.props.patchSubfolder(x.id, {
             parent: x.parent,
             title: x.title,
             content: x.content,
@@ -171,10 +171,12 @@ class genPage extends Component {
       var folders = this.state.selectedFolders;
       if (folders.length >= 0) {
         folders.map((x) => {
-          if (this.props.data.navpath.id !== x.id) {
+          if (
+            this.props.data.moveFolderModalCurrentPath.movingFolderId !== x.id
+          ) {
             this.toggleSelect(null, x);
-            this.props.updateSubFolder(x.id, {
-              parent: this.props.data.navpath.id,
+            this.props.patchSubfolder(x.id, {
+              parent: this.props.data.moveFolderModalCurrentPath.movingFolderId,
             });
             store.dispatch({ type: DELETE_SUBFOLDER, payload: x.id });
           }
@@ -228,7 +230,7 @@ class genPage extends Component {
       type: MOVE_SUBFOLDER,
       payload: { id: f.id, newIndex: pos },
     });
-    this.props.updateFolder(this.state.pagename, {
+    this.props.patchFolder(this.state.pagename, {
       preferredSort: -1,
     });
     this.setState({
@@ -250,9 +252,9 @@ class genPage extends Component {
     }
   };
   exitFolderEditMode = () => {
-    //console.log(this.props.data.data[0].subfolders);
+    //console.log(this.props.data.folder[0].subfolders);
     if (this.state.positionModified) {
-      this.props.syncAllSubFolders(this.props.data.data[0].subfolders);
+      this.props.syncAllSubFolders(this.props.data.folder[0].subfolders);
       this.setState({ positionModified: false });
     }
     this.toggleFolderEditable();
@@ -262,18 +264,18 @@ class genPage extends Component {
   };
   saveEditorChanges = () => {
     if (this.state.editor !== null) {
-      this.props.updateFolder(this.state.pagename, {
-        parent: this.props.data.data[0].parent,
-        title: this.props.data.data[0].title,
+      this.props.patchFolder(this.state.pagename, {
+        parent: this.props.data.folder[0].parent,
+        title: this.props.data.folder[0].title,
         content: this.state.editor,
       });
     }
     this.togglePostEditable();
   };
   clearPost = () => {
-    this.props.updateFolder(this.state.pagename, {
-      parent: this.props.data.data[0].parent,
-      title: this.props.data.data[0].title,
+    this.props.patchFolder(this.state.pagename, {
+      parent: this.props.data.folder[0].parent,
+      title: this.props.data.folder[0].title,
       content: "",
     });
     this.togglePostEditable();
@@ -283,7 +285,7 @@ class genPage extends Component {
     const spinner = <img className="spin spin-large" alt="" src={CIcon} />;
     const { UI, data, user } = this.props;
     const pageName = this.props.match.params.pageName;
-    const folders = data.data[0];
+    const folders = data.folder[0];
     UI.errors.folderErrors = [];
     const menu = (
       <Menu onClick={(e) => this.sortSubfolders(e)}>
@@ -309,7 +311,7 @@ class genPage extends Component {
     const modalsMarkup =
       user.credentials.isAdmin &&
       !data.loading &&
-      data.data.length > 0 &&
+      data.folder.length > 0 &&
       UI.errors.folderErrors.length === 0 ? (
         <div className="resources-editbar noselect">
           <Modal
@@ -354,7 +356,7 @@ class genPage extends Component {
               >
                 Cancel
               </Button>,
-              <Button key="2" type="primary" onClick={this.renameFolders}>
+              <Button key="2" type="primary" onClick={this.renameFolder}>
                 Rename
               </Button>,
             ]}
@@ -374,14 +376,18 @@ class genPage extends Component {
           <Modal
             className="move-dialog center noselect"
             title={
-              data.navpath.parent === "" ? (
-                "Move to " + data.navpath.title
+              data.destinationFolderId === "" ? (
+                "Move to " + data.moveFolderModalCurrentPath.title
               ) : (
                 <div className="move-modal-top">
                   <ArrowLeftOutlined
-                    onClick={() => this.props.getNavRoute(data.navpath.parent)}
+                    onClick={() =>
+                      this.props.getNavRoute(data.destinationFolderId)
+                    }
                   />
-                  <span>{"Move to " + data.navpath.title}</span>
+                  <span>
+                    {"Move to " + data.moveFolderModalCurrentPath.title}
+                  </span>
                 </div>
               )
             }
@@ -404,47 +410,52 @@ class genPage extends Component {
                 key="2"
                 type="primary"
                 onClick={this.moveFolders}
-                disabled={data.navpath.id === data.data[0].id}
+                disabled={
+                  data.moveFolderModalCurrentPath.movingFolderId ===
+                  data.folder[0].id
+                }
               >
                 {"Move Folder" + s + " Here"}
               </Button>,
             ]}
           >
-            {data.navpath.children.length === 0 ? (
+            {data.moveFolderModalCurrentPath.destinationFolderChildren
+              .length === 0 ? (
               <div className="navpath-list-empty">
                 <i>This folder has no subfolders</i>
               </div>
             ) : (
-              data.navpath.children.map((x, i) =>
-                this.state.selectedFolders.findIndex((p) => p.id === x.id) ===
-                -1 ? (
-                  <div
-                    className="navpath-list navpath-list-enabled"
-                    key={x.id}
-                    onClick={() => this.props.getNavRoute(x.id)}
-                  >
-                    <span className="navpath-list-left">
-                      <FolderFilled />
-                      {x.title}
-                    </span>
-                    <span className="navpath-list-right">
-                      <RightOutlined />
-                    </span>
-                  </div>
-                ) : (
-                  <div
-                    className="navpath-list navpath-list-disabled"
-                    key={x.id}
-                  >
-                    <span className="navpath-list-left">
-                      <FolderFilled />
-                      {x.title}
-                    </span>
-                    <span className="navpath-list-right">
-                      <RightOutlined />
-                    </span>
-                  </div>
-                )
+              data.moveFolderModalCurrentPath.destinationFolderChildren.map(
+                (x, i) =>
+                  this.state.selectedFolders.findIndex((p) => p.id === x.id) ===
+                  -1 ? (
+                    <div
+                      className="navpath-list navpath-list-enabled"
+                      key={x.id}
+                      onClick={() => this.props.getNavRoute(x.id)}
+                    >
+                      <span className="navpath-list-left">
+                        <FolderFilled />
+                        {x.title}
+                      </span>
+                      <span className="navpath-list-right">
+                        <RightOutlined />
+                      </span>
+                    </div>
+                  ) : (
+                    <div
+                      className="navpath-list navpath-list-disabled"
+                      key={x.id}
+                    >
+                      <span className="navpath-list-left">
+                        <FolderFilled />
+                        {x.title}
+                      </span>
+                      <span className="navpath-list-right">
+                        <RightOutlined />
+                      </span>
+                    </div>
+                  )
               )
             )}
           </Modal>
@@ -473,7 +484,7 @@ class genPage extends Component {
       );
     const foldersMarkup =
       !data.loading &&
-      data.data.length > 0 &&
+      data.folder.length > 0 &&
       UI.errors.folderErrors.length === 0 ? (
         <div className="floating-component">
           {folders.subfolders.length > 0 || this.state.editFolders ? (
@@ -578,7 +589,7 @@ class genPage extends Component {
       );
     const postMarkup =
       !data.loading &&
-      data.data.length > 0 &&
+      data.folder.length > 0 &&
       UI.errors.folderErrors.length === 0 ? (
         <div className="floating-component">
           {user.credentials.isAdmin &&
@@ -653,7 +664,7 @@ class genPage extends Component {
       );
     const userBlankState =
       !data.loading &&
-      data.data.length > 0 &&
+      data.folder.length > 0 &&
       UI.errors.folderErrors.length === 0 ? (
         <div className="floating-component folder-blank noselect">
           <h3 className="em2">
@@ -668,7 +679,7 @@ class genPage extends Component {
         ""
       );
     // const nullMarkup =
-    //   !data.loading && data.data.length === 0 && UI.errors.folderErrors.length === 0 ? (
+    //   !data.loading && data.folder.length === 0 && UI.errors.folderErrors.length === 0 ? (
     //     <div className="floating-component folder-blank noselect">
     //       <h3 className="em2">It looks like this folder does not exist.</h3>
     //       <h4 className="em3">Go back?</h4>
@@ -681,13 +692,13 @@ class genPage extends Component {
     //   );
     const pageMarkup =
       data.loading &&
-      data.data.length === 0 &&
+      data.folder.length === 0 &&
       UI.errors.folderErrors.length === 0 ? (
         <div className="folder-loading center noselect padding-normal">
           <Spin indicator={spinner} />
           <p className="em4-light">Loading page...</p>
         </div>
-      ) : UI.errors.folderErrors.length > 0 || data.data.length === 0 ? (
+      ) : UI.errors.folderErrors.length > 0 || data.folder.length === 0 ? (
         <div className="floating-component folder-blank noselect">
           <h3 className="em2">We could not load this folder</h3>
           <h4 className="em3">Go back?</h4>
@@ -712,13 +723,13 @@ class genPage extends Component {
         ""
       );
     var searchMarkup = () =>
-      this.props.data.folderSearchRes.length > 0 &&
+      this.props.data.folderSearchResults.length > 0 &&
       !this.props.UI.loadingFolderSearch ? (
         <div className="floating-component">
           <h3 className="em2 padding-normal">
             Search Results for '{this.state.searchKey}'
           </h3>
-          {this.props.data.folderSearchRes.map((x, i) => (
+          {this.props.data.folderSearchResults.map((x, i) => (
             <SearchResult key={i} data={x} />
           ))}
         </div>
@@ -801,12 +812,12 @@ class genPage extends Component {
   }
 }
 
-genPage.propTypes = {
+FolderPage.propTypes = {
   getFolder: PropTypes.func.isRequired,
   searchFolder: PropTypes.func.isRequired,
   deleteFolder: PropTypes.func.isRequired,
-  updateFolder: PropTypes.func.isRequired,
-  updateSubFolder: PropTypes.func.isRequired,
+  patchFolder: PropTypes.func.isRequired,
+  patchSubfolder: PropTypes.func.isRequired,
   syncAllSubFolders: PropTypes.func.isRequired,
   getNavRoute: PropTypes.func.isRequired,
   data: PropTypes.object.isRequired,
@@ -824,9 +835,9 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   getFolder,
   searchFolder,
-  updateFolder,
-  updateSubFolder,
+  patchFolder,
+  patchSubfolder,
   deleteFolder,
   getNavRoute,
   syncAllSubFolders,
-})(genPage);
+})(FolderPage);

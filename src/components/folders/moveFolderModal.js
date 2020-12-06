@@ -3,15 +3,7 @@ import PropTypes from "prop-types";
 
 // Redux stuff
 import { connect } from "react-redux";
-import {
-  getFolder,
-  searchFolder,
-  deleteFolder,
-  updateFolder,
-  updateSubFolder,
-  getNavRoute,
-  syncAllSubFolders,
-} from "../../redux/actions/dataActions";
+import { getNavRoute } from "../../redux/actions/dataActions";
 
 // css
 import "../../css/page.css";
@@ -34,8 +26,8 @@ class MoveFolderModal extends Component {
   }
 
   render() {
-    const { navpath } = this.props.data;
-    const folders = this.props.data.data;
+    const { moveFolderModalCurrentPath } = this.props.data;
+    const folder = this.props.data.folder;
     let s = "s";
     if (this.props.selectedFolders.length === 1) {
       s = "";
@@ -45,14 +37,18 @@ class MoveFolderModal extends Component {
       <Modal
         className="move-dialog center noselect"
         title={
-          navpath.parent === "" ? (
-            "Move to " + navpath.title
+          moveFolderModalCurrentPath.destinationFolderId === "" ? (
+            "Move to " + moveFolderModalCurrentPath.title
           ) : (
             <div className="move-modal-top">
               <ArrowLeftOutlined
-                onClick={() => this.props.getNavRoute(navpath.parent)}
+                onClick={() =>
+                  this.props.getNavRoute(
+                    moveFolderModalCurrentPath.destinationFolderId
+                  )
+                }
               />
-              <span>{"Move to " + navpath.title}</span>
+              <span>{"Move to " + moveFolderModalCurrentPath.title}</span>
             </div>
           )
         }
@@ -71,18 +67,18 @@ class MoveFolderModal extends Component {
             key="2"
             type="primary"
             onClick={this.props.moveFolders}
-            disabled={navpath.id === folders[0].id}
+            disabled={moveFolderModalCurrentPath.movingFolderId === folder.id}
           >
             {"Move Folder" + s + " Here"}
           </Button>,
         ]}
       >
-        {navpath.children.length === 0 ? (
+        {moveFolderModalCurrentPath.destinationFolderChildren.length === 0 ? (
           <div className="navpath-list-empty">
             <i>This folder has no subfolders</i>
           </div>
         ) : (
-          navpath.children.map((x, i) =>
+          moveFolderModalCurrentPath.destinationFolderChildren.map((x, i) =>
             this.props.selectedFolders.findIndex((p) => p.id === x.id) ===
             -1 ? (
               <div
@@ -130,11 +126,5 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
-  getFolder,
-  searchFolder,
-  deleteFolder,
-  updateFolder,
-  updateSubFolder,
   getNavRoute,
-  syncAllSubFolders,
 })(MoveFolderModal);

@@ -26,9 +26,10 @@ import AdminPage from "./pages/adminPage";
 import announcementPage from "./pages/announcementPage";
 import calendarPage from "./pages/calendarPage";
 import contactPage from "./pages/contactPage";
-import genPage from "./pages/folderPage";
+import FolderPage from "./pages/folderPage";
 import login from "./pages/login";
 import logout from "./pages/logout";
+import SearchPage from "./pages/searchPage";
 import SideNav from "./components/layout/sideNav";
 
 // axios.defaults.withCredentials = !(window.location.hostname === "localhost");
@@ -68,12 +69,21 @@ class App extends Component {
                     path="/announcements"
                     component={announcementPage}
                   />
-                  <Route exact path="/resources" component={genPage} />
+                  <Route exact path="/resources" component={FolderPage} />
                   <Route exact path="/calendar" component={calendarPage} />
                   <Route exact path="/contacts" component={contactPage} />
                   <Route exact path="/logout" component={logout} />
                   <Route exact path="/admins" component={AdminPage} />
-                  <Route path="/resources/:pageName" component={genPage} />
+                  <Route
+                    exact
+                    path="/resources/:pageName"
+                    component={FolderPage}
+                  />
+                  <Route
+                    exact
+                    path="/resources/search/:searchTerm"
+                    component={SearchPage}
+                  />
                 </Switch>
               </Layout>
             </Layout>

@@ -45,6 +45,7 @@ function compressSearchString(string, searchKey) {
   }
   return matches;
 }
+
 // get all folders in database
 exports.getAllFolders = (req, res) => {
   if (req.method !== "GET") {

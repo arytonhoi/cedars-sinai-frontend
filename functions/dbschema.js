@@ -122,36 +122,31 @@ let db = {
       createdAt: "2020-09-18T13:49:18.602Z",
       lastModified: "2020-09-18T13:49:18.602Z",
       title: "Home folder",
-      content: "Hello"
+      content: "Hello",
     },
     {
       folderId: "folder1",
       parent: "home",
-      path: [
-        "home"
-      ],
+      path: ["home"],
       preferredSort: 0,
       index: 0,
       visits: 0,
       createdAt: "2020-09-18T13:49:18.602Z",
       lastModified: "2020-09-18T13:49:18.602Z",
       title: "Folder 1",
-      text: "Hello"
+      text: "Hello",
     },
     {
       folderId: "folder2",
       parent: "folder1",
-      path: [
-        "home",
-        "folder1"
-      ],
+      path: ["home", "folder1"],
       preferredSort: 0,
       index: 0,
       visits: 0,
       createdAt: "2020-09-18T13:49:18.602Z",
       lastModified: "2020-09-18T13:49:18.602Z",
       title: "Folder 2",
-      text: "Hello"
+      text: "Hello",
     },
   ],
   announcements: [
@@ -167,10 +162,10 @@ let db = {
   departments: [
     {
       departmentId: "fdafdafdaf",
-      name: "educators"
+      name: "educators",
     },
     {
-      departmentId: "managers"
+      departmentId: "managers",
     },
   ],
   contacts: [
@@ -180,9 +175,9 @@ let db = {
       imgUrl: "idk.jog",
       departmentId: "fdafdafdaf",
       phone: "123 456 7890",
-      email: "krystal@email.com"
-    }
-  ]
+      email: "krystal@email.com",
+    },
+  ],
 };
 
 const userDetails = {

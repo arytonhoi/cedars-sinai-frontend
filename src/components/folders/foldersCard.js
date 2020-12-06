@@ -5,12 +5,9 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import store from "../../redux/store";
 import {
-  getFolder,
-  searchFolder,
   deleteFolder,
-  updateFolder,
-  updateSubFolder,
-  getNavRoute,
+  patchFolder,
+  patchSubfolder,
   syncAllSubFolders,
 } from "../../redux/actions/dataActions";
 import {
@@ -64,11 +61,11 @@ class FoldersCard extends Component {
   };
 
   // folder editing action functions
-  renameFolders = (formValues) => {
+  renameFolder = (formValues) => {
     console.log(formValues);
     var folder = this.state.selectedFolders[0];
     this.toggleSelect(null, folder);
-    this.props.updateSubFolder(folder.id, {
+    this.props.patchSubfolder(folder.id, {
       parent: folder.parent,
       title: formValues.folderTitle,
       content: folder.content,
@@ -84,10 +81,12 @@ class FoldersCard extends Component {
     let folders = this.state.selectedFolders;
     if (folders.length >= 0) {
       folders.map((x) => {
-        if (this.props.data.navpath.id !== x.id) {
+        if (
+          this.props.data.moveFolderModalCurrentPath.movingFolderId !== x.id
+        ) {
           this.toggleSelect(null, x);
-          this.props.updateSubFolder(x.id, {
-            parent: this.props.data.navpath.id,
+          this.props.patchSubfolder(x.id, {
+            parent: this.props.data.moveFolderModalCurrentPath.movingFolderId,
           });
           store.dispatch({ type: DELETE_SUBFOLDER, payload: x.id });
         }
@@ -112,9 +111,8 @@ class FoldersCard extends Component {
 
   // mode toggle functions
   exitFolderEditMode = () => {
-    console.log(this.props.folders.subfolders);
     if (this.state.positionModified) {
-      this.props.syncAllSubFolders(this.props.folders.subfolders);
+      this.props.syncAllSubFolders(this.props.folder.subfolders);
       this.setState({ positionModified: false });
     }
     this.props.toggleEditingFolders();
@@ -123,7 +121,7 @@ class FoldersCard extends Component {
   // sort functions
   sortSubfolders = (e) => {
     if (this.props.isEditingFolders && this.props.user.credentials.isAdmin) {
-      this.props.updateFolder(this.state.pagename, {
+      this.props.patchFolder(this.state.pagename, {
         preferredSort: parseInt(e.key),
       });
     }
@@ -187,7 +185,7 @@ class FoldersCard extends Component {
       type: MOVE_SUBFOLDER,
       payload: { id: f.id, newIndex: pos },
     });
-    this.props.updateFolder(this.props.pagename, {
+    this.props.patchFolder(this.props.pagename, {
       preferredSort: -1,
     });
     this.setState({
@@ -198,9 +196,8 @@ class FoldersCard extends Component {
 
   render() {
     const { credentials } = this.props.user;
-    // const { navpath } = this.props.data;
     const isAdmin = credentials.isAdmin;
-    const folders = this.props.folders;
+    const folder = this.props.folder;
     // folders.subfolders = [];
 
     const menu = (
@@ -230,13 +227,14 @@ class FoldersCard extends Component {
       <div>
         <MoveFolderModal
           visible={this.state.showMoveFolderModal}
+          // visible={true}
           moveFolders={this.moveFolders}
           selectedFolders={this.state.selectedFolders}
           toggleShowModal={this.toggleShowModal}
         />
         <RenameFolderModal
           visible={this.state.showRenameFolderModal}
-          renameFolders={this.renameFolders}
+          renameFolder={this.renameFolder}
           selectedFolders={this.state.selectedFolders}
           toggleShowModal={this.toggleShowModal}
         />
@@ -315,12 +313,12 @@ class FoldersCard extends Component {
               </span>
             </div>
           </div>
-          {folders.subfolders.length > 0 ? (
+          {folder.subfolders.length > 0 ? (
             <div className="padded-content wrapped-content">
               {isAdmin && this.props.isEditingFolders && (
                 <AddFolder target={this.props.pageName} format={0} />
               )}
-              {folders.subfolders.map((x, i) => (
+              {folder.subfolders.map((x, i) => (
                 <Folder
                   // onMouseDown={(e) => this.folderDragStart(e, x)}
                   // onMouseUp={this.folderDragEnd}
@@ -366,7 +364,6 @@ class FoldersCard extends Component {
 FoldersCard.propTypes = {
   user: PropTypes.object.isRequired,
   UI: PropTypes.object.isRequired,
-  folders: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -378,11 +375,8 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
-  getFolder,
-  searchFolder,
   deleteFolder,
-  updateFolder,
-  updateSubFolder,
-  getNavRoute,
+  patchFolder,
+  patchSubfolder,
   syncAllSubFolders,
 })(FoldersCard);

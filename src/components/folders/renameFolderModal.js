@@ -67,7 +67,7 @@ class RenameFolderModal extends Component {
             folderTitle: folder.title,
           }}
           onFinish={(formValues) => {
-            this.props.renameFolders(formValues);
+            this.props.renameFolder(formValues);
             this.formRef.current.resetFields();
           }}
         >

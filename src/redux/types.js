@@ -36,7 +36,7 @@ export const PATCH_CONTACT = "PATCH_CONTACT";
 export const DELETE_CONTACT = "DELETE_CONTACT";
 export const SEARCH_CONTACTS = "SEARCH_CONTACTS";
 // Folders
-export const ADD_SUBFOLDER = "ADD_SUBFOLDER";
+export const POST_FOLDER = "POST_FOLDER";
 export const PATCH_FOLDER = "PATCH_FOLDER";
 export const PATCH_SUBFOLDER = "PATCH_SUBFOLDER";
 export const DELETE_SUBFOLDER = "DELETE_SUBFOLDER";
@@ -46,7 +46,7 @@ export const SET_NAV_PATH = "SET_NAV_PATH";
 export const RESET_NAV_PATH = "RESET_NAV_PATH";
 export const SET_FOLDER_SEARCH_RES = "SET_FOLDER_SEARCH_RES";
 // Data Handling
-export const SET_DATA_ARRAY = "SET_DATA_ARRAY";
-export const SET_DATA = "SET_DATA";
+export const SET_FOLDER_ARRAY = "SET_FOLDER_ARRAY";
+export const SET_FOLDER = "SET_FOLDER";
 export const DELETE_DATA = "DELETE_DATA";
 export const POST_DATA = "POST_DATA";

@@ -9,12 +9,7 @@ import {
   // Errors
   SET_ERRORS,
   CLEAR_ERRORS,
-  // Data Handling
-  SET_DATA,
-  SET_DATA_ARRAY,
-  //POST_DATA,
-  DELETE_DATA,
-  // Images
+  // images
   // POST_IMAGE,
   GET_BANNER_IMAGE,
   PATCH_BANNER_IMAGE,
@@ -36,7 +31,8 @@ import {
   DELETE_CONTACT,
   SEARCH_CONTACTS,
   // Folders
-  ADD_SUBFOLDER,
+  SET_FOLDER,
+  POST_FOLDER,
   PATCH_FOLDER,
   PATCH_SUBFOLDER,
   SORT_SUBFOLDER,
@@ -318,24 +314,7 @@ export const getSearchedContacts = (searchTerm) => (dispatch) => {
   });
 };
 
-//Folders
-export const getAllFolders = () => (dispatch) => {
-  dispatch({ type: LOADING_DATA });
-  return axios
-    .get("/folders")
-    .then((res) => {
-      dispatch({
-        type: SET_DATA_ARRAY,
-        payload: res.data,
-      });
-    })
-    .catch((err) => {
-      dispatch({
-        type: SET_DATA_ARRAY,
-        payload: [],
-      });
-    });
-};
+// Folders
 export const getFolder = (folderName, track) => (dispatch) => {
   dispatch({ type: LOADING_DATA });
   axios
@@ -346,7 +325,7 @@ export const getFolder = (folderName, track) => (dispatch) => {
     )
     .then((res) => {
       dispatch({
-        type: SET_DATA,
+        type: SET_FOLDER,
         payload: res.data,
       });
       if (!isNaN(parseInt(res.data.preferredSort))) {
@@ -362,6 +341,7 @@ export const getFolder = (folderName, track) => (dispatch) => {
     })
     .catch((err) => dispatch({ type: SET_ERRORS, payload: err }));
 };
+
 export const searchFolder = (searchKey) => (dispatch) => {
   dispatch({
     type: LOADING_FOLDER_SEARCH,
@@ -379,6 +359,7 @@ export const searchFolder = (searchKey) => (dispatch) => {
     })
     .catch((err) => dispatch({ type: SET_ERRORS, payload: err }));
 };
+
 export const getNavRoute = (folderName) => (dispatch) => {
   typeof folderName === "undefined"
     ? dispatch({ type: RESET_NAV_PATH })
@@ -393,13 +374,13 @@ export const getNavRoute = (folderName) => (dispatch) => {
         .catch((err) => dispatch({ type: SET_ERRORS, payload: err }));
 };
 
-export const createFolder = (folderName, folderDetails) => (dispatch) => {
+export const postFolder = (folderName, folderDetails) => (dispatch) => {
   dispatch({ type: LOADING_UI });
   axios
     .post(`/folders/${folderName}`, folderDetails)
     .then((res) => {
       dispatch({
-        type: ADD_SUBFOLDER,
+        type: POST_FOLDER,
         payload: res.data,
       });
     })
@@ -411,20 +392,21 @@ export const createFolder = (folderName, folderDetails) => (dispatch) => {
     });
 };
 
-export const updateFolder = (folderName, folderDetails) => (dispatch) => {
+export const patchFolder = (folderId, updatedFolder) => (dispatch) => {
   dispatch({ type: LOADING_UI });
-  if (folderName === folderDetails.parent) {
+  if (folderId === updatedFolder.parent) {
     dispatch({
       type: SET_ERRORS,
       payload: { error: "Cannot move folder into itself." },
     });
   } else {
+    updatedFolder.id = folderId;
     axios
-      .patch(`/folders/${folderName}`, folderDetails)
+      .patch(`/folders/${folderId}`, updatedFolder)
       .then((res) => {
         dispatch({
           type: PATCH_FOLDER,
-          payload: folderDetails,
+          payload: updatedFolder,
         });
       })
       .catch((err) => {
@@ -436,14 +418,14 @@ export const updateFolder = (folderName, folderDetails) => (dispatch) => {
   }
 };
 
-export const updateSubFolder = (folderName, folderDetails) => (dispatch) => {
+export const patchSubfolder = (folderId, updatedFolder) => (dispatch) => {
   dispatch({ type: LOADING_UI });
   axios
-    .patch(`/folders/${folderName}`, folderDetails)
+    .patch(`/folders/${folderId}`, updatedFolder)
     .then((res) => {
       dispatch({
         type: PATCH_SUBFOLDER,
-        payload: { id: folderName, patch: folderDetails },
+        payload: { id: folderId, patch: updatedFolder },
       });
     })
     .catch((err) => {
@@ -482,16 +464,6 @@ export const deleteFolder = (folderName) => (dispatch) => {
         payload: err.response.data,
       });
     });
-};
-
-// Delete from DB
-export const deletePost = (id) => (dispatch) => {
-  axios
-    .delete(`/files/${id}`)
-    .then(() => {
-      dispatch({ type: DELETE_DATA, payload: id });
-    })
-    .catch((err) => console.log(err));
 };
 
 export const clearErrors = () => (dispatch) => {

@@ -1,11 +1,7 @@
 import {
+  // loading
   LOADING_DATA,
   STOP_LOADING_DATA,
-  // Data Handling
-  SET_DATA_ARRAY,
-  SET_DATA,
-  POST_DATA,
-  DELETE_DATA,
   // Images
   GET_BANNER_IMAGE,
   PATCH_BANNER_IMAGE,
@@ -28,7 +24,8 @@ import {
   SEARCH_CONTACTS,
   // POST_IMAGE,
   // Folders
-  ADD_SUBFOLDER,
+  SET_FOLDER,
+  POST_FOLDER,
   PATCH_FOLDER,
   PATCH_SUBFOLDER,
   DELETE_SUBFOLDER,
@@ -46,17 +43,37 @@ cedars_sinai_pic_1.png?alt=media&token=8370797b-7650-49b7-8b3a-9997fab0c32c`;
 
 const initialState = {
   loading: false,
-  data: [],
-  folderSearchRes: [],
-  navpath: { id: "", parent: "", children: [] },
+  // images
+  uploadedImageUrl: "",
+  // announcements
   announcements: [],
   filteredAnnouncements: [],
+  bannerImgs: {
+    announcements: loadingBannerImgUrl,
+  },
+  // contacts
   departments: [],
   contacts: [],
   matchingSearchContacts: [],
-  uploadedImageUrl: "",
-  bannerImgs: {
-    announcements: loadingBannerImgUrl,
+  // folders
+  folder: {
+    index: 0,
+    id: "",
+    title: "",
+    parent: "",
+    content: "",
+    visits: 0,
+    preferredSort: -1,
+    lastModified: "",
+    createdAt: "",
+    subfolders: [],
+    path: [],
+  },
+  folderSearchResults: [],
+  moveFolderModalCurrentPath: {
+    movingFolderId: "",
+    destinationFolderId: "",
+    destinationFolderChildren: [],
   },
 };
 
@@ -250,61 +267,70 @@ export default function (state = initialState, action) {
         loading: false,
       };
     // Folders
-    case ADD_SUBFOLDER:
-      state.data[0].subfolders.push(action.payload);
+    case SET_FOLDER:
+      return {
+        ...state,
+        folder: action.payload,
+        loading: false,
+      };
+    case POST_FOLDER:
+      state.folder.subfolders.push(action.payload);
       return { ...state };
     case PATCH_FOLDER:
-      state.data[0] = Object.assign(state.data[0], action.payload);
-      return { ...state };
+      return {
+        ...state,
+        folder: action.payload,
+        loading: false,
+      };
     case PATCH_SUBFOLDER:
-      let sf = state.data[0].subfolders;
+      let sf = state.folder.subfolders;
       index = sf.findIndex((x) => x.id === action.payload.id);
       if (action.payload.patch && index >= 0) {
         sf[index] = Object.assign(sf[index], action.payload.patch);
       }
-      state.data[0].subfolders = sf;
+      state.folder.subfolders = sf;
       return { ...state };
     case DELETE_SUBFOLDER:
-      sf = state.data[0].subfolders;
+      sf = state.folder.subfolders;
       index = sf.findIndex((x) => x.id === action.payload);
-      state.data[0].subfolders = sf.slice(0, index).concat(sf.slice(index + 1));
+      state.folder.subfolders = sf.slice(0, index).concat(sf.slice(index + 1));
       return { ...state };
+    // sorting folders
     case SORT_SUBFOLDER:
       switch (parseInt(action.payload)) {
         case 0:
-          state.data[0].subfolders.sort((a, b) =>
+          state.folder.subfolders.sort((a, b) =>
             a.title.toUpperCase() >= b.title.toUpperCase() ? 1 : -1
           );
           break;
         case 1:
-          state.data[0].subfolders.sort((a, b) =>
+          state.folder.subfolders.sort((a, b) =>
             a.title.toUpperCase() < b.title.toUpperCase() ? 1 : -1
           );
           break;
         case 2:
-          state.data[0].subfolders.sort((a, b) =>
+          state.folder.subfolders.sort((a, b) =>
             a.createdAt < b.createdAt ? 1 : -1
           );
           break;
         case 3:
-          state.data[0].subfolders.sort((a, b) =>
+          state.folder.subfolders.sort((a, b) =>
             a.createdAt >= b.createdAt ? 1 : -1
           );
           break;
         case 4:
-          state.data[0].subfolders.sort((a, b) =>
+          state.folder.subfolders.sort((a, b) =>
             a.visits <= b.visits ? 1 : -1
           );
           break;
         default:
-          state.data[0].subfolders.sort((a, b) =>
-            a.index >= b.index ? 1 : -1
-          );
+          state.folder.subfolders.sort((a, b) => (a.index >= b.index ? 1 : -1));
           break;
       }
       return { ...state };
+    // moving folders
     case MOVE_SUBFOLDER:
-      sf = state.data[0].subfolders;
+      sf = state.folder.subfolders;
       let oldIndex = sf.findIndex((x) => x.id === action.payload.id);
       if (oldIndex >= 0) {
         let newIndex = Math.min(
@@ -314,9 +340,9 @@ export default function (state = initialState, action) {
         sf = sf.slice(0, oldIndex).concat(sf.slice(oldIndex + 1));
         sf = sf
           .slice(0, newIndex)
-          .concat(state.data[0].subfolders[oldIndex])
+          .concat(state.folder.subfolders[oldIndex])
           .concat(sf.slice(newIndex));
-        state.data[0].subfolders = sf.map((x, i) =>
+        state.folder.subfolders = sf.map((x, i) =>
           Object.assign(x, { index: i })
         );
       }
@@ -324,57 +350,31 @@ export default function (state = initialState, action) {
     case SET_NAV_PATH:
       return {
         ...state,
-        navpath: {
-          id: action.payload.id,
+        moveFolderModalCurrentPath: {
+          movingFolderId: action.payload.id,
           title: action.payload.title,
-          parent: action.payload.parent,
-          children: action.payload.subfolders,
+          destinationFolderId: action.payload.parent,
+          destinationFolderChildren: action.payload.subfolders,
         },
         loading: false,
       };
     case RESET_NAV_PATH:
       return {
         ...state,
-        navpath: {
-          id: state.data[0].id,
-          title: state.data[0].title,
-          parent: state.data[0].parent,
-          children: state.data[0].subfolders,
+        moveFolderModalCurrentPath: {
+          movingFolderId: state.folder.id,
+          title: state.folder.title,
+          destinationFolderId: state.folder.parent,
+          destinationFolderChildren: state.folder.subfolders,
         },
         loading: false,
       };
     case SET_FOLDER_SEARCH_RES:
       return {
         ...state,
-        folderSearchRes: action.payload,
+        folderSearchResults: action.payload,
         loading: false,
       };
-    // Data Handling
-    case SET_DATA_ARRAY:
-      return {
-        ...state,
-        data: action.payload,
-        loading: false,
-      };
-
-    case SET_DATA:
-      return {
-        ...state,
-        data: [action.payload],
-        loading: false,
-      };
-    case POST_DATA:
-      return {
-        ...state,
-        data: [action.payload, ...state.data],
-      };
-    case DELETE_DATA:
-      index = state.data.findIndex((x) => x.postId === action.payload);
-      state.data.splice(index, 1);
-      return {
-        ...state,
-      };
-
     default:
       return state;
   }

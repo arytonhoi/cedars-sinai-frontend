@@ -7,7 +7,7 @@ import { Modal, Input, Button } from "antd";
 
 // Redux stuff
 import { connect } from "react-redux";
-import { createFolder, clearErrors } from "../../redux/actions/dataActions";
+import { postFolder, clearErrors } from "../../redux/actions/dataActions";
 
 class AddFolder extends Component {
   constructor() {
@@ -50,7 +50,7 @@ class AddFolder extends Component {
       const newFolder = {
         title: this.state.folder.title,
       };
-      this.props.createFolder(this.state.folder.parent, newFolder);
+      this.props.postFolder(this.state.folder.parent, newFolder);
       this.toggleCreateModal();
     } else {
       this.setState({
@@ -85,7 +85,9 @@ class AddFolder extends Component {
           visible={this.state.showCreateModal}
           onCancel={() => this.toggleStateFlag("showDeleteConfirm")}
           footer={[
-            <Button key="1" onClick={this.toggleCreateModal}>Cancel</Button>,
+            <Button key="1" onClick={this.toggleCreateModal}>
+              Cancel
+            </Button>,
             <Button
               key="2"
               type="primary"
@@ -93,7 +95,7 @@ class AddFolder extends Component {
               disabled={this.state.folder.title.length <= 0}
             >
               Create
-            </Button>
+            </Button>,
           ]}
         >
           <Input
@@ -119,6 +121,4 @@ class AddFolder extends Component {
 
 const mapStateToProps = (state) => ({});
 
-export default connect(mapStateToProps, { createFolder, clearErrors })(
-  AddFolder
-);
+export default connect(mapStateToProps, { postFolder, clearErrors })(AddFolder);
