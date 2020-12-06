@@ -1,7 +1,6 @@
-const { admin, db } = require("../util/admin");
+const { admin, db, production } = require("../util/admin");
 const { formatReqBody } = require("../util/util");
 const FieldValue = admin.firestore.FieldValue;
-
 // util functions
 function getFolderPath(folderPathsMap, folderId) {
   const folderPath = [];
@@ -51,7 +50,7 @@ exports.getAllFolders = (req, res) => {
   if (req.method !== "GET") {
     return res.status(400).json({ error: "Method not allowed" });
   }
-  db.collection("folders")
+  db.collection(`${production}folders`)
     .orderBy("lastModified", "desc")
     .get()
     .then((data) => {
@@ -75,10 +74,10 @@ exports.searchFolders = (req, res) => {
     return res.status(400).json({ error: "Method not allowed" });
   }
   const searchTerm = `${req.params.searchTerm}`;
-  const folderPathsMapRef = db.collection("paths").doc("folders");
+  const folderPathsMapRef = db.collection(`${production}paths`).doc("folders");
   // global case insensitive matching
   var regex = new RegExp(searchTerm, "gi");
-  db.collection("folders")
+  db.collection(`${production}folders`)
     .orderBy("lastModified", "desc")
     .get()
     .then((data) => {
@@ -132,7 +131,7 @@ exports.getFolder = (req, res) => {
     return res.status(400).json({ error: "Method not allowed" });
   }
   let folderData = {};
-  db.doc(`/folders/${req.params.folderId}`)
+  db.doc(`/${production}folders/${req.params.folderId}`)
     .get()
     .then((doc) => {
       if (!doc.exists) {
@@ -142,13 +141,13 @@ exports.getFolder = (req, res) => {
       folderData.id = doc.id;
       // maybe increment folder contents
       if (typeof req.query.i === "string") {
-        db.doc(`/folders/${req.params.folderId}`).update({
+        db.doc(`/${production}folders/${req.params.folderId}`).update({
           visits: admin.firestore.FieldValue.increment(1),
         });
       }
       // get all folder contents
       return db
-        .collection("folders")
+        .collection(`${production}folders`)
         .orderBy("lastModified", "desc")
         .where("parent", "==", folderData.id)
         .get();
@@ -161,7 +160,7 @@ exports.getFolder = (req, res) => {
         subfolder.id = content.id;
         folderData.subfolders.push(subfolder);
       });
-      return db.doc("/paths/folders").get();
+      return db.doc(`/${production}paths/folders`).get();
     })
     .then((doc) => {
       // recursively construct folder path map
@@ -205,13 +204,13 @@ exports.createFolder = (req, res) => {
   };
 
   // add newFolder to FB database
-  db.collection("folders")
+  db.collection(`${production}folders`)
     .add(newFolder)
     .then((doc) => {
       newFolder.id = doc.id;
 
       // update paths map
-      return db.doc("/paths/folders").get();
+      return db.doc(`/${production}paths/folders`).get();
     })
     .then((doc) => {
       if (!doc.exists) {
@@ -222,7 +221,7 @@ exports.createFolder = (req, res) => {
       newFolderPathContents.parentId = parentFolderId;
       newFolderPathContents.name = folderTitle;
       newFolderPathsMap[newFolder.id] = newFolderPathContents;
-      db.doc(`/paths/folders`).update(newFolderPathsMap);
+      db.doc(`/${production}paths/folders`).update(newFolderPathsMap);
 
       newFolder.path = getFolderPath(newFolderPathsMap, newFolder.id);
       res.json(newFolder);
@@ -238,8 +237,8 @@ exports.deleteFolder = (req, res) => {
     return res.status(403).json({ error: "Only admins can delete folders." });
   }
   const batch = db.batch();
-  const folderRef = db.doc(`/folders/${req.params.folderId}`);
-  const folderPathsMapRef = db.collection("paths").doc("folders");
+  const folderRef = db.doc(`/${production}folders/${req.params.folderId}`);
+  const folderPathsMapRef = db.collection(`${production}paths`).doc("folders");
   folderRef
     .get()
     .then((doc) => {
@@ -288,8 +287,8 @@ exports.updateOneFolder = (req, res) => {
       ) {
         updatedFolderPathObj.name = req.body.title;
       }
-      const folderRef = db.doc(`/folders/${folderToUpdate}`);
-      const folderPathsMapRef = db.collection("paths").doc("folders");
+      const folderRef = db.doc(`/${production}folders/${folderToUpdate}`);
+      const folderPathsMapRef = db.collection(`${production}paths`).doc("folders");
       const batch = db.batch();
       batch.update(folderRef, updatedFolderContents);
       if (

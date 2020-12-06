@@ -1,4 +1,4 @@
-const { db } = require("../util/admin");
+const { db, production } = require("../util/admin");
 const { formatReqBody } = require("../util/util");
 
 // get all departments in database
@@ -6,7 +6,7 @@ exports.getAllDepartments = (req, res) => {
   if (req.method !== "GET") {
     return res.status(400).json({ error: "Method not allowed" });
   }
-  db.collection("departments")
+  db.collection(`${production}departments`)
     .get()
     .then((data) => {
       let departments = [];
@@ -44,7 +44,7 @@ exports.postOneDepartment = (req, res) => {
     };
 
     // add newAnn to FB database and update parent folder
-    db.collection("departments")
+    db.collection(`${production}departments`)
       .add(newDepartment)
       .then((doc) => {
         newDepartment.id = doc.id;
@@ -66,7 +66,7 @@ exports.deleteOneDepartment = (req, res) => {
     return res.status(403).json({ error: "Unauthorized" });
   }
 
-  const department = db.doc(`/departments/${req.params.departmentId}`);
+  const department = db.doc(`/${production}departments/${req.params.departmentId}`);
   department
     .get()
     .then((doc) => {
@@ -98,7 +98,7 @@ exports.updateOneDepartment = (req, res) => {
       ...req.body,
     };
 
-    db.doc(`/departments/${req.params.departmentId}`)
+    db.doc(`/${production}departments/${req.params.departmentId}`)
       .update(updatedDepartment)
       .then(() => {
         return res.json({ message: "Department updated successfully " });
