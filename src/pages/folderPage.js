@@ -85,26 +85,29 @@ class FolderPage extends Component {
       <div className="page-container">
         <header className="page-header-container">
           <div className="page-header-secondary-items">
-            <a className="em4-light" href="/resources">
-              Resources
-              {typeof folder === "object" && typeof folder.path === "object"
-                ? folder.path.map((x, i) => {
-                    if (x.name.length >= 30) {
-                      x.name = x.name.slice(0, 30) + "...";
-                    }
-                    return x.id !== "" && x.id !== "home" ? (
+            <span>
+              <a className="em4-light" href="/resources">
+                Resources
+              </a>
+              {folder &&
+                folder.path &&
+                folder.path.map((x, i) => {
+                  if (x.name.length >= 30) {
+                    x.name = x.name.slice(0, 30) + "...";
+                  }
+                  return (
+                    x.id !== "" &&
+                    x.id !== "home" && (
                       <span className="em4-light" key={x.id}>
                         {" / "}
                         <a className="em4-light" href={x.id}>
                           {x.name}
                         </a>
                       </span>
-                    ) : (
-                      ""
-                    );
-                  })
-                : ""}
-            </a>
+                    )
+                  );
+                })}
+            </span>
           </div>
           <div className="page-header-main-items">
             <h1>
