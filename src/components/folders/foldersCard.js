@@ -125,23 +125,20 @@ class FoldersCard extends Component {
     if (this.props.isEditingFolders) {
       let updatedFolder = this.props.folder;
       updatedFolder.defaultSubfolderSort = sortKey;
-      this.props.patchFolder(this.state.pagename, updatedFolder);
+      this.props.patchFolder(updatedFolder.id, updatedFolder);
     }
     this.setState({ requestedSubfolderSortKey: sortKey });
     store.dispatch({ type: SORT_SUBFOLDER, payload: sortKey });
   };
 
   // drag folder functions
-  toggleSelect = (e, x) => {
+  toggleSelect = (event, folder) => {
     var folders = this.state.selectedFolders;
-    var pos = folders.findIndex((p) => p.id === x.id);
+    var pos = folders.findIndex((f) => f.id === folder.id);
     if (pos >= 0) {
       folders = folders.slice(0, pos).concat(folders.slice(pos + 1));
-      x.hit.className = "folder folder-normal noselect";
     } else {
-      x.hit = e.currentTarget;
-      folders.push({ ...x });
-      e.currentTarget.className = "folder folder-selected noselect";
+      folders.push({ ...folder });
     }
     this.setState({ selectedFolders: folders });
   };
@@ -317,7 +314,7 @@ class FoldersCard extends Component {
           {folder.subfolders.length > 0 ? (
             <div className="padded-content wrapped-content">
               {isAdmin && this.props.isEditingFolders && (
-                <AddFolder target={this.props.pageName} format={0} />
+                <AddFolder target={folder.id} format={0} />
               )}
               {folder.subfolders.map((x, i) => (
                 <Folder
@@ -346,7 +343,7 @@ class FoldersCard extends Component {
                   <h4 className="em3">
                     You can create subfolders under any folder.
                   </h4>
-                  <AddFolder target={this.props.pageName} format={1} />
+                  <AddFolder target={folder.id} format={1} />
                 </div>
               ) : (
                 <Empty

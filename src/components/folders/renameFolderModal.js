@@ -44,7 +44,7 @@ class RenameFolderModal extends Component {
           <span className="modal-footer-filler" key="space"></span>,
           <Button
             key="back"
-            onClick={() => this.toggleStateFlag("showRenameFolderModal")}
+            onClick={() => this.props.toggleShowModal("showRenameFolderModal")}
           >
             Cancel
           </Button>,

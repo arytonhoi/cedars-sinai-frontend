@@ -6,16 +6,31 @@ import { FolderFilled } from "@ant-design/icons";
 
 // Redux stuff
 import { connect } from "react-redux";
-//import { deleteAnnounce, clearErrors } from "../../redux/actions/dataActions";
 
 class Folder extends Component {
+  constructor() {
+    super();
+    this.state = {
+      isSelected: false,
+    };
+  }
+
   render() {
     const { label, href } = this.props;
     if (typeof href === "function") {
       return (
         <div
-          className="folder clickable folder-normal noselect"
-          onClick={href}
+          className={
+            "folder clickable noselect " +
+            (this.state.isSelected ? "folder-selected" : "folder-normal")
+          }
+          onClick={() => {
+            console.log("selected!");
+            href();
+            this.setState({
+              isSelected: !this.state.isSelected,
+            });
+          }}
           onMouseDown={this.props.onMouseDown}
           onMouseUp={this.props.onMouseUp}
         >

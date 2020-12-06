@@ -399,7 +399,6 @@ export const patchFolder = (folderId, updatedFolder) => (dispatch) => {
       payload: { error: "Cannot move folder into itself." },
     });
   } else {
-    updatedFolder.id = folderId;
     axios
       .patch(`/folders/${folderId}`, updatedFolder)
       .then((res) => {
@@ -409,10 +408,11 @@ export const patchFolder = (folderId, updatedFolder) => (dispatch) => {
         });
       })
       .catch((err) => {
-        dispatch({
-          type: SET_ERRORS,
-          payload: err.response.data,
-        });
+        console.log(err);
+        // dispatch({
+        //   type: SET_ERRORS,
+        //   payload: err.response.data,
+        // });
       });
   }
 };

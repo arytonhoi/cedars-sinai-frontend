@@ -83,13 +83,12 @@ class AddFolder extends Component {
           className="center"
           title="Create New Folder"
           visible={this.state.showCreateModal}
-          onCancel={() => this.toggleStateFlag("showDeleteConfirm")}
           footer={[
-            <Button key="1" onClick={this.toggleCreateModal}>
+            <Button key="back" onClick={this.toggleCreateModal}>
               Cancel
             </Button>,
             <Button
-              key="2"
+              key="submit"
               type="primary"
               onClick={this.handleSubmit}
               disabled={this.state.folder.title.length <= 0}
