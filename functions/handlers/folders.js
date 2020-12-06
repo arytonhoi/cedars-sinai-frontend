@@ -198,7 +198,7 @@ exports.createFolder = (req, res) => {
     lastModified: new Date().toISOString(),
     title: folderTitle,
     content: "",
-    preferredSort: 0,
+    defaultSubfolderSort: "alphabetical",
     index: 0,
     visits: 0,
   };

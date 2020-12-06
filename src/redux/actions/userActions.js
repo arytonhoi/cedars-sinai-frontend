@@ -65,7 +65,12 @@ export const logoutUser = () => (dispatch) => {
       dispatch({ type: SET_UNAUTHENTICATED });
       window.location.href = "./login";
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      localStorage.removeItem("hasValidCookie");
+      dispatch({ type: SET_UNAUTHENTICATED });
+      window.location.href = "./login";
+    });
 };
 
 export const patchUserPassword = (reqBody) => (dispatch) => {

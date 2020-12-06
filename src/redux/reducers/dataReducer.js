@@ -63,7 +63,7 @@ const initialState = {
     parent: "",
     content: "",
     visits: 0,
-    preferredSort: -1,
+    defaultSubfolderSort: -1,
     lastModified: "",
     createdAt: "",
     subfolders: [],
@@ -297,34 +297,32 @@ export default function (state = initialState, action) {
       return { ...state };
     // sorting folders
     case SORT_SUBFOLDER:
-      switch (parseInt(action.payload)) {
-        case 0:
-          state.folder.subfolders.sort((a, b) =>
-            a.title.toUpperCase() >= b.title.toUpperCase() ? 1 : -1
-          );
-          break;
-        case 1:
-          state.folder.subfolders.sort((a, b) =>
-            a.title.toUpperCase() < b.title.toUpperCase() ? 1 : -1
-          );
-          break;
-        case 2:
-          state.folder.subfolders.sort((a, b) =>
-            a.createdAt < b.createdAt ? 1 : -1
-          );
-          break;
-        case 3:
-          state.folder.subfolders.sort((a, b) =>
-            a.createdAt >= b.createdAt ? 1 : -1
-          );
-          break;
-        case 4:
+      switch (action.payload) {
+        case "most_popular":
           state.folder.subfolders.sort((a, b) =>
             a.visits <= b.visits ? 1 : -1
           );
           break;
+        case "last_modified":
+          state.folder.subfolders.sort((a, b) =>
+            a.lastModified < b.lastModified ? 1 : -1
+          );
+          break;
+        case "most_recently_added":
+          state.folder.subfolders.sort((a, b) =>
+            a.createdAt < b.createdAt ? 1 : -1
+          );
+          break;
+        case "least_recently_added":
+          state.folder.subfolders.sort((a, b) =>
+            a.createdAt >= b.createdAt ? 1 : -1
+          );
+          break;
         default:
-          state.folder.subfolders.sort((a, b) => (a.index >= b.index ? 1 : -1));
+        case "alphabetical":
+          state.folder.subfolders.sort((a, b) =>
+            a.title.toUpperCase() >= b.title.toUpperCase() ? 1 : -1
+          );
           break;
       }
       return { ...state };
