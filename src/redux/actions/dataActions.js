@@ -324,19 +324,18 @@ export const getFolder = (folderName, track) => (dispatch) => {
       }`
     )
     .then((res) => {
+      const folder = res.data;
       dispatch({
         type: SET_FOLDER,
-        payload: res.data,
+        payload: folder,
       });
-      if (!isNaN(parseInt(res.data.preferredSort))) {
-        dispatch({
-          type: SORT_SUBFOLDER,
-          payload: parseInt(res.data.preferredSort),
-        });
-      }
+      dispatch({
+        type: SORT_SUBFOLDER,
+        payload: folder.defaultSubfolderSort,
+      });
       dispatch({
         type: SET_NAV_PATH,
-        payload: res.data,
+        payload: folder,
       });
     })
     .catch((err) => dispatch({ type: SET_ERRORS, payload: err }));
@@ -436,18 +435,18 @@ export const patchSubfolder = (folderId, updatedFolder) => (dispatch) => {
     });
 };
 
-export const syncAllSubFolders = (subfolders) => (dispatch) => {
-  if (typeof subfolders === "object" && subfolders.length > 0) {
-    subfolders.forEach((x) => {
-      axios.patch(`/folders/${x.id}`, { index: x.index }).catch((err) => {
-        dispatch({
-          type: SET_ERRORS,
-          payload: err.response.data,
-        });
-      });
-    });
-  }
-};
+// export const syncAllSubFolders = (subfolders) => (dispatch) => {
+//   if (typeof subfolders === "object" && subfolders.length > 0) {
+//     subfolders.forEach((x) => {
+//       axios.patch(`/folders/${x.id}`, { index: x.index }).catch((err) => {
+//         dispatch({
+//           type: SET_ERRORS,
+//           payload: err.response.data,
+//         });
+//       });
+//     });
+//   }
+// };
 
 export const deleteFolder = (folderName) => (dispatch) => {
   axios

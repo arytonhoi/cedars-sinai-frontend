@@ -3,13 +3,7 @@ import React, { Component } from "react";
 // redux
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import {
-  getFolder,
-  searchFolder,
-  deleteFolder,
-  patchFolder,
-  syncAllSubFolders,
-} from "../redux/actions/dataActions";
+import { searchFolder } from "../redux/actions/dataActions";
 
 // components
 import SearchResult from "../components/folders/SearchResult.js";
@@ -110,14 +104,10 @@ class SearchPage extends Component {
   }
 }
 SearchPage.propTypes = {
-  getFolder: PropTypes.func.isRequired,
-  searchFolder: PropTypes.func.isRequired,
-  deleteFolder: PropTypes.func.isRequired,
-  patchFolder: PropTypes.func.isRequired,
-  syncAllSubFolders: PropTypes.func.isRequired,
   data: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   UI: PropTypes.object.isRequired,
+  searchFolder: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -128,9 +118,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-  getFolder,
   searchFolder,
-  patchFolder,
-  deleteFolder,
-  syncAllSubFolders,
 })(SearchPage);

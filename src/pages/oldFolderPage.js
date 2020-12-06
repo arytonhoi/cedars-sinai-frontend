@@ -73,7 +73,7 @@ class FolderPage extends Component {
   sortSubfolders = (e) => {
     if (this.state.editFolders && this.props.user.credentials.isAdmin) {
       this.props.patchFolder(this.state.pagename, {
-        preferredSort: parseInt(e.key),
+        defaultSubfolderSort: parseInt(e.key),
       });
     }
     this.setState({ ...this.state, requestedSort: parseInt(e.key) });
@@ -232,7 +232,7 @@ class FolderPage extends Component {
       payload: { id: f.id, newIndex: pos },
     });
     this.props.patchFolder(this.state.pagename, {
-      preferredSort: -1,
+      defaultSubfolderSort: -1,
     });
     this.setState({
       folderMoveCandidate: { start: [0, 0], target: null, id: "" },

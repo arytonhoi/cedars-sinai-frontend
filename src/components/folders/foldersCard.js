@@ -8,7 +8,7 @@ import {
   deleteFolder,
   patchFolder,
   patchSubfolder,
-  syncAllSubFolders,
+  // syncAllSubFolders,
 } from "../../redux/actions/dataActions";
 import {
   DELETE_SUBFOLDER,
@@ -40,14 +40,15 @@ class FoldersCard extends Component {
       showDeleteFolderModal: false,
       showRenameFolderModal: false,
       // selecting folders
-      folderMoveCandidate: { start: [0, 0], target: null, id: "" },
-      folderPosList: [[], []],
-      positionModified: false,
       selectedFolders: [],
       // sorting folders
-      requestedSort: null,
+      requestedSubfolderSortKey: null,
       // errors
       errors: {},
+      // dragging folders
+      // folderMoveCandidate: { start: [0, 0], target: null, id: "" },
+      // folderPosList: [[], []],
+      // positionModified: false,
     };
   }
 
@@ -111,22 +112,23 @@ class FoldersCard extends Component {
 
   // mode toggle functions
   exitFolderEditMode = () => {
-    if (this.state.positionModified) {
-      this.props.syncAllSubFolders(this.props.folder.subfolders);
-      this.setState({ positionModified: false });
-    }
+    // if (this.state.positionModified) {
+    //   this.props.syncAllSubFolders(this.props.folder.subfolders);
+    //   this.setState({ positionModified: false });
+    // }
     this.props.toggleEditingFolders();
   };
 
   // sort functions
-  sortSubfolders = (e) => {
-    if (this.props.isEditingFolders && this.props.user.credentials.isAdmin) {
-      this.props.patchFolder(this.state.pagename, {
-        preferredSort: parseInt(e.key),
-      });
+  sortSubfolders = (event) => {
+    const sortKey = event.key;
+    if (this.props.isEditingFolders) {
+      let updatedFolder = this.props.folder;
+      updatedFolder.defaultSubfolderSort = sortKey;
+      this.props.patchFolder(this.state.pagename, updatedFolder);
     }
-    this.setState({ requestedSort: parseInt(e.key) });
-    store.dispatch({ type: SORT_SUBFOLDER, payload: parseInt(e.key) });
+    this.setState({ requestedSubfolderSortKey: sortKey });
+    store.dispatch({ type: SORT_SUBFOLDER, payload: sortKey });
   };
 
   // drag folder functions
@@ -144,69 +146,74 @@ class FoldersCard extends Component {
     this.setState({ selectedFolders: folders });
   };
 
-  folderDragStart = (e, x) => {
-    var f = document.querySelectorAll(".folder");
-    var arr = this.state.folderPosList;
-    f.forEach((a) => {
-      arr[0].push(a.offsetLeft);
-      arr[1].push(a.offsetTop);
-    });
-    arr = [
-      arr[0].filter((v, i, a) => a.indexOf(v) === i),
-      arr[1].filter((v, i, a) => a.indexOf(v) === i),
-    ];
-    arr[0][arr[0].length - 1] = +Infinity;
-    arr[1][arr[1].length - 1] = +Infinity;
-    this.setState({
-      positionModified: true,
-      folderMoveCandidate: {
-        start: [e.clientX, e.clientY],
-        target: e.currentTarget,
-        id: x.id,
-      },
-      folderPosList: arr,
-    });
-  };
+  // folderDragStart = (e, x) => {
+  //   var f = document.querySelectorAll(".folder");
+  //   var arr = this.state.folderPosList;
+  //   f.forEach((a) => {
+  //     arr[0].push(a.offsetLeft);
+  //     arr[1].push(a.offsetTop);
+  //   });
+  //   arr = [
+  //     arr[0].filter((v, i, a) => a.indexOf(v) === i),
+  //     arr[1].filter((v, i, a) => a.indexOf(v) === i),
+  //   ];
+  //   arr[0][arr[0].length - 1] = +Infinity;
+  //   arr[1][arr[1].length - 1] = +Infinity;
+  //   this.setState({
+  //     positionModified: true,
+  //     folderMoveCandidate: {
+  //       start: [e.clientX, e.clientY],
+  //       target: e.currentTarget,
+  //       id: x.id,
+  //     },
+  //     folderPosList: arr,
+  //   });
+  // };
 
-  folderDragEnd = (e) => {
-    var f = this.state.folderMoveCandidate;
-    var targetSize = [e.target.clientWidth, e.target.clientHeight];
-    var arr = this.state.folderPosList;
-    var final = [
-      f.target.offsetLeft + e.clientX - f.start[0] - targetSize[0] / 2,
-      f.target.offsetTop + e.clientY - f.start[1] - targetSize[1] / 2,
-    ];
-    var pos = [
-      Math.max(arr[0].findIndex((x) => x > final[0])),
-      Math.max(arr[1].findIndex((x) => x > final[1])),
-    ];
-    pos = pos[0] + pos[1] * arr[0].length - 1;
-    store.dispatch({
-      type: MOVE_SUBFOLDER,
-      payload: { id: f.id, newIndex: pos },
-    });
-    this.props.patchFolder(this.props.pagename, {
-      preferredSort: -1,
-    });
-    this.setState({
-      folderMoveCandidate: { start: [0, 0], target: null, id: "" },
-      folderPosList: [[], []],
-    });
-  };
+  // folderDragEnd = (e) => {
+  //   var f = this.state.folderMoveCandidate;
+  //   var targetSize = [e.target.clientWidth, e.target.clientHeight];
+  //   var arr = this.state.folderPosList;
+  //   var final = [
+  //     f.target.offsetLeft + e.clientX - f.start[0] - targetSize[0] / 2,
+  //     f.target.offsetTop + e.clientY - f.start[1] - targetSize[1] / 2,
+  //   ];
+  //   var pos = [
+  //     Math.max(arr[0].findIndex((x) => x > final[0])),
+  //     Math.max(arr[1].findIndex((x) => x > final[1])),
+  //   ];
+  //   pos = pos[0] + pos[1] * arr[0].length - 1;
+  //   store.dispatch({
+  //     type: MOVE_SUBFOLDER,
+  //     payload: { id: f.id, newIndex: pos },
+  //   });
+  //   this.props.patchFolder(this.props.pagename, {
+  //     defaultSubfolderSort: -1,
+  //   });
+  //   this.setState({
+  //     folderMoveCandidate: { start: [0, 0], target: null, id: "" },
+  //     folderPosList: [[], []],
+  //   });
+  // };
 
   render() {
     const { credentials } = this.props.user;
     const isAdmin = credentials.isAdmin;
     const folder = this.props.folder;
-    // folders.subfolders = [];
 
-    const menu = (
-      <Menu onClick={(e) => this.sortSubfolders(e)}>
-        <Menu.Item key="0">Alphabetical order</Menu.Item>
-        <Menu.Item key="1">Reverse alphabetical order</Menu.Item>
-        <Menu.Item key="2">Most recently added</Menu.Item>
-        <Menu.Item key="3">Least recently added</Menu.Item>
-        <Menu.Item key="4">Most popular</Menu.Item>
+    const subfolderSortOptions = {
+      alphabetical: "Alphabetical order",
+      most_popular: "Most popular",
+      last_modified: "Last modified",
+      most_recently_added: "Most recently added",
+      least_recently_added: "Least recently added",
+    };
+
+    const subfolderSortMenu = (
+      <Menu onClick={this.sortSubfolders}>
+        {Object.keys(subfolderSortOptions).map((option) => (
+          <Menu.Item key={option}>{subfolderSortOptions[option]}</Menu.Item>
+        ))}
       </Menu>
     );
 
@@ -214,14 +221,6 @@ class FoldersCard extends Component {
     if (this.state.selectedFolders.length === 1) {
       s = "";
     }
-
-    const menuSelector = [
-      "Alphabetical order",
-      "Reverse alphabetical order",
-      "Most recently added",
-      "Least recently added",
-      "Most popular",
-    ];
 
     return (
       <div>
@@ -281,11 +280,13 @@ class FoldersCard extends Component {
                       </Button>
                     </span>
                   )}
-                <Dropdown overlay={menu}>
+                <Dropdown overlay={subfolderSortMenu}>
                   <Button>
-                    {this.state.requestedSort === null
-                      ? "Order folders by"
-                      : menuSelector[this.state.requestedSort]}{" "}
+                    {this.state.requestedSubfolderSortKey === null
+                      ? "Sort folders by"
+                      : subfolderSortOptions[
+                          this.state.requestedSubfolderSortKey
+                        ]}
                     <DownOutlined />
                   </Button>
                 </Dropdown>
@@ -378,5 +379,5 @@ export default connect(mapStateToProps, {
   deleteFolder,
   patchFolder,
   patchSubfolder,
-  syncAllSubFolders,
+  // syncAllSubFolders,
 })(FoldersCard);
