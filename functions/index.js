@@ -159,7 +159,7 @@ exports.onProdDepartmentDelete = functions.firestore
     const departmentId = context.params.departmentId;
     const batch = db.batch();
     return db
-      .collection("contacts")
+      .collection("prd_contacts")
       .where("departmentId", "==", departmentId)
       .get()
       .then((data) => {
