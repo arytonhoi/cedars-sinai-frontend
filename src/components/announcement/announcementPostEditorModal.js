@@ -7,6 +7,7 @@ import { clearErrors } from "../../redux/actions/dataActions";
 
 // Editor
 import CKEditor from "ckeditor4-react";
+import { ckConfig } from "../../util/configs/ckeditor";
 
 // styles
 import "../../css/modal.css";
@@ -151,10 +152,7 @@ class AnnouncementPostEditorModal extends Component {
               <CKEditor
                 data={this.props.announcementContent}
                 style={{ marginBottom: "15px" }}
-                config={{
-                  disallowedContent: "script embed *[on*]",
-                  removeButtons: "",
-                }}
+                config={ckConfig}
               />
             </Form.Item>
           </Form>

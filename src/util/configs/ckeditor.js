@@ -1,3 +1,3 @@
 export const ckConfig = {
-  disallowedContent : 'script embed *[on*]'
+  disallowedContent: "script embed *[on*]",
 };

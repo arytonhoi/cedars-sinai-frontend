@@ -7,6 +7,7 @@ import { patchFolder } from "../../redux/actions/dataActions";
 
 // components
 import CKEditor from "ckeditor4-react";
+import { ckConfig } from "../../util/configs/ckeditor";
 
 // css
 import "../../css/page.css";
@@ -147,11 +148,7 @@ class FolderPostCard extends Component {
             <CKEditor
               data={folder.content}
               onChange={this.updateEditor}
-              config={{
-                disallowedContent: "script embed *[on*]",
-                removeButtons: "",
-                height: "38vh",
-              }}
+              config={ckConfig}
             />
           ) : folder.content === "" ? (
             <div className="folder-blank noselect">

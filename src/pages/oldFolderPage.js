@@ -35,6 +35,7 @@ import {
 
 // Editor
 import CKEditor from "ckeditor4-react";
+import { ckConfig } from "../../util/configs/ckeditor";
 
 //HTML handling
 import parse from "html-react-parser";
@@ -647,11 +648,7 @@ class FolderPage extends Component {
                 <CKEditor
                   data={folders.content}
                   onChange={this.updateEditor}
-                  config={{
-                    disallowedContent: "script embed *[on*]",
-                    removeButtons: "",
-                    height: "38vh",
-                  }}
+                  config={ckConfig}
                 />
               </div>
             </>
