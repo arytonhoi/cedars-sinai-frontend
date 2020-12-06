@@ -322,8 +322,8 @@ class FoldersCard extends Component {
               )}
               {folders.subfolders.map((x, i) => (
                 <Folder
-                  onMouseDown={(e) => this.folderDragStart(e, x)}
-                  onMouseUp={this.folderDragEnd}
+                  // onMouseDown={(e) => this.folderDragStart(e, x)}
+                  // onMouseUp={this.folderDragEnd}
                   key={x.id}
                   label={x.title}
                   href={
