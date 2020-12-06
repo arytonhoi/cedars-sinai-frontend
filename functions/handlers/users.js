@@ -5,7 +5,7 @@ const {
   returnFormattedHttpError,
 } = require("../util/util");
 
-const firebaseConfig = require("../util/config");
+const { firebaseConfig } = require("../util/config");
 const firebase = require("firebase");
 firebase.initializeApp(firebaseConfig);
 
