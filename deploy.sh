@@ -9,6 +9,7 @@ if [[ $1 == "prd" ]]
     sed 's/^const production = "prd_";/const production = "";/' -i ./functions/util/admin.js
 elif [[ $1 == "dev" ]]
   then
+    sed 's/^const production = "prd_";/const production = "";/' -i ./functions/util/admin.js
     sed 's/^exports.app/exports.devApp/' -i ./functions/index.js
     npm run build
     firebase deploy --only hosting:cedars-dev,functions:devApp,functions:onFolderDelete,functions:onDepartmentDelete
