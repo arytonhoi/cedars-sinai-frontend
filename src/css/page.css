@@ -67,6 +67,12 @@
   padding: 24px;
 }
 
+.content-card .vertical-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .content-card .wrapped-content {
   display: flex;
   position: relative;

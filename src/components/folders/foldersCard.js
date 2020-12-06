@@ -263,7 +263,7 @@ class FoldersCard extends Component {
                           this.toggleShowModal("showDeleteFolderModal")
                         }
                       >
-                        Delete {this.state.selectedFolders.length} Folder{s}
+                        Delete {this.state.selectedFolders.length} folder{s}
                       </Button>
                       <Button
                         disabled={this.state.selectedFolders.length === 0}
@@ -271,15 +271,15 @@ class FoldersCard extends Component {
                           this.toggleShowModal("showMoveFolderModal")
                         }
                       >
-                        Move {this.state.selectedFolders.length} Folder{s}
+                        Move {this.state.selectedFolders.length} folder{s}
                       </Button>
                       <Button
-                        disabled={this.state.selectedFolders.length === 0}
+                        disabled={this.state.selectedFolders.length !== 1}
                         onClick={() =>
                           this.toggleShowModal("showRenameFolderModal")
                         }
                       >
-                        Rename {this.state.selectedFolders.length} Folder{s}
+                        Rename folder
                       </Button>
                     </span>
                   )}
@@ -292,7 +292,6 @@ class FoldersCard extends Component {
                   </Button>
                 </Dropdown>
                 {isAdmin &&
-                  !this.props.isEditingPost &&
                   (this.props.isEditingFolders ? (
                     <Button
                       type="primary"
@@ -307,6 +306,7 @@ class FoldersCard extends Component {
                   ) : (
                     <Button
                       type="primary"
+                      disabled={this.props.isEditingPost}
                       onClick={this.props.toggleEditingFolders}
                     >
                       Edit Folders
@@ -316,7 +316,6 @@ class FoldersCard extends Component {
             </div>
           </div>
           {folders.subfolders.length > 0 ? (
-            // <div className="folder-holder">
             <div className="padded-content wrapped-content">
               {isAdmin && this.props.isEditingFolders && (
                 <AddFolder target={this.props.pageName} format={0} />
@@ -338,9 +337,12 @@ class FoldersCard extends Component {
               ))}
             </div>
           ) : (
-            <div>
+            <div
+              className="padded-content vertical-content"
+              style={{ margin: "48px auto" }}
+            >
               {isAdmin ? (
-                <div className="padded-content">
+                <div className="vertical-content">
                   <h3 className="em2">It seems like there are no subfolders</h3>
                   <h4 className="em3">
                     You can create subfolders under any folder.
@@ -349,7 +351,6 @@ class FoldersCard extends Component {
                 </div>
               ) : (
                 <Empty
-                  style={{ margin: "48px auto" }}
                   image={Empty.PRESENTED_IMAGE_SIMPLE}
                   description={<span>No folders yet</span>}
                 />
