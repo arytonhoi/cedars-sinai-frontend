@@ -1,6 +1,6 @@
 const { admin, db, production } = require("../util/admin");
-const { formatReqBody } = require("../util/util");
-const firebaseConfig = require("../util/config");
+// const { formatReqBody } = require("../util/util");
+const { firebaseConfig } = require("../util/config");
 
 // upload a thumbnail image
 exports.postImage = (req, res) => {
