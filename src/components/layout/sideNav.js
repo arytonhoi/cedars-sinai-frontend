@@ -41,7 +41,7 @@ class SideNav extends Component {
       >
         <Menu
           theme="light"
-          selectedKeys={[location.pathname.substring(1)]}
+          selectedKeys={[location.pathname.split("/", 2)[1]]}
           mode="inline"
         >
           <Menu.Item style={{ marginTop: "40px", marginBottom: "36px" }}>
