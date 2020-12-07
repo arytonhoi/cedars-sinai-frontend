@@ -315,11 +315,11 @@ export const getSearchedContacts = (searchTerm) => (dispatch) => {
 };
 
 // Folders
-export const getFolder = (folderName, track) => (dispatch) => {
+export const getFolder = (folderId, track) => (dispatch) => {
   dispatch({ type: LOADING_DATA });
   axios
     .get(
-      `/folders/${folderName}?${
+      `/folders/${folderId}?${
         typeof track !== "undefined" && track === true ? "i" : ""
       }`
     )
@@ -359,11 +359,11 @@ export const searchFolder = (searchKey) => (dispatch) => {
     .catch((err) => dispatch({ type: SET_ERRORS, payload: err }));
 };
 
-export const getNavRoute = (folderName) => (dispatch) => {
-  typeof folderName === "undefined"
+export const getNavRoute = (folderId) => (dispatch) => {
+  typeof folderId === "undefined"
     ? dispatch({ type: RESET_NAV_PATH })
     : axios
-        .get(`/folders/${folderName}`)
+        .get(`/folders/${folderId}`)
         .then((res) => {
           dispatch({
             type: SET_NAV_PATH,
@@ -373,10 +373,13 @@ export const getNavRoute = (folderName) => (dispatch) => {
         .catch((err) => dispatch({ type: SET_ERRORS, payload: err }));
 };
 
-export const postFolder = (folderName, folderDetails) => (dispatch) => {
+export const postFolder = (folderId, folderDetails) => (dispatch) => {
   dispatch({ type: LOADING_UI });
+  console.log(folderId);
+  console.log(folderDetails);
+
   axios
-    .post(`/folders/${folderName}`, folderDetails)
+    .post(`/folders/${folderId}`, folderDetails)
     .then((res) => {
       dispatch({
         type: POST_FOLDER,
@@ -399,6 +402,7 @@ export const patchFolder = (folderId, updatedFolder) => (dispatch) => {
       payload: { error: "Cannot move folder into itself." },
     });
   } else {
+    updatedFolder.lastModified = new Date().toISOString();
     axios
       .patch(`/folders/${folderId}`, updatedFolder)
       .then((res) => {
@@ -419,6 +423,7 @@ export const patchFolder = (folderId, updatedFolder) => (dispatch) => {
 
 export const patchSubfolder = (folderId, updatedFolder) => (dispatch) => {
   dispatch({ type: LOADING_UI });
+  updatedFolder.lastModified = new Date().toISOString();
   axios
     .patch(`/folders/${folderId}`, updatedFolder)
     .then((res) => {
@@ -448,13 +453,13 @@ export const patchSubfolder = (folderId, updatedFolder) => (dispatch) => {
 //   }
 // };
 
-export const deleteFolder = (folderName) => (dispatch) => {
+export const deleteFolder = (folderId) => (dispatch) => {
   axios
-    .delete(`/folders/${folderName}`)
+    .delete(`/folders/${folderId}`)
     .then((res) => {
       dispatch({
         type: DELETE_SUBFOLDER,
-        payload: folderName,
+        payload: folderId,
       });
     })
     .catch((err) => {

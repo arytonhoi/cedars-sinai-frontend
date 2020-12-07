@@ -10,11 +10,7 @@ import {
   patchSubfolder,
   // syncAllSubFolders,
 } from "../../redux/actions/dataActions";
-import {
-  DELETE_SUBFOLDER,
-  MOVE_SUBFOLDER,
-  SORT_SUBFOLDER,
-} from "../../redux/types";
+import { DELETE_SUBFOLDER, SORT_SUBFOLDER } from "../../redux/types";
 
 // components
 import AddFolder from "./AddFolder.js";
@@ -65,7 +61,7 @@ class FoldersCard extends Component {
   renameFolder = (formValues) => {
     console.log(formValues);
     var folder = this.state.selectedFolders[0];
-    this.toggleSelect(null, folder);
+    // this.toggleSelect(null, folder);
     this.props.patchSubfolder(folder.id, {
       parent: folder.parent,
       title: formValues.folderTitle,
@@ -85,7 +81,7 @@ class FoldersCard extends Component {
         if (
           this.props.data.moveFolderModalCurrentPath.movingFolderId !== x.id
         ) {
-          this.toggleSelect(null, x);
+          // this.toggleSelect(null, x);
           this.props.patchSubfolder(x.id, {
             parent: this.props.data.moveFolderModalCurrentPath.movingFolderId,
           });
@@ -131,18 +127,30 @@ class FoldersCard extends Component {
     store.dispatch({ type: SORT_SUBFOLDER, payload: sortKey });
   };
 
-  // drag folder functions
+  // select folder functions
   toggleSelect = (event, folder) => {
     var folders = this.state.selectedFolders;
     var pos = folders.findIndex((f) => f.id === folder.id);
     if (pos >= 0) {
       folders = folders.slice(0, pos).concat(folders.slice(pos + 1));
     } else {
-      folders.push({ ...folder });
+      folders.push(folder);
     }
     this.setState({ selectedFolders: folders });
   };
 
+  subfolderIsSelected = (subfolder) => {
+    let i;
+    let selectedFolders = this.state.selectedFolders;
+    for (i = 0; i < selectedFolders.length; i++) {
+      if (selectedFolders[i].id === subfolder.id) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  // drag folder functions
   // folderDragStart = (e, x) => {
   //   var f = document.querySelectorAll(".folder");
   //   var arr = this.state.folderPosList;
@@ -314,20 +322,25 @@ class FoldersCard extends Component {
           {folder.subfolders.length > 0 ? (
             <div className="padded-content wrapped-content">
               {isAdmin && this.props.isEditingFolders && (
-                <AddFolder target={folder.id} format={0} />
+                // <AddFolder target={folder.id} format={0} />
+                <AddFolder parentFolderId={folder.id} format={0} />
               )}
-              {folder.subfolders.map((x, i) => (
+              {folder.subfolders.map((subfolder, i) => (
                 <Folder
                   // onMouseDown={(e) => this.folderDragStart(e, x)}
                   // onMouseUp={this.folderDragEnd}
-                  key={x.id}
-                  label={x.title}
+                  isSelected={
+                    this.props.isEditingFolders &&
+                    this.subfolderIsSelected(subfolder)
+                  }
+                  key={subfolder.id}
+                  label={subfolder.title}
                   href={
                     isAdmin && this.props.isEditingFolders
-                      ? (e) => this.toggleSelect(e, x)
+                      ? (e) => this.toggleSelect(e, subfolder)
                       : this.props.isEditingPost
                       ? () => 0
-                      : x.id
+                      : subfolder.id
                   }
                 />
               ))}
@@ -343,7 +356,7 @@ class FoldersCard extends Component {
                   <h4 className="em3">
                     You can create subfolders under any folder.
                   </h4>
-                  <AddFolder target={folder.id} format={1} />
+                  <AddFolder parentFolderId={folder.id} format={1} />
                 </div>
               ) : (
                 <Empty

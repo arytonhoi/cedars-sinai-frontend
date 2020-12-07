@@ -22,14 +22,14 @@ class Folder extends Component {
         <div
           className={
             "folder clickable noselect " +
-            (this.state.isSelected ? "folder-selected" : "folder-normal")
+            (this.props.isSelected ? "folder-selected" : "folder-normal")
           }
           onClick={() => {
-            console.log("selected!");
+            // console.log("selected!");
             href();
-            this.setState({
-              isSelected: !this.state.isSelected,
-            });
+            // this.setState({
+            //   isSelected: !this.state.isSelected,
+            // });
           }}
           onMouseDown={this.props.onMouseDown}
           onMouseUp={this.props.onMouseUp}

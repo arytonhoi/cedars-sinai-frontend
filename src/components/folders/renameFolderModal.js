@@ -23,6 +23,7 @@ class RenameFolderModal extends Component {
       this.formRef.current.resetFields();
     }
   }
+
   formRef = React.createRef();
 
   render() {

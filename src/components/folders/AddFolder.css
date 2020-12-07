@@ -1,65 +1,65 @@
-.folder-add{
+.folder-add {
   color: #1890ff;
   border: 1px solid #1890ff;
 }
-.folder-add:hover{
+.folder-add:hover {
   background: #f3f3f3;
 }
-.folder-logo-plus{
+.folder-logo-plus {
   font-size: 2.5em;
   line-height: 1;
   padding-right: 0.25em;
 }
-.fit{
+.fit {
   width: 100%;
   display: flex;
   align-items: center;
 }
 
-.folder-create-bg{
+.folder-create-bg {
   position: fixed;
   z-index: 5;
   width: 100%;
   height: 100vh;
   left: 0;
   top: 0;
-  background: rgba(128,128,128,0.5);
+  background: rgba(128, 128, 128, 0.5);
   color: black;
-  margin: 0
+  margin: 0;
 }
 
-.folder-create{
+.folder-create {
   position: fixed;
   top: 0;
   width: 50%;
   background: #fff;
 }
 
-.folder-create-input{
+.folder-create-input {
   width: 100%;
 }
 
-.folder-create-topbar{
+.folder-create-topbar {
   display: flex;
   padding: 1em 2em;
   justify-content: space-between;
   align-items: center;
   font-weight: bold;
-  border-bottom : 1px solid #f3f3f3;
+  border-bottom: 1px solid #f3f3f3;
 }
-.folder-create-middlebar{
+.folder-create-middlebar {
   padding: 2em;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
 }
-.folder-create-endbar{
+.folder-create-endbar {
   display: flex;
-  border-top : 1px solid #f3f3f3;
+  border-top: 1px solid #f3f3f3;
   padding: 1em 2em;
   justify-content: flex-end;
 }
 
-.folder-create-endbar > .ant-btn{
+.folder-create-endbar > .ant-btn {
   margin-left: 1em;
 }

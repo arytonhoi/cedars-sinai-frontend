@@ -1,66 +1,63 @@
 import React, { Component } from "react";
-import "./Folder.css";
-import "./AddFolder.css";
-//import PropTypes from "prop-types";
-
-import { Modal, Input, Button } from "antd";
 
 // Redux stuff
 import { connect } from "react-redux";
 import { postFolder, clearErrors } from "../../redux/actions/dataActions";
 
+// css
+import "../../css/modal.css";
+import "./Folder.css";
+import "./AddFolder.css";
+
+// antd
+import { Button, Form, Input, Modal } from "antd";
+
 class AddFolder extends Component {
   constructor() {
     super();
     this.state = {
-      folder: {
-        parent: "",
-        title: "",
-      },
-      errors: [],
-      showCreateModal: false,
+      showCreateFolderModal: false,
+      // parentFolderId: "",
+      errors: {},
     };
   }
+
   componentDidMount() {
-    var target = this.props.target;
-    if (typeof target === "undefined" || target === "") {
-      target = "home";
-    }
-    this.setState({
-      ...this.state,
-      folder: { ...this.state.folder, parent: target },
-    });
+    // var parentFolderId = this.props.parentFolderId;
+    // if (!parentFolderId || parentFolderId === "") {
+    //   parentFolderId = "home";
+    // }
+    // this.setState({
+    //   parentFolderId: parentFolderId,
+    // });
   }
-  toggleCreateModal = () => {
+
+  componentDidUpdate() {
+    if (this.formRef.current) {
+      this.formRef.current.resetFields();
+    }
+  }
+
+  toggleShowCreateFolderModal = () => {
     this.setState({
       ...this.state,
-      showCreateModal: !this.state.showCreateModal,
+      showCreateFolderModal: !this.state.showCreateFolderModal,
     });
     console.log(this.state);
   };
-  handleChange = (event) => {
-    this.setState({
-      ...this.state,
-      folder: { ...this.state.folder, [event.target.name]: event.target.value },
-    });
+
+  handlePostFolder = (formValues) => {
+    const newFolder = {
+      title: formValues.folderTitle,
+    };
+    this.props.postFolder(this.props.parentFolderId, newFolder);
+    this.toggleShowCreateFolderModal();
   };
-  handleSubmit = (event) => {
-    event.preventDefault();
-    if (this.state.folder.title.length > 0) {
-      const newFolder = {
-        title: this.state.folder.title,
-      };
-      this.props.postFolder(this.state.folder.parent, newFolder);
-      this.toggleCreateModal();
-    } else {
-      this.setState({
-        ...this.state,
-        errors: [{ general: "Folder name should not be blank." }],
-      });
-    }
-  };
+
+  formRef = React.createRef();
+
   render() {
-    var style = this.props.format;
+    const style = this.props.format;
     return (
       <div
         className={
@@ -70,46 +67,64 @@ class AddFolder extends Component {
         }
       >
         {typeof style === "undefined" || style === 0 ? (
-          <div className="fit" onClick={this.toggleCreateModal}>
+          <div
+            className="fit clickable"
+            onClick={this.toggleShowCreateFolderModal}
+          >
             <span className="folder-logo-plus">+</span>
             <span className="">Create a folder</span>
           </div>
         ) : (
-          <Button type="primary" onClick={this.toggleCreateModal}>
+          <Button type="primary" onClick={this.toggleShowCreateFolderModal}>
             <span className="">Create a folder</span>
           </Button>
         )}
         <Modal
-          className="center"
-          title="Create New Folder"
-          visible={this.state.showCreateModal}
+          className="modal"
+          title="Add folder"
+          visible={this.state.showCreateFolderModal}
           footer={[
-            <Button key="back" onClick={this.toggleCreateModal}>
+            <Button key="back" onClick={this.toggleShowCreateFolderModal}>
               Cancel
             </Button>,
             <Button
               key="submit"
               type="primary"
-              onClick={this.handleSubmit}
-              disabled={this.state.folder.title.length <= 0}
+              form="addFolderForm"
+              htmlType="submit"
             >
               Create
             </Button>,
           ]}
         >
-          <Input
-            className="folder-create-input"
-            type="text"
-            name="title"
-            placeholder="Name"
-            maxLength="64"
-            onChange={this.handleChange}
-          />
-          <span className="errors">
-            {this.state.errors.length > 0
-              ? this.state.errors.pop().general
-              : ""}
-          </span>
+          <Form
+            className="modal-form"
+            id="addFolderForm"
+            layout="vertical"
+            ref={this.formRef}
+            initialValues={{
+              folderTitle: "",
+            }}
+            onFinish={(formValues) => {
+              this.handlePostFolder(formValues);
+              this.formRef.current.resetFields();
+            }}
+          >
+            <Form.Item
+              name="folderTitle"
+              rules={[
+                { required: true, message: "Please input a folder name." },
+              ]}
+              label="Name"
+            >
+              <Input
+                id="folderTitle"
+                name="folderTitle"
+                type="text"
+                placeholder="ex: Equipment"
+              />
+            </Form.Item>
+          </Form>
         </Modal>
       </div>
     );
