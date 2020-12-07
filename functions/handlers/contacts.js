@@ -1,4 +1,4 @@
-const { db } = require("../util/admin");
+const { db, production } = require("../util/admin");
 const { formatReqBody } = require("../util/util");
 
 // get all contacts in database
@@ -6,7 +6,7 @@ exports.getAllContacts = (req, res) => {
   if (req.method !== "GET") {
     return res.status(400).json({ error: "Method not allowed" });
   }
-  db.collection("contacts")
+  db.collection(`${production}contacts`)
     .get()
     .then((data) => {
       let contacts = [];
@@ -47,7 +47,7 @@ exports.postOneContact = (req, res) => {
     };
 
     // add newContact to FB database and update parent folder
-    db.collection("contacts")
+    db.collection(`${production}contacts`)
       .add(newContact)
       .then((doc) => {
         newContact.id = doc.id;
@@ -70,7 +70,7 @@ exports.deleteOneContact = (req, res) => {
     return res.status(403).json({ error: "Unathorized" });
   }
 
-  const contact = db.doc(`/contacts/${req.params.contactId}`);
+  const contact = db.doc(`/${production}contacts/${req.params.contactId}`);
   contact
     .get()
     .then((doc) => {
@@ -99,7 +99,7 @@ exports.updateOneContact = (req, res) => {
     var updatedContact = {
       ...req.body,
     };
-    db.doc(`/contacts/${req.params.contactId}`)
+    db.doc(`/${production}contacts/${req.params.contactId}`)
       .update(updatedContact)
       .then(() => {
         return res.json({ message: "Contact updated successfully " });

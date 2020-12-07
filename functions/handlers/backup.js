@@ -1,4 +1,4 @@
-const { admin, db } = require("../util/admin");
+const { admin, db, production } = require("../util/admin");
 const { formatReqBody } = require("../util/util");
 
 exports.getDBContents = (req, res) => {

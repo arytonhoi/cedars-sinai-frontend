@@ -1,4 +1,4 @@
-const { admin, db } = require("../util/admin");
+const { admin, db, production } = require("../util/admin");
 const { formatReqBody } = require("../util/util");
 const firebaseConfig = require("../util/config");
 
@@ -63,7 +63,7 @@ exports.getBannerImage = (req, res) => {
     return res.status(400).json({ error: "Method not allowed" });
   }
 
-  db.doc(`/banners/${req.params.pageName}`)
+  db.doc(`/${production}banners/${req.params.pageName}`)
     .get()
     .then((doc) => {
       if (!doc.exists) {
@@ -79,7 +79,7 @@ exports.patchBannerImage = (req, res) => {
   }
 
   const updatedBannerImgObj = { imgUrl: req.body.imgUrl };
-  db.doc(`/banners/${req.params.pageName}`)
+  db.doc(`/${production}banners/${req.params.pageName}`)
     .update(updatedBannerImgObj)
     .then(() => {
       return res.json({
