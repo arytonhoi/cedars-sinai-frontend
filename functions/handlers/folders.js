@@ -1,12 +1,17 @@
 const { admin, db, production } = require("../util/admin");
-const { formatReqBody } = require("../util/util");
+const {
+  formatReqBody,
+  validateUserIsAdmin,
+  returnFormattedHttpError,
+} = require("../util/util");
 const FieldValue = admin.firestore.FieldValue;
 
 // util functions
 function getFolderPath(folderPathsMap, folderId) {
   const folderPath = [];
   let currentFolderId = folderId;
-  while (currentFolderId !== "") {
+  while (currentFolderId && currentFolderId !== "") {
+    console.log(currentFolderId);
     let folderPathsMapContent = folderPathsMap[currentFolderId];
     folderPathsMapContent.id = currentFolderId;
     folderPath.push(folderPathsMapContent);
@@ -16,7 +21,7 @@ function getFolderPath(folderPathsMap, folderId) {
   return folderPath;
 }
 
-function compressSearchString(string, searchKey) {
+function boldFolderContentSearchMatches(string, searchKey) {
   let stripHTMLRegex = new RegExp(
     `<\\/? *[a-zA-Z0-9]+( *[a-zA-Z0-9]+ *= *['"].+?['"])* *\\/? *>`,
     "gi"
@@ -48,9 +53,6 @@ function compressSearchString(string, searchKey) {
 
 // get all folders in database
 exports.getAllFolders = (req, res) => {
-  if (req.method !== "GET") {
-    return res.status(400).json({ error: "Method not allowed" });
-  }
   db.collection(`${production}folders`)
     .orderBy("lastModified", "desc")
     .get()
@@ -64,37 +66,51 @@ exports.getAllFolders = (req, res) => {
       return res.json(folders);
     })
     .catch((err) => {
-      console.error(err);
-      res.status(500).json({ error: err.code });
+      returnFormattedHttpError(
+        res,
+        500,
+        "Server failed to get all folders. Please try again.",
+        err
+      );
     });
 };
 
 // temporary search
 exports.searchFolders = (req, res) => {
-  if (req.method !== "GET") {
-    return res.status(400).json({ error: "Method not allowed" });
+  let searchTerm;
+  try {
+    searchTerm = `${req.params.searchTerm}`;
+  } catch (err) {
+    returnFormattedHttpError(
+      res,
+      400,
+      "Invalid search term. Please try another search term.",
+      err
+    );
   }
-  const searchTerm = `${req.params.searchTerm}`;
   const folderPathsMapRef = db.collection(`${production}paths`).doc("folders");
   // global case insensitive matching
   var regex = new RegExp(searchTerm, "gi");
   db.collection(`${production}folders`)
     .orderBy("lastModified", "desc")
     .get()
-    .then((data) => {
-      let folders = [];
+    .then((allFolders) => {
+      let matchedFolders = [];
       folderPathsMapRef
         .get()
-        .then((fpmr) => {
-          const fpmrd = fpmr.data();
-          data.forEach((doc) => {
+        .then((folderPathsMapRes) => {
+          const folderPathsMap = folderPathsMapRes.data();
+          allFolders.forEach((doc) => {
             let folder = doc.data();
             folder.id = doc.id;
-            folder.path = getFolderPath(fpmrd, folder.id);
+
             let relevanceCount = 0;
             let titleMatchesArray = folder.title.match(regex);
             let contentMatchesArray = folder.content.match(regex);
-            folder.content = compressSearchString(folder.content, searchTerm);
+            folder.content = boldFolderContentSearchMatches(
+              folder.content,
+              searchTerm
+            );
             if (titleMatchesArray !== null) {
               relevanceCount += 2 * titleMatchesArray.length;
             }
@@ -104,39 +120,44 @@ exports.searchFolders = (req, res) => {
 
             if (relevanceCount !== 0) {
               folder.relevanceCount = relevanceCount;
-              folders.push(folder);
+              folder.path = getFolderPath(folderPathsMap, folder.id);
+              matchedFolders.push(folder);
             }
           });
         })
         .then((x) => {
-          folders.sort((a, b) =>
+          matchedFolders.sort((a, b) =>
             a.relevanceCount < b.relevanceCount
               ? 1
               : b.relevanceCount < a.relevanceCount
               ? -1
               : 0
           );
-          return res.json(folders);
+          return res.json(matchedFolders);
         });
     })
     .catch((err) => {
-      console.error(err);
-      res.status(500).json({ error: err.code });
+      returnFormattedHttpError(
+        res,
+        500,
+        "Server failed to search. Please try again.",
+        err
+      );
     });
 };
 
 // get single folder
 exports.getFolder = (req, res) => {
-  //   return res.status(400).json({ error: req.query });
-  if (req.method !== "GET") {
-    return res.status(400).json({ error: "Method not allowed" });
-  }
   let folderData = {};
   db.doc(`/${production}folders/${req.params.folderId}`)
     .get()
     .then((doc) => {
       if (!doc.exists) {
-        return res.status(404).json({ error: "Folder not found" });
+        returnFormattedHttpError(
+          res,
+          404,
+          "Folder doesn't exist. Go back to Resources"
+        );
       }
       folderData = doc.data();
       folderData.id = doc.id;
@@ -166,33 +187,46 @@ exports.getFolder = (req, res) => {
     .then((doc) => {
       // recursively construct folder path map
       if (!doc.exists) {
-        return res.status(500).json({ error: "Folder not found" });
+        returnFormattedHttpError(
+          res,
+          500,
+          "Folder not found in folder path tree."
+        );
       }
       const folderPathsMap = doc.data();
       folderData.path = getFolderPath(folderPathsMap, folderData.id);
       return res.json(folderData);
     })
     .catch((err) => {
-      console.error(err);
-      res.status(500).json({ error: "Something went wrong" });
+      returnFormattedHttpError(
+        res,
+        500,
+        "Server failed to get folder details. Please try again.",
+        err
+      );
     });
 };
 
 // create folder
 exports.createFolder = (req, res) => {
-  if (!req.user.isAdmin) {
-    return res.status(403).json({ error: "Only admins can create folders." });
-  } else if (req.method !== "POST") {
-    return res.status(400).json({ error: "Method not allowed" });
-  }
-  try {
-    req = formatReqBody(req);
-  } catch (e) {
-    return res.status(400).json({ error: "Invalid JSON." });
-  }
+  validateUserIsAdmin(req, res);
+  req = formatReqBody(req);
   // move request params to JS object
-  const parentFolderId = req.params.folderId;
-  const folderTitle = req.body.title;
+  let parentFolderId;
+  let folderTitle;
+  try {
+    parentFolderId = req.params.folderId;
+    folderTitle = req.body.title;
+  } catch (err) {
+    returnFormattedHttpError(
+      res,
+      400,
+      `Cannot create folder. Make sure the parent folder id in the request URL is correct and the 
+      body contains the field title`,
+      err
+    );
+  }
+
   const newFolder = {
     parent: parentFolderId,
     createdAt: new Date().toISOString(),
@@ -228,15 +262,17 @@ exports.createFolder = (req, res) => {
       res.json(newFolder);
     })
     .catch((err) => {
-      console.error(err);
-      return res.status(500).json({ error: err.code });
+      returnFormattedHttpError(
+        res,
+        500,
+        "Failed to create folder. Please try again.",
+        err
+      );
     });
 };
 
 exports.deleteFolder = (req, res) => {
-  if (!req.user.isAdmin) {
-    return res.status(403).json({ error: "Only admins can delete folders." });
-  }
+  validateUserIsAdmin(req, res);
   const batch = db.batch();
   const folderRef = db.doc(`/${production}folders/${req.params.folderId}`);
   const folderPathsMapRef = db.collection(`${production}paths`).doc("folders");
@@ -244,7 +280,11 @@ exports.deleteFolder = (req, res) => {
     .get()
     .then((doc) => {
       if (!doc.exists) {
-        return res.status(404).json({ error: "Folder doesn't exist" });
+        returnFormattedHttpError(
+          res,
+          404,
+          "Folder doesn't exist. Check the request URL"
+        );
       }
       batch.delete(folderRef);
       batch.update(folderPathsMapRef, { [doc.id]: FieldValue.delete() });
@@ -254,20 +294,19 @@ exports.deleteFolder = (req, res) => {
       res.json({ message: "Folder deleted successfully" });
     })
     .catch((err) => {
-      console.error(err);
-      res.status(500).json({ error: err.code });
+      returnFormattedHttpError(
+        res,
+        404,
+        "Failed to delete folder. Please try again.",
+        err
+      );
     });
 };
 
 exports.updateOneFolder = (req, res) => {
-  if (!req.user.isAdmin) {
-    return res.status(403).json({ error: "Only admins can update folders." });
-  }
-  try {
-    req = formatReqBody(req);
-  } catch (e) {
-    return res.status(400).json({ error: "Incorrect JSON format" });
-  }
+  req = formatReqBody(req);
+  validateUserIsAdmin(req, res);
+
   if (Object.keys(req.body).length > 0) {
     try {
       const folderToUpdate = req.params.folderId;
@@ -314,8 +353,12 @@ exports.updateOneFolder = (req, res) => {
         return res.json({ message: "Folder updated successfully." });
       });
     } catch (err) {
-      console.error(err);
-      return res.status(500).json({ error: err.code });
+      returnFormattedHttpError(
+        res,
+        500,
+        "Failed to update folder. Please try again",
+        err
+      );
     }
   } else {
     return res.json({ message: "No changes were made." });
