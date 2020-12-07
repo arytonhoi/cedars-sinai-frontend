@@ -15,6 +15,7 @@ const initialState = {
 
 export default function (state = initialState, action) {
   switch (action.type) {
+    // errors
     case SET_ERRORS:
       console.log(action.payload);
       return {
@@ -27,16 +28,17 @@ export default function (state = initialState, action) {
         errors: {},
         loading: false,
       };
+    // loading
     case LOADING_UI:
       return {
         ...state,
-        errors: [],
+        errors: {},
         loading: true,
       };
     case STOP_LOADING_UI:
       return {
         ...state,
-        errors: [],
+        errors: {},
         loading: false,
       };
     case LOADING_FOLDER_SEARCH:

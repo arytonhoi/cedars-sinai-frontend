@@ -24,7 +24,7 @@ import "../../css/page.css";
 
 // Ant Design
 import { DownOutlined } from "@ant-design/icons";
-import { Button, Dropdown, Empty, Layout, Menu } from "antd";
+import { Button, Dropdown, Empty, Layout, Menu, Spin } from "antd";
 const { Content } = Layout;
 
 class FoldersCard extends Component {
@@ -203,6 +203,7 @@ class FoldersCard extends Component {
 
   render() {
     const { credentials } = this.props.user;
+    const { loading } = this.props.UI;
     const isAdmin = credentials.isAdmin;
     const folder = this.props.folder;
 
@@ -319,53 +320,61 @@ class FoldersCard extends Component {
               </span>
             </div>
           </div>
-          {folder.subfolders.length > 0 ? (
-            <div className="padded-content wrapped-content">
-              {isAdmin && this.props.isEditingFolders && (
-                // <AddFolder target={folder.id} format={0} />
-                <AddFolder parentFolderId={folder.id} format={0} />
-              )}
-              {folder.subfolders.map((subfolder, i) => (
-                <Folder
-                  // onMouseDown={(e) => this.folderDragStart(e, x)}
-                  // onMouseUp={this.folderDragEnd}
-                  isSelected={
-                    this.props.isEditingFolders &&
-                    this.subfolderIsSelected(subfolder)
-                  }
-                  key={subfolder.id}
-                  label={subfolder.title}
-                  href={
-                    isAdmin && this.props.isEditingFolders
-                      ? (e) => this.toggleSelect(e, subfolder)
-                      : this.props.isEditingPost
-                      ? () => 0
-                      : subfolder.id
-                  }
-                />
-              ))}
-            </div>
-          ) : (
-            <div
-              className="padded-content vertical-content"
-              style={{ margin: "48px auto" }}
-            >
-              {isAdmin ? (
-                <div className="vertical-content">
-                  <h3 className="em2">It seems like there are no subfolders</h3>
-                  <h4 className="em3">
-                    You can create subfolders under any folder.
-                  </h4>
-                  <AddFolder parentFolderId={folder.id} format={1} />
-                </div>
-              ) : (
-                <Empty
-                  image={Empty.PRESENTED_IMAGE_SIMPLE}
-                  description={<span>No folders yet</span>}
-                />
-              )}
+          {loading && (
+            <div className="padded-content vertical-content">
+              <Spin />
             </div>
           )}
+          {!loading &&
+            (folder.subfolders.length > 0 ? (
+              <div className="padded-content wrapped-content">
+                {isAdmin && this.props.isEditingFolders && (
+                  // <AddFolder target={folder.id} format={0} />
+                  <AddFolder parentFolderId={folder.id} format={0} />
+                )}
+                {folder.subfolders.map((subfolder, i) => (
+                  <Folder
+                    // onMouseDown={(e) => this.folderDragStart(e, x)}
+                    // onMouseUp={this.folderDragEnd}
+                    isSelected={
+                      this.props.isEditingFolders &&
+                      this.subfolderIsSelected(subfolder)
+                    }
+                    key={subfolder.id}
+                    label={subfolder.title}
+                    href={
+                      isAdmin && this.props.isEditingFolders
+                        ? (e) => this.toggleSelect(e, subfolder)
+                        : this.props.isEditingPost
+                        ? () => 0
+                        : subfolder.id
+                    }
+                  />
+                ))}
+              </div>
+            ) : (
+              <div
+                className="padded-content vertical-content"
+                style={{ margin: "48px auto" }}
+              >
+                {isAdmin ? (
+                  <div className="vertical-content">
+                    <h3 className="em2">
+                      It seems like there are no subfolders
+                    </h3>
+                    <h4 className="em3">
+                      You can create subfolders under any folder.
+                    </h4>
+                    <AddFolder parentFolderId={folder.id} format={1} />
+                  </div>
+                ) : (
+                  <Empty
+                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                    description={<span>No folders yet</span>}
+                  />
+                )}
+              </div>
+            ))}
         </Content>
       </div>
     );

@@ -16,7 +16,7 @@ import "../../css/page.css";
 import parse from "html-react-parser";
 
 // Ant Design
-import { Button, Layout, Modal } from "antd";
+import { Button, Layout, Modal, Spin } from "antd";
 const { Content } = Layout;
 
 class FolderPostCard extends Component {
@@ -73,6 +73,7 @@ class FolderPostCard extends Component {
 
   render() {
     const { credentials } = this.props.user;
+    const { loading } = this.props.UI;
     const isAdmin = credentials.isAdmin;
     const folder = this.props.folder;
 
@@ -143,31 +144,38 @@ class FolderPostCard extends Component {
             </div>
           </div>
         )}
-        <div className="padded-content-card-content">
-          {this.props.isEditingPost ? (
-            <CKEditor
-              data={folder.content}
-              onChange={this.updateEditor}
-              config={ckConfig}
-            />
-          ) : folder.content === "" ? (
-            <div className="folder-blank noselect">
-              <h3 className="em2">
-                It seems like there is no post for this folder yet.
-              </h3>
-              <h4 className="em3">Start by creating the post.</h4>
-              <Button
-                type="primary"
-                disabled={this.props.isEditingFolders}
-                onClick={this.props.toggleEditingPost}
-              >
-                Begin Post
-              </Button>
-            </div>
-          ) : (
-            <div>{parse(folder.content)}</div>
-          )}
-        </div>
+        {loading && (
+          <div className="padded-content vertical-content">
+            <Spin style={{ marginTop: "48px" }} />
+          </div>
+        )}
+        {!loading && (
+          <div className="padded-content-card-content">
+            {this.props.isEditingPost ? (
+              <CKEditor
+                data={folder.content}
+                onChange={this.updateEditor}
+                config={ckConfig}
+              />
+            ) : folder.content === "" ? (
+              <div className="folder-blank noselect">
+                <h3 className="em2">
+                  It seems like there is no post for this folder yet.
+                </h3>
+                <h4 className="em3">Start by creating the post.</h4>
+                <Button
+                  type="primary"
+                  disabled={this.props.isEditingFolders}
+                  onClick={this.props.toggleEditingPost}
+                >
+                  Begin Post
+                </Button>
+              </div>
+            ) : (
+              <div>{parse(folder.content)}</div>
+            )}
+          </div>
+        )}
       </Content>
     );
   }

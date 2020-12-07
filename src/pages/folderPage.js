@@ -76,7 +76,8 @@ class FolderPage extends Component {
   render() {
     const { credentials } = this.props.user;
     const isAdmin = credentials.isAdmin;
-    const { folder, loading } = this.props.data;
+    const { folder } = this.props.data;
+    const { loading } = this.props.UI;
     const pageName = this.props.match.params.pageName;
     // const { errors } = (this.props.UI.errors.folderErrors = []);
     // const spinner = <img className="spin spin-large" alt="" src={CIcon} />;

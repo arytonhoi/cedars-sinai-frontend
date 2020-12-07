@@ -1,6 +1,7 @@
 import {
   //UI
   LOADING_UI,
+  STOP_LOADING_UI,
   LOADING_FOLDER_SEARCH,
   STOP_LOADING_FOLDER_SEARCH,
   //STOP_LOADING_UI,
@@ -316,7 +317,7 @@ export const getSearchedContacts = (searchTerm) => (dispatch) => {
 
 // Folders
 export const getFolder = (folderId, track) => (dispatch) => {
-  dispatch({ type: LOADING_DATA });
+  dispatch({ type: LOADING_UI });
   axios
     .get(
       `/folders/${folderId}?${
@@ -336,6 +337,9 @@ export const getFolder = (folderId, track) => (dispatch) => {
       dispatch({
         type: SET_NAV_PATH,
         payload: folder,
+      });
+      dispatch({
+        type: STOP_LOADING_UI,
       });
     })
     .catch((err) => dispatch({ type: SET_ERRORS, payload: err }));
