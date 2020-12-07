@@ -1,6 +1,7 @@
 const { admin, db, production } = require("../util/admin");
 const { formatReqBody } = require("../util/util");
 const FieldValue = admin.firestore.FieldValue;
+
 // util functions
 function getFolderPath(folderPathsMap, folderId) {
   const folderPath = [];
@@ -288,7 +289,9 @@ exports.updateOneFolder = (req, res) => {
         updatedFolderPathObj.name = req.body.title;
       }
       const folderRef = db.doc(`/${production}folders/${folderToUpdate}`);
-      const folderPathsMapRef = db.collection(`${production}paths`).doc("folders");
+      const folderPathsMapRef = db
+        .collection(`${production}paths`)
+        .doc("folders");
       const batch = db.batch();
       batch.update(folderRef, updatedFolderContents);
       if (
