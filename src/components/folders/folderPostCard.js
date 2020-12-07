@@ -156,7 +156,11 @@ class FolderPostCard extends Component {
                 It seems like there is no post for this folder yet.
               </h3>
               <h4 className="em3">Start by creating the post.</h4>
-              <Button type="primary" onClick={this.props.toggleEditingPost}>
+              <Button
+                type="primary"
+                disabled={this.props.isEditingFolders}
+                onClick={this.props.toggleEditingPost}
+              >
                 Begin Post
               </Button>
             </div>
