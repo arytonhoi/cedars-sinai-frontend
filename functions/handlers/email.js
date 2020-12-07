@@ -1,6 +1,6 @@
 const SMTPConnection = require("nodemailer/lib/smtp-connection");
 
-const { fixFormat } = require("../util/shim");
+const { fixFormat } = require("../util/util");
 const { emailAuth, emailOptions } = require("../util/config.js");
 const { isEmail } = require("../util/validators.js");
 

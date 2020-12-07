@@ -1,5 +1,5 @@
 var {google} = require('googleapis');
-const { fixFormat } = require("../util/shim");
+const { fixFormat } = require("../util/util");
 const { serviceKey } = require("../util/config.js");
 const SCOPES = 'https://www.googleapis.com/auth/calendar';
 
