@@ -67,6 +67,24 @@ const {
   updateOneContact,
 } = require("./handlers/contacts");
 
+const {
+  getCalendar,
+  editCalendar,
+  deleteCalendar,
+  createCalendar,
+  getCalendarList,
+  getCalendarAcl,
+  addCalendarAcl,
+} = require("./handlers/calendar");
+
+const {
+  sendEmail
+} = require("./handlers/email");
+
+const {
+  fetchWhois
+} = require("./handlers/website");
+
 const { getDBContents, patchDBContents } = require("./handlers/backup");
 // Create and Deploy Your First Cloud Functions
 // https://firebase.google.com/docs/functions/write-firebase-functions
@@ -113,6 +131,23 @@ app.get("/api/contacts", FBAuth, getAllContacts);
 app.post("/api/contacts", FBAuth, postOneContact);
 app.delete("/api/contacts/:contactId", FBAuth, deleteOneContact);
 app.patch("/api/contacts/:contactId", FBAuth, updateOneContact);
+
+// calendar routes
+app.get("/api/calendar", FBAuth, getCalendarList);
+app.get("/api/calendar/:calendarId", FBAuth, getCalendar);
+app.get("/api/calendar/:calendarId/access", FBAuth, getCalendarAcl);
+app.post("/api/calendar", FBAuth, createCalendar);
+app.post("/api/calendar/:calendarId/access", FBAuth, addCalendarAcl);
+app.patch("/api/calendar/:calendarId", FBAuth, editCalendar);
+app.delete("/api/calendar/:calendarId", FBAuth, deleteCalendar);
+
+
+// email routes
+app.post("/api/email", FBAuth, sendEmail);
+
+// whois routes
+app.get("/api/whois", FBAuth, fetchWhois);
+app.get("/api/whois/:domain", FBAuth, fetchWhois);
 
 exports.onDepartmentDelete = functions.firestore
   .document("/departments/{departmentId}")

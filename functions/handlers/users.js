@@ -9,25 +9,33 @@ const { firebaseConfig } = require("../util/config");
 const firebase = require("firebase");
 firebase.initializeApp(firebaseConfig);
 
+const { validateLoginData } = require("../util/validators");
+
 // log user in (cookie)
 exports.login = (req, res) => {
-  req = formatReqBody(req);
-
-  let user;
+  try {
+    req = formatReqBody(req);
+  } catch (e) {
+    return res.status(400).json({ error: "Invalid JSON." });
+  }
+  var user = {
+    email: "",
+    password: "",
+  };
   // turn username into email
   try {
     user = {
       email: req.body.username.toString().concat("@email.com"),
       password: req.body.password.toString(),
     };
-  } catch (err) {
-    returnFormattedHttpError(
-      res,
-      400,
-      "Incorrect JSON. Required fields are username and password",
-      err
-    );
+  } catch (e) {
+    return res.status(400).json({
+      error: "Incomplete JSON, username and password fields required.",
+    });
   }
+  // validate data
+  const { valid, errors } = validateLoginData(user);
+  if (!valid) return res.status(400).json(errors);
 
   // When the user signs in with email and password.
   firebase
@@ -36,7 +44,7 @@ exports.login = (req, res) => {
     .then((userData) => {
       // Get the user's ID token as it is needed to exchange for a session cookie.
       return userData.user.getIdToken().then((idToken) => {
-        // expires in 14 days (Firebase maximum limit)
+        // expires in 14 days
         const expiresIn = 1000 * 60 * 60 * 24 * 14;
         admin
           .auth()
@@ -54,17 +62,17 @@ exports.login = (req, res) => {
       });
     })
     .catch((err) => {
+      console.error(err);
       if (err.code === "auth/wrong-password") {
-        returnFormattedHttpError(res, 403, "Incorrect password", err);
+        return res
+          .status(403)
+          .json({ general: "Password incorrect, please try again" });
       } else if (err.code === "auth/user-not-found") {
-        returnFormattedHttpError(res, 403, "Incorrect username", err);
+        return res
+          .status(403)
+          .json({ general: "Username incorrect, please try again" });
       } else {
-        returnFormattedHttpError(
-          res,
-          500,
-          "Server failed to login: please try again",
-          err
-        );
+        return res.status(500).json({ error: err.code });
       }
     });
 };
@@ -74,16 +82,12 @@ exports.logout = (req, res) => {
   let sessionCookie;
   try {
     sessionCookie = req.cookies.__session;
-    console.log(`Logging out: ${sessionCookie}`);
+    console.log(sessionCookie);
   } catch (err) {
-    returnFormattedHttpError(
-      res,
-      403,
-      "Logout failed: error reading cookie.",
-      err
-    );
+    console.error("Authentication cookie not provided");
+    return res.status(403).json({ error: "Unauthorized" });
   }
-  res.clearCookie("__session");
+  res.clearCookie("session");
   admin
     .auth()
     .verifySessionCookie(sessionCookie)
@@ -94,7 +98,8 @@ exports.logout = (req, res) => {
       res.status(200).json({ status: "Logout successful" });
     })
     .catch((err) => {
-      returnFormattedHttpError(res, 500, "Logout failed.", err);
+      console.log(err);
+      return res.status(403).json({ status: "Logout failed" });
     });
 };
 
@@ -108,20 +113,12 @@ exports.getAuthenticatedUser = (req, res) => {
         userData = doc.data();
         return res.json(userData);
       } else {
-        returnFormattedHttpError(
-          res,
-          403,
-          "Failed to get account details. Please re-login and try again."
-        );
+        return res.status(404).json({ error: "User not found" });
       }
     })
     .catch((err) => {
-      returnFormattedHttpError(
-        res,
-        500,
-        "Server failed to get account details. Please re-login and try again.",
-        err
-      );
+      console.error(err);
+      return res.status(500).json({ error: err.code });
     });
 };
 
