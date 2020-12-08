@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 
 // Redux stuff
 import { connect } from "react-redux";
-import { clearErrors } from "../../redux/actions/dataActions";
 
 // Editor
 import CKEditor from "ckeditor4-react";
@@ -176,6 +175,4 @@ AnnouncementPostEditorModal.propTypes = {
 
 const mapStateToProps = (state) => ({});
 
-export default connect(mapStateToProps, { clearErrors })(
-  AnnouncementPostEditorModal
-);
+export default connect(mapStateToProps, {})(AnnouncementPostEditorModal);

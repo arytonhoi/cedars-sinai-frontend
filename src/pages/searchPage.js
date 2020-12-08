@@ -16,7 +16,7 @@ import "../css/page.css";
 
 // antd
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Empty, Input, Layout } from "antd";
+import { Button, Empty, Input, Layout, Spin } from "antd";
 const { Content, Footer } = Layout;
 
 class SearchPage extends Component {
@@ -49,6 +49,7 @@ class SearchPage extends Component {
     // const isAdmin = credentials.isAdmin;
     const { folderSearchResults } = this.props.data;
     const searchTerm = this.props.match.params.searchTerm;
+    const { loading } = this.props.UI;
 
     return (
       <div className="page-container">
@@ -78,23 +79,31 @@ class SearchPage extends Component {
           <Content className="content-card">
             <div className="content-card-header">
               <div className="header-row">
-                {folderSearchResults.length > 0
-                  ? `Search results for ${searchTerm}`
-                  : `Nothing matched ${searchTerm}`}
+                {loading && "Searching..."}
+                {!loading &&
+                  (folderSearchResults.length > 0
+                    ? `Search results for "${searchTerm}"`
+                    : `Nothing matched ${searchTerm}`)}
               </div>
             </div>
             <div>
-              {folderSearchResults.length > 0 ? (
-                folderSearchResults.map((x, i) => (
-                  <SearchResult key={i} data={x} />
-                ))
-              ) : (
-                <Empty
-                  image={Empty.PRESENTED_IMAGE_SIMPLE}
-                  description={<span>No matches</span>}
-                  style={{ margin: "148px 0" }}
-                />
+              {loading && (
+                <div className="padded-content vertical-content">
+                  <Spin style={{ marginTop: "48px" }} />
+                </div>
               )}
+              {!loading &&
+                (folderSearchResults.length > 0 ? (
+                  folderSearchResults.map((x, i) => (
+                    <SearchResult key={i} data={x} />
+                  ))
+                ) : (
+                  <Empty
+                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                    description={<span>No matches</span>}
+                    style={{ margin: "148px 0" }}
+                  />
+                ))}
             </div>
           </Content>
           <Footer style={{ textAlign: "center" }}>DevelopForGood ©2020</Footer>

@@ -21,12 +21,21 @@ export default function (state = initialState, action) {
       return {
         ...state,
         errors: action.payload,
+        loading: false,
       };
     case CLEAR_ERRORS:
+      let actionName = action.payload;
+      let updatedErrors = state.errors;
+      if (updatedErrors[actionName]) {
+        console.log(`Success: cleared ${actionName} errors`);
+        delete updatedErrors[actionName];
+      } else {
+        console.log(`Warning: tried to clear nonexistent ${actionName} errors`);
+      }
+
       return {
         ...state,
-        errors: {},
-        loading: false,
+        errors: updatedErrors,
       };
     // loading
     case LOADING_UI:

@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 // Redux stuff
 import { connect } from "react-redux";
 import { patchUserPassword } from "../../redux/actions/userActions";
+import { clearError } from "../../redux/actions/uiActions";
 
 // css
 import "../../css/modal.css";
@@ -25,10 +26,10 @@ class PasswordEditorForm extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.UI.errors) {
-      this.setState({ errors: nextProps.UI.errors });
-    }
+      return { errors: nextProps.UI.errors };
+    } else return null;
   }
 
   handlePatchNewPassword = (formValues) => {
@@ -51,6 +52,7 @@ class PasswordEditorForm extends Component {
 
   render() {
     const targettedUser = this.props.targettedUser;
+    // errors
     const patchUserPasswordErrors = this.state.errors.patchUserPassword;
     return (
       <div className="page-form-container max-30">
@@ -143,6 +145,7 @@ class PasswordEditorForm extends Component {
                 type="error"
                 showIcon
                 closable
+                afterClose={() => this.props.clearError("patchUserPassword")}
               />
             )}
           <Form.Item>
@@ -157,6 +160,7 @@ class PasswordEditorForm extends Component {
 }
 
 PasswordEditorForm.propTypes = {
+  clearError: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
   targettedUser: PropTypes.string.isRequired,
   patchUserPassword: PropTypes.func.isRequired,
@@ -170,5 +174,6 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
+  clearError,
   patchUserPassword,
 })(PasswordEditorForm);

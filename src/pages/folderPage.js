@@ -33,6 +33,8 @@ class FolderPage extends Component {
       showSearchResults: false,
       searchKey: "",
       editor: null,
+      // errors
+      errors: {},
     };
   }
 
@@ -44,6 +46,12 @@ class FolderPage extends Component {
     this.props.getFolder(pageName, true);
     this.setState({ ...this.state, pagename: pageName });
     //console.log(this.props)
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.UI.errors) {
+      return { errors: nextProps.UI.errors };
+    } else return null;
   }
 
   toggleEditingFolders = () => {
@@ -79,8 +87,9 @@ class FolderPage extends Component {
     const { folder } = this.props.data;
     const { loading } = this.props.UI;
     const pageName = this.props.match.params.pageName;
-    // const { errors } = (this.props.UI.errors.folderErrors = []);
-    // const spinner = <img className="spin spin-large" alt="" src={CIcon} />;
+
+    // errors
+    // const getFolderErrors = this.state.errors.getFolder;
 
     return (
       <div className="page-container">

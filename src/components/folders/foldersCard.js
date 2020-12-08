@@ -48,6 +48,12 @@ class FoldersCard extends Component {
     };
   }
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.UI.errors) {
+      return { errors: nextProps.UI.errors };
+    } else return null;
+  }
+
   // modal functions
   toggleShowModal = (modalStateName) => {
     console.log(modalStateName);
@@ -59,7 +65,6 @@ class FoldersCard extends Component {
 
   // folder editing action functions
   renameFolder = (formValues) => {
-    console.log(formValues);
     var folder = this.state.selectedFolders[0];
     // this.toggleSelect(null, folder);
     this.props.patchSubfolder(folder.id, {
@@ -207,6 +212,10 @@ class FoldersCard extends Component {
     const isAdmin = credentials.isAdmin;
     const folder = this.props.folder;
 
+    // errors
+    // const patchFolderErrors = this.state.errors.patchFolder;
+
+    // subfolder sort stuff
     const subfolderSortOptions = {
       alphabetical: "Alphabetical order",
       most_popular: "Most popular",

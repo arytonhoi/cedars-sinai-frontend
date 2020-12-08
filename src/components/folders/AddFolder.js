@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 // Redux stuff
 import { connect } from "react-redux";
-import { postFolder, clearErrors } from "../../redux/actions/dataActions";
+import { postFolder } from "../../redux/actions/dataActions";
 
 // css
 import "../../css/modal.css";
@@ -135,4 +135,4 @@ class AddFolder extends Component {
 
 const mapStateToProps = (state) => ({});
 
-export default connect(mapStateToProps, { postFolder, clearErrors })(AddFolder);
+export default connect(mapStateToProps, { postFolder })(AddFolder);

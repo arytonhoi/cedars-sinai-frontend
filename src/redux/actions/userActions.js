@@ -6,19 +6,17 @@ import {
   PATCH_PASSWORD,
   // errors
   SET_ERRORS,
-  CLEAR_ERRORS,
 } from "../types";
+
+import { clearError } from "./uiActions";
 
 import axios from "axios";
 
+// antd
 import { notification } from "antd";
 
 const setAuthorizationHeader = () => {
   localStorage.setItem("hasValidCookie", true);
-};
-
-export const clearErrors = () => (dispatch) => {
-  dispatch({ type: CLEAR_ERRORS });
 };
 
 export const loginUser = (userData, history) => (dispatch) => {
@@ -28,7 +26,7 @@ export const loginUser = (userData, history) => (dispatch) => {
     .then((res) => {
       setAuthorizationHeader();
       dispatch(getUserData());
-      dispatch({ type: CLEAR_ERRORS });
+      // dispatch({ type: CLEAR_ERRORS });
       history.push("/");
       window.location.href = "./";
     })
@@ -81,7 +79,12 @@ export const patchUserPassword = (reqBody) => (dispatch) => {
         type: PATCH_PASSWORD,
         payload: res.data,
       });
-      dispatch(clearErrors());
+      // clear errors
+      clearError("patchUserPassword");
+      // dispatch({
+      //   type: CLEAR_ERRORS,
+      //   payload: "patchUserPassword",
+      // });
       if (reqBody.username === "admin") {
         notification["success"]({
           message: "Success!",

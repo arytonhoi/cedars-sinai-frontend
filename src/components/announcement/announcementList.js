@@ -62,7 +62,7 @@ class AnnouncementList extends Component {
                     <Button
                       icon={<EditOutlined />}
                       onClick={() =>
-                        this.handleEditThisAnnouncement(announcement)
+                        this.props.handleEditThisAnnouncement(announcement)
                       }
                       type="text"
                     />
