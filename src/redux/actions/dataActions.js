@@ -9,7 +9,6 @@ import {
   //STOP_LOADING_DATA,
   // Errors
   SET_ERRORS,
-  CLEAR_ERRORS,
   // images
   // POST_IMAGE,
   GET_BANNER_IMAGE,
@@ -43,6 +42,13 @@ import {
   SET_FOLDER_SEARCH_RES,
 } from "../types";
 import axios from "axios";
+
+// React
+import React from "react";
+
+// antd
+import { notification } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 // Images
 export const getBannerImage = (pageName) => (dispatch) => {
@@ -95,7 +101,6 @@ export const postAnnouncement = (newAnnouncement) => (dispatch) => {
         type: POST_ANNOUNCEMENT,
         payload: res.data,
       });
-      dispatch(clearErrors());
     })
     .catch((err) => {
       dispatch({
@@ -118,7 +123,6 @@ export const patchAnnouncement = (
         type: PATCH_ANNOUNCEMENT,
         payload: updatedAnnnouncement,
       });
-      // dispatch(clearErrors());
     })
     .catch((err) => {
       console.log(err);
@@ -173,7 +177,6 @@ export const postDepartment = (newDepartment) => (dispatch) => {
         type: POST_DEPARTMENT,
         payload: res.data,
       });
-      dispatch(clearErrors());
     })
     .catch((err) => {
       typeof err.response.data === "undefined"
@@ -200,7 +203,6 @@ export const patchDepartment = (updatedDepartmentId, updatedDepartment) => (
         type: PATCH_DEPARTMENT,
         payload: updatedDepartment,
       });
-      dispatch(clearErrors());
     })
     .catch((err) => {
       dispatch({
@@ -219,7 +221,6 @@ export const deleteDepartment = (departmentId) => (dispatch) => {
         type: DELETE_DEPARTMENT,
         payload: departmentId,
       });
-      dispatch(clearErrors());
     })
     .catch((err) => {
       dispatch({
@@ -257,7 +258,6 @@ export const postContact = (newContact) => (dispatch) => {
         type: POST_CONTACT,
         payload: res.data,
       });
-      dispatch(clearErrors());
     })
     .catch((err) => {
       dispatch({
@@ -279,7 +279,6 @@ export const patchContact = (updatedContactId, updatedContact) => (
         type: PATCH_CONTACT,
         payload: updatedContact,
       });
-      dispatch(clearErrors());
     })
     .catch((err) => {
       dispatch({
@@ -298,7 +297,6 @@ export const deleteContact = (contactId) => (dispatch) => {
         type: DELETE_CONTACT,
         payload: contactId,
       });
-      dispatch(clearErrors());
     })
     .catch((err) => {
       dispatch({
@@ -345,43 +343,13 @@ export const getFolder = (folderId, track) => (dispatch) => {
     .catch((err) => dispatch({ type: SET_ERRORS, payload: err }));
 };
 
-export const searchFolder = (searchKey) => (dispatch) => {
-  dispatch({
-    type: LOADING_FOLDER_SEARCH,
-  });
-  axios
-    .get(`/folders/search/${searchKey}`)
-    .then((res) => {
-      dispatch({
-        type: SET_FOLDER_SEARCH_RES,
-        payload: res.data,
-      });
-      dispatch({
-        type: STOP_LOADING_FOLDER_SEARCH,
-      });
-    })
-    .catch((err) => dispatch({ type: SET_ERRORS, payload: err }));
-};
-
-export const getNavRoute = (folderId) => (dispatch) => {
-  typeof folderId === "undefined"
-    ? dispatch({ type: RESET_NAV_PATH })
-    : axios
-        .get(`/folders/${folderId}`)
-        .then((res) => {
-          dispatch({
-            type: SET_NAV_PATH,
-            payload: res.data,
-          });
-        })
-        .catch((err) => dispatch({ type: SET_ERRORS, payload: err }));
-};
-
 export const postFolder = (folderId, folderDetails) => (dispatch) => {
-  dispatch({ type: LOADING_UI });
-  console.log(folderId);
-  console.log(folderDetails);
-
+  notification.open({
+    key: "loading",
+    duration: 0,
+    message: "Creating folder...",
+    icon: <LoadingOutlined />,
+  });
   axios
     .post(`/folders/${folderId}`, folderDetails)
     .then((res) => {
@@ -389,45 +357,79 @@ export const postFolder = (folderId, folderDetails) => (dispatch) => {
         type: POST_FOLDER,
         payload: res.data,
       });
+      notification.close("loading");
+      notification["success"]({
+        message: "Success!",
+        description: "Folder created successfully",
+      });
     })
     .catch((err) => {
-      dispatch({
-        type: SET_ERRORS,
-        payload: err.response.data,
+      // dispatch({
+      //   type: SET_ERRORS,
+      //   payload: err.response.data,
+      // });
+      let error = err.response.data;
+      console.log(error);
+      notification.close("loading");
+      notification["error"]({
+        duration: 0,
+        message: "Error!",
+        description: error.message,
       });
     });
 };
 
 export const patchFolder = (folderId, updatedFolder) => (dispatch) => {
-  dispatch({ type: LOADING_UI });
-  if (folderId === updatedFolder.parent) {
-    dispatch({
-      type: SET_ERRORS,
-      payload: { error: "Cannot move folder into itself." },
-    });
-  } else {
-    updatedFolder.lastModified = new Date().toISOString();
-    axios
-      .patch(`/folders/${folderId}`, updatedFolder)
-      .then((res) => {
-        dispatch({
-          type: PATCH_FOLDER,
-          payload: updatedFolder,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-        // dispatch({
-        //   type: SET_ERRORS,
-        //   payload: err.response.data,
-        // });
+  // if (folderId === updatedFolder.parent) {
+  //   dispatch({
+  //     type: SET_ERRORS,
+  //     payload: { error: "Cannot move folder into itself." },
+  //   });
+  // } else {
+  updatedFolder.lastModified = new Date().toISOString();
+  notification.open({
+    key: "loading",
+    duration: 0,
+    message: "Updating folder...",
+    icon: <LoadingOutlined />,
+  });
+  axios
+    .patch(`/folders/${folderId}`, updatedFolder)
+    .then((res) => {
+      dispatch({
+        type: PATCH_FOLDER,
+        payload: updatedFolder,
       });
-  }
+      notification.close("loading");
+      notification["success"]({
+        message: "Success!",
+        description: "Folder updated successfully",
+      });
+    })
+    .catch((err) => {
+      // dispatch({
+      //   type: SET_ERRORS,
+      //   payload: err.response.data,
+      // });
+      let error = err.response.data;
+      console.log(error);
+      notification.close("loading");
+      notification["error"]({
+        duration: 0,
+        message: "Error!",
+        description: error.message,
+      });
+    });
 };
 
 export const patchSubfolder = (folderId, updatedFolder) => (dispatch) => {
-  dispatch({ type: LOADING_UI });
   updatedFolder.lastModified = new Date().toISOString();
+  notification.open({
+    key: "loading",
+    duration: 0,
+    message: "Updating folder...",
+    icon: <LoadingOutlined />,
+  });
   axios
     .patch(`/folders/${folderId}`, updatedFolder)
     .then((res) => {
@@ -435,12 +437,25 @@ export const patchSubfolder = (folderId, updatedFolder) => (dispatch) => {
         type: PATCH_SUBFOLDER,
         payload: { id: folderId, patch: updatedFolder },
       });
+      notification.close("loading");
+      notification["success"]({
+        message: "Success!",
+        description: "Folder updated successfully",
+      });
     })
     .catch((err) => {
-      dispatch({
-        type: SET_ERRORS,
-        payload: err.response.data,
+      let error = err.response.data;
+      console.log(error);
+      notification.close("loading");
+      notification["error"]({
+        duration: 0,
+        message: "Error!",
+        description: error.message,
       });
+      // dispatch({
+      //   type: SET_ERRORS,
+      //   payload: err.response.data,
+      // });
     });
 };
 
@@ -458,6 +473,12 @@ export const patchSubfolder = (folderId, updatedFolder) => (dispatch) => {
 // };
 
 export const deleteFolder = (folderId) => (dispatch) => {
+  notification.open({
+    key: "loading",
+    duration: 0,
+    message: "Deleting folder...",
+    icon: <LoadingOutlined />,
+  });
   axios
     .delete(`/folders/${folderId}`)
     .then((res) => {
@@ -465,15 +486,56 @@ export const deleteFolder = (folderId) => (dispatch) => {
         type: DELETE_SUBFOLDER,
         payload: folderId,
       });
+      notification.close("loading");
+      notification["success"]({
+        message: "Success!",
+        description: "Folder deleted successfully",
+      });
     })
     .catch((err) => {
-      dispatch({
-        type: SET_ERRORS,
-        payload: err.response.data,
+      // dispatch({
+      //   type: SET_ERRORS,
+      //   payload: err.response.data,
+      // });
+      let error = err.response.data;
+      console.log(error);
+      notification.close("loading");
+      notification["error"]({
+        duration: 0,
+        message: "Error!",
+        description: error.message,
       });
     });
 };
 
-export const clearErrors = () => (dispatch) => {
-  dispatch({ type: CLEAR_ERRORS });
+export const getNavRoute = (folderId) => (dispatch) => {
+  typeof folderId === "undefined"
+    ? dispatch({ type: RESET_NAV_PATH })
+    : axios
+        .get(`/folders/${folderId}`)
+        .then((res) => {
+          dispatch({
+            type: SET_NAV_PATH,
+            payload: res.data,
+          });
+        })
+        .catch((err) => dispatch({ type: SET_ERRORS, payload: err }));
+};
+
+export const searchFolder = (searchKey) => (dispatch) => {
+  dispatch({
+    type: LOADING_FOLDER_SEARCH,
+  });
+  axios
+    .get(`/folders/search/${searchKey}`)
+    .then((res) => {
+      dispatch({
+        type: SET_FOLDER_SEARCH_RES,
+        payload: res.data,
+      });
+      dispatch({
+        type: STOP_LOADING_FOLDER_SEARCH,
+      });
+    })
+    .catch((err) => dispatch({ type: SET_ERRORS, payload: err }));
 };

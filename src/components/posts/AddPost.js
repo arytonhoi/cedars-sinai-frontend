@@ -12,7 +12,7 @@ import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 // Redux stuff
 import { connect } from "react-redux";
-import { postFolder, clearErrors } from "../../redux/actions/dataActions";
+import { postFolder } from "../../redux/actions/dataActions";
 
 // Editor
 import CKEditor from "ckeditor4-react";
@@ -55,7 +55,7 @@ class PostPost extends Component {
     this.setState({ open: true });
   };
   handleClose = () => {
-    this.props.clearErrors();
+    // this.props.clearErrors();
     this.setState({ open: false, errors: {} });
   };
   handleChange = (event) => {
@@ -120,7 +120,6 @@ class PostPost extends Component {
 }
 PostPost.propTypes = {
   postFolder: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired,
   UI: PropTypes.object.isRequired,
 };
 
@@ -128,6 +127,6 @@ const mapStateToProps = (state) => ({
   UI: state.UI,
 });
 
-export default connect(mapStateToProps, { postFolder, clearErrors })(
+export default connect(mapStateToProps, { postFolder })(
   withStyles(styles)(PostPost)
 );

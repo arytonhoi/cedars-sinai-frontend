@@ -6,7 +6,6 @@ import { FolderFilled } from "@ant-design/icons";
 
 // Redux stuff
 import { connect } from "react-redux";
-//import { deleteAnnounce, clearErrors } from "../../redux/actions/dataActions";
 
 class SearchResult extends Component {
   render() {
@@ -25,9 +24,7 @@ class SearchResult extends Component {
           </span>
           <span key="22" className="search-result-breadcrumb">
             <span key={Math.random()}>
-              <span className="em4-light">
-                Resources
-              </span>
+              <span className="em4-light">Resources</span>
             </span>
             {typeof data === "object" && typeof data.path === "object"
               ? data.path.map((x, i) => {
@@ -45,10 +42,7 @@ class SearchResult extends Component {
                 })
               : ""}
           </span>
-          <span
-            key="23"
-            dangerouslySetInnerHTML={{ __html: data.content }}
-          />
+          <span key="23" dangerouslySetInnerHTML={{ __html: data.content }} />
         </div>
       </a>
     );
