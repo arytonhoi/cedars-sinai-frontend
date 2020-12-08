@@ -75,7 +75,7 @@ export const patchBannerImage = (pageName, newImgUrlObj) => (dispatch) => {
 
 // Announcements
 export const getAnnouncements = () => (dispatch) => {
-  dispatch({ type: LOADING_DATA });
+  dispatch({ type: LOADING_UI });
   return axios
     .get("/announcements")
     .then((res) => {
@@ -83,17 +83,18 @@ export const getAnnouncements = () => (dispatch) => {
         type: SET_ANNOUNCEMENTS,
         payload: res.data,
       });
+      dispatch({ type: STOP_LOADING_UI });
     })
     .catch((err) => {
       dispatch({
         type: SET_ANNOUNCEMENTS,
         payload: [],
       });
+      dispatch({ type: STOP_LOADING_UI });
     });
 };
 
 export const postAnnouncement = (newAnnouncement) => (dispatch) => {
-  dispatch({ type: LOADING_UI });
   axios
     .post("/announcements", newAnnouncement)
     .then((res) => {
@@ -114,7 +115,6 @@ export const patchAnnouncement = (
   updatedAnnnouncementId,
   updatedAnnnouncement
 ) => (dispatch) => {
-  // dispatch({ type: LOADING_UI });
   axios
     .patch(`/announcements/${updatedAnnnouncementId}`, updatedAnnnouncement)
     .then((res) => {
@@ -169,7 +169,6 @@ export const getDepartments = () => (dispatch) => {
 };
 
 export const postDepartment = (newDepartment) => (dispatch) => {
-  dispatch({ type: LOADING_UI });
   axios
     .post("/departments", newDepartment)
     .then((res) => {
@@ -194,7 +193,6 @@ export const postDepartment = (newDepartment) => (dispatch) => {
 export const patchDepartment = (updatedDepartmentId, updatedDepartment) => (
   dispatch
 ) => {
-  dispatch({ type: LOADING_UI });
   axios
     .patch(`/departments/${updatedDepartmentId}`, updatedDepartment)
     .then((res) => {
@@ -213,7 +211,6 @@ export const patchDepartment = (updatedDepartmentId, updatedDepartment) => (
 };
 
 export const deleteDepartment = (departmentId) => (dispatch) => {
-  dispatch({ type: LOADING_UI });
   axios
     .delete(`/departments/${departmentId}`)
     .then((res) => {
@@ -250,7 +247,6 @@ export const getContacts = () => (dispatch) => {
 };
 
 export const postContact = (newContact) => (dispatch) => {
-  dispatch({ type: LOADING_UI });
   axios
     .post("/contacts", newContact)
     .then((res) => {
@@ -270,7 +266,6 @@ export const postContact = (newContact) => (dispatch) => {
 export const patchContact = (updatedContactId, updatedContact) => (
   dispatch
 ) => {
-  dispatch({ type: LOADING_UI });
   axios
     .patch(`/contacts/${updatedContactId}`, updatedContact)
     .then((res) => {
@@ -289,7 +284,6 @@ export const patchContact = (updatedContactId, updatedContact) => (
 };
 
 export const deleteContact = (contactId) => (dispatch) => {
-  dispatch({ type: LOADING_UI });
   axios
     .delete(`/contacts/${contactId}`)
     .then((res) => {

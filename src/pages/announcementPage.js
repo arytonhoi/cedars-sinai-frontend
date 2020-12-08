@@ -24,7 +24,7 @@ import "../css/ckeditor.css";
 import "../components/announcement/announcement.css";
 
 // Ant design
-import { Button, Dropdown, Input, Layout, Menu } from "antd";
+import { Button, Dropdown, Input, Layout, Menu, Spin } from "antd";
 import { DownOutlined, SearchOutlined } from "@ant-design/icons";
 const { Content, Footer } = Layout;
 
@@ -159,6 +159,7 @@ class AnnouncementPage extends Component {
     const { credentials } = this.props.user;
     const isAdmin = credentials.isAdmin;
     const { bannerImgs, filteredAnnouncements } = this.props.data;
+    const { loading } = this.props.UI;
 
     return (
       <div className="page-container">
@@ -286,11 +287,17 @@ class AnnouncementPage extends Component {
                 </span>
               </div>
             </div>
-            <AnnouncementList
-              announcements={filteredAnnouncements}
-              filter={this.state.filter}
-              handleEditThisAnnouncement={this.handleEditThisAnnouncement}
-            />
+            {loading ? (
+              <div className="padded-content vertical-content">
+                <Spin style={{ marginTop: "48px" }} />
+              </div>
+            ) : (
+              <AnnouncementList
+                announcements={filteredAnnouncements}
+                filter={this.state.filter}
+                handleEditThisAnnouncement={this.handleEditThisAnnouncement}
+              />
+            )}
           </Content>
           <Footer style={{ textAlign: "center" }}>DevelopForGood ©2020</Footer>
         </Layout>
@@ -318,6 +325,7 @@ const mapStateToProps = (state) => {
   return {
     user: state.user,
     data: state.data,
+    UI: state.UI,
   };
 };
 

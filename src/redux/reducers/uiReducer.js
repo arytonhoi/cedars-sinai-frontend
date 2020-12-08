@@ -21,6 +21,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         errors: action.payload,
+        loading: false,
       };
     case CLEAR_ERRORS:
       let actionName = action.payload;
