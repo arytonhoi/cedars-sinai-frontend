@@ -524,7 +524,8 @@ export const getNavRoute = (folderId) => (dispatch) => {
 
 export const searchFolder = (searchKey) => (dispatch) => {
   dispatch({
-    type: LOADING_FOLDER_SEARCH,
+    // type: LOADING_FOLDER_SEARCH,
+    type: LOADING_UI,
   });
   axios
     .get(`/folders/search/${searchKey}`)
@@ -534,7 +535,8 @@ export const searchFolder = (searchKey) => (dispatch) => {
         payload: res.data,
       });
       dispatch({
-        type: STOP_LOADING_FOLDER_SEARCH,
+        // type: STOP_LOADING_FOLDER_SEARCH,
+        type: STOP_LOADING_UI,
       });
     })
     .catch((err) => dispatch({ type: SET_ERRORS, payload: err }));
