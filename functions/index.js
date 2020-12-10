@@ -1,23 +1,35 @@
 const functions = require("firebase-functions");
 const express = require("express");
 const app = express();
-//const cors = require("cors");
 const cookies = require("cookie-parser");
-//app.use(cors());
+
 app.use((req, res, next) => {
+console.log(req.rawHeaders)
   if (req.headers.origin === undefined) {
-    req.headers.origin = "*";
+    if(req.headers['x-forwarded-host'] === 'localhost:5000') {
+      req.headers.origin = 'http://localhost:3000';
+    }else if(req.headers['x-forwarded-host'] !== undefined) {
+      req.headers.origin = req.headers['x-forwarded-host'];
+    }else{
+      req.headers.origin = "*";
+    }
   }
-  //console.log(req.headers.origin)
+  req.rawBody = '';
+  req.setEncoding('utf8');
+  req.on('data', function(chunk) { 
+    req.rawBody += chunk;
+  });
   res.append("Access-Control-Allow-Credentials", "true");
   res.append("Access-Control-Allow-Origin", req.headers.origin);
-  res.append("Access-Control-Allow-Headers", "Content-Type");
+  res.append("Access-Control-Allow-Headers", "Origin,Content-Type");
   res.append(
     "Access-Control-Allow-Methods",
     "POST, GET, OPTIONS, PATCH, DELETE"
   );
   res.append("Vary", "Origin");
-  next();
+  req.on('end', function() {
+    next();
+  });
 });
 app.use(cookies());
 
