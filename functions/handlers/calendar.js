@@ -12,6 +12,7 @@ var auth = new google.auth.JWT(
 );
 
 const api = google.calendar({version : "v3", auth : auth});
+// Some of these endpoints will probably never be used, but are kept here in case they cannot be managed through Google's frontend
 //Lists all calendars.
 exports.getCalendarList = (req, res) => {
   if (req.method !== "GET") {
@@ -105,7 +106,28 @@ exports.getCalendar = (req, res) => {
   if(req.params.calendarId === ""){
     return res.status(400).json({ error: "Need to request a calendar ID" });
   }else{
-    api.events.list({calendarId : req.params.calendarId}).then( cal =>{
+    if (typeof(req.query.start) === "undefined") {
+      req.query.start = (new Date()).toISOString()
+    }
+    if (typeof(req.query.start) === "string") {
+      req.query.start = Date.parse(req.query.start)
+    }
+    if (typeof(req.query.end) === "string") {
+      req.query.end = Date.parse(req.query.end)
+    }
+    if (typeof(req.query.duration) === "number") {
+      req.query.end = req.query.start + req.query.duration
+    }
+    if (typeof(req.query.end) !== "number") {
+      req.query.end = req.query.start + 2678400000
+    }
+    api.events.list({
+      calendarId : req.params.calendarId,
+      timeMin: (new Date(req.query.start)).toISOString(),
+      timeMax: (new Date(req.query.end)).toISOString(),
+      singleEvents: true,
+      orderBy: 'startTime'
+    }).then( cal =>{
       console.log(cal);
       res.json(cal.data);
     }).catch(err =>

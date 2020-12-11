@@ -4,6 +4,8 @@ import {
   STOP_LOADING_UI,
   LOADING_FOLDER_SEARCH,
   STOP_LOADING_FOLDER_SEARCH,
+  LOADING_WHOIS,
+  STOP_LOADING_WHOIS,
   //STOP_LOADING_UI,
   LOADING_DATA,
   //STOP_LOADING_DATA,
@@ -40,6 +42,10 @@ import {
   SET_NAV_PATH,
   RESET_NAV_PATH,
   SET_FOLDER_SEARCH_RES,
+  // Calendar
+  SET_EVENTS,
+  // Whois
+  SET_WHOIS_DATA,
 } from "../types";
 import axios from "axios";
 
@@ -531,6 +537,48 @@ export const searchFolder = (searchKey) => (dispatch) => {
       dispatch({
         // type: STOP_LOADING_FOLDER_SEARCH,
         type: STOP_LOADING_UI,
+      });
+    })
+    .catch((err) => dispatch({ type: SET_ERRORS, payload: err }));
+};
+
+export const getCalendarEvents = (from, to) => (dispatch) => {
+  dispatch({
+    type: LOADING_UI,
+  });
+  axios
+    .get(`/calendar/cedarsoreducation@gmail.com/?from=${from}&to=${to}`)
+    .then((res) => {
+      dispatch({
+        type: SET_EVENTS,
+        payload: res.data,
+      });
+      dispatch({
+        type: STOP_LOADING_UI,
+      });
+    })
+    .catch((err) => dispatch({ type: SET_ERRORS, payload: err }));
+};
+
+// Misc
+export const getWhois = () => (dispatch) => {
+  dispatch({
+    type: LOADING_WHOIS,
+  });
+  axios
+    .get(`/whois`)
+    .then((res) => {
+      res.data.status === 'success'?
+      dispatch({
+        type: SET_WHOIS_DATA,
+        payload: res.data,
+      }):
+      dispatch({
+        type: SET_ERRORS,
+        payload: res.data,
+      });
+      dispatch({
+        type: STOP_LOADING_WHOIS,
       });
     })
     .catch((err) => dispatch({ type: SET_ERRORS, payload: err }));

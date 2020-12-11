@@ -10,9 +10,11 @@ export const LOADING_UI = "LOADING_UI";
 export const LOADING_FOLDER_SEARCH = "LOADING_FOLDER_SEARCH";
 export const CLEAR_ERRORS = "CLEAR_ERRORS";
 export const LOADING_DATA = "LOADING_DATA";
+export const LOADING_WHOIS = "LOADING_WHOIS";
 export const STOP_LOADING_DATA = "STOP_LOADING_DATA";
 export const STOP_LOADING_UI = "STOP_LOADING_UI";
 export const STOP_LOADING_FOLDER_SEARCH = "STOP_LOADING_FOLDER_SEARCH";
+export const STOP_LOADING_WHOIS = "STOP_LOADING_WHOIS";
 // Data reducer types
 // Images
 // export const POST_IMAGE = "POST_IMAGE";
@@ -45,6 +47,10 @@ export const MOVE_SUBFOLDER = "MOVE_SUBFOLDER";
 export const SET_NAV_PATH = "SET_NAV_PATH";
 export const RESET_NAV_PATH = "RESET_NAV_PATH";
 export const SET_FOLDER_SEARCH_RES = "SET_FOLDER_SEARCH_RES";
+// Calendar
+export const SET_EVENTS = "SET_EVENTS";
+// Misc
+export const SET_WHOIS_DATA = "SET_WHOIS_DATA";
 // Data Handling
 export const SET_FOLDER_ARRAY = "SET_FOLDER_ARRAY";
 export const SET_FOLDER = "SET_FOLDER";

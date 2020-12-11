@@ -10,6 +10,7 @@ import {
 const initialState = {
   loading: false,
   loadingFolderSearch: false,
+  loadingWhois: false,
   errors: {},
 };
 

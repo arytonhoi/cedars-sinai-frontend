@@ -4,7 +4,6 @@ const app = express();
 const cookies = require("cookie-parser");
 
 app.use((req, res, next) => {
-console.log(req.rawHeaders)
   if (req.headers.origin === undefined) {
     if(req.headers['x-forwarded-host'] === 'localhost:5000') {
       req.headers.origin = 'http://localhost:3000';

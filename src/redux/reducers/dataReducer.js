@@ -34,6 +34,10 @@ import {
   SET_NAV_PATH,
   RESET_NAV_PATH,
   SET_FOLDER_SEARCH_RES,
+  // calendar
+  SET_EVENTS,
+  // whois
+  SET_WHOIS_DATA
 } from "../types";
 
 import DateHelper from "../../util/dateHelper";
@@ -55,6 +59,10 @@ const initialState = {
   departments: [],
   contacts: [],
   matchingSearchContacts: [],
+  // whois
+  whois: {},
+  // calendar events
+  calendar: [],
   // folders
   folder: {
     index: 0,
@@ -371,6 +379,20 @@ export default function (state = initialState, action) {
       return {
         ...state,
         folderSearchResults: action.payload,
+        loading: false,
+      };
+    // Calendar
+    case SET_EVENTS:
+      return {
+        ...state,
+        events: action.payload,
+        loading: false,
+      };
+    // Whois
+    case SET_WHOIS_DATA:
+      return {
+        ...state,
+        whois: action.payload,
         loading: false,
       };
     default:
