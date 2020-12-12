@@ -2,33 +2,20 @@ const functions = require("firebase-functions");
 const express = require("express");
 const app = express();
 const cookies = require("cookie-parser");
-
 app.use((req, res, next) => {
   if (req.headers.origin === undefined) {
-    if(req.headers['x-forwarded-host'] === 'localhost:5000') {
-      req.headers.origin = 'http://localhost:3000';
-    }else if(req.headers['x-forwarded-host'] !== undefined) {
-      req.headers.origin = req.headers['x-forwarded-host'];
-    }else{
-      req.headers.origin = "*";
-    }
+    req.headers.origin = "*";
   }
-  req.rawBody = '';
-  req.setEncoding('utf8');
-  req.on('data', function(chunk) { 
-    req.rawBody += chunk;
-  });
+  //console.log(req.headers.origin)
   res.append("Access-Control-Allow-Credentials", "true");
   res.append("Access-Control-Allow-Origin", req.headers.origin);
-  res.append("Access-Control-Allow-Headers", "Origin,Content-Type");
+  res.append("Access-Control-Allow-Headers", "Content-Type");
   res.append(
     "Access-Control-Allow-Methods",
     "POST, GET, OPTIONS, PATCH, DELETE"
   );
   res.append("Vary", "Origin");
-  req.on('end', function() {
-    next();
-  });
+  next();
 });
 app.use(cookies());
 
@@ -88,13 +75,9 @@ const {
   addCalendarAcl,
 } = require("./handlers/calendar");
 
-const {
-  sendEmail
-} = require("./handlers/email");
+const { sendEmail } = require("./handlers/email");
 
-const {
-  fetchWhois
-} = require("./handlers/website");
+const { fetchWhois } = require("./handlers/website");
 
 const { getDBContents, patchDBContents } = require("./handlers/backup");
 // Create and Deploy Your First Cloud Functions
@@ -151,7 +134,6 @@ app.post("/api/calendar", FBAuth, createCalendar);
 app.post("/api/calendar/:calendarId/access", FBAuth, addCalendarAcl);
 app.patch("/api/calendar/:calendarId", FBAuth, editCalendar);
 app.delete("/api/calendar/:calendarId", FBAuth, deleteCalendar);
-
 
 // email routes
 app.post("/api/email", FBAuth, sendEmail);
