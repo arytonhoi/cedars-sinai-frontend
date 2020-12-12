@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 // Redux stuff
 import { connect } from "react-redux";
-import { patchFolder } from "../../redux/actions/dataActions";
+import { patchFolder } from "../../redux/actions/folderActions";
 
 // components
 import CKEditor from "ckeditor4-react";
@@ -72,9 +72,9 @@ class FolderPostCard extends Component {
   };
 
   render() {
-    const { credentials } = this.props.user;
-    const { loading } = this.props.UI;
-    const isAdmin = credentials.isAdmin;
+    const { isAdmin } = this.props.user;
+    const { loading } = this.props.ui;
+
     const folder = this.props.folder;
 
     return (
@@ -183,13 +183,13 @@ class FolderPostCard extends Component {
 
 FolderPostCard.propTypes = {
   user: PropTypes.object.isRequired,
-  UI: PropTypes.object.isRequired,
+  ui: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    UI: state.UI,
+    ui: state.ui,
   };
 };
 

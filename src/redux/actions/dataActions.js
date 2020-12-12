@@ -568,15 +568,15 @@ export const getWhois = () => (dispatch) => {
   axios
     .get(`/whois`)
     .then((res) => {
-      res.data.status === 'success'?
-      dispatch({
-        type: SET_WHOIS_DATA,
-        payload: res.data,
-      }):
-      dispatch({
-        type: SET_ERRORS,
-        payload: res.data,
-      });
+      res.data.status === "success"
+        ? dispatch({
+            type: SET_WHOIS_DATA,
+            payload: res.data,
+          })
+        : dispatch({
+            type: SET_ERRORS,
+            payload: res.data,
+          });
       dispatch({
         type: STOP_LOADING_WHOIS,
       });

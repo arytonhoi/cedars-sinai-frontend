@@ -72,7 +72,7 @@ class PostPost extends Component {
     //const { errors } = this.state;
     const {
       classes,
-      UI: { loading }
+      ui: { loading }
     } = this.props;
     return (
       <Fragment>
@@ -125,11 +125,11 @@ class PostPost extends Component {
 PostPost.propTypes = {
   createFolder: PropTypes.func.isRequired,
   clearErrors: PropTypes.func.isRequired,
-  UI: PropTypes.object.isRequired
+  ui: PropTypes.object.isRequired
 };
 
 const mapStateToProps = (state) => ({
-  UI: state.UI
+  ui: state.UI
 });
 
 export default connect(

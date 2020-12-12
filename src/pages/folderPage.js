@@ -3,7 +3,7 @@ import React, { Component } from "react";
 // redux
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { getFolder, searchFolder } from "../redux/actions/dataActions";
+import { getFolder, searchFolder } from "../redux/actions/folderActions";
 
 // components
 import FolderPostCard from "../components/folders/folderPostCard";
@@ -49,8 +49,8 @@ class FolderPage extends Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.UI.errors) {
-      return { errors: nextProps.UI.errors };
+    if (nextProps.ui.errors) {
+      return { errors: nextProps.ui.errors };
     } else return null;
   }
 
@@ -82,10 +82,10 @@ class FolderPage extends Component {
   };
 
   render() {
-    const { credentials } = this.props.user;
-    const isAdmin = credentials.isAdmin;
-    const { folder } = this.props.data;
-    const { loading } = this.props.UI;
+    const { isAdmin } = this.props.user;
+
+    const { folder } = this.props.folders;
+    const { loading } = this.props.ui;
     const pageName = this.props.match.params.pageName;
 
     // errors
@@ -182,9 +182,9 @@ class FolderPage extends Component {
 }
 
 FolderPage.propTypes = {
-  data: PropTypes.object.isRequired,
+  folders: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
-  UI: PropTypes.object.isRequired,
+  ui: PropTypes.object.isRequired,
   // folder functions
   getFolder: PropTypes.func.isRequired,
   searchFolder: PropTypes.func.isRequired,
@@ -192,9 +192,9 @@ FolderPage.propTypes = {
 
 const mapStateToProps = (state) => ({
   editable: state.editable,
-  data: state.data,
+  folders: state.folders,
   user: state.user,
-  UI: state.UI,
+  ui: state.ui,
 });
 
 export default connect(mapStateToProps, {

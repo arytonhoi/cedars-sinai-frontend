@@ -15,8 +15,8 @@ import "../../css/page.css";
 
 class DepartmentSection extends Component {
   render() {
-    const { credentials } = this.props.user;
-    const isAdmin = credentials.isAdmin;
+    const { isAdmin } = this.props.user;
+
     const department = this.props.department;
     const contacts = this.props.contacts;
 

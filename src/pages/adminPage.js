@@ -16,8 +16,7 @@ const { Content, Footer } = Layout;
 
 class AdminPage extends Component {
   render() {
-    const { credentials } = this.props.user;
-    const isAdmin = credentials.isAdmin;
+    const { isAdmin } = this.props.user;
 
     return (
       <div className="page-container">

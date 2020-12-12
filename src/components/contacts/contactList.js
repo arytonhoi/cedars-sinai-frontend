@@ -10,8 +10,7 @@ import { EditOutlined, PhoneOutlined, MailOutlined } from "@ant-design/icons";
 
 class ContactList extends Component {
   render() {
-    const { credentials } = this.props.user;
-    const isAdmin = credentials.isAdmin;
+    const { isAdmin } = this.props.user;
     const department = this.props.department;
     const contacts = this.props.contacts;
 

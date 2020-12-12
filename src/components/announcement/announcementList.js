@@ -14,8 +14,7 @@ import { EditOutlined } from "@ant-design/icons";
 
 class AnnouncementList extends Component {
   render() {
-    const { credentials } = this.props.user;
-    const isAdmin = credentials.isAdmin;
+    const { isAdmin } = this.props.user;
     const announcements = this.props.announcements;
     const filter = this.props.filter;
     const maxAnnouncementPreviewHeight = 300;
@@ -118,14 +117,12 @@ AnnouncementList.propTypes = {
   announcements: PropTypes.array.isRequired,
   filter: PropTypes.object.isRequired,
   handleEditThisAnnouncement: PropTypes.func.isRequired,
-  data: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    data: state.data,
   };
 };
 

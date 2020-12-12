@@ -9,12 +9,10 @@ import {
 const initialState = {
   authenticated: false,
   loading: false,
-  credentials: {
-    isAdmin: false,
-  },
+  isAdmin: false,
 };
 
-export default function (state = initialState, action) {
+export const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_AUTHENTICATED:
       return {
@@ -27,7 +25,7 @@ export default function (state = initialState, action) {
       return {
         authenticated: true,
         loading: false,
-        credentials: action.payload,
+        isAdmin: action.payload.isAdmin,
       };
     case PATCH_PASSWORD:
       return state;
@@ -39,4 +37,4 @@ export default function (state = initialState, action) {
     default:
       return state;
   }
-}
+};

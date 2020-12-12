@@ -94,14 +94,14 @@ class RenameFolderModal extends Component {
 
 RenameFolderModal.propTypes = {
   user: PropTypes.object.isRequired,
-  UI: PropTypes.object.isRequired,
+  ui: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
   return {
     user: state.user,
     data: state.data,
-    UI: state.UI,
+    ui: state.ui,
   };
 };
 

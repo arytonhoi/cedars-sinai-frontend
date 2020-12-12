@@ -60,14 +60,14 @@ class DeleteFolderModal extends Component {
 
 DeleteFolderModal.propTypes = {
   user: PropTypes.object.isRequired,
-  UI: PropTypes.object.isRequired,
+  ui: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
   return {
     user: state.user,
     data: state.data,
-    UI: state.UI,
+    ui: state.ui,
   };
 };
 

@@ -17,7 +17,7 @@ import {
   deleteContact,
   // search
   getSearchedContacts,
-} from "../redux/actions/dataActions";
+} from "../redux/actions/contactActions";
 
 // Components
 import DepartmentList from "../components/contacts/departmentList";
@@ -126,7 +126,7 @@ class ContactPage extends Component {
         departmentName: "",
       });
     } else {
-      const departments = this.props.data.departments;
+      const departments = this.props.contacts.departments;
       const department = departments.find((d) => d.id === departmentId);
       this.setState({
         departmentId: departmentId,
@@ -182,7 +182,7 @@ class ContactPage extends Component {
       });
     } else {
       // editing existing contact
-      const contacts = this.props.data.contacts;
+      const contacts = this.props.contacts.contacts;
       const contact = contacts.find((c) => c.id === contactId);
       this.setState({
         contactId: contactId,
@@ -233,9 +233,9 @@ class ContactPage extends Component {
   };
 
   render() {
-    const { credentials } = this.props.user;
-    const isAdmin = credentials.isAdmin;
-    const { matchingSearchContacts, departments } = this.props.data;
+    const { isAdmin } = this.props.user;
+
+    const { matchingSearchContacts, departments } = this.props.contacts;
 
     // insert default contact pic for contacts w/o avatars
     const matchingSearchContactsWithImgs = matchingSearchContacts.map((c) => {
@@ -346,7 +346,7 @@ class ContactPage extends Component {
 }
 
 ContactPage.propTypes = {
-  data: PropTypes.object.isRequired,
+  contacts: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   // departments
   getDepartments: PropTypes.func.isRequired,
@@ -363,7 +363,7 @@ ContactPage.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    data: state.data,
+    contacts: state.contacts,
     user: state.user,
   };
 };

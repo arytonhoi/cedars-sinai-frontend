@@ -14,8 +14,8 @@ import { Button, Empty } from "antd";
 
 class DepartmentList extends Component {
   render() {
-    const { credentials } = this.props.user;
-    const isAdmin = credentials.isAdmin;
+    const { isAdmin } = this.props.user;
+
     const departments = this.props.departments;
     const contacts = this.props.contacts;
     const searchTerm = this.props.searchTerm;

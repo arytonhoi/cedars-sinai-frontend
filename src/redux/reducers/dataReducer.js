@@ -37,7 +37,7 @@ import {
   // calendar
   SET_EVENTS,
   // whois
-  SET_WHOIS_DATA
+  SET_WHOIS_DATA,
 } from "../types";
 
 import DateHelper from "../../util/dateHelper";

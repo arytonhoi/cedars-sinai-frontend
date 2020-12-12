@@ -1,69 +1,106 @@
 import {
-  LOADING_UI,
+  // errors
+  SET_ERROR,
+  CLEAR_ERROR,
+  // loading
+  SET_LOADING_PAGE,
+  STOP_LOADING_PAGE,
+  SET_LOADING_ACTION,
+  STOP_LOADING_ACTION,
   LOADING_FOLDER_SEARCH,
-  STOP_LOADING_UI,
   STOP_LOADING_FOLDER_SEARCH,
-  SET_ERRORS,
-  CLEAR_ERRORS,
 } from "../types";
 
 const initialState = {
-  loading: false,
   loadingFolderSearch: false,
   loadingWhois: false,
   errors: {},
+  loadingPage: false,
+  loadingActions: {},
 };
 
-export default function (state = initialState, action) {
+export const uiReducer = (state = initialState, action) => {
   switch (action.type) {
     // errors
-    case SET_ERRORS:
-      console.log(action.payload);
+    case SET_ERROR:
+      let error = action.payload;
+      console.log(error);
       return {
         ...state,
-        errors: action.payload,
-        loading: false,
+        loadingActions: {
+          ...state.loadingActions,
+          [error.actionName]: false,
+        },
+        errors: {
+          ...state.errors,
+          [error.actionName]: error.message,
+        },
       };
-    case CLEAR_ERRORS:
-      let actionName = action.payload;
-      let updatedErrors = state.errors;
-      if (updatedErrors[actionName]) {
-        console.log(`Success: cleared ${actionName} errors`);
-        delete updatedErrors[actionName];
-      } else {
-        console.log(`Warning: tried to clear nonexistent ${actionName} errors`);
-      }
 
+    case CLEAR_ERROR:
       return {
         ...state,
-        errors: updatedErrors,
+        errors: {
+          ...state.errors,
+          [action.payload]: false,
+        },
       };
+
     // loading
-    case LOADING_UI:
+    case SET_LOADING_PAGE:
       return {
         ...state,
         errors: {},
-        loading: true,
+        loadingPage: true,
       };
-    case STOP_LOADING_UI:
+
+    case STOP_LOADING_PAGE:
       return {
         ...state,
         errors: {},
-        loading: false,
+        loadingPage: false,
       };
+
+    case SET_LOADING_ACTION:
+      return {
+        ...state,
+        errors: {
+          ...state.errors,
+          [action.payload]: false,
+        },
+        loadingActions: {
+          ...state.loadingActions,
+          [action.payload]: true,
+        },
+      };
+
+    case STOP_LOADING_ACTION:
+      return {
+        ...state,
+        errors: {
+          ...state.errors,
+          [action.payload]: false,
+        },
+        loadingActions: {
+          ...state.loadingActions,
+          [action.payload]: false,
+        },
+      };
+
     case LOADING_FOLDER_SEARCH:
       return {
         ...state,
-        errors: [],
+        // errors: [],
         loadingFolderSearch: true,
       };
+
     case STOP_LOADING_FOLDER_SEARCH:
       return {
         ...state,
-        errors: [],
+        // errors: [],
         loadingFolderSearch: false,
       };
     default:
       return state;
   }
-}
+};

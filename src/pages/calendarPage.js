@@ -2,7 +2,6 @@ import React, { Component } from "react";
 
 // redux
 import { connect } from "react-redux";
-import {} from "../redux/actions/dataActions";
 
 // css styles
 //import "../css/layout.css";
@@ -25,28 +24,29 @@ class calendarPage extends Component {
   }
 
   render() {
-    const { credentials } = this.props.user;
-    const isAdmin = credentials.isAdmin;
+    const { isAdmin } = this.props.user;
 
     return (
       <div className="page-container">
         <header className="page-header-container">
           <div className="page-header-main-items">
             <h1>Calendar</h1>
-{isAdmin?
-            <Button
-              type="primary"
-              className="edit-button"
-              onClick={(e) => {
-                e.preventDefault();
-                window.open(
-                  "https://calendar.google.com/calendar/u/0/r?cid=cedarsoreducation@gmail.com"
-                );
-              }}
-            >
-              Edit Calendar
-            </Button>:""
-}
+            {isAdmin ? (
+              <Button
+                type="primary"
+                className="edit-button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.open(
+                    "https://calendar.google.com/calendar/u/0/r?cid=cedarsoreducation@gmail.com"
+                  );
+                }}
+              >
+                Edit Calendar
+              </Button>
+            ) : (
+              ""
+            )}
           </div>
         </header>
         <Layout className="vertical-fill-layout">
@@ -55,7 +55,11 @@ class calendarPage extends Component {
               <iframe
                 title="Google Calendar"
                 src="https://calendar.google.com/calendar/embed?src=cedarsoreducation%40gmail.com&ctz=Europe%2FLondon;showTitle=0"
-                style={{ border: "solid 1px #777", width: "100%", height: "100vh" }}
+                style={{
+                  border: "solid 1px #777",
+                  width: "100%",
+                  height: "100vh",
+                }}
                 frameborder="0"
                 scrolling="no"
               ></iframe>

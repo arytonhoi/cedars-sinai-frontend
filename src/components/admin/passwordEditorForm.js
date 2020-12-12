@@ -27,8 +27,8 @@ class PasswordEditorForm extends Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.UI.errors) {
-      return { errors: nextProps.UI.errors };
+    if (nextProps.ui.errors) {
+      return { errors: nextProps.ui.errors };
     } else return null;
   }
 
@@ -169,7 +169,7 @@ PasswordEditorForm.propTypes = {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    UI: state.UI,
+    ui: state.ui,
   };
 };
 

@@ -9,7 +9,7 @@ import {
   patchFolder,
   patchSubfolder,
   // syncAllSubFolders,
-} from "../../redux/actions/dataActions";
+} from "../../redux/actions/folderActions";
 import { DELETE_SUBFOLDER, SORT_SUBFOLDER } from "../../redux/types";
 
 // components
@@ -49,8 +49,8 @@ class FoldersCard extends Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.UI.errors) {
-      return { errors: nextProps.UI.errors };
+    if (nextProps.ui.errors) {
+      return { errors: nextProps.ui.errors };
     } else return null;
   }
 
@@ -84,11 +84,12 @@ class FoldersCard extends Component {
     if (folders.length >= 0) {
       folders.map((x) => {
         if (
-          this.props.data.moveFolderModalCurrentPath.movingFolderId !== x.id
+          this.props.folders.moveFolderModalCurrentPath.movingFolderId !== x.id
         ) {
           // this.toggleSelect(null, x);
           this.props.patchSubfolder(x.id, {
-            parent: this.props.data.moveFolderModalCurrentPath.movingFolderId,
+            parent: this.props.folders.moveFolderModalCurrentPath
+              .movingFolderId,
           });
           store.dispatch({ type: DELETE_SUBFOLDER, payload: x.id });
         }
@@ -207,10 +208,10 @@ class FoldersCard extends Component {
   // };
 
   render() {
-    const { credentials } = this.props.user;
-    const { loading } = this.props.UI;
-    const isAdmin = credentials.isAdmin;
-    const folder = this.props.folder;
+    const { isAdmin } = this.props.user;
+    const { loading } = this.props.ui;
+
+    const folder = this.props.folders;
 
     // errors
     // const patchFolderErrors = this.state.errors.patchFolder;
@@ -392,14 +393,14 @@ class FoldersCard extends Component {
 
 FoldersCard.propTypes = {
   user: PropTypes.object.isRequired,
-  UI: PropTypes.object.isRequired,
+  ui: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    data: state.data,
-    UI: state.UI,
+    folders: state.folders,
+    ui: state.ui,
   };
 };
 

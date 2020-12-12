@@ -1,11 +1,11 @@
 import {
-  LOADING_UI,
+  SET_LOADING_PAGE,
   LOADING_USER,
   SET_UNAUTHENTICATED,
   SET_USER,
   PATCH_PASSWORD,
   // errors
-  SET_ERRORS,
+  SET_ERROR,
 } from "../types";
 
 import { clearError } from "./uiActions";
@@ -20,19 +20,19 @@ const setAuthorizationHeader = () => {
 };
 
 export const loginUser = (userData, history) => (dispatch) => {
-  dispatch({ type: LOADING_UI });
+  dispatch({ type: SET_LOADING_PAGE });
   axios
     .post("/login", userData)
     .then((res) => {
       setAuthorizationHeader();
       dispatch(getUserData());
-      // dispatch({ type: CLEAR_ERRORS });
+      // dispatch({ type: CLEAR_ERROR });
       history.push("/");
       window.location.href = "./";
     })
     .catch((err) => {
       dispatch({
-        type: SET_ERRORS,
+        type: SET_ERROR,
         payload: err.response.data,
       });
     });
@@ -82,7 +82,7 @@ export const patchUserPassword = (reqBody) => (dispatch) => {
       // clear errors
       clearError("patchUserPassword");
       // dispatch({
-      //   type: CLEAR_ERRORS,
+      //   type: CLEAR_ERROR,
       //   payload: "patchUserPassword",
       // });
       if (reqBody.username === "admin") {
@@ -109,7 +109,7 @@ export const patchUserPassword = (reqBody) => (dispatch) => {
       };
       error.patchUserPassword.user = reqBody.username;
       dispatch({
-        type: SET_ERRORS,
+        type: SET_ERROR,
         payload: error,
       });
     });

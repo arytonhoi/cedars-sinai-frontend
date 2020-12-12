@@ -22,8 +22,8 @@ class login extends Component {
     };
   }
   componentWillReceiveProps(nextProps) {
-    if (nextProps.UI.errors) {
-      this.setState({ errors: nextProps.UI.errors });
+    if (nextProps.ui.errors) {
+      this.setState({ errors: nextProps.ui.errors });
     }
   }
   handleSubmit = (event) => {
@@ -53,7 +53,7 @@ class login extends Component {
   render() {
     const spinner = <img className="spin" alt="" src={CIcon} />;
     const {
-      UI: { loading },
+      ui: { loading },
     } = this.props;
     const { errors } = this.state;
     return (
@@ -110,7 +110,9 @@ class login extends Component {
             onClick={this.handleSubmit}
           >
             Sign in
-            {loading && <Spin className="button-spinner halign" indicator={spinner} />}
+            {loading && (
+              <Spin className="button-spinner halign" indicator={spinner} />
+            )}
           </Button>
           <p className="errors pw-errors noselect">
             {errors.length > 0 ? errors.pop().general : <br />}
@@ -127,13 +129,13 @@ class login extends Component {
 login.propTypes = {
   loginUser: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
-  UI: PropTypes.object.isRequired,
+  ui: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   user: state.user,
   showPw: state.showPw,
-  UI: state.UI,
+  ui: state.ui,
 });
 
 const mapActionsToProps = {

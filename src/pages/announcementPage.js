@@ -4,14 +4,32 @@ import PropTypes from "prop-types";
 // redux
 import { connect } from "react-redux";
 import {
+  // Images
+  GET_BANNER_IMAGE,
+  PATCH_BANNER_IMAGE,
+  // Announcements
+  SET_ANNOUNCEMENTS,
+  POST_ANNOUNCEMENT,
+  PATCH_ANNOUNCEMENT,
+  DELETE_ANNOUNCEMENT,
+  FILTER_ANNOUNCEMENTS,
+} from "../redux/types";
+import {
   deleteAnnouncement,
   getAnnouncements,
-  patchAnnouncement,
-  postAnnouncement,
-  getFilteredAnnouncements,
   getBannerImage,
+  getFilteredAnnouncements,
+  patchAnnouncement,
   patchBannerImage,
-} from "../redux/actions/dataActions";
+  postAnnouncement,
+} from "../redux/actions/announcementActions";
+
+import {
+  setLoadingPage,
+  stopLoadingPage,
+  setLoadingAction,
+  stopLoadingAction,
+} from "../redux/actions/uiActions";
 
 // components
 import AnnouncementPostEditorModal from "../components/announcement/announcementPostEditorModal.js";
@@ -24,8 +42,22 @@ import "../css/ckeditor.css";
 import "../components/announcement/announcement.css";
 
 // Ant design
-import { Button, Dropdown, Input, Layout, Menu, Spin } from "antd";
-import { DownOutlined, SearchOutlined } from "@ant-design/icons";
+// antd
+import {
+  Button,
+  Dropdown,
+  Input,
+  Layout,
+  Menu,
+  notification,
+  Result,
+  Spin,
+} from "antd";
+import {
+  DownOutlined,
+  LoadingOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 const { Content, Footer } = Layout;
 
 class AnnouncementPage extends Component {
@@ -48,12 +80,56 @@ class AnnouncementPage extends Component {
       elementHeight: "",
       // banner img
       isEditingBannerImg: false,
+      // errors and loading
+      loadingActions: {},
+      errors: {},
     };
   }
 
   componentDidMount() {
     this.props.getAnnouncements();
     this.props.getBannerImage("announcements");
+  }
+
+  componentDidUpdate(prevProps) {
+    // render action progress and errors
+    let currentErrors = this.props.ui.errors;
+    let currentloadingActions = this.props.ui.loadingActions;
+    let previousLoadingActions = prevProps.ui.loadingActions;
+    let previousLoadingActionNames = Object.keys(previousLoadingActions);
+
+    previousLoadingActionNames.forEach((actionName) => {
+      if (
+        !currentloadingActions[actionName] &&
+        previousLoadingActions[actionName]
+      ) {
+        // if preivousLoadingAction is no longer loading
+        switch (actionName) {
+          case PATCH_ANNOUNCEMENT:
+            notification.close(PATCH_ANNOUNCEMENT);
+            if (currentErrors[actionName]) {
+              notification["error"]({
+                message: "Announcement failed to update",
+                description: currentErrors[actionName],
+                duration: 0,
+              });
+            } else {
+              notification["success"]({
+                message: "Announcement updated!",
+              });
+            }
+            break;
+          case POST_ANNOUNCEMENT:
+            notification.close(POST_ANNOUNCEMENT);
+            notification["success"]({
+              message: "Announcement posted!",
+            });
+            break;
+          default:
+            break;
+        }
+      }
+    });
   }
 
   // input change handlers
@@ -120,9 +196,21 @@ class AnnouncementPage extends Component {
 
     if (this.state.announcementId === "") {
       // posting new announcement
+      notification.open({
+        key: POST_ANNOUNCEMENT,
+        duration: 0,
+        message: "Posting announcement...",
+        icon: <LoadingOutlined />,
+      });
       this.props.postAnnouncement(newAnnouncement);
     } else {
       // editing exisitng announcement
+      notification.open({
+        key: PATCH_ANNOUNCEMENT,
+        duration: 0,
+        message: "Updating announcement...",
+        icon: <LoadingOutlined />,
+      });
       this.props.patchAnnouncement(this.state.announcementId, newAnnouncement);
     }
 
@@ -156,10 +244,9 @@ class AnnouncementPage extends Component {
   };
 
   render() {
-    const { credentials } = this.props.user;
-    const isAdmin = credentials.isAdmin;
-    const { bannerImgs, filteredAnnouncements } = this.props.data;
-    const { loading } = this.props.UI;
+    const { isAdmin } = this.props.user;
+    const { errors, loadingActions } = this.props.ui;
+    const { bannerImgs, filteredAnnouncements } = this.props.announcements;
 
     return (
       <div className="page-container">
@@ -190,58 +277,8 @@ class AnnouncementPage extends Component {
             <h1>{isAdmin ? "Welcome Admin" : "Welcome"}</h1>
             <Button onClick={this.handleEditBannerImg}>Change picture</Button>
           </Content>
-          {/* {isAdmin && (
-            <div
-              style={{
-                position: "relative",
-                bottom: "-4px",
-                marginTop: "16px",
-              }}
-            >
-              <Button
-                type="primary"
-                size={"medium"}
-                onClick={() => this.toggleEditing()}
-              >
-                Post New Announcement
-              </Button>
-            </div>
-          )} */}
           <Content className="content-card">
             <div className="content-card-header">
-              {/* <div className="header-row">
-                <Input
-                  style={{ width: 400 }}
-                  id="searchTerm"
-                  name="searchTerm"
-                  type="text"
-                  placeholder="Search by keyword"
-                  value={this.state.searchTerm}
-                  onChange={this.handleFilterChange}
-                  suffix={
-                    <SearchOutlined
-                      className="search-input-icon"
-                      style={{ color: "rgba(0,0,0,.45)" }}
-                    />
-                  }
-                />
-                <Dropdown
-                  overlay={
-                    <Menu onClick={this.handleAgeFilterChange}>
-                      <Menu.Item key="259200000">Recently Added</Menu.Item>
-                      <Menu.Item key="86400000">Last 24 Hours</Menu.Item>
-                      <Menu.Item key="604800000">Last Week</Menu.Item>
-                      <Menu.Item key="2678400000">Last Month</Menu.Item>
-                      <Menu.Item key="Infinity">Everything</Menu.Item>
-                    </Menu>
-                  }
-                >
-                  <Button>
-                    Filter by date <DownOutlined />
-                  </Button>
-                </Dropdown>
-              </div> */}
-
               <div className="header-row">
                 <h1>Recent Announcements</h1>
                 <span className="page-header-interactive-items">
@@ -287,10 +324,16 @@ class AnnouncementPage extends Component {
                 </span>
               </div>
             </div>
-            {loading ? (
+            {loadingActions.SET_ANNOUNCEMENTS ? (
               <div className="padded-content vertical-content">
                 <Spin style={{ marginTop: "48px" }} />
               </div>
+            ) : errors.SET_ANNOUNCEMENTS ? (
+              <Result
+                status="error"
+                title="Failed to get announcements"
+                subTitle={errors.SET_ANNOUNCEMENTS}
+              />
             ) : (
               <AnnouncementList
                 announcements={filteredAnnouncements}
@@ -317,24 +360,30 @@ AnnouncementPage.propTypes = {
   getBannerImage: PropTypes.func.isRequired,
   patchBannerImage: PropTypes.func.isRequired,
   // generic
-  data: PropTypes.object.isRequired,
+  announcements: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    data: state.data,
-    UI: state.UI,
+    announcements: state.announcements,
+    ui: state.ui,
   };
 };
 
 export default connect(mapStateToProps, {
-  getAnnouncements,
-  postAnnouncement,
-  patchAnnouncement,
+  // announcements,
   deleteAnnouncement,
-  getFilteredAnnouncements,
+  getAnnouncements,
   getBannerImage,
+  getFilteredAnnouncements,
+  patchAnnouncement,
+  postAnnouncement,
   patchBannerImage,
+  // loading
+  setLoadingPage,
+  stopLoadingPage,
+  setLoadingAction,
+  stopLoadingAction,
 })(AnnouncementPage);

@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 // AntDesign
 import { Layout, Menu } from "antd";
 import {
-  CalendarOutlined,
+  // CalendarOutlined,
   ContactsOutlined,
   FolderOpenOutlined,
   LogoutOutlined,
@@ -28,8 +28,8 @@ class SideNav extends Component {
   };
 
   render() {
-    const { credentials } = this.props.user;
-    const isAdmin = credentials.isAdmin;
+    const { isAdmin } = this.props.user;
+
     const { collapsed } = this.state;
     const { location } = this.props;
     return (

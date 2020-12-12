@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 // Redux stuff
 import { connect } from "react-redux";
-import { getNavRoute } from "../../redux/actions/dataActions";
+import { getNavRoute } from "../../redux/actions/folderActions";
 
 // css
 import "../../css/page.css";
@@ -26,8 +26,8 @@ class MoveFolderModal extends Component {
   }
 
   render() {
-    const { moveFolderModalCurrentPath } = this.props.data;
-    const folder = this.props.data.folder;
+    const { moveFolderModalCurrentPath } = this.props.folders;
+    const folder = this.props.folders.folder;
     let s = "s";
     if (this.props.selectedFolders.length === 1) {
       s = "";
@@ -114,14 +114,14 @@ class MoveFolderModal extends Component {
 
 MoveFolderModal.propTypes = {
   user: PropTypes.object.isRequired,
-  UI: PropTypes.object.isRequired,
+  ui: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    data: state.data,
-    UI: state.UI,
+    folders: state.folders,
+    ui: state.ui,
   };
 };
 

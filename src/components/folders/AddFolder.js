@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 // Redux stuff
 import { connect } from "react-redux";
-import { postFolder } from "../../redux/actions/dataActions";
+import { postFolder } from "../../redux/actions/folderActions";
 
 // css
 import "../../css/modal.css";

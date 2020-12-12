@@ -3,7 +3,7 @@ import React, { Component } from "react";
 // redux
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { searchFolder } from "../redux/actions/dataActions";
+import { searchFolder } from "../redux/actions/folderActions";
 
 // components
 import SearchResult from "../components/folders/SearchResult.js";
@@ -45,11 +45,11 @@ class SearchPage extends Component {
   };
 
   render() {
-    // const { credentials } = this.props.user;
-    // const isAdmin = credentials.isAdmin;
-    const { folderSearchResults } = this.props.data;
+    // const { isAdmin } = this.props.user;
+    //
+    const { folderSearchResults } = this.props.folders;
     const searchTerm = this.props.match.params.searchTerm;
-    const { loading } = this.props.UI;
+    const { loading } = this.props.ui;
 
     return (
       <div className="page-container">
@@ -113,17 +113,17 @@ class SearchPage extends Component {
   }
 }
 SearchPage.propTypes = {
-  data: PropTypes.object.isRequired,
+  folders: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
-  UI: PropTypes.object.isRequired,
+  ui: PropTypes.object.isRequired,
   searchFolder: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   editable: state.editable,
-  data: state.data,
+  folders: state.folders,
   user: state.user,
-  UI: state.UI,
+  ui: state.ui,
 });
 
 export default connect(mapStateToProps, {

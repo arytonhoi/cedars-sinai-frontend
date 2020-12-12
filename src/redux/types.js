@@ -4,15 +4,18 @@ export const SET_UNAUTHENTICATED = "SET_UNAUTHENTICATED";
 export const SET_USER = "SET_USER";
 export const LOADING_USER = "LOADING_USER";
 export const PATCH_PASSWORD = "PATCH_PASSWORD";
-// UI reducer types
-export const SET_ERRORS = "SET_ERRORS";
-export const LOADING_UI = "LOADING_UI";
-export const LOADING_FOLDER_SEARCH = "LOADING_FOLDER_SEARCH";
-export const CLEAR_ERRORS = "CLEAR_ERRORS";
+// Error reducer types
+export const SET_ERROR = "SET_ERROR";
+export const CLEAR_ERROR = "CLEAR_ERROR";
+// Loading reducer types
+export const SET_LOADING_PAGE = "SET_LOADING_PAGE";
+export const STOP_LOADING_PAGE = "STOP_LOADING_PAGE";
+export const SET_LOADING_ACTION = "SET_LOADING_ACTION";
+export const STOP_LOADING_ACTION = "STOP_LOADING_ACTION";
 export const LOADING_DATA = "LOADING_DATA";
 export const LOADING_WHOIS = "LOADING_WHOIS";
 export const STOP_LOADING_DATA = "STOP_LOADING_DATA";
-export const STOP_LOADING_UI = "STOP_LOADING_UI";
+export const LOADING_FOLDER_SEARCH = "LOADING_FOLDER_SEARCH";
 export const STOP_LOADING_FOLDER_SEARCH = "STOP_LOADING_FOLDER_SEARCH";
 export const STOP_LOADING_WHOIS = "STOP_LOADING_WHOIS";
 // Data reducer types
@@ -38,6 +41,7 @@ export const PATCH_CONTACT = "PATCH_CONTACT";
 export const DELETE_CONTACT = "DELETE_CONTACT";
 export const SEARCH_CONTACTS = "SEARCH_CONTACTS";
 // Folders
+export const SET_FOLDER = "SET_FOLDER";
 export const POST_FOLDER = "POST_FOLDER";
 export const PATCH_FOLDER = "PATCH_FOLDER";
 export const PATCH_SUBFOLDER = "PATCH_SUBFOLDER";
@@ -53,6 +57,5 @@ export const SET_EVENTS = "SET_EVENTS";
 export const SET_WHOIS_DATA = "SET_WHOIS_DATA";
 // Data Handling
 export const SET_FOLDER_ARRAY = "SET_FOLDER_ARRAY";
-export const SET_FOLDER = "SET_FOLDER";
 export const DELETE_DATA = "DELETE_DATA";
 export const POST_DATA = "POST_DATA";
