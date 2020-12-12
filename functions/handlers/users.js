@@ -17,7 +17,7 @@ exports.login = (req, res) => {
   // turn username into email
   try {
     user = {
-      email: req.body.username.toString().concat("@email.com"),
+      email: req.body.username.toString().concat("@cedarsoreducation.com"),
       password: req.body.password.toString(),
     };
   } catch (err) {
@@ -134,7 +134,7 @@ exports.updatePassword = (req, res) => {
   let user;
   try {
     user = {
-      email: req.body.username.concat("@email.com"),
+      email: req.body.username.concat("@cedarsoreducation.com"),
       currentPassword: req.body.currentPassword,
       newPassword: req.body.newPassword,
     };
