@@ -9,9 +9,6 @@ import { getFolder, searchFolder } from "../redux/actions/folderActions";
 import FolderPostCard from "../components/folders/folderPostCard";
 import FoldersCard from "../components/folders/foldersCard";
 
-// images
-// import CIcon from "../images/icon.png";
-
 // styles
 import "../css/genPage.css";
 import "../css/page.css";
@@ -83,9 +80,8 @@ class FolderPage extends Component {
 
   render() {
     const { isAdmin } = this.props.user;
-
-    const { folder } = this.props.folders;
     const { loading } = this.props.ui;
+    const { folder } = this.props.folders;
     const pageName = this.props.match.params.pageName;
 
     // errors

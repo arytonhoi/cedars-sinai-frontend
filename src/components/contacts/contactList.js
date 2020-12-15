@@ -5,12 +5,14 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 // Ant design
-import { Avatar, Button, Empty } from "antd";
+import { Avatar, Button, Empty, Spin } from "antd";
 import { EditOutlined, PhoneOutlined, MailOutlined } from "@ant-design/icons";
 
 class ContactList extends Component {
   render() {
     const { isAdmin } = this.props.user;
+    const { loadingActions } = this.props.ui;
+
     const department = this.props.department;
     const contacts = this.props.contacts;
 
@@ -46,28 +48,33 @@ class ContactList extends Component {
       );
     }, this);
 
-    return contacts.length !== 0 ? (
-      <ul>{contactsListComponent}</ul>
-    ) : (
-      <Empty
-        image={Empty.PRESENTED_IMAGE_SIMPLE}
-        description={<span>No contacts</span>}
-      >
-        {!this.props.isEditingPage && (
-          <Button
-            type="dashed"
-            onClick={() => this.props.handleAddorEditContact(department.id)}
-          >
-            Add contact
-          </Button>
-        )}
-      </Empty>
-    );
+    if (loadingActions.SET_CONTACTS) {
+      return <Spin style={{ marginTop: "48px" }} />;
+    } else {
+      return contacts.length !== 0 ? (
+        <ul>{contactsListComponent}</ul>
+      ) : (
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description={<span>No contacts</span>}
+        >
+          {!this.props.isEditingPage && (
+            <Button
+              type="dashed"
+              onClick={() => this.props.handleAddorEditContact(department.id)}
+            >
+              Add contact
+            </Button>
+          )}
+        </Empty>
+      );
+    }
   }
 }
 
 ContactList.propTypes = {
   user: PropTypes.object.isRequired,
+  ui: PropTypes.object.isRequired,
   department: PropTypes.object.isRequired,
   contacts: PropTypes.array.isRequired,
   handleAddorEditContact: PropTypes.func.isRequired,
@@ -77,6 +84,7 @@ ContactList.propTypes = {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
+    ui: state.ui,
   };
 };
 

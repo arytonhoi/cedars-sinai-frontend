@@ -2,11 +2,10 @@ import {
   // errors
   SET_ERROR,
   CLEAR_ERROR,
+  CLEAR_ALL_ERRORS,
   // loading
   SET_LOADING_ACTION,
   STOP_LOADING_ACTION,
-  SET_LOADING_PAGE,
-  STOP_LOADING_PAGE,
 } from "../types";
 
 // errors
@@ -25,6 +24,10 @@ export const clearError = (actionName) => (dispatch) => {
   });
 };
 
+export const clearAllErrors = () => (dispatch) => {
+  dispatch({ type: CLEAR_ALL_ERRORS });
+};
+
 // loading
 export const setLoadingAction = (actionName) => (dispatch) => {
   dispatch({
@@ -38,12 +41,4 @@ export const stopLoadingAction = (actionName) => (dispatch) => {
     type: STOP_LOADING_ACTION,
     payload: actionName,
   });
-};
-
-export const setLoadingPage = () => (dispatch) => {
-  dispatch({ type: SET_LOADING_PAGE });
-};
-
-export const stopLoadingPage = () => (dispatch) => {
-  dispatch({ type: STOP_LOADING_PAGE });
 };

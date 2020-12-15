@@ -1,5 +1,4 @@
 import {
-  SET_LOADING_PAGE,
   LOADING_USER,
   SET_UNAUTHENTICATED,
   SET_USER,
@@ -20,7 +19,6 @@ const setAuthorizationHeader = () => {
 };
 
 export const loginUser = (userData, history) => (dispatch) => {
-  dispatch({ type: SET_LOADING_PAGE });
   axios
     .post("/login", userData)
     .then((res) => {

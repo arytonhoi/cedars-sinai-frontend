@@ -76,7 +76,6 @@ class FolderPostCard extends Component {
     const { loading } = this.props.ui;
 
     const folder = this.props.folder;
-
     return (
       <Content className="content-card">
         <Modal

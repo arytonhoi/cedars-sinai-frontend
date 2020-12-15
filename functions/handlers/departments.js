@@ -1,11 +1,12 @@
 const { db, production } = require("../util/admin");
-const { formatReqBody } = require("../util/util");
+const {
+  formatReqBody,
+  validateUserIsAdmin,
+  returnFormattedHttpError,
+} = require("../util/util");
 
 // get all departments in database
 exports.getAllDepartments = (req, res) => {
-  if (req.method !== "GET") {
-    return res.status(400).json({ error: "Method not allowed" });
-  }
   db.collection(`${production}departments`)
     .get()
     .then((data) => {
@@ -18,62 +19,67 @@ exports.getAllDepartments = (req, res) => {
       return res.json(departments);
     })
     .catch((err) => {
-      console.error(err);
-      res.status(500).json({ error: err.code });
+      returnFormattedHttpError(
+        res,
+        500,
+        "Failed to get departments. Please refresh and try again.",
+        err
+      );
     });
 };
 
 // create file
 exports.postOneDepartment = (req, res) => {
-  try {
-    req = formatReqBody(req);
-  } catch (e) {
-    return res.status(400).json({ error: "Invalid JSON." });
-  }
-  console.log(req.user.isAdmin);
-  if (!req.user.isAdmin) {
-    return res.status(403).json({ error: "Unathorized" });
-  } else if (req.method !== "POST") {
-    return res.status(400).json({ error: "Method not allowed" });
-  }
+  req = formatReqBody(req);
+  validateUserIsAdmin(req, res);
 
   // move request params to JS object newFIle
+  let newDepartment;
   try {
-    const newDepartment = {
+    newDepartment = {
       name: req.body.name,
     };
-
-    // add newAnn to FB database and update parent folder
-    db.collection(`${production}departments`)
-      .add(newDepartment)
-      .then((doc) => {
-        newDepartment.id = doc.id;
-        res.json(newDepartment);
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).json({ error: "something went wrong" });
-      });
-  } catch (e) {
-    return res
-      .status(400)
-      .json({ error: "JSON incomplete. Required keys are name" });
+  } catch (err) {
+    returnFormattedHttpError(
+      res,
+      400,
+      "JSON incomplete. Required keys are name",
+      err
+    );
   }
+
+  // add newAnn to FB database and update parent folder
+  db.collection(`${production}departments`)
+    .add(newDepartment)
+    .then((doc) => {
+      newDepartment.id = doc.id;
+      res.json(newDepartment);
+    })
+    .catch((err) => {
+      returnFormattedHttpError(
+        res,
+        400,
+        "Failed to add department. Please refresh and try again.",
+        err
+      );
+    });
 };
 
 exports.deleteOneDepartment = (req, res) => {
-  if (!req.user.isAdmin) {
-    return res.status(403).json({ error: "Unauthorized" });
-  }
+  validateUserIsAdmin(req, res);
 
-  const department = db.doc(`/${production}departments/${req.params.departmentId}`);
+  const department = db.doc(
+    `/${production}departments/${req.params.departmentId}`
+  );
   department
     .get()
     .then((doc) => {
       if (!doc.exists) {
-        return res
-          .status(404)
-          .json({ error: "Cannot delete nonexistent department." });
+        returnFormattedHttpError(
+          res,
+          404,
+          "Failed to delete department. Given id does not match any departments."
+        );
       } else {
         return department.delete();
       }
@@ -82,32 +88,42 @@ exports.deleteOneDepartment = (req, res) => {
       res.json({ message: "Department deleted successfully" });
     })
     .catch((err) => {
-      console.error(err);
-      res.status(500).json({ error: err.code });
+      returnFormattedHttpError(
+        res,
+        500,
+        "Failed to delete department. Please refresh and try again."
+      );
     });
 };
 
 exports.updateOneDepartment = (req, res) => {
-  try {
-    req = formatReqBody(req);
-  } catch (e) {
-    return res.status(400).json({ error: "Invalid JSON." });
-  }
-  if (Object.keys(req.body).length > 0) {
-    const updatedDepartment = {
-      ...req.body,
-    };
+  req = formatReqBody(req);
+  validateUserIsAdmin(req, res);
 
-    db.doc(`/${production}departments/${req.params.departmentId}`)
-      .update(updatedDepartment)
-      .then(() => {
-        return res.json({ message: "Department updated successfully " });
-      })
-      .catch((err) => {
-        console.error(err);
-        return res.status(500).json({ error: err.code });
-      });
-  } else {
-    return res.json({ message: "No changes were made." });
+  let updatedDepartment;
+  try {
+    updatedDepartment = {
+      name: req.body.name,
+    };
+  } catch (err) {
+    returnFormattedHttpError(
+      res,
+      400,
+      "JSON incomplete. Required keys are name",
+      err
+    );
   }
+
+  db.doc(`/${production}departments/${req.params.departmentId}`)
+    .update(updatedDepartment)
+    .then(() => {
+      return res.json({ message: "Department updated successfully" });
+    })
+    .catch((err) => {
+      returnFormattedHttpError(
+        res,
+        500,
+        "Failed to update department. Please refresh and try again."
+      );
+    });
 };

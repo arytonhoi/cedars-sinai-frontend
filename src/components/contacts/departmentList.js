@@ -10,17 +10,20 @@ import "./contacts.css";
 import "../../css/page.css";
 
 // antd
-import { Button, Empty } from "antd";
+import { Button, Empty, Spin } from "antd";
 
 class DepartmentList extends Component {
   render() {
     const { isAdmin } = this.props.user;
+    const { loadingActions } = this.props.ui;
 
     const departments = this.props.departments;
     const contacts = this.props.contacts;
     const searchTerm = this.props.searchTerm;
 
-    if (departments.length === 0) {
+    if (loadingActions.SET_DEPARTMENTS) {
+      return <Spin style={{ marginTop: "48px" }} />;
+    } else if (departments.length === 0) {
       return (
         <Empty
           style={{ margin: "auto" }}
@@ -39,7 +42,7 @@ class DepartmentList extends Component {
       );
     } else if (
       contacts.length === 0 &&
-      departments.length > 0 &&
+      // departments.length > 0 &&
       searchTerm !== ""
     ) {
       return (
@@ -82,6 +85,7 @@ class DepartmentList extends Component {
 
 DepartmentList.propTypes = {
   user: PropTypes.object.isRequired,
+  ui: PropTypes.object.isRequired,
   // data
   departments: PropTypes.array.isRequired,
   contacts: PropTypes.array.isRequired,
@@ -97,6 +101,7 @@ DepartmentList.propTypes = {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
+    ui: state.ui,
   };
 };
 

@@ -115,7 +115,7 @@ class FoldersCard extends Component {
   // mode toggle functions
   exitFolderEditMode = () => {
     // if (this.state.positionModified) {
-    //   this.props.syncAllSubFolders(this.props.folder.subfolders);
+    //   this.props.syncAllSubFolders(this.props.folders.subfolders);
     //   this.setState({ positionModified: false });
     // }
     this.props.toggleEditingFolders();
@@ -125,7 +125,7 @@ class FoldersCard extends Component {
   sortSubfolders = (event) => {
     const sortKey = event.key;
     if (this.props.isEditingFolders) {
-      let updatedFolder = this.props.folder;
+      let updatedFolder = this.props.folders;
       updatedFolder.defaultSubfolderSort = sortKey;
       this.props.patchFolder(updatedFolder.id, updatedFolder);
     }
@@ -210,11 +210,7 @@ class FoldersCard extends Component {
   render() {
     const { isAdmin } = this.props.user;
     const { loading } = this.props.ui;
-
-    const folder = this.props.folders;
-
-    // errors
-    // const patchFolderErrors = this.state.errors.patchFolder;
+    const { folder } = this.props.folders;
 
     // subfolder sort stuff
     const subfolderSortOptions = {

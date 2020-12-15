@@ -29,6 +29,7 @@ class AnnouncementPostEditorModal extends Component {
   }
 
   toggleDeleting = (event) => {
+    event.preventDefault();
     this.setState({
       isDeleting: !this.state.isDeleting,
     });

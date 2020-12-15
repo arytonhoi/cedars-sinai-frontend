@@ -7,9 +7,8 @@ export const PATCH_PASSWORD = "PATCH_PASSWORD";
 // Error reducer types
 export const SET_ERROR = "SET_ERROR";
 export const CLEAR_ERROR = "CLEAR_ERROR";
+export const CLEAR_ALL_ERRORS = "CLEAR_ALL_ERRORS";
 // Loading reducer types
-export const SET_LOADING_PAGE = "SET_LOADING_PAGE";
-export const STOP_LOADING_PAGE = "STOP_LOADING_PAGE";
 export const SET_LOADING_ACTION = "SET_LOADING_ACTION";
 export const STOP_LOADING_ACTION = "STOP_LOADING_ACTION";
 export const LOADING_DATA = "LOADING_DATA";

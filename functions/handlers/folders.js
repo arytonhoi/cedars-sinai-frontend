@@ -69,7 +69,7 @@ exports.getAllFolders = (req, res) => {
       returnFormattedHttpError(
         res,
         500,
-        "Server failed to get all folders. Please try again.",
+        "Failed to get folders. Please refresh and try again.",
         err
       );
     });
@@ -201,7 +201,7 @@ exports.getFolder = (req, res) => {
       returnFormattedHttpError(
         res,
         500,
-        "Server failed to get folder details. Please try again.",
+        "Failed to get folder details. Please refresh and try again.",
         err
       );
     });
@@ -209,8 +209,8 @@ exports.getFolder = (req, res) => {
 
 // create folder
 exports.createFolder = (req, res) => {
-  validateUserIsAdmin(req, res);
   req = formatReqBody(req);
+  validateUserIsAdmin(req, res);
   // move request params to JS object
   let parentFolderId;
   let folderTitle;

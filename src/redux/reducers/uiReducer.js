@@ -2,9 +2,8 @@ import {
   // errors
   SET_ERROR,
   CLEAR_ERROR,
+  CLEAR_ALL_ERRORS,
   // loading
-  SET_LOADING_PAGE,
-  STOP_LOADING_PAGE,
   SET_LOADING_ACTION,
   STOP_LOADING_ACTION,
   LOADING_FOLDER_SEARCH,
@@ -15,7 +14,6 @@ const initialState = {
   loadingFolderSearch: false,
   loadingWhois: false,
   errors: {},
-  loadingPage: false,
   loadingActions: {},
 };
 
@@ -46,21 +44,14 @@ export const uiReducer = (state = initialState, action) => {
         },
       };
 
+    case CLEAR_ALL_ERRORS:
+      return {
+        ...state,
+        errors: {},
+        loadingActions: {},
+      };
+
     // loading
-    case SET_LOADING_PAGE:
-      return {
-        ...state,
-        errors: {},
-        loadingPage: true,
-      };
-
-    case STOP_LOADING_PAGE:
-      return {
-        ...state,
-        errors: {},
-        loadingPage: false,
-      };
-
     case SET_LOADING_ACTION:
       return {
         ...state,

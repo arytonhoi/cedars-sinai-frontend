@@ -26,8 +26,7 @@ class MoveFolderModal extends Component {
   }
 
   render() {
-    const { moveFolderModalCurrentPath } = this.props.folders;
-    const folder = this.props.folders.folder;
+    const { folder, moveFolderModalCurrentPath } = this.props.folders;
     let s = "s";
     if (this.props.selectedFolders.length === 1) {
       s = "";

@@ -5,14 +5,12 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
   // Images
-  GET_BANNER_IMAGE,
-  PATCH_BANNER_IMAGE,
+  // GET_BANNER_IMAGE,
+  // PATCH_BANNER_IMAGE,
   // Announcements
-  SET_ANNOUNCEMENTS,
   POST_ANNOUNCEMENT,
   PATCH_ANNOUNCEMENT,
   DELETE_ANNOUNCEMENT,
-  FILTER_ANNOUNCEMENTS,
 } from "../redux/types";
 import {
   deleteAnnouncement,
@@ -23,10 +21,9 @@ import {
   patchBannerImage,
   postAnnouncement,
 } from "../redux/actions/announcementActions";
-
 import {
-  setLoadingPage,
-  stopLoadingPage,
+  clearAllErrors,
+  clearError,
   setLoadingAction,
   stopLoadingAction,
 } from "../redux/actions/uiActions";
@@ -87,6 +84,7 @@ class AnnouncementPage extends Component {
   }
 
   componentDidMount() {
+    this.props.clearAllErrors();
     this.props.getAnnouncements();
     this.props.getBannerImage("announcements");
   }
@@ -105,25 +103,52 @@ class AnnouncementPage extends Component {
       ) {
         // if preivousLoadingAction is no longer loading
         switch (actionName) {
-          case PATCH_ANNOUNCEMENT:
-            notification.close(PATCH_ANNOUNCEMENT);
-            if (currentErrors[actionName]) {
-              notification["error"]({
-                message: "Announcement failed to update",
-                description: currentErrors[actionName],
-                duration: 0,
-              });
-            } else {
-              notification["success"]({
-                message: "Announcement updated!",
-              });
-            }
-            break;
           case POST_ANNOUNCEMENT:
             notification.close(POST_ANNOUNCEMENT);
-            notification["success"]({
-              message: "Announcement posted!",
-            });
+            currentErrors[actionName]
+              ? notification["error"]({
+                  message: "Failed to post announcement",
+                  description: currentErrors[actionName],
+                  duration: 0,
+                  onClose: () => {
+                    clearError(POST_ANNOUNCEMENT);
+                  },
+                })
+              : notification["success"]({
+                  message: "Announcement posted!",
+                });
+            break;
+
+          case PATCH_ANNOUNCEMENT:
+            notification.close(PATCH_ANNOUNCEMENT);
+            currentErrors[actionName]
+              ? notification["error"]({
+                  message: "Failed to update announcement",
+                  description: currentErrors[actionName],
+                  duration: 0,
+                  onClose: () => {
+                    clearError(PATCH_ANNOUNCEMENT);
+                  },
+                })
+              : notification["success"]({
+                  message: "Announcement updated!",
+                });
+            break;
+
+          case DELETE_ANNOUNCEMENT:
+            notification.close(DELETE_ANNOUNCEMENT);
+            currentErrors[actionName]
+              ? notification["error"]({
+                  message: "Failed to delete announcement",
+                  description: currentErrors[actionName],
+                  duration: 0,
+                  onClose: () => {
+                    clearError(DELETE_ANNOUNCEMENT);
+                  },
+                })
+              : notification["success"]({
+                  message: "Announcement deleted!",
+                });
             break;
           default:
             break;
@@ -218,6 +243,12 @@ class AnnouncementPage extends Component {
   };
 
   handleDeleteThisAnnouncement = () => {
+    notification.open({
+      key: DELETE_ANNOUNCEMENT,
+      duration: 0,
+      message: "Deleting announcement...",
+      icon: <LoadingOutlined />,
+    });
     this.props.deleteAnnouncement(this.state.announcementId);
     this.handleCancelEditAnnouncement();
   };
@@ -247,6 +278,14 @@ class AnnouncementPage extends Component {
     const { isAdmin } = this.props.user;
     const { errors, loadingActions } = this.props.ui;
     const { bannerImgs, filteredAnnouncements } = this.props.announcements;
+
+    // const announcementSortOptions = {
+    //   recently_added: "Recently Added",
+    //   last_24_hours: "Last 24 Hours",
+    //   last_week: "Last Week",
+    //   last_month: "Last Month",
+    //   everything: "Everything",
+    // };
 
     return (
       <div className="page-container">
@@ -382,8 +421,8 @@ export default connect(mapStateToProps, {
   postAnnouncement,
   patchBannerImage,
   // loading
-  setLoadingPage,
-  stopLoadingPage,
+  clearAllErrors,
+  clearError,
   setLoadingAction,
   stopLoadingAction,
 })(AnnouncementPage);
