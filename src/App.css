@@ -6,6 +6,10 @@ body {
   font-weight: 400;
   font-size: 14px;
 }
+
+section {
+  height: 1vh;
+}
 /* 
 h4 {
   color: #999 !important;
