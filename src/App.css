@@ -7,8 +7,14 @@ body {
   font-size: 14px;
 }
 
-section {
-  height: 1vh;
+section.ant-layout-has-sider {
+  height: 100vh;
+}
+.ant-layout-content.content-card.folder-post {
+  overflow-x: scroll !important;
+  overflow-y: visible !important;
+  -ms-overflow-x: scroll !important;
+  -ms-overflow-y: visible !important;
 }
 /* 
 h4 {

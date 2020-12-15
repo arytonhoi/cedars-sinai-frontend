@@ -77,7 +77,7 @@ class FolderPostCard extends Component {
 
     const folder = this.props.folder;
     return (
-      <Content className="content-card">
+      <Content className="content-card folder-post">
         <Modal
           className="center"
           title={"Cancel changes to your post?"}
