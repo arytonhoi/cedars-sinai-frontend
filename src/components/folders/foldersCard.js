@@ -5,12 +5,15 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import store from "../../redux/store";
 import {
+  DELETE_SUBFOLDER,
+  PATCH_SUBFOLDER,
+  SORT_SUBFOLDER,
+} from "../../redux/types";
+import {
   deleteFolder,
-  patchFolder,
   patchSubfolder,
-  // syncAllSubFolders,
 } from "../../redux/actions/folderActions";
-import { DELETE_SUBFOLDER, SORT_SUBFOLDER } from "../../redux/types";
+import { clearError } from "../../redux/actions/uiActions";
 
 // components
 import AddFolder from "./AddFolder.js";
@@ -23,8 +26,16 @@ import RenameFolderModal from "./renameFolderModal.js";
 import "../../css/page.css";
 
 // Ant Design
-import { DownOutlined } from "@ant-design/icons";
-import { Button, Dropdown, Empty, Layout, Menu, Spin } from "antd";
+import { DownOutlined, LoadingOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Dropdown,
+  Empty,
+  Layout,
+  Menu,
+  notification,
+  Spin,
+} from "antd";
 const { Content } = Layout;
 
 class FoldersCard extends Component {
@@ -39,8 +50,6 @@ class FoldersCard extends Component {
       selectedFolders: [],
       // sorting folders
       requestedSubfolderSortKey: null,
-      // errors
-      errors: {},
       // dragging folders
       // folderMoveCandidate: { start: [0, 0], target: null, id: "" },
       // folderPosList: [[], []],
@@ -48,10 +57,56 @@ class FoldersCard extends Component {
     };
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.ui.errors) {
-      return { errors: nextProps.ui.errors };
-    } else return null;
+  componentDidUpdate(prevProps) {
+    // render action progress and errors
+    let currentErrors = this.props.ui.errors;
+    let currentloadingActions = this.props.ui.loadingActions;
+    let previousLoadingActions = prevProps.ui.loadingActions;
+    let previousLoadingActionNames = Object.keys(previousLoadingActions);
+
+    previousLoadingActionNames.forEach((actionName) => {
+      if (
+        !currentloadingActions[actionName] &&
+        previousLoadingActions[actionName]
+      ) {
+        // if preivousLoadingAction is no longer loading
+        switch (actionName) {
+          // departments
+          case PATCH_SUBFOLDER:
+            notification.close(PATCH_SUBFOLDER);
+            currentErrors[actionName]
+              ? notification["error"]({
+                  message: "Failed to update folder",
+                  description: currentErrors[actionName],
+                  duration: 0,
+                  onClose: () => {
+                    clearError(PATCH_SUBFOLDER);
+                  },
+                })
+              : notification["success"]({
+                  message: "Folder updated!",
+                });
+            break;
+          case DELETE_SUBFOLDER:
+            notification.close(DELETE_SUBFOLDER);
+            currentErrors[actionName]
+              ? notification["error"]({
+                  message: "Failed to delete folder",
+                  description: currentErrors[actionName],
+                  duration: 0,
+                  onClose: () => {
+                    clearError(DELETE_SUBFOLDER);
+                  },
+                })
+              : notification["success"]({
+                  message: "Folder deleted!",
+                });
+            break;
+          default:
+            break;
+        }
+      }
+    });
   }
 
   // modal functions
@@ -65,8 +120,13 @@ class FoldersCard extends Component {
 
   // folder editing action functions
   renameFolder = (formValues) => {
+    notification.open({
+      key: PATCH_SUBFOLDER,
+      duration: 0,
+      message: "Renaming folder...",
+      icon: <LoadingOutlined />,
+    });
     var folder = this.state.selectedFolders[0];
-    // this.toggleSelect(null, folder);
     this.props.patchSubfolder(folder.id, {
       parent: folder.parent,
       title: formValues.folderTitle,
@@ -80,6 +140,12 @@ class FoldersCard extends Component {
   };
 
   moveFolders = () => {
+    notification.open({
+      key: PATCH_SUBFOLDER,
+      duration: 0,
+      message: "Moving folder...",
+      icon: <LoadingOutlined />,
+    });
     let folders = this.state.selectedFolders;
     if (folders.length >= 0) {
       folders.map((x) => {
@@ -103,6 +169,12 @@ class FoldersCard extends Component {
   };
 
   deleteFolders = () => {
+    notification.open({
+      key: DELETE_SUBFOLDER,
+      duration: 0,
+      message: "Deleting folder...",
+      icon: <LoadingOutlined />,
+    });
     this.state.selectedFolders.map((folder) =>
       this.props.deleteFolder(folder.id)
     );
@@ -209,7 +281,7 @@ class FoldersCard extends Component {
 
   render() {
     const { isAdmin } = this.props.user;
-    const { loading } = this.props.ui;
+    const { loadingActions } = this.props.ui;
     const { folder } = this.props.folders;
 
     // subfolder sort stuff
@@ -326,12 +398,12 @@ class FoldersCard extends Component {
               </span>
             </div>
           </div>
-          {loading && (
+          {loadingActions.SET_FOLDER && (
             <div className="padded-content vertical-content">
               <Spin />
             </div>
           )}
-          {!loading &&
+          {!loadingActions.SET_FOLDER &&
             (folder.subfolders.length > 0 ? (
               <div className="padded-content wrapped-content">
                 {isAdmin && this.props.isEditingFolders && (
@@ -390,6 +462,9 @@ class FoldersCard extends Component {
 FoldersCard.propTypes = {
   user: PropTypes.object.isRequired,
   ui: PropTypes.object.isRequired,
+  deleteFolder: PropTypes.func.isRequired,
+  patchSubfolder: PropTypes.func.isRequired,
+  clearError: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -402,7 +477,7 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
   deleteFolder,
-  patchFolder,
   patchSubfolder,
+  clearError,
   // syncAllSubFolders,
 })(FoldersCard);

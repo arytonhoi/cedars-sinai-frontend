@@ -7,15 +7,17 @@ body {
   font-size: 14px;
 }
 
-section.ant-layout-has-sider {
+/* section.ant-layout-has-sider {
   height: 100vh;
-}
-.ant-layout-content.content-card.folder-post {
+} */
+
+/* .ant-layout-content.content-card.folder-post {
   overflow-x: scroll !important;
   overflow-y: visible !important;
   -ms-overflow-x: scroll !important;
   -ms-overflow-y: visible !important;
-}
+} */
+
 /* 
 h4 {
   color: #999 !important;
@@ -62,20 +64,20 @@ label,
   animation-name: spin;
   animation-duration: 3000ms;
   animation-iteration-count: infinite;
-  animation-timing-function: linear; 
+  animation-timing-function: linear;
 }
 
-.spin-large{
+.spin-large {
   width: 5em !important;
   height: auto !important;
 }
 @keyframes spin {
-    from {
-        transform:rotate(0deg);
-    }
-    to {
-        transform:rotate(360deg);
-    }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .shadow {

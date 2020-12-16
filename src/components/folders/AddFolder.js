@@ -1,8 +1,11 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 // Redux stuff
 import { connect } from "react-redux";
+import { POST_FOLDER } from "../../redux/types";
 import { postFolder } from "../../redux/actions/folderActions";
+import { clearError } from "../../redux/actions/uiActions";
 
 // css
 import "../../css/modal.css";
@@ -10,7 +13,8 @@ import "./Folder.css";
 import "./AddFolder.css";
 
 // antd
-import { Button, Form, Input, Modal } from "antd";
+import { Button, Form, Input, Modal, notification } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 class AddFolder extends Component {
   constructor() {
@@ -18,24 +22,48 @@ class AddFolder extends Component {
     this.state = {
       showCreateFolderModal: false,
       // parentFolderId: "",
-      errors: {},
     };
   }
 
-  componentDidMount() {
-    // var parentFolderId = this.props.parentFolderId;
-    // if (!parentFolderId || parentFolderId === "") {
-    //   parentFolderId = "home";
-    // }
-    // this.setState({
-    //   parentFolderId: parentFolderId,
-    // });
-  }
-
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     if (this.formRef.current) {
       this.formRef.current.resetFields();
     }
+
+    // render action progress and errors
+    let currentErrors = this.props.ui.errors;
+    let currentloadingActions = this.props.ui.loadingActions;
+    let previousLoadingActions = prevProps.ui.loadingActions;
+    let previousLoadingActionNames = Object.keys(previousLoadingActions);
+
+    previousLoadingActionNames.forEach((actionName) => {
+      if (
+        !currentloadingActions[actionName] &&
+        previousLoadingActions[actionName]
+      ) {
+        // if preivousLoadingAction is no longer loading
+        switch (actionName) {
+          // departments
+          case POST_FOLDER:
+            notification.close(POST_FOLDER);
+            currentErrors[actionName]
+              ? notification["error"]({
+                  message: "Failed to add folder",
+                  description: currentErrors[actionName],
+                  duration: 0,
+                  onClose: () => {
+                    clearError(POST_FOLDER);
+                  },
+                })
+              : notification["success"]({
+                  message: "Folder added!",
+                });
+            break;
+          default:
+            break;
+        }
+      }
+    });
   }
 
   toggleShowCreateFolderModal = () => {
@@ -47,6 +75,12 @@ class AddFolder extends Component {
   };
 
   handlePostFolder = (formValues) => {
+    notification.open({
+      key: POST_FOLDER,
+      duration: 0,
+      message: "Adding folder...",
+      icon: <LoadingOutlined />,
+    });
     const newFolder = {
       title: formValues.folderTitle,
     };
@@ -131,8 +165,12 @@ class AddFolder extends Component {
   }
 }
 
-//AddFolder.propTypes = {};
+AddFolder.propTypes = { clearError: PropTypes.func.isRequired };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => {
+  return {
+    ui: state.ui,
+  };
+};
 
-export default connect(mapStateToProps, { postFolder })(AddFolder);
+export default connect(mapStateToProps, { clearError, postFolder })(AddFolder);

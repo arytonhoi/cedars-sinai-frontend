@@ -5,10 +5,10 @@ import {
   PATCH_SUBFOLDER,
   DELETE_SUBFOLDER,
   SORT_SUBFOLDER,
-  MOVE_SUBFOLDER,
+  // MOVE_SUBFOLDER,
   SET_NAV_PATH,
   RESET_NAV_PATH,
-  SET_FOLDER_SEARCH_RES,
+  SET_FOLDER_SEARCH_RESULTS,
 } from "../types";
 
 const initialState = {
@@ -100,24 +100,24 @@ export const folderReducer = (state = initialState, action) => {
       }
       return { ...state };
     // moving folders
-    case MOVE_SUBFOLDER:
-      sf = state.folder.subfolders;
-      let oldIndex = sf.findIndex((x) => x.id === action.payload.id);
-      if (oldIndex >= 0) {
-        let newIndex = Math.min(
-          Math.max(0, action.payload.newIndex),
-          sf.length
-        );
-        sf = sf.slice(0, oldIndex).concat(sf.slice(oldIndex + 1));
-        sf = sf
-          .slice(0, newIndex)
-          .concat(state.folder.subfolders[oldIndex])
-          .concat(sf.slice(newIndex));
-        state.folder.subfolders = sf.map((x, i) =>
-          Object.assign(x, { index: i })
-        );
-      }
-      return { ...state };
+    // case MOVE_SUBFOLDER:
+    //   sf = state.folder.subfolders;
+    //   let oldIndex = sf.findIndex((x) => x.id === action.payload.id);
+    //   if (oldIndex >= 0) {
+    //     let newIndex = Math.min(
+    //       Math.max(0, action.payload.newIndex),
+    //       sf.length
+    //     );
+    //     sf = sf.slice(0, oldIndex).concat(sf.slice(oldIndex + 1));
+    //     sf = sf
+    //       .slice(0, newIndex)
+    //       .concat(state.folder.subfolders[oldIndex])
+    //       .concat(sf.slice(newIndex));
+    //     state.folder.subfolders = sf.map((x, i) =>
+    //       Object.assign(x, { index: i })
+    //     );
+    //   }
+    //   return { ...state };
     case SET_NAV_PATH:
       return {
         ...state,
@@ -140,7 +140,7 @@ export const folderReducer = (state = initialState, action) => {
         },
         loading: false,
       };
-    case SET_FOLDER_SEARCH_RES:
+    case SET_FOLDER_SEARCH_RESULTS:
       return {
         ...state,
         folderSearchResults: action.payload,

@@ -30,8 +30,6 @@ class FolderPage extends Component {
       showSearchResults: false,
       searchKey: "",
       editor: null,
-      // errors
-      errors: {},
     };
   }
 
@@ -42,13 +40,6 @@ class FolderPage extends Component {
     }
     this.props.getFolder(pageName, true);
     this.setState({ ...this.state, pagename: pageName });
-    //console.log(this.props)
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.ui.errors) {
-      return { errors: nextProps.ui.errors };
-    } else return null;
   }
 
   toggleEditingFolders = () => {
@@ -57,6 +48,7 @@ class FolderPage extends Component {
       isEditingFolders: !this.state.isEditingFolders,
     });
   };
+
   toggleEditingPost = () => {
     console.log("toggleEditingPost");
     this.setState({
@@ -72,6 +64,7 @@ class FolderPage extends Component {
       this.setState({ showSearchResults: false, searchKey: e.target.value });
     }
   };
+
   searchFolder = () => {
     window.location.href = `${
       process.env.PUBLIC_URL
@@ -80,12 +73,9 @@ class FolderPage extends Component {
 
   render() {
     const { isAdmin } = this.props.user;
-    const { loading } = this.props.ui;
+    const { loadingActions } = this.props.ui;
     const { folder } = this.props.folders;
     const pageName = this.props.match.params.pageName;
-
-    // errors
-    // const getFolderErrors = this.state.errors.getFolder;
 
     return (
       <div className="page-container">
@@ -117,7 +107,7 @@ class FolderPage extends Component {
           </div>
           <div className="page-header-main-items">
             <h1>
-              {loading
+              {loadingActions.SET_FOLDER
                 ? "Loading..."
                 : typeof folder === "object"
                 ? folder.title

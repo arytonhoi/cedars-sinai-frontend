@@ -3,7 +3,9 @@ import PropTypes from "prop-types";
 
 // Redux stuff
 import { connect } from "react-redux";
+import { PATCH_FOLDER } from "../../redux/types";
 import { patchFolder } from "../../redux/actions/folderActions";
+import { clearError } from "../../redux/actions/uiActions";
 
 // components
 import CKEditor from "ckeditor4-react";
@@ -16,7 +18,8 @@ import "../../css/page.css";
 import parse from "html-react-parser";
 
 // Ant Design
-import { Button, Layout, Modal, Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Button, Layout, Modal, notification, Spin } from "antd";
 const { Content } = Layout;
 
 class FolderPostCard extends Component {
@@ -28,8 +31,44 @@ class FolderPostCard extends Component {
       editor: null,
       // modals
       showPostCancelConfirm: false,
-      errors: {},
     };
+  }
+
+  componentDidUpdate(prevProps) {
+    // render action progress and errors
+    let currentErrors = this.props.ui.errors;
+    let currentloadingActions = this.props.ui.loadingActions;
+    let previousLoadingActions = prevProps.ui.loadingActions;
+    let previousLoadingActionNames = Object.keys(previousLoadingActions);
+
+    previousLoadingActionNames.forEach((actionName) => {
+      if (
+        !currentloadingActions[actionName] &&
+        previousLoadingActions[actionName]
+      ) {
+        // if preivousLoadingAction is no longer loading
+        switch (actionName) {
+          // departments
+          case PATCH_FOLDER:
+            notification.close(PATCH_FOLDER);
+            currentErrors[actionName]
+              ? notification["error"]({
+                  message: "Failed to update post",
+                  description: currentErrors[actionName],
+                  duration: 0,
+                  onClose: () => {
+                    clearError(PATCH_FOLDER);
+                  },
+                })
+              : notification["success"]({
+                  message: "Post updated!",
+                });
+            break;
+          default:
+            break;
+        }
+      }
+    });
   }
 
   // toggles
@@ -56,6 +95,12 @@ class FolderPostCard extends Component {
 
   // action functions
   saveEditorChanges = () => {
+    notification.open({
+      key: PATCH_FOLDER,
+      duration: 0,
+      message: "Updating post...",
+      icon: <LoadingOutlined />,
+    });
     if (this.state.editor !== null) {
       const updatedFolder = this.props.folder;
       updatedFolder.content = this.state.editor;
@@ -73,7 +118,7 @@ class FolderPostCard extends Component {
 
   render() {
     const { isAdmin } = this.props.user;
-    const { loading } = this.props.ui;
+    const { loadingActions } = this.props.ui;
 
     const folder = this.props.folder;
     return (
@@ -143,12 +188,12 @@ class FolderPostCard extends Component {
             </div>
           </div>
         )}
-        {loading && (
+        {loadingActions.SET_FOLDER && (
           <div className="padded-content vertical-content">
             <Spin style={{ marginTop: "48px" }} />
           </div>
         )}
-        {!loading && (
+        {!loadingActions.SET_FOLDER && (
           <div className="padded-content-card-content">
             {this.props.isEditingPost ? (
               <CKEditor
@@ -183,6 +228,7 @@ class FolderPostCard extends Component {
 FolderPostCard.propTypes = {
   user: PropTypes.object.isRequired,
   ui: PropTypes.object.isRequired,
+  clearError: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -194,4 +240,5 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
   patchFolder,
+  clearError,
 })(FolderPostCard);

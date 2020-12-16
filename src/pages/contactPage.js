@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import axios from "axios";
 
 // redux
-
 import { connect } from "react-redux";
 import {
   // Departments
@@ -29,12 +28,7 @@ import {
   // search
   getSearchedContacts,
 } from "../redux/actions/contactActions";
-import {
-  clearAllErrors,
-  clearError,
-  setLoadingAction,
-  stopLoadingAction,
-} from "../redux/actions/uiActions";
+import { clearError } from "../redux/actions/uiActions";
 
 // Components
 import DepartmentList from "../components/contacts/departmentList";
@@ -72,8 +66,6 @@ class ContactPage extends Component {
       // modals
       showContactEditorModal: false,
       showDepartmentEditorModal: false,
-      // errors
-      errors: {},
     };
   }
 
@@ -538,8 +530,5 @@ export default connect(mapStateToProps, {
   // search
   getSearchedContacts,
   // ui
-  clearAllErrors,
   clearError,
-  setLoadingAction,
-  stopLoadingAction,
 })(ContactPage);
