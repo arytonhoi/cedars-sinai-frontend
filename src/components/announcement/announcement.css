@@ -95,6 +95,7 @@
 
 .announcement-expand-toggle {
   position: absolute;
+  left: 0; /* for ie11 */
   bottom: 0;
   padding: 100px 0 10px 0;
   background-image: linear-gradient(rgba(255, 255, 255, 0), white);

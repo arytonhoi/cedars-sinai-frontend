@@ -8,7 +8,7 @@ body {
 }
 
 .ant-layout .ant-layout-sider {
-  min-height: 100vh;
+  min-height: 100vh; /*for IE11*/
 }
 
 /* section.ant-layout-has-sider {
