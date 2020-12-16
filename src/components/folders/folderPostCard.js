@@ -101,10 +101,11 @@ class FolderPostCard extends Component {
       message: "Updating post...",
       icon: <LoadingOutlined />,
     });
+    console.log(this.props.currentFolderId);
     if (this.state.editor !== null) {
       const updatedFolder = this.props.folder;
       updatedFolder.content = this.state.editor;
-      this.props.patchFolder(this.props.pagename, updatedFolder);
+      this.props.patchFolder(this.props.currentFolderId, updatedFolder);
     }
     this.toggleEditingPost();
   };
@@ -112,7 +113,7 @@ class FolderPostCard extends Component {
   clearPost = () => {
     const updatedFolder = this.props.folder;
     updatedFolder.content = "";
-    this.props.patchFolder(this.props.pagename, updatedFolder);
+    this.props.patchFolder(this.props.currentFolderId, updatedFolder);
     this.toggleEditingPost();
   };
 

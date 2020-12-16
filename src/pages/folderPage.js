@@ -73,7 +73,10 @@ class FolderPage extends Component {
     const { isAdmin } = this.props.user;
     const { loadingActions } = this.props.ui;
     const { folder } = this.props.folders;
-    const pageName = this.props.match.params.pageName;
+    let currentFolderId = this.props.match.params.currentFolderId;
+    if (!currentFolderId || currentFolderId === "") {
+      currentFolderId = "home";
+    }
 
     return (
       <div className="page-container">
@@ -141,7 +144,6 @@ class FolderPage extends Component {
             isEditingPost={this.state.isEditingPost}
             // data
             folder={folder}
-            pageName={this.pagename}
             // functions
             exitFolderEditMode={this.exitFolderEditMode}
             toggleEditingFolders={this.toggleEditingFolders}
@@ -153,7 +155,7 @@ class FolderPage extends Component {
               isEditingPost={this.state.isEditingPost}
               //data
               folder={folder}
-              pagename={pageName}
+              currentFolderId={currentFolderId}
               //functions
               toggleEditingPost={this.toggleEditingPost}
             />
