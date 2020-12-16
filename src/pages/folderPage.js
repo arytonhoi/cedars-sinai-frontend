@@ -43,14 +43,12 @@ class FolderPage extends Component {
   }
 
   toggleEditingFolders = () => {
-    console.log("toggleEditingFolders");
     this.setState({
       isEditingFolders: !this.state.isEditingFolders,
     });
   };
 
   toggleEditingPost = () => {
-    console.log("toggleEditingPost");
     this.setState({
       isEditingPost: !this.state.isEditingPost,
     });

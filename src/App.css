@@ -7,6 +7,10 @@ body {
   font-size: 14px;
 }
 
+.ant-layout .ant-layout-sider {
+  min-height: 100vh;
+}
+
 /* section.ant-layout-has-sider {
   height: 100vh;
 } */
