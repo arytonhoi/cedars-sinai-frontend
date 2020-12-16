@@ -107,19 +107,32 @@ exports.getCalendar = (req, res) => {
     return res.status(400).json({ error: "Need to request a calendar ID" });
   }else{
     if (typeof(req.query.start) === "undefined") {
-      req.query.start = (new Date()).toISOString()
+      req.query.start = Date.parse(new Date())
     }
-    if (typeof(req.query.start) === "string") {
+
+    if ( isNaN(Date.parse(req.query.start)) ) {
+      if( isNaN(parseInt(req.query.start)) ){
+        req.query.start = (new Date()).toISOString()
+      }else{
+        req.query.start = parseInt(req.query.start)
+      }
+    }else{
       req.query.start = Date.parse(req.query.start)
     }
-    if (typeof(req.query.end) === "string") {
+
+    if ( isNaN(Date.parse(req.query.end)) ) {
+      if( isNaN(parseInt(req.query.end)) ){
+        if ( isNaN(parseInt(req.query.duration)) ) {
+          req.query.end = parseInt(req.query.start) + 2678400000
+        }
+        else {
+          req.query.end = parseInt(req.query.start) + parseInt(req.query.duration)
+        }
+      }else{
+        req.query.end = parseInt(req.query.end)
+      }
+    }else{
       req.query.end = Date.parse(req.query.end)
-    }
-    if (typeof(req.query.duration) === "number") {
-      req.query.end = req.query.start + req.query.duration
-    }
-    if (typeof(req.query.end) !== "number") {
-      req.query.end = req.query.start + 2678400000
     }
     api.events.list({
       calendarId : req.params.calendarId,
@@ -128,10 +141,10 @@ exports.getCalendar = (req, res) => {
       singleEvents: true,
       orderBy: 'startTime'
     }).then( cal =>{
-      console.log(cal);
+      //console.log(cal);
       res.json(cal.data);
     }).catch(err =>
-      res.error({'error':err.response})
+      res.status(400).json({'error':err.response})
     )
   }
 }
