@@ -4,7 +4,7 @@ import {
   // whois
   SET_WHOIS_DATA,
 } from "../types";
-
+import DateHelper from "../../util/dateHelper";
 
 const loadingBannerImgUrl = `https://firebasestorage.googleapis.com/v0/b/fir-db-d2d47.appspot.com/o/
 cedars_sinai_pic_1.png?alt=media&token=8370797b-7650-49b7-8b3a-9997fab0c32c`;
@@ -24,7 +24,15 @@ export const calendarReducer = (state = initialState, action) => {
     case SET_EVENTS:
       return {
         ...state,
-        events: action.payload.items,
+        events: action.payload.items.map(x=>{
+          if(typeof(x.start.date)==="string"){x.start.dateTime=Date.parse(x.start.date)}
+          if(typeof(x.end.date)==="string"){x.end.dateTime=Date.parse(x.end.date)}
+          return({
+            ...x,
+            startTime: new DateHelper(x.start.dateTime),
+            endTime: new DateHelper(x.end.dateTime),
+          })
+        }),
         loading: false,
       };
     // Whois

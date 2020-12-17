@@ -18,7 +18,7 @@ export class DateHelper {
     var resultString = "";
     var dateTokens = [
       ["SECONDS", /^s{1,2}/g],
-      ["MINUTE", /^m{1,2}/g],
+      ["MINUTES", /^m{1,2}/g],
       ["HOUR_12", /^H{1,2}/g],
       ["HOUR_24", /^h{1,2}/g],
       ["AMPM", /^t/g],
@@ -46,13 +46,14 @@ export class DateHelper {
           add = this.date.getMinutes();
           break;
         case "HOUR_12":
-          add = this.date.getHours();
+          add = this.date.getHours() % 12;
+          if(add===0){add+=12};
           break;
         case "HOUR_24":
-          add = this.date.getHours() % 12;
+          add = this.date.getHours();
           break;
         case "AMPM":
-          add = this.date.getHours() > 12 ? "AM" : "PM";
+          add = this.date.getHours() < 12 ? "AM" : "PM";
           break;
         case "DAY":
           add = this.date.getDate();
@@ -99,8 +100,12 @@ export class DateHelper {
           add = tokens[i][1].toString();
       }
       if (typeof add == "number") {
-        var delta = add.toString().length - tokens[i][2] + 1;
-        add = Array(Math.max(delta, 0)).join("0") + add;
+        while(add.toString().length < tokens[i][2]){
+          add = "0"+add
+        }
+        if(tokens[i][1] === "YEAR" && add.toString().length > tokens[i][2]){
+          add = add.toString().slice(-tokens[i][2])
+        }
       }
       resultString += add;
     }

@@ -15,3 +15,7 @@
   margin-top: 1em;
 
 }
+.event-modal-show-holder{
+  display: flex;
+  flex-direction: column;
+}

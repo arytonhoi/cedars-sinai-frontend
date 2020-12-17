@@ -10,8 +10,9 @@ import "../css/input.css";
 import "../css/page.css";
 import "../css/calendar.css";
 import Day from "../components/calendars/Day";
+
 // Ant design
-import { Calendar, Badge, Button, Layout } from "antd";
+import { Modal, Calendar, Badge, Button, Layout } from "antd";
 //import { SearchOutlined } from "@ant-design/icons";
 const { Content, Footer } = Layout;
 class calendarPage extends Component {
@@ -19,6 +20,8 @@ class calendarPage extends Component {
     super();
     var date = new Date()
     this.state = {
+      showEventDetails: false,
+      selectedEvent:undefined,
       selectedDate:{
         day: date.getDate(),
         month: date.getMonth(),
@@ -42,11 +45,16 @@ class calendarPage extends Component {
 
 var getListData = (value) => {
   return this.props.calendar.events.filter(x=>{
-    x = new Date(x.start.dateTime)
-    return x.getFullYear()===value.year() && x.getMonth()===value.month() && x.getDate() === value.date()
+    return x.startTime.date.getFullYear()===value.year() && x.startTime.date.getMonth()===value.month() && x.startTime.date.getDate() === value.date()
   })
 }
 
+var selectEvent = (etag) => {
+  this.setState({
+    showEventDetails: !this.state.showEventDetails,
+    selectedEvent: this.props.calendar.events.find(x=>x.etag===etag)
+  })
+}
 var setDate = (e) =>{
   if(e.month() !== this.state.selectedDate.month || e.year() !== this.state.selectedDate.year){
     this.props.getCalendarEvents(Date.parse(new Date(e.year(),e.month(),0)) )
@@ -59,9 +67,7 @@ var setDate = (e) =>{
     },
   })
 }
-function debug(e){
-  console.log(e)
-}
+
 var dateCellRender = (value) => {
   const eventList = getListData(value);
   return (
@@ -69,6 +75,7 @@ var dateCellRender = (value) => {
       key={value.toString()}
       date={value}
       events={eventList}
+      eventToggleCallback={selectEvent}
       isToday={value.date()===this.state.currentDate.day &&
                value.month()===this.state.currentDate.month &&
                value.year()===this.state.currentDate.year
@@ -82,8 +89,23 @@ var dateCellRender = (value) => {
   );
 }
 console.log(this.props)
+console.log(this.state.selectedEvent)
     return (
       <div className="page-container">
+        {typeof(this.state.selectedEvent)!=="undefined" &&
+        <Modal
+          visible={this.state.showEventDetails}
+          title = {typeof(this.state.selectedEvent.summary)==="undefined"?"Calendar Event":this.state.selectedEvent.summary}
+          onCancel={()=>this.setState({showEventDetails:false})}
+          footer={null}
+        >
+          <div className="event-modal-show-holder">
+          <span key="1">{this.state.selectedEvent.startTime.toString("d MMM YYYY H:mm t")} to  {this.state.selectedEvent.endTime.toString("d MMM YYYY H:mm t")}</span>
+          <span key="2">{typeof(this.state.selectedEvent.location)==="undefined"?<i>Location not provided</i>:this.state.selectedEvent.location}</span>
+          <span key="3">{typeof(this.state.selectedEvent.description)==="undefined"?<i>Description not provided</i>:this.state.selectedEvent.description}</span>
+          </div>
+        </Modal>
+        }
         <header className="page-header-container">
           <div className="page-header-main-items">
             <h1>Calendar</h1>
