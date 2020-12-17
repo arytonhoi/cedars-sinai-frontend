@@ -1,7 +1,7 @@
 import {
   //UI
-  LOADING_UI,
-  STOP_LOADING_UI,
+  SET_LOADING_ACTION,
+  STOP_LOADING_ACTION,
   LOADING_WHOIS,
   STOP_LOADING_WHOIS,
   SET_EVENTS,
@@ -11,19 +11,20 @@ import {
 import axios from "axios";
 import { setError } from "./uiActions";
 
-export const getCalendarEvents = (from, to) => (dispatch) => {
+export const getCalendarEvents = (from) => (dispatch) => {
+  from -= 604800000;
   dispatch({
-    type: LOADING_UI,
+    type: SET_LOADING_ACTION,
   });
   axios
-    .get(`/calendar/cedarsoreducation@gmail.com/?from=${from}&to=${to}`)
+    .get(`/calendar/cedarsoreducation@gmail.com/?start=${from}&duration=4320000000`)
     .then((res) => {
       dispatch({
         type: SET_EVENTS,
         payload: res.data,
       });
       dispatch({
-        type: STOP_LOADING_UI,
+        type: STOP_LOADING_ACTION,
       });
     })
     .catch((err) => {
