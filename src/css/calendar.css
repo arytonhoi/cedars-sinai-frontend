@@ -5,8 +5,7 @@
   justify-content: center;
 }
 .edit-button {
-  
-  /*position: absolute;
+ /*position: absolute;
   right: 10px;*/
   display: flex;
   flex-wrap: wrap;
@@ -18,4 +17,13 @@
 .event-modal-show-holder{
   display: flex;
   flex-direction: column;
+}
+
+.event-modal-row{
+  padding: 0.25em;
+}
+
+.event-modal-row > .anticon{
+  color: #5A5A5A;
+  padding-right: 0.5em;
 }
