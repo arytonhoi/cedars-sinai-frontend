@@ -94,6 +94,7 @@ var dateCellRender = (value) => {
       <div className="page-container">
         {typeof(this.state.selectedEvent)!=="undefined" &&
         <Modal
+          className= "center noselect"
           visible={this.state.showEventDetails}
           title = {typeof(this.state.selectedEvent.summary)==="undefined"?"Calendar Event":this.state.selectedEvent.summary}
           onCancel={()=>this.setState({showEventDetails:false})}

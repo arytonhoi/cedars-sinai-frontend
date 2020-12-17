@@ -1,0 +1,54 @@
+.day-holder{
+  -webkit-box-shadow: 0px 3px 7px 2px #F0F0F0;
+  -moz-box-shadow: 0px 3px 7px 2px #F0F0F0;
+  box-shadow: 0px 3px 7px 2px #F0F0F0;
+  height: 10em;
+  margin: 0.5em;
+  position: relative;
+  color: #000;
+}
+
+.day-topbar{
+  padding: 0.5em;
+  padding-bottom: 0;
+}
+.day-selected{
+  background: #E6F7FF !important;
+}
+
+.day-selected > .day-topbar{
+  border-top: 2px solid #1890FF !important;
+}
+
+.day-greyed-out{
+  background: rgba(240,240,240,0.5);
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 3
+}
+
+.day-events-aligner{
+  margin: 0.5em;
+  margin-top: 0em;
+  overflow: hidden;
+  overflow-y: scroll;
+  height: calc(100% - 2.5em);
+}
+
+.day-events{
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  width: 100vw;
+}
+
+.day-today{
+  font-weight: bold;
+  color:#fff;
+  background:#1890FF;
+  border-radius: 50%;
+  padding: 0.25em;
+}
