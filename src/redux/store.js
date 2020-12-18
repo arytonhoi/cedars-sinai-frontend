@@ -6,6 +6,7 @@ import { announcementReducer } from "./reducers/announcementReducer";
 import { contactReducer } from "./reducers/contactReducer";
 import { folderReducer } from "./reducers/folderReducer";
 import { uiReducer } from "./reducers/uiReducer";
+import { calendarReducer } from "./reducers/calendarReducer";
 
 const initialState = {};
 
@@ -16,6 +17,7 @@ const reducers = combineReducers({
   announcements: announcementReducer,
   contacts: contactReducer,
   folders: folderReducer,
+  calendar: calendarReducer,
   ui: uiReducer,
 });
 
