@@ -383,15 +383,6 @@ class ContactPage extends Component {
     const { isAdmin } = this.props.user;
     const { matchingSearchContacts, departments } = this.props.contacts;
 
-    // insert default contact pic for contacts w/o avatars
-    const matchingSearchContactsWithImgs = matchingSearchContacts.map((c) => {
-      const contactWithImg = c;
-      if (contactWithImg.imgUrl === "") {
-        contactWithImg.imgUrl = defaultContactPic;
-      }
-      return contactWithImg;
-    });
-
     return (
       <div className="page-container">
         <header className="page-header-container">
@@ -474,7 +465,7 @@ class ContactPage extends Component {
             <DepartmentList
               // data
               departments={departments}
-              contacts={matchingSearchContactsWithImgs}
+              contacts={matchingSearchContacts}
               // departments
               handleAddorEditDepartment={this.handleAddorEditDepartment}
               // contacts
