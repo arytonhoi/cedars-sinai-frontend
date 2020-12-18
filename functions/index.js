@@ -6,6 +6,8 @@ app.use((req, res, next) => {
   if (req.headers.origin === undefined) {
     req.headers.origin = "*";
   }
+  //req.rawBody = "";
+  //req.on("data",function(c){req.rawBody += c})
   //console.log(req.headers.origin)
   res.append("Access-Control-Allow-Credentials", "true");
   res.append("Access-Control-Allow-Origin", req.headers.origin);
@@ -15,7 +17,8 @@ app.use((req, res, next) => {
     "POST, GET, OPTIONS, PATCH, DELETE"
   );
   res.append("Vary", "Origin");
-  next();
+  //req.on('end',function(){next()});
+  next()
 });
 app.use(cookies());
 
@@ -68,8 +71,11 @@ const {
 const {
   getCalendar,
   editCalendar,
+  editCalendarEvent,
   deleteCalendar,
+  deleteCalendarEvent,
   createCalendar,
+  createCalendarEvent,
   getCalendarList,
   getCalendarAcl,
   addCalendarAcl,
@@ -129,6 +135,9 @@ app.patch("/api/contacts/:contactId", FBAuth, updateOneContact);
 // calendar routes
 app.get("/api/calendar", FBAuth, getCalendarList);
 app.get("/api/calendar/:calendarId", FBAuth, getCalendar);
+app.post("/api/calendar/:calendarId/events", FBAuth, createCalendarEvent);
+app.delete("/api/calendar/:calendarId/events/:eventId", FBAuth, deleteCalendarEvent);
+app.patch("/api/calendar/:calendarId/events/:eventId", FBAuth, editCalendarEvent);
 app.get("/api/calendar/:calendarId/access", FBAuth, getCalendarAcl);
 app.post("/api/calendar", FBAuth, createCalendar);
 app.post("/api/calendar/:calendarId/access", FBAuth, addCalendarAcl);
