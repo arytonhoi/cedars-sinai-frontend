@@ -8,11 +8,13 @@ exports.postImage = (req, res) => {
   const path = require("path");
   const os = require("os");
   const fs = require("fs");
+  const sharp = require("sharp");
   const busboy = new BusBoy({ headers: req.headers });
 
   let thumbnailFilename;
   let firebaseImageUrl;
   let imageToBeUploaded = {};
+  let fstream;
 
   busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
     if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
@@ -31,30 +33,39 @@ exports.postImage = (req, res) => {
       `${imageFileNamePrefix}.${imageExtension}`
     );
     imageToBeUploaded = { filepath, mimetype };
-    file.pipe(fs.createWriteStream(filepath));
+
+    const imageResizer = sharp().resize(1080);
+    fstream = fs.createWriteStream(filepath);
+    file.pipe(imageResizer).pipe(fstream);
   });
 
+  // busboy on finish after "last of the data has been read from the request"
   busboy.on("finish", () => {
-    admin
-      .storage()
-      .bucket()
-      .upload(imageToBeUploaded.filepath, {
-        resumable: false,
-        metadata: {
+    // fstream on close after "the stream and any of its hidden resources are being closed"
+    fstream.on("close", () => {
+      console.log("Image resized!");
+      admin
+        .storage()
+        .bucket()
+        .upload(imageToBeUploaded.filepath, {
+          resumable: false,
           metadata: {
-            contentType: imageToBeUploaded.mimetype,
+            metadata: {
+              contentType: imageToBeUploaded.mimetype,
+            },
           },
-        },
-      })
-      .then(() => {
-        firebaseImageUrl = `https://firebasestorage.googleapis.com/v0/b/${firebaseConfig.storageBucket}/o/${thumbnailFilename}?alt=media`;
-        return res.json({ imgUrl: firebaseImageUrl });
-      })
-      .catch((err) => {
-        console.error(err);
-        return res.status(500).json({ error: err.code });
-      });
+        })
+        .then(() => {
+          firebaseImageUrl = `https://firebasestorage.googleapis.com/v0/b/${firebaseConfig.storageBucket}/o/${thumbnailFilename}?alt=media`;
+          return res.json({ imgUrl: firebaseImageUrl });
+        })
+        .catch((err) => {
+          console.error(err);
+          return res.status(500).json({ error: err.code });
+        });
+    });
   });
+
   busboy.end(req.rawBody);
 };
 
