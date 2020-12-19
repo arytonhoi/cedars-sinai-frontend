@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 // AntDesign
 import { Layout, Menu } from "antd";
 import {
-  // CalendarOutlined,
+  CalendarOutlined,
   ContactsOutlined,
   FolderOpenOutlined,
   LogoutOutlined,
@@ -66,9 +66,9 @@ class SideNav extends Component {
           <Menu.Item key="resources" icon={<FolderOpenOutlined />}>
             <Link to="/resources">Resources</Link>
           </Menu.Item>
-          {/* <Menu.Item key="calendar" icon={<CalendarOutlined />}>
+          <Menu.Item key="calendar" icon={<CalendarOutlined />}>
             <Link to="/calendar">Calendar</Link>
-          </Menu.Item> */}
+          </Menu.Item>
           <Menu.Item key="contacts" icon={<ContactsOutlined />}>
             <Link to="/contacts">Contacts</Link>
           </Menu.Item>
