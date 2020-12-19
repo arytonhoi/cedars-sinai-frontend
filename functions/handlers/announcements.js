@@ -71,7 +71,9 @@ exports.deleteOneAnnouncement = (req, res) => {
     return res.status(403).json({ error: "Unathorized" });
   }
 
-  const announcement = db.doc(`/${production}announcements/${req.params.announcementId}`);
+  const announcement = db.doc(
+    `/${production}announcements/${req.params.announcementId}`
+  );
   announcement
     .get()
     .then((doc) => {

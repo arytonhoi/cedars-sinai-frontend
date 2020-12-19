@@ -2,7 +2,6 @@ import React, { Component } from "react";
 
 // Redux
 import { connect } from "react-redux";
-import { PATCH_USER } from "../redux/types";
 import { clearAllErrors } from "../redux/actions/uiActions";
 
 // CSS Style

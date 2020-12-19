@@ -311,7 +311,9 @@ class AnnouncementPage extends Component {
             <img alt="bg" src={bannerImgs.announcements} />
             <div className="img-banner-mask"></div>
             <h1>{isAdmin ? "Welcome Admin" : "Welcome"}</h1>
-            <Button onClick={this.handleEditBannerImg}>Change picture</Button>
+            {isAdmin && (
+              <Button onClick={this.handleEditBannerImg}>Change picture</Button>
+            )}
           </Content>
           <Content className="content-card">
             <div className="content-card-header">
