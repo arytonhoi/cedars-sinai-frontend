@@ -2,6 +2,8 @@ import React, { Component } from "react";
 
 // Redux
 import { connect } from "react-redux";
+import { PATCH_USER } from "../redux/types";
+import { clearAllErrors } from "../redux/actions/uiActions";
 
 // CSS Style
 // import "../css/adminPage.css";
@@ -15,6 +17,10 @@ import { Alert, Empty, Layout } from "antd";
 const { Content, Footer } = Layout;
 
 class AdminPage extends Component {
+  componentDidMount() {
+    this.props.clearAllErrors();
+  }
+
   render() {
     const { isAdmin } = this.props.user;
 
@@ -84,4 +90,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(AdminPage);
+export default connect(mapStateToProps, { clearAllErrors })(AdminPage);

@@ -7,12 +7,9 @@ import {
   SET_ERROR,
 } from "../types";
 
-import { clearError } from "./uiActions";
+import { setError, setLoadingAction, stopLoadingAction } from "./uiActions";
 
 import axios from "axios";
-
-// antd
-import { notification } from "antd";
 
 const setAuthorizationHeader = () => {
   localStorage.setItem("hasValidCookie", true);
@@ -70,6 +67,8 @@ export const logoutUser = () => (dispatch) => {
 };
 
 export const patchUserPassword = (reqBody) => (dispatch) => {
+  let actionName = `${PATCH_PASSWORD}_${reqBody.username}`;
+  dispatch(setLoadingAction(actionName));
   return axios
     .patch("/user/password", reqBody)
     .then((res) => {
@@ -77,38 +76,12 @@ export const patchUserPassword = (reqBody) => (dispatch) => {
         type: PATCH_PASSWORD,
         payload: res.data,
       });
-      // clear errors
-      clearError("patchUserPassword");
-      // dispatch({
-      //   type: CLEAR_ERROR,
-      //   payload: "patchUserPassword",
-      // });
-      if (reqBody.username === "admin") {
-        notification["success"]({
-          message: "Success!",
-          description: "Password changed successfully! Logging out... ",
-        });
-        setTimeout(function () {
-          localStorage.removeItem("hasValidCookie");
-          dispatch({ type: SET_UNAUTHENTICATED });
-          window.location.href = "./login";
-        }, 3000);
-      } else {
-        notification["success"]({
-          message: "Success!",
-          description:
-            "Password changed successfully! Staff will need to re-login.",
-        });
-      }
+      return res;
+    })
+    .then(() => {
+      dispatch(stopLoadingAction(actionName));
     })
     .catch((err) => {
-      const error = {
-        patchUserPassword: err.response.data,
-      };
-      error.patchUserPassword.user = reqBody.username;
-      dispatch({
-        type: SET_ERROR,
-        payload: error,
-      });
+      dispatch(setError(actionName, err.response.data));
     });
 };

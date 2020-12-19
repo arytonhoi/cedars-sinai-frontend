@@ -77,9 +77,6 @@ class AnnouncementPage extends Component {
       elementHeight: "",
       // banner img
       isEditingBannerImg: false,
-      // errors and loading
-      loadingActions: {},
-      errors: {},
     };
   }
 

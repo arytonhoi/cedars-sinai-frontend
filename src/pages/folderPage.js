@@ -4,6 +4,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getFolder, searchFolder } from "../redux/actions/folderActions";
+import { clearAllErrors } from "../redux/actions/uiActions";
 
 // components
 import FolderPostCard from "../components/folders/folderPostCard";
@@ -34,6 +35,7 @@ class FolderPage extends Component {
   }
 
   componentDidMount() {
+    this.props.clearAllErrors();
     var pageName = this.props.match.params.pageName;
     if (typeof pageName !== "string" || pageName === "") {
       pageName = "home";
@@ -184,6 +186,7 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
+  clearAllErrors,
   getFolder,
   searchFolder,
 })(FolderPage);

@@ -3,7 +3,9 @@ import PropTypes from "prop-types";
 
 // Redux stuff
 import { connect } from "react-redux";
+import { PATCH_PASSWORD } from "../../redux/types";
 import { patchUserPassword } from "../../redux/actions/userActions";
+import { logoutUser } from "../../redux/actions/userActions";
 import { clearError } from "../../redux/actions/uiActions";
 
 // css
@@ -11,25 +13,53 @@ import "../../css/modal.css";
 
 // Ant Design
 import { Alert, Button, Input, Form, notification } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 class PasswordEditorForm extends Component {
-  constructor() {
-    super();
-    this.state = {
-      errors: {},
-    };
-  }
+  patchTargettedUserPasswordActionName = `${PATCH_PASSWORD}_${this.props.targettedUser}`;
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     if (this.formRef.current) {
       this.formRef.current.resetFields();
     }
-  }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.ui.errors) {
-      return { errors: nextProps.ui.errors };
-    } else return null;
+    // render action progress and errors
+    let currentErrors = this.props.ui.errors;
+    let currentloadingActions = this.props.ui.loadingActions;
+    let previousLoadingActions = prevProps.ui.loadingActions;
+    let previousLoadingActionNames = Object.keys(previousLoadingActions);
+
+    previousLoadingActionNames.forEach((actionName) => {
+      if (
+        !currentloadingActions[actionName] &&
+        previousLoadingActions[actionName]
+      ) {
+        // if preivousLoadingAction is no longer loading
+        switch (actionName) {
+          case this.patchTargettedUserPasswordActionName:
+            notification.close(this.patchTargettedUserPasswordActionName);
+            if (!currentErrors[actionName]) {
+              if (this.props.targettedUser === "admin") {
+                notification["success"]({
+                  message: "Success!",
+                  description: "Password changed successfully! Logging out... ",
+                });
+                setTimeout(() => {
+                  this.props.logoutUser();
+                }, 3000);
+              } else {
+                notification["success"]({
+                  message: "Password changed!",
+                });
+              }
+            }
+            break;
+
+          default:
+            break;
+        }
+      }
+    });
   }
 
   handlePatchNewPassword = (formValues) => {
@@ -38,6 +68,13 @@ class PasswordEditorForm extends Component {
       currentPassword: formValues.currentPassword,
       newPassword: formValues.newPassword,
     };
+
+    notification.open({
+      key: this.patchTargettedUserPasswordActionName,
+      duration: 0,
+      message: "Changing password...",
+      icon: <LoadingOutlined />,
+    });
 
     this.props.patchUserPassword(reqBody);
   };
@@ -51,9 +88,11 @@ class PasswordEditorForm extends Component {
   formRef = React.createRef();
 
   render() {
+    const { errors } = this.props.ui;
     const targettedUser = this.props.targettedUser;
     // errors
-    const patchUserPasswordErrors = this.state.errors.patchUserPassword;
+    const patchUserPasswordErrors =
+      errors[this.patchTargettedUserPasswordActionName];
     return (
       <div className="page-form-container max-30">
         <h2 className="page-form-header">{targettedUser}</h2>
@@ -137,17 +176,16 @@ class PasswordEditorForm extends Component {
               type="text"
             />
           </Form.Item>
-          {patchUserPasswordErrors &&
-            patchUserPasswordErrors.user === this.props.targettedUser && (
-              <Alert
-                style={{ marginTop: "15px" }}
-                message={patchUserPasswordErrors.message}
-                type="error"
-                showIcon
-                closable
-                afterClose={() => this.props.clearError("patchUserPassword")}
-              />
-            )}
+          {patchUserPasswordErrors && (
+            <Alert
+              style={{ marginTop: "15px" }}
+              message={patchUserPasswordErrors}
+              type="error"
+              showIcon
+              closable
+              afterClose={() => this.props.clearError(patchUserPasswordErrors)}
+            />
+          )}
           <Form.Item>
             <Button type="primary" htmlType="submit">
               Change password
@@ -162,6 +200,7 @@ class PasswordEditorForm extends Component {
 PasswordEditorForm.propTypes = {
   clearError: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
+  ui: PropTypes.object.isRequired,
   targettedUser: PropTypes.string.isRequired,
   patchUserPassword: PropTypes.func.isRequired,
 };
@@ -175,5 +214,6 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
   clearError,
+  logoutUser,
   patchUserPassword,
 })(PasswordEditorForm);

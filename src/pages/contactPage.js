@@ -28,7 +28,7 @@ import {
   // search
   getSearchedContacts,
 } from "../redux/actions/contactActions";
-import { clearError } from "../redux/actions/uiActions";
+import { clearError, clearAllErrors } from "../redux/actions/uiActions";
 
 // Components
 import DepartmentList from "../components/contacts/departmentList";
@@ -70,6 +70,7 @@ class ContactPage extends Component {
   }
 
   componentDidMount() {
+    this.props.clearAllErrors();
     this.props.getDepartments();
     this.props.getContacts();
   }
@@ -521,5 +522,6 @@ export default connect(mapStateToProps, {
   // search
   getSearchedContacts,
   // ui
+  clearAllErrors,
   clearError,
 })(ContactPage);
