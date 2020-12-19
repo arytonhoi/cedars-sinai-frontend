@@ -404,12 +404,47 @@ class FoldersCard extends Component {
             </div>
           )}
           {!loadingActions.SET_FOLDER &&
-            (folder.subfolders.length > 0 ? (
-              <div className="padded-content wrapped-content">
-                {isAdmin && this.props.isEditingFolders && (
-                  // <AddFolder target={folder.id} format={0} />
-                  <AddFolder parentFolderId={folder.id} format={0} />
+            !this.props.isEditingFolders &&
+            folder.subfolders.length === 0 && (
+              <div
+                className="padded-content vertical-content"
+                style={{ margin: "48px auto" }}
+              >
+                {isAdmin ? (
+                  <div className="vertical-content">
+                    <h3 className="em2">There are no folders here.</h3>
+                    <h4 className="em3">Create using "Edit Folders"</h4>
+                  </div>
+                ) : (
+                  <Empty
+                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                    description={<span>No folders yet</span>}
+                  />
                 )}
+              </div>
+            )}
+          {!loadingActions.SET_FOLDER &&
+            !this.props.isEditingFolders &&
+            folder.subfolders.length > 0 && (
+              <div className="padded-content wrapped-content">
+                {folder.subfolders.map((subfolder, i) => (
+                  <Folder
+                    isSelected={
+                      this.props.isEditingFolders &&
+                      this.subfolderIsSelected(subfolder)
+                    }
+                    key={subfolder.id}
+                    label={subfolder.title}
+                    href={this.props.isEditingPost ? () => 0 : subfolder.id}
+                  />
+                ))}
+              </div>
+            )}
+          {!loadingActions.SET_FOLDER &&
+            this.props.isEditingFolders &&
+            isAdmin && (
+              <div className="padded-content wrapped-content">
+                <AddFolder parentFolderId={folder.id} format={0} />
                 {folder.subfolders.map((subfolder, i) => (
                   <Folder
                     // onMouseDown={(e) => this.folderDragStart(e, x)}
@@ -420,39 +455,11 @@ class FoldersCard extends Component {
                     }
                     key={subfolder.id}
                     label={subfolder.title}
-                    href={
-                      isAdmin && this.props.isEditingFolders
-                        ? (e) => this.toggleSelect(e, subfolder)
-                        : this.props.isEditingPost
-                        ? () => 0
-                        : subfolder.id
-                    }
+                    href={(e) => this.toggleSelect(e, subfolder)}
                   />
                 ))}
               </div>
-            ) : (
-              <div
-                className="padded-content vertical-content"
-                style={{ margin: "48px auto" }}
-              >
-                {isAdmin ? (
-                  <div className="vertical-content">
-                    <h3 className="em2">
-                      It seems like there are no subfolders
-                    </h3>
-                    <h4 className="em3">
-                      You can create subfolders under any folder.
-                    </h4>
-                    <AddFolder parentFolderId={folder.id} format={1} />
-                  </div>
-                ) : (
-                  <Empty
-                    image={Empty.PRESENTED_IMAGE_SIMPLE}
-                    description={<span>No folders yet</span>}
-                  />
-                )}
-              </div>
-            ))}
+            )}
         </Content>
       </div>
     );

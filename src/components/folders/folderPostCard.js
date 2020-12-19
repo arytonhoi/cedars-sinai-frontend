@@ -95,16 +95,16 @@ class FolderPostCard extends Component {
 
   // action functions
   saveEditorChanges = () => {
-    notification.open({
-      key: PATCH_FOLDER,
-      duration: 0,
-      message: "Updating post...",
-      icon: <LoadingOutlined />,
-    });
-    console.log(this.props.currentFolderId);
+    // console.log(this.props.currentFolderId);
     if (this.state.editor !== null) {
       const updatedFolder = this.props.folder;
       updatedFolder.content = this.state.editor;
+      notification.open({
+        key: PATCH_FOLDER,
+        duration: 0,
+        message: "Updating post...",
+        icon: <LoadingOutlined />,
+      });
       this.props.patchFolder(this.props.currentFolderId, updatedFolder);
     }
     this.toggleEditingPost();
@@ -204,17 +204,15 @@ class FolderPostCard extends Component {
               />
             ) : folder.content === "" ? (
               <div className="folder-blank noselect">
-                <h3 className="em2">
-                  It seems like there is no post for this folder yet.
-                </h3>
-                <h4 className="em3">Start by creating the post.</h4>
-                <Button
+                <h3 className="em2">There is no post for this folder.</h3>
+                <h4 className="em3">Create using "Edit Post"</h4>
+                {/* <Button
                   type="primary"
                   disabled={this.props.isEditingFolders}
                   onClick={this.props.toggleEditingPost}
                 >
                   Begin Post
-                </Button>
+                </Button> */}
               </div>
             ) : (
               <div>{parse(folder.content)}</div>

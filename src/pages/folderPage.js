@@ -79,7 +79,7 @@ class FolderPage extends Component {
     if (!currentFolderId || currentFolderId === "") {
       currentFolderId = "home";
     }
-
+    console.log(folder);
     return (
       <div className="page-container">
         <header className="page-header-container">

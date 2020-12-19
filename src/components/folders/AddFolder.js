@@ -71,7 +71,6 @@ class AddFolder extends Component {
       ...this.state,
       showCreateFolderModal: !this.state.showCreateFolderModal,
     });
-    console.log(this.state);
   };
 
   handlePostFolder = (formValues) => {

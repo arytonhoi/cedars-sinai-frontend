@@ -76,6 +76,10 @@ class RenameFolderModal extends Component {
             name="folderTitle"
             rules={[
               { required: true, message: "Folder name cannot be blank." },
+              {
+                max: 100,
+                message: "Folder name cannot be longer than 100 characters",
+              },
             ]}
             label="Name"
           >

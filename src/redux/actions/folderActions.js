@@ -28,6 +28,7 @@ export const getFolder = (folderId, track) => (dispatch) => {
     )
     .then((res) => {
       const folder = res.data;
+      console.log(folder);
       dispatch({
         type: SET_FOLDER,
         payload: folder,

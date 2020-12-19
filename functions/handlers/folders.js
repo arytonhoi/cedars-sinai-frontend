@@ -10,7 +10,7 @@ const FieldValue = admin.firestore.FieldValue;
 function getFolderPath(folderPathsMap, folderId) {
   const folderPath = [];
   let currentFolderId = folderId;
-  while (currentFolderId && currentFolderId !== "") {
+  while (currentFolderId && currentFolderId !== "home") {
     console.log(currentFolderId);
     let folderPathsMapContent = folderPathsMap[currentFolderId];
     folderPathsMapContent.id = currentFolderId;
@@ -180,7 +180,9 @@ exports.getFolder = (req, res) => {
       folderContents.forEach((content) => {
         let subfolder = content.data();
         subfolder.id = content.id;
-        folderData.subfolders.push(subfolder);
+        if (subfolder.id !== "home") {
+          folderData.subfolders.push(subfolder);
+        }
       });
       return db.doc(`/${production}paths/folders`).get();
     })
