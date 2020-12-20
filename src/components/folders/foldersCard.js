@@ -186,10 +186,10 @@ class FoldersCard extends Component {
 
   // mode toggle functions
   exitFolderEditMode = () => {
-    // if (this.state.positionModified) {
-    //   this.props.syncAllSubFolders(this.props.folders.subfolders);
-    //   this.setState({ positionModified: false });
-    // }
+    if (this.state.positionModified) {
+      this.props.syncAllSubFolders(this.props.folders.subfolders);
+      this.setState({ positionModified: false });
+    }
     this.props.toggleEditingFolders();
   };
 
@@ -306,6 +306,12 @@ class FoldersCard extends Component {
       s = "";
     }
 
+    let waitForLoadingActions = [
+      DELETE_SUBFOLDER,
+      PATCH_SUBFOLDER,
+      SORT_SUBFOLDER,
+    ];
+
     return (
       <div>
         <MoveFolderModal
@@ -382,6 +388,9 @@ class FoldersCard extends Component {
                         background: "#52C41A",
                         borderColor: "#52C41A",
                       }}
+                      disabled={waitForLoadingActions.some(
+                        (actionName) => loadingActions[actionName]
+                      )}
                       onClick={this.exitFolderEditMode}
                     >
                       Finish Editing
