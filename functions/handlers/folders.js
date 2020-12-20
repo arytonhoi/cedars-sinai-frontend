@@ -316,6 +316,8 @@ exports.updateOneFolder = (req, res) => {
         ...req.body,
         lastModified: new Date().toISOString(),
       };
+      delete updatedFolderContents.subfolders;
+      delete updatedFolderContents.path;
       var updatedFolderPathObj = {};
       if (
         typeof req.body.parent === "string" ||

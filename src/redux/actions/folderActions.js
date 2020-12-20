@@ -69,7 +69,7 @@ export const postFolder = (folderId, folderDetails) => (dispatch) => {
 
 export const patchFolder = (folderId, updatedFolder) => (dispatch) => {
   dispatch(setLoadingAction(PATCH_FOLDER));
-  updatedFolder.lastModified = new Date().toISOString();
+  // updatedFolder.lastModified = new Date().toISOString();
   axios
     .patch(`/folders/${folderId}`, updatedFolder)
     .then((res) => {
@@ -89,7 +89,7 @@ export const patchFolder = (folderId, updatedFolder) => (dispatch) => {
 
 export const patchSubfolder = (folderId, updatedFolder) => (dispatch) => {
   dispatch(setLoadingAction(PATCH_SUBFOLDER));
-  updatedFolder.lastModified = new Date().toISOString();
+  // updatedFolder.lastModified = new Date().toISOString();
   axios
     .patch(`/folders/${folderId}`, updatedFolder)
     .then((res) => {
