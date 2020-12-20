@@ -18,8 +18,14 @@ class ContactList extends Component {
 
     // contacts
     const contactsListComponent = contacts.map((c) => {
-      if(c.phone.match(/^\d{10}$/) !== null){
-        c.phone = "(" + c.phone.slice(0,3) + ") " + c.phone.slice(3,6) + "-" + c.phone.slice(6,10)
+      if (c.phone.match(/^\d{10}$/) !== null) {
+        c.phone =
+          "(" +
+          c.phone.slice(0, 3) +
+          ") " +
+          c.phone.slice(3, 6) +
+          "-" +
+          c.phone.slice(6, 10);
       }
       return (
         <li key={c.id} className="contact-item">

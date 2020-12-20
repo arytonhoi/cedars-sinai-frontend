@@ -147,6 +147,10 @@ class AddFolder extends Component {
               name="folderTitle"
               rules={[
                 { required: true, message: "Please input a folder name." },
+                {
+                  max: 100,
+                  message: "Folder name cannot be longer than 100 characters",
+                },
               ]}
               label="Name"
             >

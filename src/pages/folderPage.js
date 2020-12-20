@@ -7,6 +7,7 @@ import { getFolder, searchFolder } from "../redux/actions/folderActions";
 import { clearAllErrors } from "../redux/actions/uiActions";
 
 // components
+import FolderHeaderNav from "../components/folders/folderHeaderNav";
 import FolderPostCard from "../components/folders/folderPostCard";
 import FoldersCard from "../components/folders/foldersCard";
 
@@ -79,34 +80,12 @@ class FolderPage extends Component {
     if (!currentFolderId || currentFolderId === "") {
       currentFolderId = "home";
     }
-    console.log(folder);
+
     return (
       <div className="page-container">
         <header className="page-header-container">
           <div className="page-header-secondary-items">
-            <span>
-              <a className="em4-light" href="/resources">
-                Resources
-              </a>
-              {folder &&
-                folder.path &&
-                folder.path.map((x, i) => {
-                  if (x.name.length >= 30) {
-                    x.name = x.name.slice(0, 30) + "...";
-                  }
-                  return (
-                    x.id !== "" &&
-                    x.id !== "home" && (
-                      <span className="em4-light" key={x.id}>
-                        {" / "}
-                        <a className="em4-light" href={x.id}>
-                          {x.name}
-                        </a>
-                      </span>
-                    )
-                  );
-                })}
-            </span>
+            <FolderHeaderNav />
           </div>
           <div className="page-header-main-items">
             <h1>
