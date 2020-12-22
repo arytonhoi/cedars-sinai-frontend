@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import "../../css/modal.css";
 
 // Ant Design
-import { Button, Modal } from "antd";
+import { Button, List, Modal } from "antd";
 
 class DeleteFolderModal extends Component {
   constructor() {
@@ -24,10 +24,19 @@ class DeleteFolderModal extends Component {
       s = "";
     }
 
+    let folderNames = this.props.selectedFolders.map((folder) => folder.title);
+    // const folderNames = [
+    //   "Racing car sprays burning fuel into crowd.",
+    //   "Japanese princess to wed commoner.",
+    //   "Australian walks 100km after outback crash.",
+    //   "Man charged over missing wedding girl.",
+    //   "Los Angeles battles huge wildfires.",
+    // ];
+
     return (
       <Modal
         className="modal"
-        title="Are you sure?"
+        title="Permanently delete these folders?"
         visible={this.props.visible}
         footer={[
           <Button
@@ -41,7 +50,7 @@ class DeleteFolderModal extends Component {
           </Button>,
         ]}
       >
-        Deleting{" "}
+        {/* Deleting{" "}
         {this.props.selectedFolders.map((x, i, a) =>
           a.length === 1
             ? "'" + x.title + "'"
@@ -52,7 +61,19 @@ class DeleteFolderModal extends Component {
             : "'" + x.title + "' "
         )}{" "}
         will remove all contents, including files and subfolders within the
-        folder{s}. This action is irreversible.
+        folder{s}. This action is irreversible. */}
+        <List
+          size="small"
+          // header={
+          //   <div>
+          //     Permanently delete all following folders, subfolders, and posts?
+          //   </div>
+          // }
+          // footer={<div>Footer</div>}
+          bordered
+          dataSource={folderNames}
+          renderItem={(item) => <List.Item>{item}</List.Item>}
+        />
       </Modal>
     );
   }
