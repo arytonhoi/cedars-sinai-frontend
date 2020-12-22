@@ -12,7 +12,7 @@ import "../css/calendar.css";
 import Day from "../components/calendars/Day";
 
 // Ant design
-import { Modal, Calendar, Badge, Button, Layout } from "antd";
+import { Modal, Calendar, Button, Layout } from "antd";
 import {
   CalendarOutlined,
   EnvironmentOutlined,

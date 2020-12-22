@@ -44,7 +44,7 @@ class SideNav extends Component {
           selectedKeys={[location.pathname.split("/", 2)[1]]}
           mode="inline"
         >
-          <Menu.Item style={{ marginTop: "40px", marginBottom: "36px" }}>
+          <Menu.Item style={{ marginTop: "24px", marginBottom: "24px" }}>
             {this.state.collapsed ? (
               <img
                 style={{ position: "relative", left: "-8px" }}

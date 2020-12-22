@@ -19,19 +19,7 @@ class DeleteFolderModal extends Component {
   }
 
   render() {
-    let s = "s";
-    if (this.props.selectedFolders.length === 1) {
-      s = "";
-    }
-
     let folderNames = this.props.selectedFolders.map((folder) => folder.title);
-    // const folderNames = [
-    //   "Racing car sprays burning fuel into crowd.",
-    //   "Japanese princess to wed commoner.",
-    //   "Australian walks 100km after outback crash.",
-    //   "Man charged over missing wedding girl.",
-    //   "Los Angeles battles huge wildfires.",
-    // ];
 
     return (
       <Modal

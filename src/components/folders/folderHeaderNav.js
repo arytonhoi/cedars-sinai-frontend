@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import "../../css/page.css";
 
 // antd
-import { Menu, Dropdown, message } from "antd";
+import { Menu, Dropdown } from "antd";
 
 class FolderHeaderNav extends Component {
   render() {
