@@ -25,3 +25,25 @@ exports.validateUserIsAdmin = (req, res) => {
     );
   }
 };
+
+exports.validateReqBodyFields = (req, schema, res) => {
+  try {
+    let reqSchema = req.body;
+    Object.keys(reqSchema).forEach((key) => {
+      if (!(key in schema)) {
+        return this.returnFormattedHttpError(
+          res,
+          400,
+          `Update JSON body contains invalid key: ${key}`
+        );
+      }
+    });
+  } catch (err) {
+    return this.returnFormattedHttpError(
+      res,
+      400,
+      "Update JSON body is invalid",
+      err
+    );
+  }
+};

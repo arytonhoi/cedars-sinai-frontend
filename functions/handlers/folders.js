@@ -1,9 +1,12 @@
 const { admin, db, production } = require("../util/admin");
 const {
   formatReqBody,
+  validateReqBodyFields,
   validateUserIsAdmin,
   returnFormattedHttpError,
 } = require("../util/util");
+const { folderSchema } = require("../dbSchemas");
+
 const FieldValue = admin.firestore.FieldValue;
 
 // util functions
@@ -229,16 +232,17 @@ exports.createFolder = (req, res) => {
     );
   }
 
-  const newFolder = {
-    parent: parentFolderId,
-    createdAt: new Date().toISOString(),
-    lastModified: new Date().toISOString(),
-    title: folderTitle,
-    content: "",
-    defaultSubfolderSort: "alphabetical",
-    index: 0,
-    visits: 0,
-  };
+  // clone folderSchema
+  // WARNING: only a shallow clone
+  const newFolder = Object.assign({}, folderSchema);
+
+  newFolder.parent = parentFolderId;
+  newFolder.createdAt = new Date().toISOString();
+  newFolder.lastModified = new Date().toISOString();
+  newFolder.title = folderTitle;
+  newFolder.content = "";
+  newFolder.defaultSubfolderSort = "alphabetical";
+  newFolder.visits = 0;
 
   // add newFolder to FB database
   db.collection(`${production}folders`)
@@ -307,64 +311,44 @@ exports.deleteFolder = (req, res) => {
 
 exports.updateOneFolder = (req, res) => {
   req = formatReqBody(req);
+  validateReqBodyFields(req, folderSchema, res);
   validateUserIsAdmin(req, res);
 
-  if (Object.keys(req.body).length > 0) {
-    try {
-      const folderToUpdate = req.params.folderId;
-      const updatedFolderContents = {
-        ...req.body,
-        lastModified: new Date().toISOString(),
-      };
-      delete updatedFolderContents.subfolders;
-      delete updatedFolderContents.path;
-      var updatedFolderPathObj = {};
-      if (
-        typeof req.body.parent === "string" ||
-        typeof req.body.parent === "number"
-      ) {
-        updatedFolderPathObj.parentId = req.body.parent;
-      }
-      if (
-        typeof req.body.title === "string" ||
-        typeof req.body.title === "number"
-      ) {
-        updatedFolderPathObj.name = req.body.title;
-      }
-      const folderRef = db.doc(`/${production}folders/${folderToUpdate}`);
-      const folderPathsMapRef = db
-        .collection(`${production}paths`)
-        .doc("folders");
-      const batch = db.batch();
-      batch.update(folderRef, updatedFolderContents);
-      if (
-        typeof req.body.parent === "string" ||
-        typeof req.body.parent === "number"
-      ) {
-        batch.update(folderPathsMapRef, {
-          [`${folderToUpdate}.parentId`]: req.body.parent,
-        });
-      }
-      if (
-        typeof req.body.title === "string" ||
-        typeof req.body.title === "number"
-      ) {
-        batch.update(folderPathsMapRef, {
-          [`${folderToUpdate}.name`]: req.body.title,
-        });
-      }
-      return batch.commit().then(() => {
-        return res.json({ message: "Folder updated successfully." });
-      });
-    } catch (err) {
-      returnFormattedHttpError(
-        res,
-        500,
-        "Failed to update folder. Please try again",
-        err
-      );
+  // actual folder object
+  const updatedFolderId = req.params.folderId;
+  const updatedFolder = {
+    ...req.body,
+    lastModified: new Date().toISOString(),
+  };
+
+  // folder path
+  const updatedFolderPathObj = {};
+  if (req.body.title) updatedFolderPathObj.name = req.body.title;
+  if (req.body.parent) {
+    if (req.body.parent === updatedFolderId) {
+      returnFormattedHttpError(res, 400, "Cannot move folder into itself.");
     }
-  } else {
-    return res.json({ message: "No changes were made." });
+    updatedFolderPathObj.parentId = req.body.parent;
   }
+
+  // get object refs from Firebase
+  const folderRef = db.doc(`/${production}folders/${updatedFolderId}`);
+  const folderPathsMapRef = db.collection(`/${production}paths`).doc("folders");
+
+  // start updating
+  const batch = db.batch();
+  batch.update(folderRef, updatedFolder);
+  // update folder path field by field
+  if (updatedFolderPathObj.name)
+    batch.update(folderPathsMapRef, {
+      [`${updatedFolderId}.name`]: updatedFolderPathObj.name,
+    });
+  if (updatedFolderPathObj.parentId)
+    batch.update(folderPathsMapRef, {
+      [`${updatedFolderId}.parentId`]: updatedFolderPathObj.parentId,
+    });
+
+  return batch.commit().then(() => {
+    return res.json({ message: "Folder updated successfully " });
+  });
 };

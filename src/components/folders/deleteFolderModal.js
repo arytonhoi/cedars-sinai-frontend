@@ -50,18 +50,6 @@ class DeleteFolderModal extends Component {
           </Button>,
         ]}
       >
-        {/* Deleting{" "}
-        {this.props.selectedFolders.map((x, i, a) =>
-          a.length === 1
-            ? "'" + x.title + "'"
-            : a.length - i === 1
-            ? " and '" + x.title + "'"
-            : i < a.length - 2
-            ? "'" + x.title + "', "
-            : "'" + x.title + "' "
-        )}{" "}
-        will remove all contents, including files and subfolders within the
-        folder{s}. This action is irreversible. */}
         <List
           size="small"
           // header={
