@@ -31,9 +31,10 @@ import {
 import { clearError, clearAllErrors } from "../redux/actions/uiActions";
 
 // Components
+import ContactEditorModal from "../components/contacts/contactEditorModal";
 import DepartmentList from "../components/contacts/departmentList";
 import DepartmentEditorModal from "../components/contacts/departmentEditorModal";
-import ContactEditorModal from "../components/contacts/contactEditorModal";
+import FloatAddButton from "../components/layout/floatAddButton";
 
 // css styles
 import "../css/page.css";
@@ -383,9 +384,14 @@ class ContactPage extends Component {
   render() {
     const { isAdmin } = this.props.user;
     const { matchingSearchContacts, departments } = this.props.contacts;
+    const floatAddButtonOptions = {
+      Department: this.handleAddorEditDepartment,
+      Contact: this.handleAddorEditContact,
+    };
 
     return (
       <div className="page-container">
+        {isAdmin && <FloatAddButton options={floatAddButtonOptions} />}
         <header className="page-header-container">
           <div className="page-header-main-items">
             <h1>Contacts</h1>

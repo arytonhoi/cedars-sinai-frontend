@@ -1,0 +1,14 @@
+.floatAddButton {
+  position: fixed;
+  bottom: 48px;
+  right: 48px;
+  z-index: 10;
+  height: 64px;
+  width: 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  background-color: #1890ff;
+  border-radius: 50%;
+}
