@@ -31,7 +31,7 @@ class DepartmentSection extends Component {
           <header className="content-card-header">
             <div className="header-row">
               <h1>{department.name}</h1>
-              {isAdmin && this.props.isEditingPage && (
+              {isAdmin && (
                 <Button
                   icon={<EditOutlined />}
                   onClick={() =>
@@ -46,20 +46,7 @@ class DepartmentSection extends Component {
             department={department}
             contacts={contacts}
             handleAddorEditContact={this.props.handleAddorEditContact}
-            isEditingPage={this.props.isEditingPage}
           />
-
-          {isAdmin && this.props.isEditingPage && (
-            <footer>
-              <Button
-                onClick={() => this.props.handleAddorEditContact(department.id)}
-                type="dashed"
-                block
-              >
-                + Add new contact
-              </Button>
-            </footer>
-          )}
         </li>
       );
     }
@@ -76,7 +63,6 @@ DepartmentSection.propTypes = {
   // contacts
   handleAddorEditContact: PropTypes.func.isRequired,
   // general
-  isEditingPage: PropTypes.bool.isRequired,
   searchTerm: PropTypes.string.isRequired,
 };
 

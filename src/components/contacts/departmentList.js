@@ -10,7 +10,7 @@ import "./contacts.css";
 import "../../css/page.css";
 
 // antd
-import { Button, Empty, Spin } from "antd";
+import { Empty, Spin } from "antd";
 
 class DepartmentList extends Component {
   render() {
@@ -28,17 +28,14 @@ class DepartmentList extends Component {
         <Empty
           style={{ margin: "auto" }}
           image={Empty.PRESENTED_IMAGE_SIMPLE}
-          description={<span>No departments</span>}
-        >
-          {isAdmin && !this.props.isEditingPage && (
-            <Button
-              type="dashed"
-              onClick={() => this.props.handleAddorEditDepartment()}
-            >
-              Add department
-            </Button>
-          )}
-        </Empty>
+          description={
+            <span>
+              {isAdmin
+                ? 'Add departments using the botttom right "+" button'
+                : "No departments yet."}
+            </span>
+          }
+        ></Empty>
       );
     } else if (
       contacts.length === 0 &&
@@ -71,8 +68,6 @@ class DepartmentList extends Component {
             handleAddorEditDepartment={this.props.handleAddorEditDepartment}
             // contacts
             handleAddorEditContact={this.props.handleAddorEditContact}
-            // general
-            isEditingPage={this.props.isEditingPage}
             searchTerm={this.props.searchTerm}
           />
         );
@@ -94,7 +89,6 @@ DepartmentList.propTypes = {
   // contact functions
   handleAddorEditContact: PropTypes.func.isRequired,
   // general
-  isEditingPage: PropTypes.bool.isRequired,
   searchTerm: PropTypes.string.isRequired,
 };
 

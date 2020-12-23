@@ -50,7 +50,6 @@ class ContactPage extends Component {
   constructor() {
     super();
     this.state = {
-      isEditingPage: false,
       // departments
       confirmDeleteDepartment: false,
       departmentId: "",
@@ -221,12 +220,6 @@ class ContactPage extends Component {
     if (event.target.name === "searchTerm") {
       this.props.getSearchedContacts(value);
     }
-  };
-
-  toggleEditPage = () => {
-    this.setState({
-      isEditingPage: !this.state.isEditingPage,
-    });
   };
 
   // department functions
@@ -406,7 +399,7 @@ class ContactPage extends Component {
                 onChange={this.handleChange}
                 suffix={<SearchOutlined style={{ color: "rgba(0,0,0,.45)" }} />}
               />
-              {isAdmin && !this.state.isEditingPage && (
+              {/* {isAdmin && !this.state.isEditingPage && (
                 <Button
                   type="primary"
                   size={"medium"}
@@ -433,7 +426,7 @@ class ContactPage extends Component {
                 >
                   Save changes
                 </Button>
-              )}
+              )} */}
             </span>
           </div>
         </header>
@@ -472,13 +465,12 @@ class ContactPage extends Component {
             <DepartmentList
               // data
               departments={departments}
+              // departments={[]}
               contacts={matchingSearchContacts}
               // departments
               handleAddorEditDepartment={this.handleAddorEditDepartment}
               // contacts
               handleAddorEditContact={this.handleAddorEditContact}
-              // general
-              isEditingPage={this.state.isEditingPage}
               searchTerm={this.state.searchTerm}
             />
           </Content>

@@ -43,7 +43,7 @@ class ContactList extends Component {
               <a href={`mailto:${c.email}`}>{c.email}</a>
             </div>
 
-            {isAdmin && this.props.isEditingPage && (
+            {isAdmin && (
               <Button
                 icon={<EditOutlined />}
                 onClick={() =>
@@ -65,17 +65,14 @@ class ContactList extends Component {
       ) : (
         <Empty
           image={Empty.PRESENTED_IMAGE_SIMPLE}
-          description={<span>No contacts</span>}
-        >
-          {!this.props.isEditingPage && (
-            <Button
-              type="dashed"
-              onClick={() => this.props.handleAddorEditContact(department.id)}
-            >
-              Add contact
-            </Button>
-          )}
-        </Empty>
+          description={
+            <span>
+              {isAdmin
+                ? `Add contacts using the bottom right "+" button`
+                : "No contacts yet"}
+            </span>
+          }
+        />
       );
     }
   }
@@ -87,7 +84,6 @@ ContactList.propTypes = {
   department: PropTypes.object.isRequired,
   contacts: PropTypes.array.isRequired,
   handleAddorEditContact: PropTypes.func.isRequired,
-  isEditingPage: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => {
