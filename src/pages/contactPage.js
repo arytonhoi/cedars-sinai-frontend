@@ -399,34 +399,6 @@ class ContactPage extends Component {
                 onChange={this.handleChange}
                 suffix={<SearchOutlined style={{ color: "rgba(0,0,0,.45)" }} />}
               />
-              {/* {isAdmin && !this.state.isEditingPage && (
-                <Button
-                  type="primary"
-                  size={"medium"}
-                  onClick={() => this.toggleEditPage()}
-                >
-                  Edit contacts
-                </Button>
-              )}
-              {isAdmin && this.state.isEditingPage && (
-                <Button
-                  size={"medium"}
-                  onClick={() => this.handleAddorEditDepartment()}
-                >
-                  Add department
-                </Button>
-              )}
-
-              {isAdmin && this.state.isEditingPage && (
-                <Button
-                  type="primary"
-                  style={{ background: "#52C41A", borderColor: "#52C41A" }}
-                  size={"medium"}
-                  onClick={() => this.toggleEditPage()}
-                >
-                  Save changes
-                </Button>
-              )} */}
             </span>
           </div>
         </header>
