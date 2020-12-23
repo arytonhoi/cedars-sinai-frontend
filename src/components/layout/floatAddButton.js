@@ -19,27 +19,35 @@ class FloatAddButton extends Component {
 
   render() {
     const { isAdmin } = this.props.user;
+    const options = this.props.options;
+    const optionKeys = Object.keys(options);
     if (!isAdmin) return null;
 
-    const optionsMenu = (
-      <Menu onClick={this.handleAction}>
-        {Object.keys(this.props.options).map((option) => (
-          <Menu.Item key={option}>{option}</Menu.Item>
-        ))}
-      </Menu>
-    );
-
-    return (
-      <Dropdown
-        // className="floatAddButton"
-        overlay={optionsMenu}
-        placement="topCenter"
-      >
-        <div className="floatAddButton">
-          <PlusOutlined style={{ fontSize: "24px", color: "white" }} />
-        </div>
-      </Dropdown>
-    );
+    if (optionKeys.length === 1) {
+      // const optionFunction = options[optionKeys[0]];
+      return (
+        <Tooltip title={`Add ${optionKeys[0]}`}>
+          <div className="floatAddButton" onClick={options[optionKeys[0]]}>
+            <PlusOutlined style={{ fontSize: "24px", color: "white" }} />
+          </div>
+        </Tooltip>
+      );
+    } else {
+      const optionsMenu = (
+        <Menu onClick={this.handleAction}>
+          {Object.keys(options).map((option) => (
+            <Menu.Item key={option}>{option}</Menu.Item>
+          ))}
+        </Menu>
+      );
+      return (
+        <Dropdown overlay={optionsMenu} placement="topCenter">
+          <div className="floatAddButton">
+            <PlusOutlined style={{ fontSize: "24px", color: "white" }} />
+          </div>
+        </Dropdown>
+      );
+    }
   }
 }
 

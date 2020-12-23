@@ -36,7 +36,13 @@ class AnnouncementList extends Component {
         <Empty
           style={{ margin: "auto" }}
           image={Empty.PRESENTED_IMAGE_SIMPLE}
-          description={<span>No announcements yet</span>}
+          description={
+            <span>
+              {isAdmin
+                ? `Post announcements using the bottom right "+" button`
+                : "No announcements yet"}
+            </span>
+          }
         ></Empty>
       );
     } else {

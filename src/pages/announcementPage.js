@@ -32,6 +32,7 @@ import {
 import AnnouncementPostEditorModal from "../components/announcement/announcementPostEditorModal.js";
 import AnnouncementList from "../components/announcement/announcementList.js";
 import BannerImgEditorModal from "../components/announcement/bannerImgEditorModal.js";
+import FloatAddButton from "../components/layout/floatAddButton";
 
 // css styles
 import "../css/page.css";
@@ -73,7 +74,7 @@ class AnnouncementPage extends Component {
         oldestAnnouncementTimestamp: 7776000000,
       },
       // announcement editor modal
-      isEditing: false,
+      showAnnouncementEditorModal: false,
       elementHeight: "",
       // banner img
       isEditingBannerImg: false,
@@ -180,22 +181,26 @@ class AnnouncementPage extends Component {
     this.props.getFilteredAnnouncements(updatedFilter);
   };
 
-  // form handlers
-  toggleEditing = () => {
-    this.setState({
-      isEditing: !this.state.isEditing,
-    });
-  };
-
   // announcement editor functions
-  handleEditThisAnnouncement = (announcement) => {
+  handleEditThisAnnouncement = (announcement = null) => {
     this.setState({
-      announcementId: announcement.id,
-      announcementTitle: announcement.title,
-      announcementAuthor: announcement.author,
-      announcementContent: announcement.content,
-      isEditing: true,
+      showAnnouncementEditorModal: true,
     });
+    if (announcement === null) {
+      this.setState({
+        announcementId: "",
+        announcementTitle: "",
+        announcementAuthor: "",
+        announcementContent: "",
+      });
+    } else {
+      this.setState({
+        announcementId: announcement.id,
+        announcementTitle: announcement.title,
+        announcementAuthor: announcement.author,
+        announcementContent: announcement.content,
+      });
+    }
   };
 
   handleCancelEditAnnouncement = () => {
@@ -204,7 +209,7 @@ class AnnouncementPage extends Component {
       announcementTitle: "",
       announcementAuthor: "",
       announcementContent: "",
-      isEditing: false,
+      showAnnouncementEditorModal: false,
     });
   };
 
@@ -283,12 +288,16 @@ class AnnouncementPage extends Component {
     //   last_month: "Last Month",
     //   everything: "Everything",
     // };
+    const floatAddButtonOptions = {
+      Announcement: this.handleEditThisAnnouncement,
+    };
 
     return (
       <div className="page-container">
+        {isAdmin && <FloatAddButton options={floatAddButtonOptions} />}
         {isAdmin && (
           <AnnouncementPostEditorModal
-            visible={this.state.isEditing}
+            visible={this.state.showAnnouncementEditorModal}
             isEditingExistingAnnouncement={this.state.announcementId !== ""}
             announcementTitle={this.state.announcementTitle}
             announcementAuthor={this.state.announcementAuthor}
@@ -350,15 +359,6 @@ class AnnouncementPage extends Component {
                       Filter by date <DownOutlined />
                     </Button>
                   </Dropdown>
-                  {isAdmin && (
-                    <Button
-                      type="primary"
-                      size={"medium"}
-                      onClick={() => this.toggleEditing()}
-                    >
-                      Post New Announcement
-                    </Button>
-                  )}
                 </span>
               </div>
             </div>
