@@ -215,7 +215,7 @@ class FolderPage extends Component {
     const newFolder = {
       title: formValues.folderTitle,
     };
-    this.props.postFolder(this.props.folders.folder.parent, newFolder);
+    this.props.postFolder(this.props.folders.folder.id, newFolder);
     this.handleCancelAddSubfolder();
   };
 

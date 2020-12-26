@@ -42,12 +42,15 @@ class SearchPage extends Component {
   };
 
   searchFolder = (searchTerm) => {
-    this.props.searchFolder(searchTerm);
+    // this.props.searchFolder(searchTerm);
+    window.location.href = `${
+      process.env.PUBLIC_URL
+    }/resources/search/${searchTerm.trim()}`;
   };
 
   render() {
     const { folderSearchResults } = this.props.folders;
-    const searchTerm = this.state.searchTerm;
+    const searchTerm = this.props.match.params.searchTerm;
     const { loading } = this.props.ui;
 
     return (
