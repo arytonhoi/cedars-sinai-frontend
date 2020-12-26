@@ -328,7 +328,7 @@ class AnnouncementPage extends Component {
             <div className="content-card-header">
               <div className="header-row">
                 <h1>Recent Announcements</h1>
-                <span className="page-header-interactive-items">
+                <span className="header-interactive-items">
                   <Input
                     style={{ width: 400 }}
                     id="searchTerm"

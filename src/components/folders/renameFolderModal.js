@@ -39,7 +39,7 @@ class RenameFolderModal extends Component {
     return (
       <Modal
         className="modal"
-        title={"Rename folder"}
+        title={this.props.isAddingFolder ? "Add Folder" : "Rename Folder"}
         visible={this.props.visible}
         footer={[
           <span className="modal-footer-filler" key="space"></span>,
@@ -55,7 +55,7 @@ class RenameFolderModal extends Component {
             form="renameFolderForm"
             htmlType="submit"
           >
-            Rename
+            {this.props.isAddingFolder ? "Add" : "Rename"}
           </Button>,
         ]}
       >
@@ -68,7 +68,10 @@ class RenameFolderModal extends Component {
             folderTitle: folder.title,
           }}
           onFinish={(formValues) => {
-            this.props.renameFolder(formValues);
+            this.props.isAddingFolder
+              ? this.props.handlePostSubfolder(formValues)
+              : this.props.handleRenameFolder(formValues);
+
             this.formRef.current.resetFields();
           }}
         >

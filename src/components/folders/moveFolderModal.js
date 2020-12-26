@@ -65,10 +65,10 @@ class MoveFolderModal extends Component {
           <Button
             key="2"
             type="primary"
-            onClick={this.props.moveFolders}
+            onClick={this.props.handleMoveSubfolders}
             disabled={moveFolderModalCurrentPath.movingFolderId === folder.id}
           >
-            {"Move Folder" + s + " Here"}
+            Move
           </Button>,
         ]}
       >
@@ -114,6 +114,7 @@ class MoveFolderModal extends Component {
 MoveFolderModal.propTypes = {
   user: PropTypes.object.isRequired,
   ui: PropTypes.object.isRequired,
+  handleMoveSubfolders: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {

@@ -9,7 +9,7 @@ import { clearError } from "../../redux/actions/uiActions";
 
 // css
 import "../../css/modal.css";
-import "./Folder.css";
+import "./folder.css";
 import "./AddFolder.css";
 
 // antd

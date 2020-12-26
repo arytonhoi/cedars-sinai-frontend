@@ -33,7 +33,11 @@ class DeleteFolderModal extends Component {
           >
             Cancel
           </Button>,
-          <Button key="submit" type="danger" onClick={this.props.deleteFolders}>
+          <Button
+            key="submit"
+            type="danger"
+            onClick={this.props.handleDeleteSubfolders}
+          >
             Delete
           </Button>,
         ]}

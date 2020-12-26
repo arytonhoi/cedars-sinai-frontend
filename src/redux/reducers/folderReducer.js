@@ -14,13 +14,12 @@ import {
 const initialState = {
   // folders
   folder: {
-    index: 0,
     id: "",
     title: "",
     parent: "",
     content: "",
     visits: 0,
-    defaultSubfolderSort: -1,
+    defaultSubfolderSort: null,
     lastModified: "",
     createdAt: "",
     subfolders: [],
@@ -34,8 +33,6 @@ const initialState = {
   },
 };
 
-var index;
-
 // export functions
 export const folderReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -44,30 +41,50 @@ export const folderReducer = (state = initialState, action) => {
       return {
         ...state,
         folder: action.payload,
-        loading: false,
       };
+
     case POST_FOLDER:
       state.folder.subfolders.push(action.payload);
       return { ...state };
+
     case PATCH_FOLDER:
+      let folderUpdates = action.payload;
+      let updatedFolder = state.folder;
+      Object.keys(folderUpdates).forEach((key) => {
+        updatedFolder[key] = folderUpdates[key];
+      });
+
       return {
         ...state,
-        folder: action.payload,
-        loading: false,
+        folder: {
+          ...state.folder,
+          content: updatedFolder.content,
+        },
       };
+
     case PATCH_SUBFOLDER:
-      let sf = state.folder.subfolders;
-      index = sf.findIndex((x) => x.id === action.payload.id);
-      if (action.payload.patch && index >= 0) {
-        sf[index] = Object.assign(sf[index], action.payload.patch);
-      }
-      state.folder.subfolders = sf;
-      return { ...state };
+      let updatedSubfolder = action.payload;
+      return {
+        ...state,
+        folder: {
+          ...state.folder,
+          subfolders: state.folder.subfolders.map((folder) =>
+            folder.id === updatedSubfolder.id ? updatedSubfolder : folder
+          ),
+        },
+      };
+
     case DELETE_SUBFOLDER:
-      sf = state.folder.subfolders;
-      index = sf.findIndex((x) => x.id === action.payload);
-      state.folder.subfolders = sf.slice(0, index).concat(sf.slice(index + 1));
-      return { ...state };
+      let deletedSubfolderId = action.payload;
+      return {
+        ...state,
+        folder: {
+          ...state.folder,
+          subfolders: state.folder.subfolders.filter(
+            (folder) => folder.id !== deletedSubfolderId
+          ),
+        },
+      };
     // sorting folders
     case SORT_SUBFOLDER:
       switch (action.payload) {
@@ -127,7 +144,6 @@ export const folderReducer = (state = initialState, action) => {
           destinationFolderId: action.payload.parent,
           destinationFolderChildren: action.payload.subfolders,
         },
-        loading: false,
       };
     case RESET_NAV_PATH:
       return {
@@ -138,13 +154,11 @@ export const folderReducer = (state = initialState, action) => {
           destinationFolderId: state.folder.parent,
           destinationFolderChildren: state.folder.subfolders,
         },
-        loading: false,
       };
     case SET_FOLDER_SEARCH_RESULTS:
       return {
         ...state,
         folderSearchResults: action.payload,
-        loading: false,
       };
     default:
       return state;

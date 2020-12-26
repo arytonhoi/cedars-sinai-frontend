@@ -1,52 +1,123 @@
-.folder{
-  margin: 0.5em;
+/* ============================================================================================== */
+/* FOLDER LAYOUT STYLES */
+/* ============================================================================================== */
+.folder-section-header-row {
+  margin-bottom: 12px;
+}
+
+.folder-section-header-row h2 {
+  font-size: 14px;
+  font-weight: 400;
+  color: #868686;
+  display: inline-block;
+}
+
+/* ============================================================================================== */
+/* PAGE AND CONTENT HEADER STYLES */
+/* ============================================================================================== */
+
+.folder-header-nav {
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: 400;
+  color: #414141;
+}
+
+.folder-select-button-container {
+  display: inline-block;
+  padding-right: 8px;
+  border-right: 1px solid #E5E5E5;
+}
+
+/* ============================================================================================== */
+/* FOLDER LIST AND FOLDER STYLES */
+/* ============================================================================================== */
+
+.folder-list {
+  margin-right: -12px;
+  margin-bottom: -20px;
+}
+
+.col-1 .folder-container {
+  width: calc(100% - 12px);
+}
+.col-2 .folder-container {
+  width: calc(50% - 12px);
+}
+.col-3 .folder-container {
+  width: calc(33.33% - 12px);
+}
+.col-4 .folder-container {
+  width: calc(25% - 12px);
+}
+.col-5 .folder-container {
+  width: calc(20% - 12px);
+}
+.col-6 .folder-container {
+  width: calc(16.66% - 12px);
+}
+.col-7 .folder-container {
+  width: calc(14.28% - 12px);
+}
+
+.folder-container {
+  margin-right: 12px;
+  margin-bottom: 20px;
+  padding: 0 16px;
   border-radius: 0.5em;
-  padding: 0.25em 1em;
-  width: calc( 25% - 1em);
-  min-width: 5em;
+  height: 56px;
   display: flex;
   align-items: center;
 }
-.folder-link{
+
+/* ============================================================================================== */
+/* TEXT STYLES */
+/* ============================================================================================== */
+.folder-link {
   display: flex;
   align-items: center;
 }
-.folder-normal{
+
+.folder-normal {
   color: black;
-  border: 1px solid #C4C4C4;
+  border: 1px solid #c4c4c4;
 }
-.folder-normal:hover{
+
+.folder-normal:hover {
   background: #f3f3f3;
 }
 
-.folder-label{
+.folder-label {
   max-height: 1.5em;
   overflow: hidden;
   word-wrap: anywhere;
 }
-.folder-selected{
+
+.folder-selected {
   background: #e9f0fd;
   border: 1px solid #3068cb;
   color: #3068cb;
   cursor: pointer;
 }
-.folder-selected:hover{
-  -webkit-box-shadow: inset 0px 0px 100px 100px rgba(248,248,248,0.5);
-  -moz-box-shadow: inset 0px 0px 100px 100px rgba(248,248,248,0.5);
-  box-shadow: inset 0px 0px 100px 100px rgba(248,248,248,0.5);
+
+.folder-selected:hover {
+  -webkit-box-shadow: inset 0px 0px 100px 100px rgba(248, 248, 248, 0.5);
+  -moz-box-shadow: inset 0px 0px 100px 100px rgba(248, 248, 248, 0.5);
+  box-shadow: inset 0px 0px 100px 100px rgba(248, 248, 248, 0.5);
 }
 
-.folder-logo-icon{
+.folder-logo-icon {
   line-height: 1;
   color: #92ceff !important;
 }
-.folder-logo-icon > .anticon-folder > svg{
+
+.folder-logo-icon > .anticon-folder > svg {
   width: 2.5em !important;
   height: 2.5em !important;
   padding-right: 0.5em;
 }
 
-.folder-normal:hover, .folder-label:hover{
+.folder-normal:hover,
+.folder-label:hover {
   color: black !important;
 }
-

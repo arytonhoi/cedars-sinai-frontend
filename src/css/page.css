@@ -7,6 +7,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  max-width: 
 }
 
 .vertical-fill-layout {
@@ -42,8 +43,8 @@
   margin: 0;
 }
 
-.page-header-interactive-items .ant-input-affix-wrapper,
-.page-header-interactive-items button {
+.header-interactive-items .ant-input-affix-wrapper,
+.header-interactive-items button {
   margin-left: 8px;
   margin-right: 0;
 }
@@ -74,7 +75,7 @@
   align-items: center;
 }
 
-.content-card .wrapped-content {
+.wrapped-content {
   display: flex;
   position: relative;
   flex-wrap: wrap;
@@ -152,7 +153,7 @@
   font-weight: 500;
 }
 
-.content-card-header .header-row {
+.header-row {
   display: flex;
   align-items: center;
   justify-content: space-between;

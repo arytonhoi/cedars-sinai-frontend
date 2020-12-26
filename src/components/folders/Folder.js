@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./Folder.css";
+import "./folder.css";
 import PropTypes from "prop-types";
 
 import { FolderFilled } from "@ant-design/icons";
@@ -8,67 +8,38 @@ import { FolderFilled } from "@ant-design/icons";
 import { connect } from "react-redux";
 
 class Folder extends Component {
-  constructor() {
-    super();
-    this.state = {
-      isSelected: false,
-    };
-  }
-
   render() {
-    const { label, href } = this.props;
-    if (typeof href === "function") {
-      return (
-        <div
-          className={
-            "folder clickable noselect " +
-            (this.props.isSelected ? "folder-selected" : "folder-normal")
-          }
-          onClick={() => {
-            // console.log("selected!");
-            href();
-            // this.setState({
-            //   isSelected: !this.state.isSelected,
-            // });
-          }}
-          onMouseDown={this.props.onMouseDown}
-          onMouseUp={this.props.onMouseUp}
-        >
-          <div className="folder-link">
-            <span className="folder-logo-icon">
-              <FolderFilled />
-            </span>
-            <span className="folder-label">{label}</span>
-          </div>
+    const folder = this.props.folder;
+    return (
+      <div
+        className={
+          "folder-container clickable noselect " +
+          (this.props.isSelected ? "folder-selected" : "folder-normal")
+        }
+        onClick={(event) => {
+          this.props.handleFolderClick(event, folder);
+        }}
+        onDoubleClick={(event) => {
+          this.props.handleFolderDoubleClick(event, folder);
+        }}
+      >
+        <div className="folder-link">
+          <span className="folder-logo-icon">
+            <FolderFilled />
+          </span>
+          <span className="folder-label">{folder.title}</span>
         </div>
-      );
-    } else {
-      return (
-        <a
-          className="folder folder-normal noselect"
-          href={"/resources/" + href}
-        >
-          <div className="folder-link">
-            <span className="folder-logo-icon">
-              <FolderFilled />
-            </span>
-            <span className="folder-label">{label}</span>
-          </div>
-        </a>
-      );
-    }
+      </div>
+    );
   }
 }
 
 Folder.propTypes = {
-  label: PropTypes.string.isRequired,
-  href: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-    PropTypes.func,
-  ]).isRequired,
+  user: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  user: state.user,
+});
 
 export default connect(mapStateToProps, {})(Folder);

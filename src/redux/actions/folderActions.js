@@ -69,7 +69,6 @@ export const postFolder = (folderId, folderDetails) => (dispatch) => {
 
 export const patchFolder = (folderId, updatedFolder) => (dispatch) => {
   dispatch(setLoadingAction(PATCH_FOLDER));
-  // updatedFolder.lastModified = new Date().toISOString();
   axios
     .patch(`/folders/${folderId}`, updatedFolder)
     .then((res) => {
@@ -89,13 +88,14 @@ export const patchFolder = (folderId, updatedFolder) => (dispatch) => {
 
 export const patchSubfolder = (folderId, updatedFolder) => (dispatch) => {
   dispatch(setLoadingAction(PATCH_SUBFOLDER));
-  // updatedFolder.lastModified = new Date().toISOString();
   axios
     .patch(`/folders/${folderId}`, updatedFolder)
     .then((res) => {
+      updatedFolder.id = folderId;
+      console.log(updatedFolder);
       dispatch({
         type: PATCH_SUBFOLDER,
-        payload: { id: folderId, patch: updatedFolder },
+        payload: updatedFolder,
       });
       return res;
     })
@@ -103,7 +103,8 @@ export const patchSubfolder = (folderId, updatedFolder) => (dispatch) => {
       dispatch(stopLoadingAction(PATCH_SUBFOLDER));
     })
     .catch((err) => {
-      dispatch(setError(PATCH_SUBFOLDER, err.response.data));
+      console.log(err);
+      // dispatch(setError(PATCH_SUBFOLDER, err.response.data));
     });
 };
 

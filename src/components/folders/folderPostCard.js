@@ -18,9 +18,8 @@ import "../../css/page.css";
 import parse from "html-react-parser";
 
 // Ant Design
-import { LoadingOutlined } from "@ant-design/icons";
-import { Button, Layout, Modal, notification, Spin } from "antd";
-const { Content } = Layout;
+import { EditOutlined, LoadingOutlined } from "@ant-design/icons";
+import { Button, Modal, notification, Spin } from "antd";
 
 class FolderPostCard extends Component {
   constructor() {
@@ -95,18 +94,18 @@ class FolderPostCard extends Component {
 
   // action functions
   saveEditorChanges = () => {
-    // console.log(this.props.currentFolderId);
     if (this.state.editor !== null) {
-      const updatedFolder = this.props.folder;
-      updatedFolder.content = this.state.editor;
       notification.open({
         key: PATCH_FOLDER,
         duration: 0,
         message: "Updating post...",
         icon: <LoadingOutlined />,
       });
-      this.props.patchFolder(this.props.currentFolderId, updatedFolder);
+      this.props.patchFolder(this.props.currentFolderId, {
+        content: this.state.editor,
+      });
     }
+
     this.toggleEditingPost();
   };
 
@@ -123,7 +122,7 @@ class FolderPostCard extends Component {
 
     const folder = this.props.folder;
     return (
-      <Content className="content-card folder-post">
+      <div className="padded-content-card-content">
         <Modal
           className="center"
           title={"Cancel changes to your post?"}
@@ -149,53 +148,37 @@ class FolderPostCard extends Component {
         >
           This will remove all new changes made to your post.
         </Modal>
-        {isAdmin && (
-          <div className="content-card-header">
-            <div className="header-row">
-              <span key="space" />
-              {this.props.isEditingPost ? (
-                <span className="page-header-interactive-items">
-                  <Button type="danger" onClick={this.clearPost}>
-                    Delete entire post
-                  </Button>
-                  <Button onClick={this.maybeShowPostCancelConfirm}>
-                    Cancel
-                  </Button>
-                  <Button
-                    type="primary"
-                    style={{
-                      background: "#52C41A",
-                      borderColor: "#52C41A",
-                    }}
-                    // disabled={
-                    //   this.state.editor === null || this.state.editor === ""
-                    // }
-                    onClick={this.saveEditorChanges}
-                  >
-                    Save Changes
-                  </Button>
-                </span>
-              ) : (
-                <span className="page-header-interactive-items">
-                  <Button
-                    type="primary"
-                    disabled={this.props.isEditingFolders}
-                    onClick={this.props.toggleEditingPost}
-                  >
-                    Edit Post
-                  </Button>
-                </span>
-              )}
-            </div>
-          </div>
-        )}
+        <header className="header-row folder-section-header-row">
+          <span>
+            <h2>Information</h2>
+            {isAdmin && !this.props.isEditingPost && (
+              <Button type="text" onClick={this.props.toggleEditingPost}>
+                <EditOutlined />
+              </Button>
+            )}
+          </span>
+          {isAdmin && this.props.isEditingPost && (
+            <span className="header-interactive-items">
+              <Button onClick={this.maybeShowPostCancelConfirm}>Cancel</Button>
+              <Button
+                type="primary"
+                // disabled={
+                //   this.state.editor === null || this.state.editor === ""
+                // }
+                onClick={this.saveEditorChanges}
+              >
+                Save
+              </Button>
+            </span>
+          )}
+        </header>
         {loadingActions.SET_FOLDER && (
-          <div className="padded-content vertical-content">
+          <div className="vertical-content">
             <Spin style={{ marginTop: "48px" }} />
           </div>
         )}
         {!loadingActions.SET_FOLDER && (
-          <div className="padded-content-card-content">
+          <div>
             {this.props.isEditingPost ? (
               <CKEditor
                 data={folder.content}
@@ -219,7 +202,7 @@ class FolderPostCard extends Component {
             )}
           </div>
         )}
-      </Content>
+      </div>
     );
   }
 }

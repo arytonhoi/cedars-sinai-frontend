@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 // css
-import "../../css/page.css";
+import "./folder.css";
 
 // antd
 import { Menu, Dropdown } from "antd";
@@ -35,11 +35,7 @@ class FolderHeaderNav extends Component {
         {dropdownPathList.map((folder) => {
           return (
             <Menu.Item>
-              <a
-                // target="_blank"
-                // rel="noopener noreferrer"
-                href={folder.id}
-              >
+              <a rel="noopener noreferrer" href={folder.id}>
                 {folder.name}
               </a>
             </Menu.Item>
@@ -50,17 +46,16 @@ class FolderHeaderNav extends Component {
 
     return (
       <span style={{ height: "22px" }}>
-        <a className="em4-light" href="/resources">
+        <a className="folder-header-nav" href="/resources">
           Resources
         </a>
         {dropdownPathList.length > 0 && (
-          <span className="em4-light" key={folder.id}>
+          <span className="folder-header-nav" key={folder.id}>
             {" / "}
             <Dropdown overlay={navMenu}>
               <p
                 style={{ display: "inline-block" }}
-                // className="ant-dropdown-link"
-                className="em4-light"
+                className="folder-header-nav"
                 onClick={(e) => e.preventDefault()}
               >
                 . . .
@@ -72,9 +67,9 @@ class FolderHeaderNav extends Component {
           return (
             folder.id !== "" &&
             folder.id !== "home" && (
-              <span className="em4-light" key={folder.id}>
+              <span className="folder-header-nav" key={folder.id}>
                 {" / "}
-                <a className="em4-light" href={folder.id}>
+                <a className="folder-header-nav" href={folder.id}>
                   {folder.name}
                 </a>
               </span>

@@ -388,7 +388,7 @@ class ContactPage extends Component {
         <header className="page-header-container">
           <div className="page-header-main-items">
             <h1>Contacts</h1>
-            <span className="page-header-interactive-items">
+            <span className="header-interactive-items">
               <Input
                 style={{ width: 300 }}
                 id="searchTerm"

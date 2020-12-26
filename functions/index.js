@@ -18,7 +18,7 @@ app.use((req, res, next) => {
   );
   res.append("Vary", "Origin");
   //req.on('end',function(){next()});
-  next()
+  next();
 });
 app.use(cookies());
 
@@ -136,8 +136,16 @@ app.patch("/api/contacts/:contactId", FBAuth, updateOneContact);
 app.get("/api/calendar", FBAuth, getCalendarList);
 app.get("/api/calendar/:calendarId", FBAuth, getCalendar);
 app.post("/api/calendar/:calendarId/events", FBAuth, createCalendarEvent);
-app.delete("/api/calendar/:calendarId/events/:eventId", FBAuth, deleteCalendarEvent);
-app.patch("/api/calendar/:calendarId/events/:eventId", FBAuth, editCalendarEvent);
+app.delete(
+  "/api/calendar/:calendarId/events/:eventId",
+  FBAuth,
+  deleteCalendarEvent
+);
+app.patch(
+  "/api/calendar/:calendarId/events/:eventId",
+  FBAuth,
+  editCalendarEvent
+);
 app.get("/api/calendar/:calendarId/access", FBAuth, getCalendarAcl);
 app.post("/api/calendar", FBAuth, createCalendar);
 app.post("/api/calendar/:calendarId/access", FBAuth, addCalendarAcl);

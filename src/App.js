@@ -76,7 +76,7 @@ class App extends Component {
                   <Route exact path="/admins" component={AdminPage} />
                   <Route
                     exact
-                    path="/resources/:pageName"
+                    path="/resources/:folderId"
                     component={FolderPage}
                   />
                   <Route

@@ -56,7 +56,7 @@ class SearchPage extends Component {
         <header className="page-header-container">
           <div className="page-header-main-items">
             <h1>Search Resources</h1>
-            <span className="page-header-interactive-items">
+            <span className="header-interactive-items">
               <Input
                 className="resources-search no-padding"
                 onChange={this.handleChange}

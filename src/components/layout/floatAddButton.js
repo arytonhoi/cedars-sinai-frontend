@@ -24,7 +24,6 @@ class FloatAddButton extends Component {
     if (!isAdmin) return null;
 
     if (optionKeys.length === 1) {
-      // const optionFunction = options[optionKeys[0]];
       return (
         <Tooltip title={`Add ${optionKeys[0]}`}>
           <div className="floatAddButton" onClick={options[optionKeys[0]]}>
