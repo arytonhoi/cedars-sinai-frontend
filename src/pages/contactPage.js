@@ -40,7 +40,7 @@ import FloatAddButton from "../components/layout/floatAddButton";
 import "../css/page.css";
 
 // Ant design
-import { Button, Input, Layout, notification } from "antd";
+import { Input, Layout, notification } from "antd";
 import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 const { Content, Footer } = Layout;
 const defaultContactPic = `https://firebasestorage.googleapis.com/v0/b/fir-db-d2d47.appspot.com/o/

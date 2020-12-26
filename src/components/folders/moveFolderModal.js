@@ -27,10 +27,6 @@ class MoveFolderModal extends Component {
 
   render() {
     const { folder, moveFolderModalCurrentPath } = this.props.folders;
-    let s = "s";
-    if (this.props.selectedFolders.length === 1) {
-      s = "";
-    }
 
     return (
       <Modal
@@ -68,7 +64,7 @@ class MoveFolderModal extends Component {
             onClick={this.props.handleMoveSubfolders}
             disabled={moveFolderModalCurrentPath.movingFolderId === folder.id}
           >
-            Move
+            Move Here
           </Button>,
         ]}
       >

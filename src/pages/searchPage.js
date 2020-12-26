@@ -15,8 +15,7 @@ import SearchResult from "../components/folders/SearchResult.js";
 import "../css/page.css";
 
 // antd
-import { SearchOutlined } from "@ant-design/icons";
-import { Button, Empty, Input, Layout, Spin } from "antd";
+import { Empty, Input, Layout, Spin } from "antd";
 const { Content, Footer } = Layout;
 const { Search } = Input;
 

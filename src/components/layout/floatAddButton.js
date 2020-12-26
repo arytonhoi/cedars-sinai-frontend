@@ -11,9 +11,6 @@ import "./floatAddButton.css";
 
 class FloatAddButton extends Component {
   handleAction = (event) => {
-    console.log(event.key);
-    // console.log(this.props.options);
-    // console.log(this.props.options[event.key]);
     this.props.options[event.key]();
   };
 

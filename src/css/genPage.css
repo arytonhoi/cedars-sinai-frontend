@@ -1,9 +1,9 @@
-hr.folder-hr{
-  border: 1px solid #ABABAB;
+hr.folder-hr {
+  border: 1px solid #ababab;
   margin: 1em;
 }
 
-.resources-topbar{
+.resources-topbar {
   background: #fff;
   padding: 1em 1.71em;
   display: flex;
@@ -11,11 +11,11 @@ hr.folder-hr{
   justify-content: space-between;
   align-items: flex-end;
 }
-span.em4-light:last-of-type > a{
+span.em4-light:last-of-type > a {
   color: #595959 !important;
 }
 
-.resources-topbar-right{
+.resources-topbar-right {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
@@ -29,8 +29,7 @@ span.em4-light:last-of-type > a{
   }
 }
 
-
-.button-holder{
+.button-holder {
   width: 100%;
   display: flex;
   justify-content: flex-end;
@@ -38,14 +37,15 @@ span.em4-light:last-of-type > a{
   flex-wrap: wrap;
 }
 
-.button-holder > .ant-btn{
+.button-holder > .ant-btn {
   margin: 0.25em !important;
 }
 
-.folder-blank > .ant-btn, .folder-blank > .add-blank{
+.folder-blank > .ant-btn,
+.folder-blank > .add-blank {
   margin: 1em;
 }
-.folder-topbar{
+.folder-topbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -55,25 +55,25 @@ span.em4-light:last-of-type > a{
   margin-bottom: 1.71em;
 }
 
-.folder-post{
+.folder-post {
   position: relative;
   overflow-x: scroll;
 }
 
-.folder-blank{
-  display:flex;
+.folder-blank {
+  display: flex;
   padding: 5em 0;
   flex-direction: column;
   align-items: center;
 }
 
-.post-topbar{
+.post-topbar {
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
 
-.folder-holder{
+.folder-holder {
   display: flex;
   position: relative;
   flex-wrap: wrap;
@@ -81,7 +81,7 @@ span.em4-light:last-of-type > a{
   padding: 0 1.71em;
 }
 
-.post-editbar{
+.post-editbar {
   display: flex;
   width: 100%;
   align-items: center;
@@ -92,70 +92,69 @@ span.em4-light:last-of-type > a{
   margin-bottom: 1.71em;
 }
 
-.folder-editbar{
+.folder-editbar {
   display: flex;
   width: 100%;
   align-items: center;
   justify-content: flex-end;
 }
 
-.folder-post{
+.folder-post {
   padding: 0 1.71em;
 }
 
-.folder-loading{
+.folder-loading {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
 }
-.move-dialog > .ant-modal-content > .ant-modal-body{
+.move-dialog > .ant-modal-content > .ant-modal-body {
   padding: 0;
 }
-.move-modal-top>.anticon{
+.move-modal-top > .anticon {
   padding-right: 1em;
 }
 
-.navpath-list{
+.navpath-list {
   width: 100%;
   padding: 0.75em 1.5em;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  cursor:pointer;
+  cursor: pointer;
 }
 
-.navpath-list-enabled:hover{
+.navpath-list-enabled:hover {
   background: #1890ff;
   font-weight: bold;
   color: white;
 }
-.navpath-list-disabled{
+.navpath-list-disabled {
   background: #eee;
   color: #555;
   cursor: not-allowed;
 }
-.navpath-list-left{
+.navpath-list-left {
   display: flex;
   align-items: center;
 }
-.navpath-list-empty{
+.navpath-list-empty {
   width: 100%;
   text-align: center;
   padding: 2em;
 }
-.navpath-list-left > .anticon-folder > svg{
+.navpath-list-left > .anticon-folder > svg {
   width: 2.5em !important;
   height: 2.5em !important;
   padding-right: 0.75em;
 }
-.navpath-list-enabled > .navpath-list-left > .anticon-folder > svg{
+.navpath-list-enabled > .navpath-list-left > .anticon-folder > svg {
   color: #92ceff !important;
 }
-.navpath-list-disabled > .navpath-list-right > .anticon-right > svg{
-  display:none;
+.navpath-list-disabled > .navpath-list-right > .anticon-right > svg {
+  display: none;
 }
-.navpath-list-enabled > .navpath-list-right > .anticon-right > svg{
+.navpath-list-enabled > .navpath-list-right > .anticon-right > svg {
   color: #fff !important;
 }
-
