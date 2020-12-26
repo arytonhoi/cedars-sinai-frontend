@@ -32,11 +32,7 @@ import "../css/page.css";
 import "../components/folders/folder.css";
 
 // antd
-import {
-  DownOutlined,
-  LoadingOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { DownOutlined, LoadingOutlined } from "@ant-design/icons";
 import {
   Button,
   Dropdown,
@@ -48,6 +44,7 @@ import {
   Spin,
 } from "antd";
 const { Content, Footer } = Layout;
+const { Search } = Input;
 
 class FolderPage extends Component {
   constructor() {
@@ -185,10 +182,10 @@ class FolderPage extends Component {
     }
   };
 
-  searchFolder = () => {
+  searchFolder = (searchTerm) => {
     window.location.href = `${
       process.env.PUBLIC_URL
-    }/resources/search/${this.state.searchKey.trim()}`;
+    }/resources/search/${searchTerm.trim()}`;
   };
 
   // folder editing action functions
@@ -467,24 +464,28 @@ class FolderPage extends Component {
         />
         <header className="page-header-container">
           <div className="page-header-main-items">
-            <span />
-            <span className="header-interactive-items">
-              <Input
-                onKeyUp={this.searchFolderCallback}
-                onSubmit={this.searchFolder}
-                disabled={this.state.isEditingPost}
-                className="resources-search no-padding"
-                suffix={<SearchOutlined />}
-                placeholder="Search resources by name"
-              />
-              <Button
-                type="primary"
-                disabled={this.state.isEditingPost}
-                onClick={this.searchFolder}
-              >
-                Search
-              </Button>
-            </span>
+            {/* <Input
+              onKeyUp={this.searchFolderCallback}
+              onSubmit={this.searchFolder}
+              disabled={this.state.isEditingPost}
+              className="resources-search no-padding"
+              suffix={<SearchOutlined />}
+              placeholder="Search resources by name"
+            /> */}
+            <Search
+              size="large"
+              className="folder-search"
+              placeholder="Search in Resources"
+              // prefix={<SearchOutlined />}
+              onSearch={(searchTerm) => this.searchFolder(searchTerm)}
+            />
+            {/* <Button
+              type="primary"
+              disabled={this.state.isEditingPost}
+              onClick={this.searchFolder}
+            >
+              Search
+            </Button> */}
           </div>
         </header>
         <Layout className="vertical-fill-layout">

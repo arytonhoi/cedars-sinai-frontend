@@ -18,6 +18,7 @@ import "../css/page.css";
 import { SearchOutlined } from "@ant-design/icons";
 import { Button, Empty, Input, Layout, Spin } from "antd";
 const { Content, Footer } = Layout;
+const { Search } = Input;
 
 class SearchPage extends Component {
   constructor() {
@@ -28,7 +29,9 @@ class SearchPage extends Component {
   }
 
   componentDidMount = () => {
-    this.props.searchFolder(this.props.match.params.searchTerm);
+    let searchTerm = this.props.match.params.searchTerm;
+    this.props.searchFolder(searchTerm);
+    this.setState({ searchTerm: searchTerm });
   };
 
   handleChange = (event) => {
@@ -38,41 +41,27 @@ class SearchPage extends Component {
     });
   };
 
-  searchFolder = () => {
-    const searchTerm = this.state.searchTerm.trim();
-    // this.props.searchFolder(searchTerm);
-    window.location.href = `${process.env.PUBLIC_URL}/resources/search/${searchTerm}`;
+  searchFolder = (searchTerm) => {
+    this.props.searchFolder(searchTerm);
   };
 
   render() {
-    // const { isAdmin } = this.props.user;
-    //
     const { folderSearchResults } = this.props.folders;
-    const searchTerm = this.props.match.params.searchTerm;
+    const searchTerm = this.state.searchTerm;
     const { loading } = this.props.ui;
 
     return (
       <div className="page-container">
         <header className="page-header-container">
           <div className="page-header-main-items">
-            <h1>Search Resources</h1>
-            <span className="header-interactive-items">
-              <Input
-                className="resources-search no-padding"
-                onChange={this.handleChange}
-                suffix={<SearchOutlined />}
-                placeholder="Search resources by name"
-              />
-              <Button
-                type="primary"
-                disabled={
-                  this.state.isEditingFolders || this.state.isEditingPost
-                }
-                onClick={this.searchFolder}
-              >
-                Search
-              </Button>
-            </span>
+            <Search
+              size="large"
+              className="folder-search"
+              placeholder="Search in Resources"
+              value={this.state.searchTerm}
+              onChange={this.handleChange}
+              onSearch={(searchTerm) => this.searchFolder(searchTerm)}
+            />
           </div>
         </header>
         <Layout className="vertical-fill-layout">
@@ -83,7 +72,7 @@ class SearchPage extends Component {
                 {!loading &&
                   (folderSearchResults.length > 0
                     ? `Search results for "${searchTerm}"`
-                    : `Nothing matched ${searchTerm}`)}
+                    : `Nothing matched "${searchTerm}"`)}
               </div>
             </div>
             <div>
