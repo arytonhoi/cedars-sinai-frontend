@@ -160,7 +160,6 @@ class AnnouncementPage extends Component {
     this.setState({
       [event.target.name]: event.target.value,
     });
-    console.log(this.state);
   };
 
   handleFilterChange = (event) => {
@@ -183,15 +182,13 @@ class AnnouncementPage extends Component {
 
   // announcement editor functions
   handleEditThisAnnouncement = (announcement = null) => {
-    this.setState({
-      showAnnouncementEditorModal: true,
-    });
     if (announcement === null) {
       this.setState({
         announcementId: "",
         announcementTitle: "",
         announcementAuthor: "",
         announcementContent: "",
+        showAnnouncementEditorModal: true,
       });
     } else {
       this.setState({
@@ -199,6 +196,7 @@ class AnnouncementPage extends Component {
         announcementTitle: announcement.title,
         announcementAuthor: announcement.author,
         announcementContent: announcement.content,
+        showAnnouncementEditorModal: true,
       });
     }
   };

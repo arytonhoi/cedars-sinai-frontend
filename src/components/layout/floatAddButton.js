@@ -23,7 +23,10 @@ class FloatAddButton extends Component {
     if (optionKeys.length === 1) {
       return (
         <Tooltip title={`Add ${optionKeys[0]}`}>
-          <div className="floatAddButton" onClick={options[optionKeys[0]]}>
+          <div
+            className="floatAddButton"
+            onClick={() => options[optionKeys[0]]()}
+          >
             <PlusOutlined style={{ fontSize: "24px", color: "white" }} />
           </div>
         </Tooltip>

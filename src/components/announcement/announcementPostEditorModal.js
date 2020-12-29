@@ -29,7 +29,6 @@ class AnnouncementPostEditorModal extends Component {
   }
 
   toggleDeleting = (event) => {
-    event.preventDefault();
     this.setState({
       isDeleting: !this.state.isDeleting,
     });
@@ -165,9 +164,9 @@ class AnnouncementPostEditorModal extends Component {
 AnnouncementPostEditorModal.propTypes = {
   // announcement info
   isEditingExistingAnnouncement: PropTypes.bool.isRequired,
-  announcementTitle: PropTypes.string.isRequired,
-  announcementAuthor: PropTypes.string.isRequired,
-  announcementContent: PropTypes.string.isRequired,
+  // announcementTitle: PropTypes.string.isRequired,
+  // announcementAuthor: PropTypes.string.isRequired,
+  // announcementContent: PropTypes.string.isRequired,
   // functions
   handlePostOrPatchAnnouncement: PropTypes.func.isRequired,
   handleCancelEditAnnouncement: PropTypes.func.isRequired,
