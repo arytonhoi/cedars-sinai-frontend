@@ -13,7 +13,7 @@ import {
 import DateHelper from "../../util/dateHelper";
 
 const loadingBannerImgUrl = `https://firebasestorage.googleapis.com/v0/b/fir-db-d2d47.appspot.com/o/
-cedars_sinai_pic_1.png?alt=media&token=8370797b-7650-49b7-8b3a-9997fab0c32c`;
+1608346433293_237616441801.png?alt=media&token=8370797b-7650-49b7-8b3a-9997fab0c32c`;
 
 const initialState = {
   // announcements

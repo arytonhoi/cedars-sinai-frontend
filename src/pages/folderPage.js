@@ -70,15 +70,23 @@ class FolderPage extends Component {
     };
   }
 
+  renderFolder = (currentFolderId) => {
+    if (!currentFolderId) currentFolderId = "home";
+    this.props.getFolder(currentFolderId, true);
+  };
+
   // component functions
   componentDidMount() {
     this.props.clearAllErrors();
-    let currentFolderId = this.props.match.params.folderId;
-    if (!currentFolderId) currentFolderId = "home";
-    this.props.getFolder(currentFolderId, true);
+    this.renderFolder(this.props.match.params.folderId);
   }
 
   componentDidUpdate(prevProps) {
+    // render page based on current folder id
+    if (prevProps.match.params.folderId !== this.props.match.params.folderId) {
+      this.renderFolder(this.props.match.params.folderId);
+    }
+
     // set initial numFolderColumns
     if (!this.state.numFolderColumns && this.folderListRef.current) {
       this.computeNumFolderColumns();
@@ -148,7 +156,7 @@ class FolderPage extends Component {
                   },
                 })
               : notification["success"]({
-                  message: "Folder deleted!",
+                  message: "Folders deleted!",
                 });
             break;
           default:
@@ -183,9 +191,7 @@ class FolderPage extends Component {
   };
 
   searchFolder = (searchTerm) => {
-    window.location.href = `${
-      process.env.PUBLIC_URL
-    }/resources/search/${searchTerm.trim()}`;
+    this.props.history.push(`/resources/search/${searchTerm.trim()}`);
   };
 
   // folder editing action functions
@@ -240,7 +246,6 @@ class FolderPage extends Component {
   };
 
   handleMoveSubfolders = () => {
-    console.log("hi");
     notification.open({
       key: PATCH_SUBFOLDER,
       duration: 0,
@@ -344,7 +349,7 @@ class FolderPage extends Component {
     event.preventDefault();
     // https://stackoverflow.com/questions/54786555/text-gets-highlighted-if-clicked-with-shift-ie-11
     if (!this.props.user.isAdmin) {
-      this.goToNewFolderPage(folder.id);
+      this.props.history.push(`/resources/${folder.id}`);
     } else {
       let selectedFolders = this.state.selectedFolders;
       let idx = selectedFolders.indexOf(folder);
@@ -379,12 +384,7 @@ class FolderPage extends Component {
 
   handleFolderDoubleClick = (event, folder) => {
     this.setState({ selectedFolders: [] });
-    this.goToNewFolderPage(folder.id);
-  };
-
-  goToNewFolderPage = (folderId) => {
-    this.setState({ requestedSubfolderSortKey: null });
-    window.location.href = `/resources/${folderId}`;
+    this.props.history.push(`/resources/${folder.id}`);
   };
 
   computeNumFolderColumns = () => {
@@ -403,9 +403,9 @@ class FolderPage extends Component {
         (folderListElement.clientWidth + columnGapWidth) /
           (minFolderWidth + columnGapWidth)
       );
-      console.log(
-        `Width: ${folderListElement.clientWidth}, numCols: ${numFolderColumns}`
-      );
+      // console.log(
+      //   `Width: ${folderListElement.clientWidth}, numCols: ${numFolderColumns}`
+      // );
       this.setState({
         numFolderColumns: numFolderColumns,
       });
@@ -414,10 +414,10 @@ class FolderPage extends Component {
 
   render() {
     const { isAdmin } = this.props.user;
-    const { loadingActions } = this.props.ui;
+    const { loadingActions, errors } = this.props.ui;
     const { folder } = this.props.folders;
 
-    let currentFolderId = this.props.match.params.currentFolderId;
+    let currentFolderId = this.props.match.params.folderId;
     if (!currentFolderId || currentFolderId === "") {
       currentFolderId = "home";
     }
@@ -479,20 +479,13 @@ class FolderPage extends Component {
               // prefix={<SearchOutlined />}
               onSearch={(searchTerm) => this.searchFolder(searchTerm)}
             />
-            {/* <Button
-              type="primary"
-              disabled={this.state.isEditingPost}
-              onClick={this.searchFolder}
-            >
-              Search
-            </Button> */}
           </div>
         </header>
         <Layout className="vertical-fill-layout">
           <Content className="content-card">
             <header className="content-card-header">
               <div className="header-row">
-                <FolderHeaderNav goToNewFolderPage={this.goToNewFolderPage} />
+                <FolderHeaderNav />
                 <span className="header-interactive-items">
                   {isAdmin && this.state.selectedFolders.length > 0 && (
                     <div className="folder-select-button-container">
@@ -559,17 +552,27 @@ class FolderPage extends Component {
                   className="vertical-content"
                   style={{ margin: "48px auto" }}
                 >
-                  {isAdmin ? (
-                    <div className="vertical-content">
-                      <h3 className="em2">There are no folders here.</h3>
-                      <h4 className="em3">Create using "Edit Folders"</h4>
-                    </div>
-                  ) : (
-                    <Empty
-                      image={Empty.PRESENTED_IMAGE_SIMPLE}
-                      description={<span>No folders yet</span>}
-                    />
-                  )}
+                  <Empty
+                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                    description={
+                      <span>
+                        {isAdmin
+                          ? 'Create folders using "Add Folder"'
+                          : "No folders yet"}
+                      </span>
+                    }
+                  />
+                </div>
+              )}
+              {!loadingActions.SET_FOLDER && errors.SET_FOLDER && (
+                <div
+                  className="vertical-content"
+                  style={{ margin: "48px auto" }}
+                >
+                  <Empty
+                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                    description={<span>{errors.SET_FOLDER.message}</span>}
+                  />
                 </div>
               )}
               {!loadingActions.SET_FOLDER && (

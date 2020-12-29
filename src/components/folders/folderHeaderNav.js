@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 // Redux stuff
 import { connect } from "react-redux";
@@ -34,10 +35,8 @@ class FolderHeaderNav extends Component {
       <Menu>
         {dropdownPathList.map((folder) => {
           return (
-            <Menu.Item>
-              <a rel="noopener noreferrer" href={folder.id}>
-                {folder.name}
-              </a>
+            <Menu.Item key={folder.id}>
+              <Link to={`/resources/${folder.id}`}>{folder.name}</Link>
             </Menu.Item>
           );
         })}
@@ -46,9 +45,9 @@ class FolderHeaderNav extends Component {
 
     return (
       <span style={{ height: "22px" }}>
-        <a className="folder-header-nav" href="/resources">
+        <Link className="folder-header-nav" to={`/resources`}>
           Resources
-        </a>
+        </Link>
         {dropdownPathList.length > 0 && (
           <span className="folder-header-nav" key={folder.id}>
             {" / "}
@@ -69,31 +68,17 @@ class FolderHeaderNav extends Component {
             folder.id !== "home" && (
               <span className="folder-header-nav" key={folder.id}>
                 {" / "}
-                <a className="folder-header-nav" href={folder.id}>
+                <Link
+                  className="folder-header-nav"
+                  key={folder.id}
+                  to={`/resources/${folder.id}`}
+                >
                   {folder.name}
-                </a>
+                </Link>
               </span>
             )
           );
         })}
-        {/* {folder &&
-            folder.path &&
-            folder.path.map((x, i) => {
-              if (x.name.length >= 30) {
-                x.name = x.name.slice(0, 30) + "...";
-              }
-              return (
-                x.id !== "" &&
-                x.id !== "home" && (
-                  <span className="em4-light" key={x.id}>
-                    {" / "}
-                    <a className="em4-light" href={x.id}>
-                      {x.name}
-                    </a>
-                  </span>
-                )
-              );
-            })} */}
       </span>
     );
   }

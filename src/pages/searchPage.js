@@ -33,18 +33,24 @@ class SearchPage extends Component {
     this.setState({ searchTerm: searchTerm });
   };
 
+  componentDidUpdate(prevProps) {
+    // render page based on current search term
+    if (
+      prevProps.match.params.searchTerm !== this.props.match.params.searchTerm
+    ) {
+      this.props.searchFolder(this.props.match.params.searchTerm);
+    }
+  }
+
+  searchFolder = (searchTerm) => {
+    this.props.history.push(`/resources/search/${searchTerm.trim()}`);
+    this.setState({ searchTerm: searchTerm });
+  };
+
   handleChange = (event) => {
-    console.log(event.target.value);
     this.setState({
       searchTerm: event.target.value,
     });
-  };
-
-  searchFolder = (searchTerm) => {
-    // this.props.searchFolder(searchTerm);
-    window.location.href = `${
-      process.env.PUBLIC_URL
-    }/resources/search/${searchTerm.trim()}`;
   };
 
   render() {

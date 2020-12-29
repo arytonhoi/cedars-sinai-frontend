@@ -10,6 +10,9 @@ import {
 
 // errors
 export const setError = (actionName, error) => (dispatch) => {
+  if (typeof error === "string") {
+    error = {message: error}
+  }
   error.actionName = actionName;
   dispatch({
     type: SET_ERROR,
