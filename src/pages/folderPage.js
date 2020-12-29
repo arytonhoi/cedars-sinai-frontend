@@ -181,15 +181,6 @@ class FolderPage extends Component {
   };
 
   // search functions
-  searchFolderCallback = (e) => {
-    if (e.keyCode === 13) {
-      e.preventDefault();
-      this.searchFolder();
-    } else {
-      this.setState({ showSearchResults: false, searchKey: e.target.value });
-    }
-  };
-
   searchFolder = (searchTerm) => {
     this.props.history.push(`/resources/search/${searchTerm.trim()}`);
   };
@@ -464,14 +455,6 @@ class FolderPage extends Component {
         />
         <header className="page-header-container">
           <div className="page-header-main-items">
-            {/* <Input
-              onKeyUp={this.searchFolderCallback}
-              onSubmit={this.searchFolder}
-              disabled={this.state.isEditingPost}
-              className="resources-search no-padding"
-              suffix={<SearchOutlined />}
-              placeholder="Search resources by name"
-            /> */}
             <Search
               size="large"
               className="folder-search"

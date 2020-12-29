@@ -19,7 +19,7 @@ import parse from "html-react-parser";
 
 // Ant Design
 import { EditOutlined, LoadingOutlined } from "@ant-design/icons";
-import { Button, Modal, notification, Spin } from "antd";
+import { Button, Empty, Modal, notification, Spin } from "antd";
 
 class FolderPostCard extends Component {
   constructor() {
@@ -186,16 +186,13 @@ class FolderPostCard extends Component {
                 config={ckConfig}
               />
             ) : folder.content === "" ? (
-              <div className="folder-blank noselect">
-                <h3 className="em2">There is no post for this folder.</h3>
-                <h4 className="em3">Create using "Edit Post"</h4>
-                {/* <Button
-                  type="primary"
-                  disabled={this.props.isEditingFolders}
-                  onClick={this.props.toggleEditingPost}
-                >
-                  Begin Post
-                </Button> */}
+              <div className="vertical-content" style={{ margin: "48px auto" }}>
+                <Empty
+                  image={Empty.PRESENTED_IMAGE_SIMPLE}
+                  description={
+                    <span>Add information using the Pencil icon</span>
+                  }
+                />
               </div>
             ) : (
               <div>{parse(folder.content)}</div>
