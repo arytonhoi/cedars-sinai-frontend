@@ -23,10 +23,10 @@ class Folder extends Component {
           this.props.handleFolderDoubleClick(event, folder);
         }}
       >
-        <div className="folder-link">
-          <span className="folder-logo-icon">
-            <FolderFilled />
-          </span>
+        <div className="folder">
+          {/* <span className="folder-logo-icon"> */}
+          <FolderFilled />
+          {/* </span> */}
           <span className="folder-label">{folder.title}</span>
         </div>
       </div>

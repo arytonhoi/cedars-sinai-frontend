@@ -58,7 +58,7 @@
   flex-direction: column;
   justify-content: flex-start;
   margin: 24px 0 0 0;
-  border-radius: 10px;
+  border-radius: 5px;
   background-color: white;
   flex: 1 0 auto; /*for IE11*/
   /* overflow: hidden; */
@@ -138,8 +138,10 @@
 /* CONTENT LAYOUTS AND STYLES */
 /* ============================================================================================== */
 .content-card-header {
-  padding: 24px 24px 0 24px;
-  border-bottom: 2px solid #f0f0f0;
+  margin: 0 24px;
+  padding-top: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .content-card-header h1 {
@@ -156,7 +158,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
 }
 
 .padded-content-card-content {

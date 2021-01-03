@@ -20,13 +20,21 @@
   text-decoration: none;
   font-size: 17px;
   font-weight: 400;
-  color: #414141;
+  /* color: #414141; */
+}
+
+.collapsed-folder-header-nav {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.collapsed-folder-header-nav + .anticon.anticon-down {
+  display: none;
 }
 
 .folder-select-button-container {
   display: inline-block;
   padding-right: 8px;
-  border-right: 1px solid #E5E5E5;
+  border-right: 1px solid #e5e5e5;
 }
 
 .folder-search.ant-input-group-wrapper {
@@ -83,18 +91,12 @@
 }
 
 .folder-normal {
-  color: black;
-  border: 1px solid #c4c4c4;
+  /* color: black; */
+  border: 1px solid #dadce0;
 }
 
 .folder-normal:hover {
   background: #f3f3f3;
-}
-
-.folder-label {
-  max-height: 1.5em;
-  overflow: hidden;
-  word-wrap: anywhere;
 }
 
 .folder-selected {
@@ -110,15 +112,34 @@
   box-shadow: inset 0px 0px 100px 100px rgba(248, 248, 248, 0.5);
 }
 
-.folder-logo-icon {
+/* ============================================================================================== */
+/* FOLDER STYLES */
+/* ============================================================================================== */
+.folder {
   line-height: 1;
-  color: #92ceff !important;
+  display: flex;
+  align-items: center;
 }
 
-.folder-logo-icon > .anticon-folder > svg {
-  width: 2.5em !important;
-  height: 2.5em !important;
-  padding-right: 0.5em;
+.folder-label {
+  font-size: 13px;
+  font-weight: 500;
+  /* color: #5f6368; */
+  width: 100%;
+  /* overflow: hidden; */
+  white-space: nowrap;
+  color: rgba(0,0,0,.72);
+  text-overflow: ellipsis;
+}
+
+.folder .anticon-folder {
+  color: #92ceff;
+  margin-right: 12px;
+}
+
+.folder .anticon-folder svg {
+  width: 24px;
+  height: 24px;
 }
 
 .folder-normal:hover,

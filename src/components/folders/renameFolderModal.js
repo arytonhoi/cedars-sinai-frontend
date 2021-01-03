@@ -91,6 +91,7 @@ class RenameFolderModal extends Component {
               name="folderTitle"
               type="text"
               placeholder="ex: Equipment"
+              autocomplete="off"
             />
           </Form.Item>
         </Form>

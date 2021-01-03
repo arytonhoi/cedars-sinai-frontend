@@ -9,7 +9,7 @@ import { connect } from "react-redux";
 import "./folder.css";
 
 // antd
-import { Menu, Dropdown } from "antd";
+import { Breadcrumb, Menu } from "antd";
 
 class FolderHeaderNav extends Component {
   render() {
@@ -44,30 +44,25 @@ class FolderHeaderNav extends Component {
     );
 
     return (
-      <span style={{ height: "22px" }}>
-        <Link className="folder-header-nav" to={`/resources`}>
-          Resources
-        </Link>
+      <Breadcrumb>
+        <Breadcrumb.Item>
+          <Link className="folder-header-nav" to={`/resources`}>
+            Resources
+          </Link>
+        </Breadcrumb.Item>
         {dropdownPathList.length > 0 && (
-          <span className="folder-header-nav" key={folder.id}>
-            {" / "}
-            <Dropdown overlay={navMenu}>
-              <p
-                style={{ display: "inline-block" }}
-                className="folder-header-nav"
-                onClick={(e) => e.preventDefault()}
-              >
-                . . .
-              </p>
-            </Dropdown>
-          </span>
+          <Breadcrumb.Item
+            className="folder-header-nav collapsed-folder-header-nav"
+            overlay={navMenu}
+          >
+            . . .
+          </Breadcrumb.Item>
         )}
         {renderedPathList.map((folder, i) => {
           return (
             folder.id !== "" &&
             folder.id !== "home" && (
-              <span className="folder-header-nav" key={folder.id}>
-                {" / "}
+              <Breadcrumb.Item>
                 <Link
                   className="folder-header-nav"
                   key={folder.id}
@@ -75,11 +70,11 @@ class FolderHeaderNav extends Component {
                 >
                   {folder.name}
                 </Link>
-              </span>
+              </Breadcrumb.Item>
             )
           );
         })}
-      </span>
+      </Breadcrumb>
     );
   }
 }
