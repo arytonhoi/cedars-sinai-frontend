@@ -17,8 +17,10 @@ class Folder extends Component {
           (this.props.isSelected ? "folder-selected" : "folder-normal")
         }
         onClick={(event) => {
+          event.preventDefault();
           this.props.handleFolderClick(event, folder);
         }}
+        onMouseDown={(event) => event.preventDefault()}
         onDoubleClick={(event) => {
           this.props.handleFolderDoubleClick(event, folder);
         }}
