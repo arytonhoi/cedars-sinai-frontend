@@ -41,21 +41,8 @@ import "../components/announcement/announcement.css";
 
 // Ant design
 // antd
-import {
-  Button,
-  Dropdown,
-  Input,
-  Layout,
-  Menu,
-  notification,
-  Result,
-  Spin,
-} from "antd";
-import {
-  DownOutlined,
-  LoadingOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { Button, Dropdown, Input, Layout, Menu, notification, Result, Spin } from "antd";
+import { DownOutlined, LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 const { Content, Footer } = Layout;
 
 class AnnouncementPage extends Component {
@@ -95,10 +82,7 @@ class AnnouncementPage extends Component {
     let previousLoadingActionNames = Object.keys(previousLoadingActions);
 
     previousLoadingActionNames.forEach((actionName) => {
-      if (
-        !currentloadingActions[actionName] &&
-        previousLoadingActions[actionName]
-      ) {
+      if (!currentloadingActions[actionName] && previousLoadingActions[actionName]) {
         // if preivousLoadingAction is no longer loading
         switch (actionName) {
           case POST_ANNOUNCEMENT:
@@ -318,9 +302,7 @@ class AnnouncementPage extends Component {
             <img alt="bg" src={bannerImgs.announcements} />
             <div className="img-banner-mask"></div>
             <h1>{isAdmin ? "Welcome Admin" : "Welcome"}</h1>
-            {isAdmin && (
-              <Button onClick={this.handleEditBannerImg}>Change picture</Button>
-            )}
+            {isAdmin && <Button onClick={this.handleEditBannerImg}>Change picture</Button>}
           </Content>
           <Content className="content-card">
             <div className="content-card-header">

@@ -4,13 +4,9 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { searchFolder } from "../redux/actions/folderActions";
-import { SET_FOLDER_SEARCH_RESULTS } from "../redux/types";
 
 // components
 import SearchResult from "../components/folders/SearchResult.js";
-
-// images
-// import CIcon from "../images/icon.png";
 
 // styles
 import "../css/page.css";

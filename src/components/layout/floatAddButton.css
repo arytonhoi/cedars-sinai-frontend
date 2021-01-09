@@ -1,4 +1,4 @@
-.floatAddButton {
+.float-button {
   position: fixed;
   bottom: 48px;
   right: 48px;
@@ -11,4 +11,13 @@
   text-align: center;
   background-color: #1890ff;
   border-radius: 50%;
+}
+
+.single-option {
+  cursor: pointer;
+}
+
+.float-button-text {
+  font-size: 24px;
+  color: white !important;
 }

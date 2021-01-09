@@ -18,16 +18,17 @@ class FloatAddButton extends Component {
     const { isAdmin } = this.props.user;
     const options = this.props.options;
     const optionKeys = Object.keys(options);
+
     if (!isAdmin) return null;
 
     if (optionKeys.length === 1) {
       return (
         <Tooltip title={`Add ${optionKeys[0]}`}>
           <div
-            className="floatAddButton"
+            className="float-button single-option"
             onClick={() => options[optionKeys[0]]()}
           >
-            <PlusOutlined style={{ fontSize: "24px", color: "white" }} />
+            <PlusOutlined className="float-button-text" />
           </div>
         </Tooltip>
       );
@@ -41,7 +42,7 @@ class FloatAddButton extends Component {
       );
       return (
         <Dropdown overlay={optionsMenu} placement="topCenter">
-          <div className="floatAddButton">
+          <div className="float-button">
             <PlusOutlined style={{ fontSize: "24px", color: "white" }} />
           </div>
         </Dropdown>
