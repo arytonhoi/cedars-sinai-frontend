@@ -560,10 +560,7 @@ class FolderPage extends Component {
               )}
               {!loadingActions.SET_FOLDER && (
                 <div
-                  className={
-                    "wrapped-content folder-list " +
-                    `col-${this.state.numFolderColumns}`
-                  }
+                  className={"wrapped-content folder-list"}
                   ref={this.folderListRef}
                 >
                   {folder.subfolders.map((subfolder, i) => (
@@ -573,6 +570,7 @@ class FolderPage extends Component {
                       }
                       key={subfolder.id}
                       folder={subfolder}
+                      numFolderColumns={this.state.numFolderColumns}
                       handleFolderClick={this.handleFolderClick}
                       handleFolderDoubleClick={this.handleFolderDoubleClick}
                     />

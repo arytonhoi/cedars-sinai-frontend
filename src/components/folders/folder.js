@@ -16,6 +16,7 @@ class Folder extends Component {
           "folder-container clickable noselect " +
           (this.props.isSelected ? "folder-selected" : "folder-normal")
         }
+        style={{ width: `calc(${100 / this.props.numFolderColumns}% - 12px` }}
         onClick={(event) => {
           event.preventDefault();
           this.props.handleFolderClick(event, folder);
