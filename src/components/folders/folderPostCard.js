@@ -124,9 +124,9 @@ class FolderPostCard extends Component {
     return (
       <div className="padded-content-card-content">
         <Modal
-          className="center"
           title={"Cancel changes to your post?"}
           visible={this.state.showPostCancelConfirm}
+          centered={true}
           footer={[
             <Button
               key="cancel"

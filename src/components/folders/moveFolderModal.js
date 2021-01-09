@@ -30,7 +30,8 @@ class MoveFolderModal extends Component {
 
     return (
       <Modal
-        className="move-dialog center noselect"
+        className="move-dialog"
+        centered={true}
         title={
           moveFolderModalCurrentPath.destinationFolderId === "" ? (
             "Move to " + moveFolderModalCurrentPath.title

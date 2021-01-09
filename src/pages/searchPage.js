@@ -4,6 +4,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { searchFolder } from "../redux/actions/folderActions";
+import { SET_FOLDER_SEARCH_RESULTS } from "../redux/types";
 
 // components
 import SearchResult from "../components/folders/SearchResult.js";
@@ -35,9 +36,7 @@ class SearchPage extends Component {
 
   componentDidUpdate(prevProps) {
     // render page based on current search term
-    if (
-      prevProps.match.params.searchTerm !== this.props.match.params.searchTerm
-    ) {
+    if (prevProps.match.params.searchTerm !== this.props.match.params.searchTerm) {
       this.props.searchFolder(this.props.match.params.searchTerm);
     }
   }
@@ -56,7 +55,7 @@ class SearchPage extends Component {
   render() {
     const { folderSearchResults } = this.props.folders;
     const searchTerm = this.props.match.params.searchTerm;
-    const { loading } = this.props.ui;
+    const { loadingActions } = this.props.ui;
 
     return (
       <div className="page-container">
@@ -76,24 +75,22 @@ class SearchPage extends Component {
           <Content className="content-card">
             <div className="content-card-header">
               <div className="header-row">
-                {loading && "Searching..."}
-                {!loading &&
-                  (folderSearchResults.length > 0
-                    ? `Search results for "${searchTerm}"`
-                    : `Nothing matched "${searchTerm}"`)}
+                {loadingActions.SET_FOLDER_SEARCH_RESULTS
+                  ? "Searching..."
+                  : folderSearchResults.length > 0
+                  ? `Search results for "${searchTerm}"`
+                  : `Nothing matched "${searchTerm}"`}
               </div>
             </div>
             <div>
-              {loading && (
+              {loadingActions.SET_FOLDER_SEARCH_RESULTS && (
                 <div className="padded-content vertical-content">
                   <Spin style={{ marginTop: "48px" }} />
                 </div>
               )}
-              {!loading &&
+              {!loadingActions.SET_FOLDER_SEARCH_RESULTS &&
                 (folderSearchResults.length > 0 ? (
-                  folderSearchResults.map((x, i) => (
-                    <SearchResult key={i} data={x} />
-                  ))
+                  folderSearchResults.map((x, i) => <SearchResult key={i} data={x} />)
                 ) : (
                   <Empty
                     image={Empty.PRESENTED_IMAGE_SIMPLE}

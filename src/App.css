@@ -20,7 +20,10 @@ body {
 .ant-dropdown-trigger {
   margin-right: 0.5em;
 }
-/* UI */
+
+/* ============================================================================================== */
+/* KEEP */
+/* ============================================================================================== */
 .noselect {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -35,22 +38,24 @@ label,
   cursor: pointer;
 }
 
+/* ============================================================================================== */
+/* REPLACE */
+/* ============================================================================================== */
+/* Search */
 .em2 {
   font-weight: 700;
   font-size: 1.5em !important;
 }
-.em3 {
-  font-weight: 400;
-  font-size: 1em;
-  color: #7e7e7e !important;
-}
+
+/* Search */
 .em4-light {
   font-weight: 400;
   font-size: 1em;
   color: #8c8c8c !important;
 }
 
-/* Positioning */
+/* login
+calendar */
 .center {
   position: absolute !important;
   top: 50% !important;
@@ -58,12 +63,14 @@ label,
   transform: translate(-50%, -50%) !important;
 }
 
+/* login */
 .valign {
   position: absolute !important;
   top: 50% !important;
   transform: translateY(-50%) !important;
 }
 
+/* login */
 .halign {
   position: absolute !important;
   left: 50% !important;
