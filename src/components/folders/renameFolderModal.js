@@ -28,7 +28,7 @@ class RenameFolderModal extends Component {
 
   render() {
     let folder;
-    if (this.props.selectedFolders[0]) {
+    if (!this.props.isAddingFolder && this.props.selectedFolders[0]) {
       folder = this.props.selectedFolders[0];
     } else {
       folder = {

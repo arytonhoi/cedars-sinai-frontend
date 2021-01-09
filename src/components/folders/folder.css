@@ -60,6 +60,21 @@
   user-select: none;
 }
 
+.folder-delete-list {
+  list-style-type: none;
+  padding-inline-start: 0;
+  max-height: 50vh;
+  overflow: scroll;
+}
+
+/* .folder-delete-list-bottom-blur {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+  background-image: linear-gradient(rgba(255, 255, 255, 0), white);
+} */
+
 /* ============================================================================================== */
 /* ACTUAL FOLDER STYLES */
 /* ============================================================================================== */
@@ -69,26 +84,33 @@
   width: 100%;
 }
 
-.folder-normal {
-  color: black;
-  border: 1px solid #c4c4c4;
+.folder-normal,
+.folder-delete-item {
+  color: #474747;
+  border: 1px solid #DADCE1;
 }
 
 .folder-normal:hover {
   background: #f3f3f3;
 }
 
+.folder-delete-item {
+  cursor: default;
+}
+
 .folder-label {
   width: 100%;
+  font-size: 14px;
+  font-weight: 400;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .folder-selected {
-  background: #e9f0fd;
-  border: 1px solid #3068cb;
-  color: #3068cb;
+  background: #E9F6FE;
+  border: 1px solid #448EF7;
+  color: #448EF7;
   cursor: pointer;
 }
 
@@ -100,15 +122,10 @@
 
 .folder-logo-icon {
   color: #92ceff !important;
-  padding-right: 6px;
+  padding-right: 12px;
 }
 
 .folder-logo-icon .anticon svg {
-  width: 32px !important;
-  height: 32px !important;
-}
-
-.folder-normal:hover,
-.folder-label:hover {
-  color: black !important;
+  width: 28px !important;
+  height: 28px !important;
 }
