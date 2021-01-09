@@ -53,7 +53,7 @@ export const getAnnouncements = () => (dispatch) => {
       dispatch(stopLoadingAction(SET_ANNOUNCEMENTS));
     })
     .catch((err) => {
-      dispatch(setError(POST_ANNOUNCEMENT, err.response.data));
+      dispatch(setError(POST_ANNOUNCEMENT, err));
     });
 };
 
@@ -72,7 +72,7 @@ export const postAnnouncement = (newAnnouncement) => (dispatch) => {
       dispatch(stopLoadingAction(POST_ANNOUNCEMENT));
     })
     .catch((err) => {
-      dispatch(setError(POST_ANNOUNCEMENT, err.response.data));
+      dispatch(setError(POST_ANNOUNCEMENT, err));
     });
 };
 
@@ -95,7 +95,7 @@ export const patchAnnouncement = (
       dispatch(stopLoadingAction(PATCH_ANNOUNCEMENT));
     })
     .catch((err) => {
-      dispatch(setError(PATCH_ANNOUNCEMENT, err.response.data));
+      dispatch(setError(PATCH_ANNOUNCEMENT, err));
     });
 };
 
@@ -111,7 +111,7 @@ export const deleteAnnouncement = (id) => (dispatch) => {
       dispatch(stopLoadingAction(DELETE_ANNOUNCEMENT));
     })
     .catch((err) => {
-      dispatch(setError(DELETE_ANNOUNCEMENT, err.response.data));
+      dispatch(setError(DELETE_ANNOUNCEMENT, err));
     });
 };
 

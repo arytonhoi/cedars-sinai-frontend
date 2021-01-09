@@ -28,7 +28,7 @@ export const getCalendarEvents = (from) => (dispatch) => {
       });
     })
     .catch((err) => {
-      dispatch(setError(SET_EVENTS, err.response.data));
+      dispatch(setError(SET_EVENTS, err));
     });
 };
 
@@ -50,5 +50,5 @@ export const getWhois = () => (dispatch) => {
         type: STOP_LOADING_WHOIS,
       });
     })
-    .catch((err) => dispatch(setError(SET_EVENTS, err.response.data)));
+    .catch((err) => dispatch(setError(SET_EVENTS, err)));
 };

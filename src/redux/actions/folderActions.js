@@ -45,7 +45,7 @@ export const getFolder = (folderId, track) => (dispatch) => {
     .then(() => {
       dispatch(stopLoadingAction(SET_FOLDER));
     })
-    .catch((err) => dispatch(setError(SET_FOLDER, err.response.data)));
+    .catch((err) => dispatch(setError(SET_FOLDER, err)));
 };
 
 export const postFolder = (folderId, folderDetails) => (dispatch) => {
@@ -63,7 +63,7 @@ export const postFolder = (folderId, folderDetails) => (dispatch) => {
       dispatch(stopLoadingAction(POST_FOLDER));
     })
     .catch((err) => {
-      dispatch(setError(POST_FOLDER, err.response.data));
+      dispatch(setError(POST_FOLDER, err));
     });
 };
 
@@ -82,7 +82,7 @@ export const patchFolder = (folderId, updatedFolder) => (dispatch) => {
       dispatch(stopLoadingAction(PATCH_FOLDER));
     })
     .catch((err) => {
-      dispatch(setError(PATCH_FOLDER, err.response.data));
+      dispatch(setError(PATCH_FOLDER, err));
     });
 };
 
@@ -104,7 +104,7 @@ export const patchSubfolder = (folderId, updatedFolder) => (dispatch) => {
     })
     .catch((err) => {
       console.log(err);
-      // dispatch(setError(PATCH_SUBFOLDER, err.response.data));
+      // dispatch(setError(PATCH_SUBFOLDER, err));
     });
 };
 
@@ -114,7 +114,7 @@ export const patchSubfolder = (folderId, updatedFolder) => (dispatch) => {
 //       axios.patch(`/folders/${x.id}`, { index: x.index }).catch((err) => {
 //         dispatch({
 //           type: SET_ERROR,
-//           payload: err.response.data,
+//           payload: err,
 //         });
 //       });
 //     });
@@ -136,7 +136,7 @@ export const deleteFolder = (folderId) => (dispatch) => {
       dispatch(stopLoadingAction(DELETE_SUBFOLDER));
     })
     .catch((err) => {
-      dispatch(setError(DELETE_SUBFOLDER, err.response.data));
+      dispatch(setError(DELETE_SUBFOLDER, err));
     });
 };
 
@@ -152,7 +152,7 @@ export const getNavRoute = (folderId) => (dispatch) => {
           });
         })
         .catch((err) => {
-          dispatch(setError(SET_NAV_PATH, err.response.data));
+          dispatch(setError(SET_NAV_PATH, err));
         });
 };
 
@@ -171,6 +171,6 @@ export const searchFolder = (searchKey) => (dispatch) => {
       dispatch(stopLoadingAction(SET_FOLDER_SEARCH_RESULTS));
     })
     .catch((err) => {
-      dispatch(setError(SET_FOLDER_SEARCH_RESULTS, err.response.data));
+      dispatch(setError(SET_FOLDER_SEARCH_RESULTS, err));
     });
 };

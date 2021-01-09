@@ -4,12 +4,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import store from "../redux/store";
-import {
-  DELETE_SUBFOLDER,
-  PATCH_SUBFOLDER,
-  POST_FOLDER,
-  SORT_SUBFOLDER,
-} from "../redux/types";
+import { DELETE_SUBFOLDER, PATCH_SUBFOLDER, POST_FOLDER, SORT_SUBFOLDER } from "../redux/types";
 import {
   deleteFolder,
   patchSubfolder,
@@ -33,16 +28,7 @@ import "../components/folders/folder.css";
 
 // antd
 import { DownOutlined, LoadingOutlined } from "@ant-design/icons";
-import {
-  Button,
-  Dropdown,
-  Empty,
-  Input,
-  Layout,
-  Menu,
-  notification,
-  Spin,
-} from "antd";
+import { Button, Dropdown, Empty, Input, Layout, Menu, notification, Spin } from "antd";
 const { Content, Footer } = Layout;
 const { Search } = Input;
 
@@ -106,10 +92,7 @@ class FolderPage extends Component {
     let previousLoadingActions = prevProps.ui.loadingActions;
     let previousLoadingActionNames = Object.keys(previousLoadingActions);
     previousLoadingActionNames.forEach((actionName) => {
-      if (
-        !currentloadingActions[actionName] &&
-        previousLoadingActions[actionName]
-      ) {
+      if (!currentloadingActions[actionName] && previousLoadingActions[actionName]) {
         // if preivousLoadingAction is no longer loading
         switch (actionName) {
           case POST_FOLDER:
@@ -246,13 +229,10 @@ class FolderPage extends Component {
     let folders = this.state.selectedFolders;
     if (folders.length >= 0) {
       folders.map((x) => {
-        if (
-          this.props.folders.moveFolderModalCurrentPath.movingFolderId !== x.id
-        ) {
+        if (this.props.folders.moveFolderModalCurrentPath.movingFolderId !== x.id) {
           // this.toggleSelect(null, x);
           this.props.patchSubfolder(x.id, {
-            parent: this.props.folders.moveFolderModalCurrentPath
-              .movingFolderId,
+            parent: this.props.folders.moveFolderModalCurrentPath.movingFolderId,
           });
           store.dispatch({ type: DELETE_SUBFOLDER, payload: x.id });
         }
@@ -272,9 +252,7 @@ class FolderPage extends Component {
       message: "Deleting folder...",
       icon: <LoadingOutlined />,
     });
-    this.state.selectedFolders.map((folder) =>
-      this.props.deleteFolder(folder.id)
-    );
+    this.state.selectedFolders.map((folder) => this.props.deleteFolder(folder.id));
     this.setState({
       showDeleteFolderModal: false,
       selectedFolders: [],
@@ -307,8 +285,7 @@ class FolderPage extends Component {
   findFoldersInBetweenSelections = (selectedFolder) => {
     let subfolders = this.props.folders.folder.subfolders;
     let currentlySelectedFolders = this.state.selectedFolders;
-    let lastSelectedFolder =
-      currentlySelectedFolders[currentlySelectedFolders.length - 1];
+    let lastSelectedFolder = currentlySelectedFolders[currentlySelectedFolders.length - 1];
     let foldersInBetween = [];
 
     if (!lastSelectedFolder) {
@@ -318,19 +295,11 @@ class FolderPage extends Component {
         // Cannot read property 'id' of undefined
         (f) => f.id === lastSelectedFolder.id
       );
-      let selectedFolderIdx = subfolders.findIndex(
-        (f) => f.id === selectedFolder.id
-      );
+      let selectedFolderIdx = subfolders.findIndex((f) => f.id === selectedFolder.id);
 
       lastSelectedFolderIdx < selectedFolderIdx
-        ? (foldersInBetween = subfolders.slice(
-            lastSelectedFolderIdx,
-            selectedFolderIdx + 1
-          ))
-        : (foldersInBetween = subfolders.slice(
-            selectedFolderIdx,
-            lastSelectedFolderIdx
-          ));
+        ? (foldersInBetween = subfolders.slice(lastSelectedFolderIdx, selectedFolderIdx + 1))
+        : (foldersInBetween = subfolders.slice(selectedFolderIdx, lastSelectedFolderIdx));
     }
 
     return foldersInBetween;
@@ -348,16 +317,12 @@ class FolderPage extends Component {
       if (event.metaKey || event.ctrlKey) {
         // select or deselect multiple folders individually
         idx >= 0
-          ? (selectedFolders = selectedFolders
-              .slice(0, idx)
-              .concat(selectedFolders.slice(idx + 1)))
+          ? (selectedFolders = selectedFolders.slice(0, idx).concat(selectedFolders.slice(idx + 1)))
           : selectedFolders.push(folder);
         this.setState({ selectedFolders: selectedFolders });
       } else if (event.shiftKey) {
         // select multiple folders at once
-        let additionalSelectedFolders = this.findFoldersInBetweenSelections(
-          folder
-        );
+        let additionalSelectedFolders = this.findFoldersInBetweenSelections(folder);
         // filter out already selected folders
         additionalSelectedFolders = additionalSelectedFolders.filter(
           (f) => selectedFolders.indexOf(f) < 0
@@ -386,19 +351,17 @@ class FolderPage extends Component {
     // examples
     // width = 899, x = 4.297 => 4 columns
     // width = 1126, x = 5.3679 => 5 columns
+    let minNumFolderColumns = 1;
     let minFolderWidth = 250;
     let columnGapWidth = 12;
     const folderListElement = this.folderListRef.current;
     if (folderListElement) {
       let numFolderColumns = Math.floor(
-        (folderListElement.clientWidth + columnGapWidth) /
-          (minFolderWidth + columnGapWidth)
+        (folderListElement.clientWidth + columnGapWidth) / (minFolderWidth + columnGapWidth)
       );
-      // console.log(
-      //   `Width: ${folderListElement.clientWidth}, numCols: ${numFolderColumns}`
-      // );
+      // console.log(`Width: ${folderListElement.clientWidth}, numCols: ${numFolderColumns}`);
       this.setState({
-        numFolderColumns: numFolderColumns,
+        numFolderColumns: Math.max(minNumFolderColumns, numFolderColumns),
       });
     }
   };
@@ -475,25 +438,19 @@ class FolderPage extends Component {
                       <Button
                         disabled={this.state.selectedFolders.length === 0}
                         danger
-                        onClick={() =>
-                          this.toggleShowModal("showDeleteFolderModal")
-                        }
+                        onClick={() => this.toggleShowModal("showDeleteFolderModal")}
                       >
                         Delete
                       </Button>
                       <Button
                         disabled={this.state.selectedFolders.length === 0}
-                        onClick={() =>
-                          this.toggleShowModal("showMoveFolderModal")
-                        }
+                        onClick={() => this.toggleShowModal("showMoveFolderModal")}
                       >
                         Move
                       </Button>
                       <Button
                         disabled={this.state.selectedFolders.length !== 1}
-                        onClick={() =>
-                          this.toggleShowModal("showRenameFolderModal")
-                        }
+                        onClick={() => this.toggleShowModal("showRenameFolderModal")}
                       >
                         Rename
                       </Button>
@@ -515,9 +472,7 @@ class FolderPage extends Component {
                     <h2>
                       {`Sorted:  ${
                         this.state.requestedSubfolderSortKey
-                          ? subfolderSortOptions[
-                              this.state.requestedSubfolderSortKey
-                            ]
+                          ? subfolderSortOptions[this.state.requestedSubfolderSortKey]
                           : "loading..."
                       }`}
                       <DownOutlined style={{ marginLeft: "6px" }} />
@@ -531,27 +486,19 @@ class FolderPage extends Component {
                 </div>
               )}
               {!loadingActions.SET_FOLDER && folder.subfolders.length === 0 && (
-                <div
-                  className="vertical-content"
-                  style={{ margin: "48px auto" }}
-                >
+                <div className="vertical-content" style={{ margin: "48px auto" }}>
                   <Empty
                     image={Empty.PRESENTED_IMAGE_SIMPLE}
                     description={
                       <span>
-                        {isAdmin
-                          ? 'Create folders using "Add Folder"'
-                          : "No folders yet"}
+                        {isAdmin ? 'Create folders using "Add Folder"' : "No folders yet"}
                       </span>
                     }
                   />
                 </div>
               )}
               {!loadingActions.SET_FOLDER && errors.SET_FOLDER && (
-                <div
-                  className="vertical-content"
-                  style={{ margin: "48px auto" }}
-                >
+                <div className="vertical-content" style={{ margin: "48px auto" }}>
                   <Empty
                     image={Empty.PRESENTED_IMAGE_SIMPLE}
                     description={<span>{errors.SET_FOLDER.message}</span>}
@@ -559,15 +506,10 @@ class FolderPage extends Component {
                 </div>
               )}
               {!loadingActions.SET_FOLDER && (
-                <div
-                  className={"wrapped-content folder-list"}
-                  ref={this.folderListRef}
-                >
+                <div className={"wrapped-content folder-list"} ref={this.folderListRef}>
                   {folder.subfolders.map((subfolder, i) => (
                     <Folder
-                      isSelected={
-                        isAdmin && this.subfolderIsSelected(subfolder)
-                      }
+                      isSelected={isAdmin && this.subfolderIsSelected(subfolder)}
                       key={subfolder.id}
                       folder={subfolder}
                       numFolderColumns={this.state.numFolderColumns}

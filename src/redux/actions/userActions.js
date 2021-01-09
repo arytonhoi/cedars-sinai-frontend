@@ -28,7 +28,7 @@ export const loginUser = (userData, history) => (dispatch) => {
     .catch((err) => {
       dispatch({
         type: SET_ERROR,
-        payload: err.response.data,
+        payload: err,
       });
     });
 };
@@ -82,6 +82,6 @@ export const patchUserPassword = (reqBody) => (dispatch) => {
       dispatch(stopLoadingAction(actionName));
     })
     .catch((err) => {
-      dispatch(setError(actionName, err.response.data));
+      dispatch(setError(actionName, err));
     });
 };

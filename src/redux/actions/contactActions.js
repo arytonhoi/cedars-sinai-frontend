@@ -32,7 +32,7 @@ export const getDepartments = () => (dispatch) => {
       dispatch(stopLoadingAction(SET_DEPARTMENTS));
     })
     .catch((err) => {
-      dispatch(setError(SET_DEPARTMENTS, err.response.data));
+      dispatch(setError(SET_DEPARTMENTS, err));
     });
 };
 
@@ -51,7 +51,7 @@ export const postDepartment = (newDepartment) => (dispatch) => {
       dispatch(stopLoadingAction(POST_DEPARTMENT));
     })
     .catch((err) => {
-      dispatch(setError(POST_DEPARTMENT, err.response.data));
+      dispatch(setError(POST_DEPARTMENT, err));
     });
 };
 
@@ -72,7 +72,7 @@ export const patchDepartment = (updatedDepartmentId, updatedDepartment) => (
       dispatch(stopLoadingAction(PATCH_DEPARTMENT));
     })
     .catch((err) => {
-      dispatch(setError(PATCH_DEPARTMENT, err.response.data));
+      dispatch(setError(PATCH_DEPARTMENT, err));
     });
 };
 
@@ -90,7 +90,7 @@ export const deleteDepartment = (departmentId) => (dispatch) => {
       dispatch(stopLoadingAction(DELETE_DEPARTMENT));
     })
     .catch((err) => {
-      dispatch(setError(DELETE_DEPARTMENT, err.response.data));
+      dispatch(setError(DELETE_DEPARTMENT, err));
     });
 };
 
@@ -109,7 +109,7 @@ export const getContacts = () => (dispatch) => {
       dispatch(stopLoadingAction(SET_CONTACTS));
     })
     .catch((err) => {
-      dispatch(setError(SET_CONTACTS, err.response.data));
+      dispatch(setError(SET_CONTACTS, err));
     });
 };
 
@@ -127,7 +127,7 @@ export const postContact = (newContact) => (dispatch) => {
       dispatch(stopLoadingAction(POST_CONTACT));
     })
     .catch((err) => {
-      dispatch(setError(POST_CONTACT, err.response.data));
+      dispatch(setError(POST_CONTACT, err));
     });
 };
 
@@ -148,7 +148,7 @@ export const patchContact = (updatedContactId, updatedContact) => (
       dispatch(stopLoadingAction(PATCH_CONTACT));
     })
     .catch((err) => {
-      dispatch(setError(PATCH_CONTACT, err.response.data));
+      dispatch(setError(PATCH_CONTACT, err));
     });
 };
 
@@ -166,7 +166,7 @@ export const deleteContact = (contactId) => (dispatch) => {
       dispatch(stopLoadingAction(DELETE_CONTACT));
     })
     .catch((err) => {
-      dispatch(setError(DELETE_CONTACT, err.response.data));
+      dispatch(setError(DELETE_CONTACT, err));
     });
 };
 
