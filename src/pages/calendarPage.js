@@ -161,27 +161,6 @@ class calendarPage extends Component {
             </div>
           </Modal>
         )}
-        {/* <header className="page-header-container">
-          <div className="page-header-main-items">
-            <h1>Calendar</h1>
-            {isAdmin ? (
-              <Button
-                type="primary"
-                className="edit-button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.open(
-                    "https://calendar.google.com/calendar/u/0/r?cid=cedarsoreducation@gmail.com"
-                  );
-                }}
-              >
-                Edit Calendar
-              </Button>
-            ) : (
-              ""
-            )}
-          </div>
-        </header> */}
         <Layout className="vertical-fill-layout">
           <Content className="content-card calendar-container">
             <Calendar
