@@ -90,9 +90,7 @@ export const announcementReducer = (state = initialState, action) => {
       const deletedAnnouncementId = action.payload;
       return {
         ...state,
-        announcements: state.announcements.filter(
-          (a) => a.id !== deletedAnnouncementId
-        ),
+        announcements: state.announcements.filter((a) => a.id !== deletedAnnouncementId),
         filteredAnnouncements: state.filteredAnnouncements.filter(
           (a) => a.id !== deletedAnnouncementId
         ),
@@ -109,12 +107,8 @@ export const announcementReducer = (state = initialState, action) => {
           (a) =>
             now - a.createdAtTimestamp < oldestAnnouncementTimestamp &&
             (announcementSearchTerm.trim() === "" ||
-              a.title
-                .toLowerCase()
-                .includes(announcementSearchTerm.trim().toLowerCase()) ||
-              a.content
-                .toLowerCase()
-                .includes(announcementSearchTerm.trim().toLowerCase()))
+              a.title.toLowerCase().includes(announcementSearchTerm.trim().toLowerCase()) ||
+              a.content.toLowerCase().includes(announcementSearchTerm.trim().toLowerCase()))
         ),
       };
     default:

@@ -58,7 +58,7 @@ class AnnouncementPage extends Component {
       filteredAnnouncements: [],
       filter: {
         searchTerm: "",
-        oldestAnnouncementTimestamp: 7776000000,
+        oldestAnnouncementTimestamp: 31536000000,
       },
       // announcement editor modal
       showAnnouncementEditorModal: false,
@@ -156,6 +156,7 @@ class AnnouncementPage extends Component {
   };
 
   handleAgeFilterChange = (event) => {
+    // const filterKey = event.key;
     const updatedFilter = this.state.filter;
     updatedFilter.oldestAnnouncementTimestamp = event.key;
     this.setState({
@@ -263,13 +264,22 @@ class AnnouncementPage extends Component {
     const { errors, loadingActions } = this.props.ui;
     const { bannerImgs, filteredAnnouncements } = this.props.announcements;
 
-    // const announcementSortOptions = {
-    //   recently_added: "Recently Added",
-    //   last_24_hours: "Last 24 Hours",
-    //   last_week: "Last Week",
-    //   last_month: "Last Month",
-    //   everything: "Everything",
-    // };
+    const announcementAgeFilterOptions = {
+      86400000: "Last 24 Hours",
+      604800000: "Last Week",
+      2678400000: "Last Month",
+      31536000000: "Last Year",
+      Infinity: "Everything",
+    };
+
+    const announcementAgeFilterMenu = (
+      <Menu onClick={this.handleAgeFilterChange}>
+        {Object.keys(announcementAgeFilterOptions).map((option) => (
+          <Menu.Item key={option}>{announcementAgeFilterOptions[option]}</Menu.Item>
+        ))}
+      </Menu>
+    );
+
     const floatAddButtonOptions = {
       Announcement: this.handleEditThisAnnouncement,
     };
@@ -324,19 +334,12 @@ class AnnouncementPage extends Component {
                       />
                     }
                   />
-                  <Dropdown
-                    overlay={
-                      <Menu onClick={this.handleAgeFilterChange}>
-                        <Menu.Item key="259200000">Recently Added</Menu.Item>
-                        <Menu.Item key="86400000">Last 24 Hours</Menu.Item>
-                        <Menu.Item key="604800000">Last Week</Menu.Item>
-                        <Menu.Item key="2678400000">Last Month</Menu.Item>
-                        <Menu.Item key="Infinity">Everything</Menu.Item>
-                      </Menu>
-                    }
-                  >
+                  <Dropdown overlay={announcementAgeFilterMenu}>
                     <Button>
-                      Filter by date <DownOutlined />
+                      {`Show:  ${
+                        announcementAgeFilterOptions[this.state.filter.oldestAnnouncementTimestamp]
+                      }`}{" "}
+                      <DownOutlined />
                     </Button>
                   </Dropdown>
                 </span>
