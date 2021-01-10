@@ -10,11 +10,7 @@ import "../../css/page.css";
 import "../../css/genPage.css";
 
 // Ant Design
-import {
-  ArrowLeftOutlined,
-  FolderFilled,
-  RightOutlined,
-} from "@ant-design/icons";
+import { ArrowLeftOutlined, FolderFilled, RightOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
 
 class MoveFolderModal extends Component {
@@ -39,9 +35,7 @@ class MoveFolderModal extends Component {
             <div className="move-modal-top">
               <ArrowLeftOutlined
                 onClick={() =>
-                  this.props.getNavRoute(
-                    moveFolderModalCurrentPath.destinationFolderId
-                  )
+                  this.props.getNavRoute(moveFolderModalCurrentPath.destinationFolderId)
                 }
               />
               <span>{"Move to " + moveFolderModalCurrentPath.title}</span>
@@ -49,6 +43,7 @@ class MoveFolderModal extends Component {
           )
         }
         visible={this.props.visible}
+        closable={false}
         footer={[
           <Button
             key="1"
@@ -75,8 +70,7 @@ class MoveFolderModal extends Component {
           </div>
         ) : (
           moveFolderModalCurrentPath.destinationFolderChildren.map((x, i) =>
-            this.props.selectedFolders.findIndex((p) => p.id === x.id) ===
-            -1 ? (
+            this.props.selectedFolders.findIndex((p) => p.id === x.id) === -1 ? (
               <div
                 className="navpath-list navpath-list-enabled"
                 key={x.id}

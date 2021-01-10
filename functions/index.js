@@ -77,7 +77,7 @@ const { getDBContents, patchDBContents } = require("./handlers/backup");
 // Create and Deploy Your First Cloud Functions
 // https://firebase.google.com/docs/functions/write-firebase-functions
 
-exports.devApp = functions.https.onRequest(app);
+exports.app = functions.https.onRequest(app);
 
 // NEW ROUTES
 

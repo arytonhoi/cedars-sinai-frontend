@@ -49,11 +49,7 @@ class ContactEditorModal extends Component {
     return (
       <Modal
         className="modal"
-        title={
-          this.props.isEditingExistingContact
-            ? "Edit contact"
-            : "Add new contact"
-        }
+        title={this.props.isEditingExistingContact ? "Edit contact" : "Add new contact"}
         visible={this.props.visible}
         centered={true}
         closable={false}
@@ -81,12 +77,7 @@ class ContactEditorModal extends Component {
               ]
             : [
                 this.props.isEditingExistingContact ? (
-                  <Button
-                    danger
-                    type="primary"
-                    key="delete"
-                    onClick={this.toggleDeleting}
-                  >
+                  <Button danger type="primary" key="delete" onClick={this.toggleDeleting}>
                     Delete
                   </Button>
                 ) : null,
@@ -100,12 +91,7 @@ class ContactEditorModal extends Component {
                 >
                   Cancel
                 </Button>,
-                <Button
-                  key="submit"
-                  type="primary"
-                  form="contactEditorForm"
-                  htmlType="submit"
-                >
+                <Button key="submit" type="primary" form="contactEditorForm" htmlType="submit">
                   {this.props.isEditingExistingContact ? "Save changes" : "Add"}
                 </Button>,
               ]
@@ -135,24 +121,13 @@ class ContactEditorModal extends Component {
           >
             <div className="upload-centered">
               <Avatar size="large" src={this.props.contactImgUrl} />
-              <Upload
-                name="logo"
-                action={this.props.handleImageChange}
-                showUploadList={false}
-              >
+              <Upload name="logo" action={this.props.handleImageChange} showUploadList={false}>
                 <Button icon={<EditOutlined />}>Edit photo</Button>
               </Upload>
             </div>
           </Form.Item>
-          <Form.Item
-            name="contactDepartmentId"
-            label="Department"
-            rules={[{ required: true }]}
-          >
-            <Select
-              name="contactDepartmentId"
-              placeholder="Select a department"
-            >
+          <Form.Item name="contactDepartmentId" label="Department" rules={[{ required: true }]}>
+            <Select name="contactDepartmentId" placeholder="Select a department">
               {this.props.departments.map((d) => (
                 <Option key={d.id} value={d.id}>
                   {d.name}
@@ -178,11 +153,7 @@ class ContactEditorModal extends Component {
             ]}
             label="Phone Number"
           >
-            <Input
-              name="contactPhone"
-              type="phone"
-              placeholder="ex: (123) 456-7890"
-            />
+            <Input name="contactPhone" type="phone" placeholder="ex: (123) 456-7890" />
           </Form.Item>
           <Form.Item
             name="contactEmail"
@@ -192,11 +163,7 @@ class ContactEditorModal extends Component {
             ]}
             label="E-mail"
           >
-            <Input
-              name="contactEmail"
-              type="email"
-              placeholder="ex: janedoe@email.com"
-            />
+            <Input name="contactEmail" type="email" placeholder="ex: janedoe@email.com" />
           </Form.Item>
         </Form>
       </Modal>

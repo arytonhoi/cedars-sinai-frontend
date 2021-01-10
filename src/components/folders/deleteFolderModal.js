@@ -26,6 +26,7 @@ class DeleteFolderModal extends Component {
         className="modal"
         title="Permanently delete these folders?"
         visible={this.props.visible}
+        closable={false}
         footer={[
           <Button key="cancel" onClick={() => this.props.toggleShowModal("showDeleteFolderModal")}>
             Cancel
