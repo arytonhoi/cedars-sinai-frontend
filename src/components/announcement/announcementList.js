@@ -66,9 +66,7 @@ class AnnouncementList extends Component {
                   {isAdmin && (
                     <Button
                       icon={<EditOutlined />}
-                      onClick={() =>
-                        this.props.handleEditThisAnnouncement(announcement)
-                      }
+                      onClick={() => this.props.handleEditThisAnnouncement(announcement)}
                       type="text"
                     />
                   )}
@@ -84,10 +82,7 @@ class AnnouncementList extends Component {
                 />
                 <div
                   ref={(element) => {
-                    if (
-                      element &&
-                      element.clientHeight > maxAnnouncementPreviewHeight
-                    ) {
+                    if (element && element.clientHeight > maxAnnouncementPreviewHeight) {
                       element.className = element.className + " overflowed";
                     }
                   }}
@@ -95,18 +90,12 @@ class AnnouncementList extends Component {
                   dangerouslySetInnerHTML={{ __html: announcement.content }}
                 />
                 <span className="announcement-expand-toggle">
-                  <label
-                    htmlFor={announcement.id + "-expand-checkbox"}
-                    className="ant-btn"
-                  >
+                  <label htmlFor={announcement.id + "-expand-checkbox"} className="ant-btn">
                     Show more
                   </label>
                 </span>
                 <span className="announcement-collapse-toggle">
-                  <label
-                    htmlFor={announcement.id + "-expand-checkbox"}
-                    className="ant-btn"
-                  >
+                  <label htmlFor={announcement.id + "-expand-checkbox"} className="ant-btn">
                     Show less
                   </label>
                 </span>

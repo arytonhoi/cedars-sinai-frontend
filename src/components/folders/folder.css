@@ -87,7 +87,7 @@
 .folder-normal,
 .folder-delete-item {
   color: #474747;
-  border: 1px solid #DADCE1;
+  border: 1px solid #dadce1;
 }
 
 .folder-normal:hover {
@@ -108,9 +108,9 @@
 }
 
 .folder-selected {
-  background: #E9F6FE;
-  border: 1px solid #448EF7;
-  color: #448EF7;
+  background: #e9f6fe;
+  border: 1px solid #448ef7;
+  color: #448ef7;
   cursor: pointer;
 }
 

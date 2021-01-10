@@ -40,14 +40,14 @@
 
 .announcement-header h1 {
   font-size: 14px;
-  font-weight: 500;
-  color: #595959;
+  font-weight: 400;
+  color: #474747;
 }
 
 .announcement-header h3 {
-  font-size: 12px;
-  font-weight: 300;
-  color: #595959;
+  font-size: 14px;
+  font-weight: 400;
+  color: #868686;
   display: inline-block;
   margin-right: 1em;
 }
@@ -119,8 +119,7 @@
   display: block;
 }
 
-.announcement-expand-toggle-checkbox:checked
-  ~ .announcement-content.overflowed {
+.announcement-expand-toggle-checkbox:checked ~ .announcement-content.overflowed {
   max-height: 1600px;
   overflow: scroll;
 }

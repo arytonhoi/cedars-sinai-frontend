@@ -20,12 +20,7 @@ class ContactList extends Component {
     const contactsListComponent = contacts.map((c) => {
       if (c.phone.match(/^\d{10}$/) !== null) {
         c.phone =
-          "(" +
-          c.phone.slice(0, 3) +
-          ") " +
-          c.phone.slice(3, 6) +
-          "-" +
-          c.phone.slice(6, 10);
+          "(" + c.phone.slice(0, 3) + ") " + c.phone.slice(3, 6) + "-" + c.phone.slice(6, 10);
       }
       return (
         <li key={c.id} className="contact-item">
@@ -46,9 +41,7 @@ class ContactList extends Component {
             {isAdmin && (
               <Button
                 icon={<EditOutlined />}
-                onClick={() =>
-                  this.props.handleAddorEditContact(department.id, c.id)
-                }
+                onClick={() => this.props.handleAddorEditContact(department.id, c.id)}
                 type="text"
               />
             )}
@@ -67,9 +60,7 @@ class ContactList extends Component {
           image={Empty.PRESENTED_IMAGE_SIMPLE}
           description={
             <span>
-              {isAdmin
-                ? `Add contacts using the bottom right "+" button`
-                : "No contacts yet"}
+              {isAdmin ? `Add contacts using the bottom right "+" button` : "No contacts yet"}
             </span>
           }
         />
