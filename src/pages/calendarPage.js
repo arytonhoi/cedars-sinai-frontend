@@ -4,8 +4,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { getCalendarEvents } from "../redux/actions/calendarActions";
 
+// components
+import FloatAddButton from "../components/layout/floatAddButton";
+
 // css styles
-//import "../css/layout.css";
 import "../css/input.css";
 import "../css/page.css";
 import "../css/calendar.css";
@@ -13,12 +15,9 @@ import Day from "../components/calendars/Day";
 
 // Ant design
 import { Modal, Calendar, Button, Layout } from "antd";
-import {
-  CalendarOutlined,
-  EnvironmentOutlined,
-  AlignLeftOutlined,
-} from "@ant-design/icons";
+import { CalendarOutlined, EnvironmentOutlined, AlignLeftOutlined } from "@ant-design/icons";
 const { Content, Footer } = Layout;
+
 class calendarPage extends Component {
   constructor() {
     super();
@@ -42,18 +41,22 @@ class calendarPage extends Component {
       errors: {},
     };
   }
+
   componentDidMount() {
     this.props.getCalendarEvents(
-      Date.parse(
-        new Date(this.state.selectedDate.year, this.state.selectedDate.month, 1)
-      )
+      Date.parse(new Date(this.state.selectedDate.year, this.state.selectedDate.month, 1))
     );
   }
+
+  handleEditThisCalendar() {
+    window.open("https://calendar.google.com/calendar/u/0/r?cid=cedarsoreducation@gmail.com");
+  }
+
   render() {
     //console.log(this.state)
     const { isAdmin } = this.props.user;
 
-    var getListData = (value) => {
+    let getListData = (value) => {
       return this.props.calendar.events.filter((x) => {
         return (
           x.startTime.date.getFullYear() === value.year() &&
@@ -63,20 +66,19 @@ class calendarPage extends Component {
       });
     };
 
-    var selectEvent = (etag) => {
+    let selectEvent = (etag) => {
       this.setState({
         showEventDetails: !this.state.showEventDetails,
         selectedEvent: this.props.calendar.events.find((x) => x.etag === etag),
       });
     };
-    var setDate = (e) => {
+
+    let setDate = (e) => {
       if (
         e.month() !== this.state.selectedDate.month ||
         e.year() !== this.state.selectedDate.year
       ) {
-        this.props.getCalendarEvents(
-          Date.parse(new Date(e.year(), e.month(), 0))
-        );
+        this.props.getCalendarEvents(Date.parse(new Date(e.year(), e.month(), 0)));
       }
       this.setState({
         selectedDate: {
@@ -87,7 +89,7 @@ class calendarPage extends Component {
       });
     };
 
-    var dateCellRender = (value) => {
+    let dateCellRender = (value) => {
       const eventList = getListData(value);
       return (
         <Day
@@ -109,11 +111,16 @@ class calendarPage extends Component {
         />
       );
     };
+
+    const floatAddButtonOptions = {
+      Calendar: this.handleEditThisCalendar,
+    };
+
     return (
       <div className="page-container">
+        {isAdmin && <FloatAddButton options={floatAddButtonOptions} isEditOptions={true} />}
         {typeof this.state.selectedEvent !== "undefined" && (
           <Modal
-            className="center noselect"
             visible={this.state.showEventDetails}
             title={
               typeof this.state.selectedEvent.summary === "undefined"
@@ -127,13 +134,8 @@ class calendarPage extends Component {
               <div className="event-modal-row" key="1">
                 <CalendarOutlined />
                 <span>
-                  {this.state.selectedEvent.startTime.toString(
-                    "d MMM YYYY H:mm t"
-                  )}{" "}
-                  to{" "}
-                  {this.state.selectedEvent.endTime.toString(
-                    "d MMM YYYY H:mm t"
-                  )}
+                  {this.state.selectedEvent.startTime.toString("d MMM YYYY H:mm t")} to{" "}
+                  {this.state.selectedEvent.endTime.toString("d MMM YYYY H:mm t")}
                 </span>
               </div>
               <div className="event-modal-row" key="2">
@@ -149,8 +151,7 @@ class calendarPage extends Component {
               <div className="event-modal-row" key="3">
                 <AlignLeftOutlined />
                 <span>
-                  {typeof this.state.selectedEvent.description ===
-                  "undefined" ? (
+                  {typeof this.state.selectedEvent.description === "undefined" ? (
                     <i>Description not provided</i>
                   ) : (
                     this.state.selectedEvent.description
@@ -160,7 +161,7 @@ class calendarPage extends Component {
             </div>
           </Modal>
         )}
-        <header className="page-header-container">
+        {/* <header className="page-header-container">
           <div className="page-header-main-items">
             <h1>Calendar</h1>
             {isAdmin ? (
@@ -180,17 +181,16 @@ class calendarPage extends Component {
               ""
             )}
           </div>
-        </header>
+        </header> */}
         <Layout className="vertical-fill-layout">
-          <Content className="content-card">
-            <div className="google-calendar">
-              <Calendar
-                dateFullCellRender={dateCellRender}
-                onChange={setDate}
-                onPanelChange={setDate}
-                onSelect={setDate}
-              />
-            </div>
+          <Content className="content-card calendar-container">
+            <Calendar
+              className="calendar"
+              dateFullCellRender={dateCellRender}
+              onChange={setDate}
+              onPanelChange={setDate}
+              onSelect={setDate}
+            />
           </Content>
           <Footer style={{ textAlign: "center" }}>DevelopForGood ©2020</Footer>
         </Layout>

@@ -12,10 +12,7 @@ app.use((req, res, next) => {
   res.append("Access-Control-Allow-Credentials", "true");
   res.append("Access-Control-Allow-Origin", req.headers.origin);
   res.append("Access-Control-Allow-Headers", "Content-Type");
-  res.append(
-    "Access-Control-Allow-Methods",
-    "POST, GET, OPTIONS, PATCH, DELETE"
-  );
+  res.append("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PATCH, DELETE");
   res.append("Vary", "Origin");
   //req.on('end',function(){next()});
   next();
@@ -24,19 +21,10 @@ app.use(cookies());
 
 const FBAuth = require("./util/fbAuth");
 const { admin, db } = require("./util/admin");
-const {
-  login,
-  logout,
-  getAuthenticatedUser,
-  updatePassword,
-} = require("./handlers/users");
+const { login, logout, getAuthenticatedUser, updatePassword } = require("./handlers/users");
 const FieldValue = admin.firestore.FieldValue;
 
-const {
-  getBannerImage,
-  patchBannerImage,
-  postImage,
-} = require("./handlers/images");
+const { getBannerImage, patchBannerImage, postImage } = require("./handlers/images");
 
 const {
   getAllFolders,
@@ -89,7 +77,7 @@ const { getDBContents, patchDBContents } = require("./handlers/backup");
 // Create and Deploy Your First Cloud Functions
 // https://firebase.google.com/docs/functions/write-firebase-functions
 
-exports.app = functions.https.onRequest(app);
+exports.devApp = functions.https.onRequest(app);
 
 // NEW ROUTES
 
@@ -136,16 +124,8 @@ app.patch("/api/contacts/:contactId", FBAuth, updateOneContact);
 app.get("/api/calendar", FBAuth, getCalendarList);
 app.get("/api/calendar/:calendarId", FBAuth, getCalendar);
 app.post("/api/calendar/:calendarId/events", FBAuth, createCalendarEvent);
-app.delete(
-  "/api/calendar/:calendarId/events/:eventId",
-  FBAuth,
-  deleteCalendarEvent
-);
-app.patch(
-  "/api/calendar/:calendarId/events/:eventId",
-  FBAuth,
-  editCalendarEvent
-);
+app.delete("/api/calendar/:calendarId/events/:eventId", FBAuth, deleteCalendarEvent);
+app.patch("/api/calendar/:calendarId/events/:eventId", FBAuth, editCalendarEvent);
 app.get("/api/calendar/:calendarId/access", FBAuth, getCalendarAcl);
 app.post("/api/calendar", FBAuth, createCalendar);
 app.post("/api/calendar/:calendarId/access", FBAuth, addCalendarAcl);

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 // AntDesign
 import { Dropdown, Menu, Tooltip } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 
 // Styles
 import "./floatAddButton.css";
@@ -17,18 +17,20 @@ class FloatAddButton extends Component {
   render() {
     const { isAdmin } = this.props.user;
     const options = this.props.options;
+    const isEditOptions = this.props.isEditOptions;
     const optionKeys = Object.keys(options);
 
     if (!isAdmin) return null;
 
     if (optionKeys.length === 1) {
       return (
-        <Tooltip title={`Add ${optionKeys[0]}`}>
-          <div
-            className="float-button single-option"
-            onClick={() => options[optionKeys[0]]()}
-          >
-            <PlusOutlined className="float-button-text" />
+        <Tooltip title={`${isEditOptions ? "Edit" : "Add"} ${optionKeys[0]}`}>
+          <div className="float-button single-option" onClick={() => options[optionKeys[0]]()}>
+            {isEditOptions ? (
+              <EditOutlined className="float-button-text" />
+            ) : (
+              <PlusOutlined className="float-button-text" />
+            )}
           </div>
         </Tooltip>
       );
