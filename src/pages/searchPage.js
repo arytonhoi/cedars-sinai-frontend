@@ -80,7 +80,7 @@ class SearchPage extends Component {
             </div>
             <div>
               {loadingActions.SET_FOLDER_SEARCH_RESULTS && (
-                <div className="padded-content vertical-content">
+                <div className="padded vertical-content">
                   <Spin style={{ marginTop: "48px" }} />
                 </div>
               )}

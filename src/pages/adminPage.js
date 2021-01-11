@@ -33,14 +33,14 @@ class AdminPage extends Component {
         <Layout className="vertical-fill-layout">
           {isAdmin ? (
             <div>
-              <Content className="content-card">
+              <Content className="content-card padded">
                 <div className="content-card-header">
                   <div className="header-row">
                     <h1>Change Passwords</h1>
                   </div>
                 </div>
-                <div className="padded-content">
-                  <div className="row">
+                <div>
+                  <div className="row padded-top">
                     <PasswordEditorForm targettedUser="admin" />
                     <PasswordEditorForm targettedUser="staff" />
                   </div>
@@ -52,7 +52,7 @@ class AdminPage extends Component {
                   />
                 </div>
               </Content>
-              <Content className="content-card">
+              <Content className="content-card padded">
                 <div className="content-card-header">
                   <div className="header-row">
                     <h1>Billing Information</h1>
@@ -69,9 +69,7 @@ class AdminPage extends Component {
             <Content className="content-card">
               <Empty
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description={
-                  <span>Staff accounts cannot view the Admin page.</span>
-                }
+                description={<span>Staff accounts cannot view the Admin page.</span>}
                 style={{ margin: "148px 0" }}
               />
             </Content>

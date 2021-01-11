@@ -1,13 +1,18 @@
 /* ============================================================================================== */
-/* GENERAL CONTACT STYLES*/
-/* ============================================================================================== */
-.contact-item:last-child {
-  margin-bottom: 12px;
-}
-
-/* ============================================================================================== */
 /* CONTACT LIST AND ITEM STYLES*/
 /* ============================================================================================== */
+.department-header {
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.department-name {
+  font-size: 17px;
+  font-weight: 400;
+  color: #414141;
+  margin: 0;
+}
+
 .contact-item {
   width: 100%;
 }
@@ -17,13 +22,16 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 2px solid #f0f0f0;
-  margin: 0 24px;
-  padding: 11px 0;
+  border-bottom: 1px solid #f0f0f0;
+  padding: 12px 0;
 }
 
 .contact-item:nth-child(even) {
   background: #fafafa;
+}
+
+.contact-item:last-child {
+  margin-bottom: 24px;
 }
 
 .contact-item a {

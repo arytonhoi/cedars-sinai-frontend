@@ -28,15 +28,13 @@ class DepartmentSection extends Component {
     } else {
       return (
         <li className="department-item">
-          <header className="content-card-header">
+          <header className="department-header">
             <div className="header-row">
-              <h1>{department.name}</h1>
+              <h2 className="department-name">{department.name}</h2>
               {isAdmin && (
                 <Button
                   icon={<EditOutlined />}
-                  onClick={() =>
-                    this.props.handleAddorEditDepartment(department.id)
-                  }
+                  onClick={() => this.props.handleAddorEditDepartment(department.id)}
                   type="text"
                 />
               )}

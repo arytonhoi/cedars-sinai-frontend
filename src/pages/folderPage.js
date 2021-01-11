@@ -428,7 +428,7 @@ class FolderPage extends Component {
           </div>
         </header>
         <Layout className="vertical-fill-layout">
-          <Content className="content-card">
+          <Content className="content-card padded">
             <header className="content-card-header">
               <div className="header-row">
                 <FolderHeaderNav />
@@ -464,7 +464,7 @@ class FolderPage extends Component {
                 </span>
               </div>
             </header>
-            <div className="padded-content-card-content">
+            <div className="content-card-content">
               <header className="header-row folder-section-header-row">
                 <h2>Folders</h2>
                 <span className="header-interactive-items">

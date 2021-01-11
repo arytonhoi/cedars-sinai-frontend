@@ -314,10 +314,10 @@ class AnnouncementPage extends Component {
             <h1>{isAdmin ? "Welcome Admin" : "Welcome"}</h1>
             {isAdmin && <Button onClick={this.handleEditBannerImg}>Change picture</Button>}
           </Content>
-          <Content className="content-card">
+          <Content className="content-card padded">
             <div className="content-card-header">
               <div className="header-row">
-                <h1>Recent Announcements</h1>
+                <h1>Announcements</h1>
                 <span className="header-interactive-items">
                   <Input
                     style={{ width: 400 }}
@@ -346,7 +346,7 @@ class AnnouncementPage extends Component {
               </div>
             </div>
             {loadingActions.SET_ANNOUNCEMENTS ? (
-              <div className="padded-content vertical-content">
+              <div className="padded vertical-content">
                 <Spin style={{ marginTop: "48px" }} />
               </div>
             ) : errors.SET_ANNOUNCEMENTS ? (

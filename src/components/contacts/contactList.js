@@ -60,7 +60,7 @@ class ContactList extends Component {
           image={Empty.PRESENTED_IMAGE_SIMPLE}
           description={
             <span>
-              {isAdmin ? `Add contacts using the bottom right "+" button` : "No contacts yet"}
+              {isAdmin ? `Add contacts using the floating "+" button` : "No contacts yet"}
             </span>
           }
         />

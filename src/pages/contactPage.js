@@ -83,10 +83,7 @@ class ContactPage extends Component {
     let previousLoadingActionNames = Object.keys(previousLoadingActions);
 
     previousLoadingActionNames.forEach((actionName) => {
-      if (
-        !currentloadingActions[actionName] &&
-        previousLoadingActions[actionName]
-      ) {
+      if (!currentloadingActions[actionName] && previousLoadingActions[actionName]) {
         // if preivousLoadingAction is no longer loading
         switch (actionName) {
           // departments
@@ -403,7 +400,7 @@ class ContactPage extends Component {
           </div>
         </header>
         <Layout className="vertical-fill-layout">
-          <Content className="content-card">
+          <Content className="content-card padded">
             <DepartmentEditorModal
               // flags
               visible={isAdmin && this.state.showDepartmentEditorModal}
@@ -412,9 +409,7 @@ class ContactPage extends Component {
               departmentName={this.state.departmentName}
               handlePostOrPatchDepartment={this.handlePostOrPatchDepartment}
               handleDeleteDepartment={this.handleDeleteDepartment}
-              handleCancelAddorEditDepartment={
-                this.handleCancelAddorEditDepartment
-              }
+              handleCancelAddorEditDepartment={this.handleCancelAddorEditDepartment}
             />
 
             <ContactEditorModal

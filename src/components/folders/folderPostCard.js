@@ -41,10 +41,7 @@ class FolderPostCard extends Component {
     let previousLoadingActionNames = Object.keys(previousLoadingActions);
 
     previousLoadingActionNames.forEach((actionName) => {
-      if (
-        !currentloadingActions[actionName] &&
-        previousLoadingActions[actionName]
-      ) {
+      if (!currentloadingActions[actionName] && previousLoadingActions[actionName]) {
         // if preivousLoadingAction is no longer loading
         switch (actionName) {
           // departments
@@ -122,16 +119,13 @@ class FolderPostCard extends Component {
 
     const folder = this.props.folder;
     return (
-      <div className="padded-content-card-content">
+      <div className="content-card-content">
         <Modal
           title={"Cancel changes to your post?"}
           visible={this.state.showPostCancelConfirm}
           centered={true}
           footer={[
-            <Button
-              key="cancel"
-              onClick={() => this.setState({ showPostCancelConfirm: false })}
-            >
+            <Button key="cancel" onClick={() => this.setState({ showPostCancelConfirm: false })}>
               No
             </Button>,
             <Button
@@ -180,18 +174,12 @@ class FolderPostCard extends Component {
         {!loadingActions.SET_FOLDER && (
           <div>
             {this.props.isEditingPost ? (
-              <CKEditor
-                data={folder.content}
-                onChange={this.updateEditor}
-                config={ckConfig}
-              />
+              <CKEditor data={folder.content} onChange={this.updateEditor} config={ckConfig} />
             ) : folder.content === "" ? (
               <div className="vertical-content" style={{ margin: "48px auto" }}>
                 <Empty
                   image={Empty.PRESENTED_IMAGE_SIMPLE}
-                  description={
-                    <span>Add information using the Pencil icon</span>
-                  }
+                  description={<span>Add information using the Pencil icon</span>}
                 />
               </div>
             ) : (
