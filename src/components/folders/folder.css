@@ -96,6 +96,8 @@
 
 .folder-delete-item {
   cursor: default;
+  margin-right: 0;
+  margin-bottom: 12px;
 }
 
 .folder-label {
