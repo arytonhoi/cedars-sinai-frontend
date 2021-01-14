@@ -13,8 +13,7 @@ class Folder extends Component {
     return (
       <div
         className={
-          "folder-container " +
-          (this.props.isSelected ? "folder-selected" : "folder-normal")
+          "folder-container " + (this.props.isSelected ? "folder-selected" : "folder-normal")
         }
         style={{ width: `calc(${100 / this.props.numFolderColumns}% - 12px` }}
         onClick={(event) => {

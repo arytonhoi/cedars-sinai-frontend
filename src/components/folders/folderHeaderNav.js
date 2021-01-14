@@ -9,15 +9,19 @@ import { connect } from "react-redux";
 import "./folder.css";
 
 // antd
-import { Menu, Dropdown } from "antd";
+import { Breadcrumb, Menu } from "antd";
 
 class FolderHeaderNav extends Component {
   render() {
-    const { folder } = this.props.folders;
+    let { folder } = this.props.folders;
+    let searchResultFolder = this.props.searchResultFolder;
+    if (searchResultFolder) {
+      folder = searchResultFolder;
+    }
 
-    let pathList = folder.path.map((folder, i) => {
-      if (folder.name.length >= 30) {
-        folder.name = folder.name.slice(0, 27) + "...";
+    let pathList = folder.path.map((folder) => {
+      if (folder.name.length >= 40) {
+        folder.name = folder.name.slice(0, 37) + "...";
       }
       return folder;
     });
@@ -31,7 +35,7 @@ class FolderHeaderNav extends Component {
       renderedPathList = pathList;
     }
 
-    const navMenu = (
+    const collapsedPathsMenu = (
       <Menu>
         {dropdownPathList.map((folder) => {
           return (
@@ -43,44 +47,46 @@ class FolderHeaderNav extends Component {
       </Menu>
     );
 
-    return (
-      <span style={{ height: "22px" }}>
-        <Link className="folder-header-nav" to={`/resources`}>
-          Resources
+    if (searchResultFolder) {
+      return (
+        <Link className="folder-header-nav search-result-link" to={`/resources/${folder.id}`}>
+          {`Resources` +
+            (dropdownPathList.length > 0 ? " / . . ." : "") +
+            `${renderedPathList.map((folder) => ` / ${folder.name}`).join("")}`}
         </Link>
-        {dropdownPathList.length > 0 && (
-          <span className="folder-header-nav" key={folder.id}>
-            {" / "}
-            <Dropdown overlay={navMenu}>
-              <p
-                style={{ display: "inline-block" }}
-                className="folder-header-nav"
-                onClick={(e) => e.preventDefault()}
-              >
-                . . .
-              </p>
-            </Dropdown>
-          </span>
-        )}
-        {renderedPathList.map((folder, i) => {
-          return (
-            folder.id !== "" &&
-            folder.id !== "home" && (
-              <span className="folder-header-nav" key={folder.id}>
-                {" / "}
-                <Link
-                  className="folder-header-nav"
-                  key={folder.id}
-                  to={`/resources/${folder.id}`}
-                >
-                  {folder.name}
-                </Link>
-              </span>
-            )
-          );
-        })}
-      </span>
-    );
+      );
+    } else {
+      return (
+        <Breadcrumb>
+          <Breadcrumb.Item>
+            <Link className="folder-header-nav" to={`/resources`}>
+              Resources
+            </Link>
+          </Breadcrumb.Item>
+          {dropdownPathList.length > 0 && (
+            <Breadcrumb.Item
+              className="collapsed-folder-header-nav-container"
+              overlay={collapsedPathsMenu}
+              dropdownProps={{ placement: "bottomLeft", arrow: "false" }}
+            >
+              <span className="folder-header-nav">. . .</span>
+            </Breadcrumb.Item>
+          )}
+          {renderedPathList.map((folder) => {
+            return (
+              folder.id !== "" &&
+              folder.id !== "home" && (
+                <Breadcrumb.Item key={folder.id}>
+                  <Link className="folder-header-nav" to={`/resources/${folder.id}`}>
+                    {folder.name}
+                  </Link>
+                </Breadcrumb.Item>
+              )
+            );
+          })}
+        </Breadcrumb>
+      );
+    }
   }
 }
 

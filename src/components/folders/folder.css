@@ -17,10 +17,13 @@
 /* ============================================================================================== */
 
 .folder-header-nav {
-  text-decoration: none;
   font-size: 17px;
   font-weight: 400;
   color: #414141;
+}
+
+.collapsed-folder-header-nav-container + .anticon-down {
+  display: none !important;
 }
 
 .folder-select-button-container {
@@ -130,4 +133,37 @@
 .folder-logo-icon .anticon svg {
   width: 28px !important;
   height: 28px !important;
+}
+
+/* ============================================================================================== */
+/* SEARCH STYLES */
+/* ============================================================================================== */
+.search-result-container {
+  padding: 24px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.search-result-header-row {
+  display: flex;
+  align-items: center;
+}
+
+.search-result-link {
+  color: #5ea7f8;
+  font-size: 16px;
+}
+
+.search-result-link:hover {
+  text-decoration: underline;
+}
+
+.search-result-content-container {
+  margin-top: 12px;
+  margin-bottom: 24px;
+  padding: 12px 24px;
+  border: 1px solid #dadce1;
+  border-radius: 8px;
+  max-height: 300px;
+  width: 50%;
+  overflow: scroll;
 }

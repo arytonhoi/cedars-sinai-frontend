@@ -24,36 +24,6 @@ function getFolderPath(folderPathsMap, folderId) {
   return folderPath;
 }
 
-function boldFolderContentSearchMatches(string, searchKey) {
-  let stripHTMLRegex = new RegExp(
-    `<\\/? *[a-zA-Z0-9]+( *[a-zA-Z0-9]+ *= *['"].+?['"])* *\\/? *>`,
-    "gi"
-  );
-  let findMatchStringRegex = new RegExp(
-    `(((\\w+\\W+){5}|^.*?)[^ ]*${searchKey}[^ ]*((\\W+\\w+){5}|.*?$))`,
-    "gim"
-  );
-  let boldMatchStringRegex = new RegExp(`${searchKey}`, "gi");
-  string = string.replace(stripHTMLRegex, "");
-  var matches = string.match(findMatchStringRegex);
-  if (matches === null) {
-    matches = string.split(" ").slice(0, 20).join(" ");
-    if (string !== matches) {
-      matches += "...";
-    }
-  } else {
-    matches = matches
-      .map(
-        (x) =>
-          " ..." +
-          x.replace(boldMatchStringRegex, `<b>${searchKey}</b>`) +
-          "... "
-      )
-      .join("");
-  }
-  return matches;
-}
-
 // get all folders in database
 exports.getAllFolders = (req, res) => {
   db.collection(`${production}folders`)
@@ -79,17 +49,39 @@ exports.getAllFolders = (req, res) => {
 };
 
 // temporary search
+function boldFolderContentSearchMatches(string, searchKey) {
+  // regex to strip HTML tags
+  let stripHTMLRegex = new RegExp(
+    `<\\/? *[a-zA-Z0-9]+( *[a-zA-Z0-9]+ *= *['"].+?['"])* *\\/? *>`,
+    "gi"
+  );
+  // let stripHTMLRegex = new RegExp(`<[^>]*>`, "gi");
+  let findMatchStringRegex = new RegExp(
+    `(((\\w+\\W+){5}|^.*?)[^ ]*${searchKey}[^ ]*((\\W+\\w+){5}|.*?$))`,
+    "gim"
+  );
+  let boldMatchStringRegex = new RegExp(`${searchKey}`, "gi");
+  string = string.replace(stripHTMLRegex, "");
+  var matches = string.match(findMatchStringRegex);
+  if (matches === null) {
+    matches = string.split(" ").slice(0, 20).join(" ");
+    if (string !== matches) {
+      matches += "...";
+    }
+  } else {
+    matches = matches
+      .map((x) => " ..." + x.replace(boldMatchStringRegex, `<b>${searchKey}</b>`) + "... ")
+      .join("");
+  }
+  return matches;
+}
+
 exports.searchFolders = (req, res) => {
   let searchTerm;
   try {
     searchTerm = `${req.params.searchTerm}`;
   } catch (err) {
-    returnFormattedHttpError(
-      res,
-      400,
-      "Invalid search term. Please try another search term.",
-      err
-    );
+    returnFormattedHttpError(res, 400, "Invalid search term. Please try another search term.", err);
   }
   const folderPathsMapRef = db.collection(`${production}paths`).doc("folders");
   // global case insensitive matching
@@ -110,10 +102,8 @@ exports.searchFolders = (req, res) => {
             let relevanceCount = 0;
             let titleMatchesArray = folder.title.match(regex);
             let contentMatchesArray = folder.content.match(regex);
-            folder.content = boldFolderContentSearchMatches(
-              folder.content,
-              searchTerm
-            );
+
+            // random algorithm, title matches are worth 2x each content match
             if (titleMatchesArray !== null) {
               relevanceCount += 2 * titleMatchesArray.length;
             }
@@ -121,31 +111,25 @@ exports.searchFolders = (req, res) => {
               relevanceCount += contentMatchesArray.length;
             }
 
+            // add relevance count to each folder
             if (relevanceCount !== 0) {
               folder.relevanceCount = relevanceCount;
               folder.path = getFolderPath(folderPathsMap, folder.id);
+              // folder.content = boldFolderContentSearchMatches(folder.content, searchTerm);
               matchedFolders.push(folder);
             }
           });
         })
         .then((x) => {
+          // sort by relevance count
           matchedFolders.sort((a, b) =>
-            a.relevanceCount < b.relevanceCount
-              ? 1
-              : b.relevanceCount < a.relevanceCount
-              ? -1
-              : 0
+            a.relevanceCount < b.relevanceCount ? 1 : b.relevanceCount < a.relevanceCount ? -1 : 0
           );
           return res.json(matchedFolders);
         });
     })
     .catch((err) => {
-      returnFormattedHttpError(
-        res,
-        500,
-        "Server failed to search. Please try again.",
-        err
-      );
+      returnFormattedHttpError(res, 500, "Server failed to search. Please try again.", err);
     });
 };
 
@@ -156,11 +140,7 @@ exports.getFolder = (req, res) => {
     .get()
     .then((doc) => {
       if (!doc.exists) {
-        returnFormattedHttpError(
-          res,
-          404,
-          "Folder doesn't exist. Go back to Resources"
-        );
+        returnFormattedHttpError(res, 404, "Folder doesn't exist. Go back to Resources");
       }
       folderData = doc.data();
       folderData.id = doc.id;
@@ -192,11 +172,7 @@ exports.getFolder = (req, res) => {
     .then((doc) => {
       // recursively construct folder path map
       if (!doc.exists) {
-        returnFormattedHttpError(
-          res,
-          500,
-          "Folder not found in folder path tree."
-        );
+        returnFormattedHttpError(res, 500, "Folder not found in folder path tree.");
       }
       const folderPathsMap = doc.data();
       folderData.path = getFolderPath(folderPathsMap, folderData.id);
@@ -268,12 +244,7 @@ exports.createFolder = (req, res) => {
       res.json(newFolder);
     })
     .catch((err) => {
-      returnFormattedHttpError(
-        res,
-        500,
-        "Failed to create folder. Please try again.",
-        err
-      );
+      returnFormattedHttpError(res, 500, "Failed to create folder. Please try again.", err);
     });
 };
 
@@ -286,11 +257,7 @@ exports.deleteFolder = (req, res) => {
     .get()
     .then((doc) => {
       if (!doc.exists) {
-        returnFormattedHttpError(
-          res,
-          404,
-          "Folder doesn't exist. Check the request URL"
-        );
+        returnFormattedHttpError(res, 404, "Folder doesn't exist. Check the request URL");
       }
       batch.delete(folderRef);
       batch.update(folderPathsMapRef, { [doc.id]: FieldValue.delete() });
@@ -300,12 +267,7 @@ exports.deleteFolder = (req, res) => {
       res.json({ message: "Folder deleted successfully" });
     })
     .catch((err) => {
-      returnFormattedHttpError(
-        res,
-        404,
-        "Failed to delete folder. Please try again.",
-        err
-      );
+      returnFormattedHttpError(res, 404, "Failed to delete folder. Please try again.", err);
     });
 };
 

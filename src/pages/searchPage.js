@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { searchFolder } from "../redux/actions/folderActions";
 
 // components
-import SearchResult from "../components/folders/SearchResult.js";
+import SearchResult from "../components/folders/searchResult.js";
 
 // styles
 import "../css/page.css";
@@ -68,14 +68,16 @@ class SearchPage extends Component {
           </div>
         </header>
         <Layout className="vertical-fill-layout">
-          <Content className="content-card">
+          <Content className="content-card padded">
             <div className="content-card-header">
               <div className="header-row">
-                {loadingActions.SET_FOLDER_SEARCH_RESULTS
-                  ? "Searching..."
-                  : folderSearchResults.length > 0
-                  ? `Search results for "${searchTerm}"`
-                  : `Nothing matched "${searchTerm}"`}
+                <h1>
+                  {loadingActions.SET_FOLDER_SEARCH_RESULTS
+                    ? "Searching..."
+                    : folderSearchResults.length > 0
+                    ? `${folderSearchResults.length} results for "${searchTerm}"`
+                    : `Nothing matched - "${searchTerm}"`}
+                </h1>
               </div>
             </div>
             <div>
@@ -86,7 +88,9 @@ class SearchPage extends Component {
               )}
               {!loadingActions.SET_FOLDER_SEARCH_RESULTS &&
                 (folderSearchResults.length > 0 ? (
-                  folderSearchResults.map((x, i) => <SearchResult key={i} data={x} />)
+                  folderSearchResults.map((folder) => (
+                    <SearchResult key={folder.id} folder={folder} />
+                  ))
                 ) : (
                   <Empty
                     image={Empty.PRESENTED_IMAGE_SIMPLE}

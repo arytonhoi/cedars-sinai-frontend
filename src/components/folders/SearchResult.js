@@ -1,56 +1,42 @@
 import React, { Component } from "react";
-import "./SearchResult.css";
 import PropTypes from "prop-types";
-
-import { FolderFilled } from "@ant-design/icons";
 
 // Redux stuff
 import { connect } from "react-redux";
 
+// components
+import FolderHeaderNav from "./folderHeaderNav";
+
+// styles
+import "./folder.css";
+
+// antdesign
+import { FolderFilled } from "@ant-design/icons";
+
+//HTML handling
+import parse from "html-react-parser";
+
 class SearchResult extends Component {
   render() {
-    const { data } = this.props;
+    const { folder } = this.props;
     return (
-      <a
-        className="search-result noselect padding-normal"
-        href={"/resources/" + data.id}
-      >
-        <div key="1" className="folder-logo-icon">
-          <FolderFilled />
-        </div>
-        <div key="2" className="search-main-box">
-          <span key="21" className="em2 search-result-title">
-            {data.title}
+      <article className="search-result-container">
+        <div className="search-result-header-row">
+          <span className="folder-logo-icon">
+            <FolderFilled />
           </span>
-          <span key="22" className="search-result-breadcrumb">
-            <span key={Math.random()}>
-              <span className="em4-light">Resources</span>
-            </span>
-            {typeof data === "object" && typeof data.path === "object"
-              ? data.path.map((x, i) => {
-                  if (x.name.length >= 30) {
-                    x.name = x.name.slice(0, 30) + "...";
-                  }
-                  return x.id !== "" && x.id !== "home" ? (
-                    <span className="em4-light" key={x.id}>
-                      {" / "}
-                      {x.name}
-                    </span>
-                  ) : (
-                    ""
-                  );
-                })
-              : ""}
-          </span>
-          <span key="23" dangerouslySetInnerHTML={{ __html: data.content }} />
+          <FolderHeaderNav searchResultFolder={folder} />
         </div>
-      </a>
+        {folder.content !== "" && (
+          <div className="search-result-content-container">{parse(folder.content)}</div>
+        )}
+      </article>
     );
   }
 }
 
 SearchResult.propTypes = {
-  data: PropTypes.object.isRequired,
+  folder: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({});

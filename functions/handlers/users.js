@@ -1,9 +1,5 @@
 const { admin, db } = require("../util/admin");
-const {
-  formatReqBody,
-  validateUserIsAdmin,
-  returnFormattedHttpError,
-} = require("../util/util");
+const { formatReqBody, validateUserIsAdmin, returnFormattedHttpError } = require("../util/util");
 
 const { firebaseConfig } = require("../util/config");
 const firebase = require("firebase");
@@ -59,12 +55,7 @@ exports.login = (req, res) => {
       } else if (err.code === "auth/user-not-found") {
         returnFormattedHttpError(res, 403, "Incorrect username", err);
       } else {
-        returnFormattedHttpError(
-          res,
-          500,
-          "Server failed to login: please try again",
-          err
-        );
+        returnFormattedHttpError(res, 500, "Server failed to login: please try again", err);
       }
     });
 };
@@ -76,12 +67,7 @@ exports.logout = (req, res) => {
     sessionCookie = req.cookies.__session;
     console.log(`Logging out: ${sessionCookie}`);
   } catch (err) {
-    returnFormattedHttpError(
-      res,
-      403,
-      "Logout failed: error reading cookie.",
-      err
-    );
+    returnFormattedHttpError(res, 403, "Logout failed: error reading cookie.", err);
   }
   res.clearCookie("__session");
   admin
