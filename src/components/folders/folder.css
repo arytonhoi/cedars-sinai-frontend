@@ -165,5 +165,6 @@
   border-radius: 8px;
   max-height: 300px;
   width: 50%;
+  min-width: 400px;
   overflow: scroll;
 }

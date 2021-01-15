@@ -37,8 +37,10 @@
     "shell": "firebase functions:shell",
     "deploy": "./deploy.sh",
     "logs": "firebase functions:log",
-    "deploy-prd": "./deploy.sh prd",
-    "deploy-dev": "./deploy.sh dev",
+    "swap-prd": "cp prd.firebase.json firebase.json",
+    "swap-dev": "cp dev.firebase.json firebase.json",
+    "deploy-prd": "npm run swap-prd && firebase use production && npm run build && firebase deploy",
+    "deploy-dev": "npm run swap-dev && firebase use development && npm run build && firebase deploy",
     "null": "echo ''"
   },
   "pre-commit": [],

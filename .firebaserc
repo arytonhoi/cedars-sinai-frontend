@@ -1,5 +1,23 @@
 {
   "projects": {
-    "default": "fir-db-d2d47"
+    "default": "fir-db-d2d47",
+    "development": "fir-db-d2d47",
+    "production": "cedars-sinai-prd"
+  },
+  "targets": {
+    "cedars-sinai-prd": {
+      "hosting": {
+        "cedars-sinai-prd": [
+          "cedars-sinai-prd"
+        ]
+      }
+    },
+    "fir-db-d2d47": {
+      "hosting": {
+        "cedars-sinai-dev": [
+          "cedars-sinai-dev"
+        ]
+      }
+    }
   }
 }
