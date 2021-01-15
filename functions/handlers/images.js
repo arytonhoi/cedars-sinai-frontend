@@ -1,4 +1,4 @@
-const { admin, db, production } = require("../util/admin");
+const { admin, db } = require("../util/admin");
 // const { formatReqBody } = require("../util/util");
 const { firebaseConfig } = require("../util/config");
 
@@ -18,9 +18,7 @@ exports.postImage = (req, res) => {
 
   busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
     if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
-      return res
-        .status(400)
-        .json({ error: "Wrong file type submitted. Must be jpg or png" });
+      return res.status(400).json({ error: "Wrong file type submitted. Must be jpg or png" });
     }
 
     const date = new Date();
@@ -28,10 +26,7 @@ exports.postImage = (req, res) => {
     const imageExtension = filename.split(".")[filename.split(".").length - 1];
     const imageFileNamePrefix = `${date.getTime()}_${random_num}`;
     thumbnailFilename = `${imageFileNamePrefix}.${imageExtension}`;
-    const filepath = path.join(
-      os.tmpdir(),
-      `${imageFileNamePrefix}.${imageExtension}`
-    );
+    const filepath = path.join(os.tmpdir(), `${imageFileNamePrefix}.${imageExtension}`);
     imageToBeUploaded = { filepath, mimetype };
 
     const imageResizer = sharp().resize(1080);
@@ -74,7 +69,7 @@ exports.getBannerImage = (req, res) => {
     return res.status(400).json({ error: "Method not allowed" });
   }
 
-  db.doc(`/${production}banners/${req.params.pageName}`)
+  db.doc(`/banners/${req.params.pageName}`)
     .get()
     .then((doc) => {
       if (!doc.exists) {
@@ -90,7 +85,7 @@ exports.patchBannerImage = (req, res) => {
   }
 
   const updatedBannerImgObj = { imgUrl: req.body.imgUrl };
-  db.doc(`/${production}banners/${req.params.pageName}`)
+  db.doc(`/banners/${req.params.pageName}`)
     .update(updatedBannerImgObj)
     .then(() => {
       return res.json({

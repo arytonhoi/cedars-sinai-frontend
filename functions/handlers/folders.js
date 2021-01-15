@@ -1,4 +1,4 @@
-const { admin, db, production } = require("../util/admin");
+const { admin, db } = require("../util/admin");
 const {
   formatReqBody,
   validateReqBodyFields,
@@ -26,7 +26,7 @@ function getFolderPath(folderPathsMap, folderId) {
 
 // get all folders in database
 exports.getAllFolders = (req, res) => {
-  db.collection(`${production}folders`)
+  db.collection(`folders`)
     .orderBy("lastModified", "desc")
     .get()
     .then((data) => {
@@ -83,10 +83,10 @@ exports.searchFolders = (req, res) => {
   } catch (err) {
     returnFormattedHttpError(res, 400, "Invalid search term. Please try another search term.", err);
   }
-  const folderPathsMapRef = db.collection(`${production}paths`).doc("folders");
+  const folderPathsMapRef = db.collection(`paths`).doc("folders");
   // global case insensitive matching
   var regex = new RegExp(searchTerm, "gi");
-  db.collection(`${production}folders`)
+  db.collection(`folders`)
     .orderBy("lastModified", "desc")
     .get()
     .then((allFolders) => {
@@ -136,7 +136,7 @@ exports.searchFolders = (req, res) => {
 // get single folder
 exports.getFolder = (req, res) => {
   let folderData = {};
-  db.doc(`/${production}folders/${req.params.folderId}`)
+  db.doc(`/folders/${req.params.folderId}`)
     .get()
     .then((doc) => {
       if (!doc.exists) {
@@ -146,13 +146,13 @@ exports.getFolder = (req, res) => {
       folderData.id = doc.id;
       // maybe increment folder contents
       if (typeof req.query.i === "string") {
-        db.doc(`/${production}folders/${req.params.folderId}`).update({
+        db.doc(`/folders/${req.params.folderId}`).update({
           visits: admin.firestore.FieldValue.increment(1),
         });
       }
       // get all folder contents
       return db
-        .collection(`${production}folders`)
+        .collection(`folders`)
         .orderBy("lastModified", "desc")
         .where("parent", "==", folderData.id)
         .get();
@@ -167,7 +167,7 @@ exports.getFolder = (req, res) => {
           folderData.subfolders.push(subfolder);
         }
       });
-      return db.doc(`/${production}paths/folders`).get();
+      return db.doc(`/paths/folders`).get();
     })
     .then((doc) => {
       // recursively construct folder path map
@@ -221,13 +221,13 @@ exports.createFolder = (req, res) => {
   newFolder.visits = 0;
 
   // add newFolder to FB database
-  db.collection(`${production}folders`)
+  db.collection(`folders`)
     .add(newFolder)
     .then((doc) => {
       newFolder.id = doc.id;
 
       // update paths map
-      return db.doc(`/${production}paths/folders`).get();
+      return db.doc(`/paths/folders`).get();
     })
     .then((doc) => {
       if (!doc.exists) {
@@ -238,7 +238,7 @@ exports.createFolder = (req, res) => {
       newFolderPathContents.parentId = parentFolderId;
       newFolderPathContents.name = folderTitle;
       newFolderPathsMap[newFolder.id] = newFolderPathContents;
-      db.doc(`/${production}paths/folders`).update(newFolderPathsMap);
+      db.doc(`/paths/folders`).update(newFolderPathsMap);
 
       newFolder.path = getFolderPath(newFolderPathsMap, newFolder.id);
       res.json(newFolder);
@@ -251,8 +251,8 @@ exports.createFolder = (req, res) => {
 exports.deleteFolder = (req, res) => {
   validateUserIsAdmin(req, res);
   const batch = db.batch();
-  const folderRef = db.doc(`/${production}folders/${req.params.folderId}`);
-  const folderPathsMapRef = db.collection(`${production}paths`).doc("folders");
+  const folderRef = db.doc(`/folders/${req.params.folderId}`);
+  const folderPathsMapRef = db.collection(`paths`).doc("folders");
   folderRef
     .get()
     .then((doc) => {
@@ -294,8 +294,8 @@ exports.updateOneFolder = (req, res) => {
   }
 
   // get object refs from Firebase
-  const folderRef = db.doc(`/${production}folders/${updatedFolderId}`);
-  const folderPathsMapRef = db.collection(`/${production}paths`).doc("folders");
+  const folderRef = db.doc(`/folders/${updatedFolderId}`);
+  const folderPathsMapRef = db.collection(`/paths`).doc("folders");
 
   // start updating
   const batch = db.batch();

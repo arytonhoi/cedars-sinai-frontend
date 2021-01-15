@@ -1,4 +1,4 @@
-const { admin, db, production } = require("../util/admin");
+const { admin, db } = require("../util/admin");
 const { formatReqBody } = require("../util/util");
 
 exports.getDBContents = (req, res) => {
@@ -44,9 +44,7 @@ exports.patchDBContents = (req, res) => {
     var database = req.body;
     var ckeys = Object.keys(database);
     if (ckeys.length === 0) {
-      return res
-        .status(400)
-        .json({ error: "Empty object, nothing was changed" });
+      return res.status(400).json({ error: "Empty object, nothing was changed" });
     }
     Promise.all(
       ckeys.map(async (x) => {
@@ -70,16 +68,12 @@ exports.patchDBContents = (req, res) => {
               });
               await batch.commit();
             })
-          ).catch((err) =>
-            res.status(500).json({ error: `Error restoring collection ${x}.` })
-          );
+          ).catch((err) => res.status(500).json({ error: `Error restoring collection ${x}.` }));
         }
       })
     )
       .then((x) => res.json({ message: "Database successfully updated." }))
-      .catch((err) =>
-        res.status(500).json({ error: "Error restoring from backup." })
-      );
+      .catch((err) => res.status(500).json({ error: "Error restoring from backup." }));
   } else {
     res.status(403).json({ error: "Only admins can update the database." });
   }

@@ -1,4 +1,4 @@
-const { db, production } = require("../util/admin");
+const { db } = require("../util/admin");
 const { formatReqBody } = require("../util/util");
 
 // get all announcements in database
@@ -6,7 +6,7 @@ exports.getAllAnnouncements = (req, res) => {
   if (req.method !== "GET") {
     return res.status(400).json({ error: "Method not allowed" });
   }
-  db.collection(`${production}announcements`)
+  db.collection(`announcements`)
     .orderBy("createdAt", "desc")
     .get()
     .then((data) => {
@@ -48,7 +48,7 @@ exports.postOneAnnouncement = (req, res) => {
     };
 
     // add newAnnouncement to FB database and update parent folder
-    db.collection(`${production}announcements`)
+    db.collection(`announcements`)
       .add(newAnnouncement)
       .then((doc) => {
         newAnnouncement.id = doc.id;
@@ -60,8 +60,7 @@ exports.postOneAnnouncement = (req, res) => {
       });
   } catch (e) {
     return res.status(400).json({
-      error:
-        "JSON incomplete. Required keys are title, author, isPinned and content",
+      error: "JSON incomplete. Required keys are title, author, isPinned and content",
     });
   }
 };
@@ -71,9 +70,7 @@ exports.deleteOneAnnouncement = (req, res) => {
     return res.status(403).json({ error: "Unathorized" });
   }
 
-  const announcement = db.doc(
-    `/${production}announcements/${req.params.announcementId}`
-  );
+  const announcement = db.doc(`/announcements/${req.params.announcementId}`);
   announcement
     .get()
     .then((doc) => {
@@ -103,7 +100,7 @@ exports.updateOneAnnouncement = (req, res) => {
       ...req.body,
     };
     delete updatedAnnouncement.createdAt;
-    db.doc(`/${production}announcements/${req.params.announcementId}`)
+    db.doc(`/announcements/${req.params.announcementId}`)
       .update(updatedAnnouncement)
       .then(() => {
         return res.json({ message: "Announcement updated successfully " });

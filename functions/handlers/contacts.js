@@ -1,16 +1,12 @@
-const { db, production } = require("../util/admin");
-const {
-  formatReqBody,
-  validateUserIsAdmin,
-  returnFormattedHttpError,
-} = require("../util/util");
+const { db } = require("../util/admin");
+const { formatReqBody, validateUserIsAdmin, returnFormattedHttpError } = require("../util/util");
 
 const defaultContactPic = `https://firebasestorage.googleapis.com/v0/b/fir-db-d2d47.appspot.com/o/
 cedars_robot_1080x1080.jpg?alt=media&token=0932153f-e1e3-4f47-b419-fd5ae76abd34`;
 
 // get all contacts in database
 exports.getAllContacts = (req, res) => {
-  db.collection(`${production}contacts`)
+  db.collection(`contacts`)
     .get()
     .then((data) => {
       let contacts = [];
@@ -60,7 +56,7 @@ exports.postOneContact = (req, res) => {
   }
 
   // add newContact to FB database and update parent folder
-  db.collection(`${production}contacts`)
+  db.collection(`contacts`)
     .add(newContact)
     .then((doc) => {
       newContact.id = doc.id;
@@ -79,7 +75,7 @@ exports.postOneContact = (req, res) => {
 exports.deleteOneContact = (req, res) => {
   validateUserIsAdmin(req, res);
 
-  const contact = db.doc(`/${production}contacts/${req.params.contactId}`);
+  const contact = db.doc(`/contacts/${req.params.contactId}`);
   contact
     .get()
     .then((doc) => {
@@ -129,7 +125,7 @@ exports.updateOneContact = (req, res) => {
     );
   }
 
-  db.doc(`/${production}contacts/${req.params.contactId}`)
+  db.doc(`/contacts/${req.params.contactId}`)
     .update(updatedContact)
     .then(() => {
       return res.json({ message: "Contact updated successfully " });

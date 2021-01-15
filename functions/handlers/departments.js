@@ -1,13 +1,9 @@
-const { db, production } = require("../util/admin");
-const {
-  formatReqBody,
-  validateUserIsAdmin,
-  returnFormattedHttpError,
-} = require("../util/util");
+const { db } = require("../util/admin");
+const { formatReqBody, validateUserIsAdmin, returnFormattedHttpError } = require("../util/util");
 
 // get all departments in database
 exports.getAllDepartments = (req, res) => {
-  db.collection(`${production}departments`)
+  db.collection(`departments`)
     .get()
     .then((data) => {
       let departments = [];
@@ -40,16 +36,11 @@ exports.postOneDepartment = (req, res) => {
       name: req.body.name,
     };
   } catch (err) {
-    returnFormattedHttpError(
-      res,
-      400,
-      "JSON incomplete. Required keys are name",
-      err
-    );
+    returnFormattedHttpError(res, 400, "JSON incomplete. Required keys are name", err);
   }
 
   // add newAnn to FB database and update parent folder
-  db.collection(`${production}departments`)
+  db.collection(`departments`)
     .add(newDepartment)
     .then((doc) => {
       newDepartment.id = doc.id;
@@ -68,9 +59,7 @@ exports.postOneDepartment = (req, res) => {
 exports.deleteOneDepartment = (req, res) => {
   validateUserIsAdmin(req, res);
 
-  const department = db.doc(
-    `/${production}departments/${req.params.departmentId}`
-  );
+  const department = db.doc(`/departments/${req.params.departmentId}`);
   department
     .get()
     .then((doc) => {
@@ -106,15 +95,10 @@ exports.updateOneDepartment = (req, res) => {
       name: req.body.name,
     };
   } catch (err) {
-    returnFormattedHttpError(
-      res,
-      400,
-      "JSON incomplete. Required keys are name",
-      err
-    );
+    returnFormattedHttpError(res, 400, "JSON incomplete. Required keys are name", err);
   }
 
-  db.doc(`/${production}departments/${req.params.departmentId}`)
+  db.doc(`/departments/${req.params.departmentId}`)
     .update(updatedDepartment)
     .then(() => {
       return res.json({ message: "Department updated successfully" });
