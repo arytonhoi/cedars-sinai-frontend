@@ -53,7 +53,7 @@ export const getAnnouncements = () => (dispatch) => {
       dispatch(stopLoadingAction(SET_ANNOUNCEMENTS));
     })
     .catch((err) => {
-      dispatch(setError(POST_ANNOUNCEMENT, err));
+      dispatch(setError(SET_ANNOUNCEMENTS, err));
     });
 };
 
@@ -76,10 +76,7 @@ export const postAnnouncement = (newAnnouncement) => (dispatch) => {
     });
 };
 
-export const patchAnnouncement = (
-  updatedAnnnouncementId,
-  updatedAnnnouncement
-) => (dispatch) => {
+export const patchAnnouncement = (updatedAnnnouncementId, updatedAnnnouncement) => (dispatch) => {
   dispatch(setLoadingAction(PATCH_ANNOUNCEMENT));
   axios
     .patch(`/announcements/${updatedAnnnouncementId}`, updatedAnnnouncement)

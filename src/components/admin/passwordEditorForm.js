@@ -30,10 +30,7 @@ class PasswordEditorForm extends Component {
     let previousLoadingActionNames = Object.keys(previousLoadingActions);
 
     previousLoadingActionNames.forEach((actionName) => {
-      if (
-        !currentloadingActions[actionName] &&
-        previousLoadingActions[actionName]
-      ) {
+      if (!currentloadingActions[actionName] && previousLoadingActions[actionName]) {
         // if preivousLoadingAction is no longer loading
         switch (actionName) {
           case this.patchTargettedUserPasswordActionName:
@@ -91,8 +88,7 @@ class PasswordEditorForm extends Component {
     const { errors } = this.props.ui;
     const targettedUser = this.props.targettedUser;
     // errors
-    const patchUserPasswordErrors =
-      errors[this.patchTargettedUserPasswordActionName];
+    const patchUserPasswordErrors = errors[this.patchTargettedUserPasswordActionName];
     return (
       <div className="page-form-container max-30">
         <h2 className="page-form-header">{targettedUser}</h2>
@@ -163,18 +159,12 @@ class PasswordEditorForm extends Component {
                     return Promise.resolve();
                   }
 
-                  return Promise.reject(
-                    "The two passwords that you entered do not match."
-                  );
+                  return Promise.reject("The two passwords that you entered do not match.");
                 },
               }),
             ]}
           >
-            <Input
-              id={`confirmPassword-${targettedUser}`}
-              name="confirmPassword"
-              type="text"
-            />
+            <Input id={`confirmPassword-${targettedUser}`} name="confirmPassword" type="text" />
           </Form.Item>
           {patchUserPasswordErrors && (
             <Alert

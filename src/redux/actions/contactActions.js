@@ -55,9 +55,7 @@ export const postDepartment = (newDepartment) => (dispatch) => {
     });
 };
 
-export const patchDepartment = (updatedDepartmentId, updatedDepartment) => (
-  dispatch
-) => {
+export const patchDepartment = (updatedDepartmentId, updatedDepartment) => (dispatch) => {
   dispatch(setLoadingAction(PATCH_DEPARTMENT));
   axios
     .patch(`/departments/${updatedDepartmentId}`, updatedDepartment)
@@ -131,9 +129,7 @@ export const postContact = (newContact) => (dispatch) => {
     });
 };
 
-export const patchContact = (updatedContactId, updatedContact) => (
-  dispatch
-) => {
+export const patchContact = (updatedContactId, updatedContact) => (dispatch) => {
   dispatch(setLoadingAction(PATCH_CONTACT));
   axios
     .patch(`/contacts/${updatedContactId}`, updatedContact)

@@ -1,10 +1,5 @@
 import React, { Component } from "react";
-import {
-  BrowserRouter as Router,
-  Redirect,
-  Route,
-  Switch,
-} from "react-router-dom";
+import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
 
 // Redux
 import { Provider } from "react-redux";
@@ -26,7 +21,7 @@ import announcementPage from "./pages/announcementPage";
 import calendarPage from "./pages/calendarPage";
 import contactPage from "./pages/contactPage";
 import FolderPage from "./pages/folderPage";
-import login from "./pages/login";
+import LoginPage from "./pages/loginPage";
 import logout from "./pages/logout";
 import SearchPage from "./pages/searchPage";
 import SideNav from "./components/layout/sideNav";
@@ -59,30 +54,18 @@ class App extends Component {
               <SideNav location={this.props.location} />
               <Layout className="site-layout">
                 <Switch>
-                  <AuthRoute exact path="/login" component={login} />
+                  <AuthRoute exact path="/login" component={LoginPage} />
                   <Route exact path="/">
                     <Redirect to="/announcements" />
                   </Route>
-                  <Route
-                    exact
-                    path="/announcements"
-                    component={announcementPage}
-                  />
+                  <Route exact path="/announcements" component={announcementPage} />
                   <Route exact path="/resources" component={FolderPage} />
                   <Route exact path="/calendar" component={calendarPage} />
                   <Route exact path="/contacts" component={contactPage} />
                   <Route exact path="/logout" component={logout} />
                   <Route exact path="/admins" component={AdminPage} />
-                  <Route
-                    exact
-                    path="/resources/:folderId"
-                    component={FolderPage}
-                  />
-                  <Route
-                    exact
-                    path="/resources/search/:searchTerm"
-                    component={SearchPage}
-                  />
+                  <Route exact path="/resources/:folderId" component={FolderPage} />
+                  <Route exact path="/resources/search/:searchTerm" component={SearchPage} />
                 </Switch>
               </Layout>
             </Layout>
@@ -96,7 +79,7 @@ class App extends Component {
             <Route exact path="*">
               <Redirect to="/login" />
             </Route>
-            <Route exact path="/login" component={login} />
+            <Route exact path="/login" component={LoginPage} />
           </Router>
         </Provider>
       );

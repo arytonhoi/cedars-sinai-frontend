@@ -11,11 +11,6 @@ body {
   min-height: 100vh; /*for IE11*/
 }
 
-.pw-input {
-  border: 2px solid #eee;
-  padding: 0.25em 2em 0.25em 0.5em !important;
-}
-
 /* ============================================================================================== */
 /* KEEP */
 /* ============================================================================================== */
@@ -43,25 +38,10 @@ label,
   color: #8c8c8c !important;
 }
 
-/* login
-calendar */
+/* calendar */
 .center {
   position: absolute !important;
   top: 50% !important;
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
-}
-
-/* login */
-.valign {
-  position: absolute !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-}
-
-/* login */
-.halign {
-  position: absolute !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
 }

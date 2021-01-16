@@ -1,61 +1,82 @@
-body{
-  background: #fff;
+/* ============================================================================================== */
+/* PAGE LAYOUTS */
+/* ============================================================================================== */
+.login-page-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.login-form{
-  background: #f3f3f3;
-  border-radius: 0.5em;
-  padding:4.6em 2.9em 3.2em 3.2em !important;
-  text-align: left;
+/* ============================================================================================== */
+/* HEADER */
+/* ============================================================================================== */
+.login-page-header {
+  padding: 0 48px;
+  margin: 48px 0;
+  height: 50px;
+  width: 100%;
 }
 
-.logo-box {
-  height: 3em;
-  margin: 1.5em;
-  background: rgba(255, 255, 255, 0.3);
-  position: absolute;
-  left: 1em;
-  top: 0.75em;
+.login-header-logo {
+  height: 100%;
+  width: auto;
 }
 
-.login-title{
-  font-size: 1.7em;
-  font-weight: bold;
-  color: rgba(0, 0, 0, 0.85);
-}
-
-.pw-field-wrapper{
+/* ============================================================================================== */
+/* LOGIN BOX */
+/* ============================================================================================== */
+.login-box-container {
   position: relative;
-  color: rgba(0, 0, 0, 0.85);
-}
-
-.ant-form-row-login{
+  display: flex;
   align-items: center;
-}
-.ant-form-row-login,.ant-form-item-has-error{
-  align-items: flex-start;
-}
-.pw-toggle{
-  cursor: pointer;
-  right: 0.7em;
-  text-align: center;
-  color: rgba(0, 0, 0, 0.65);
-}
-.pw-errors{
-  width: 100%;
-  text-align: center;
-}
-
-.pw-input{
-}
-.login-button{
   justify-content: center;
+  flex: 1;
+  max-height: 800px;
 }
 
-.select-user{
-  cursor: pointer;
+.login-box {
+  position: relative;
+  top: -100px;
+  padding: 48px 48px 24px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f3f3f3;
+  min-width: 410px;
+  /* min-height: 300px; */
+  border-radius: 8px;
+}
+
+.login-form-header {
+  font-size: 24px;
+  margin-bottom: 24px;
+}
+
+/* ============================================================================================== */
+/* LOGIN FORM */
+/* ============================================================================================== */
+.login-form-container {
   width: 100%;
-  text-align: center;
-  color: rgba(0, 0, 0, 0.65);
 }
 
+.login-password-input .ant-form-item-control-input-content {
+  width: 100%;
+}
+
+.login-error-alert {
+  margin-bottom: 12px !important;
+}
+
+.login-form-button {
+  width: 100%;
+}
+
+.login-user-switch-button {
+  margin: 0 auto;
+  cursor: pointer;
+}
+
+.login-user-switch-button:hover {
+  text-decoration: underline;
+}

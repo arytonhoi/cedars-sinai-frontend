@@ -1,13 +1,6 @@
-import {
-  LOADING_USER,
-  SET_UNAUTHENTICATED,
-  SET_USER,
-  PATCH_PASSWORD,
-  // errors
-  SET_ERROR,
-} from "../types";
+import { SET_UNAUTHENTICATED, SET_USER, PATCH_PASSWORD } from "../types";
 
-import { setError, setLoadingAction, stopLoadingAction } from "./uiActions";
+import { clearError, setError, setLoadingAction, stopLoadingAction } from "./uiActions";
 
 import axios from "axios";
 
@@ -15,26 +8,27 @@ const setAuthorizationHeader = () => {
   localStorage.setItem("hasValidCookie", true);
 };
 
-export const loginUser = (userData, history) => (dispatch) => {
+export const loginUser = (userData) => (dispatch) => {
+  dispatch(setLoadingAction(SET_USER));
   axios
     .post("/login", userData)
     .then((res) => {
+      return res;
+    })
+    .then(() => {
+      dispatch(stopLoadingAction(SET_USER));
+      dispatch(clearError(SET_USER));
       setAuthorizationHeader();
       dispatch(getUserData());
-      // dispatch({ type: CLEAR_ERROR });
-      history.push("/");
       window.location.href = "./";
     })
     .catch((err) => {
-      dispatch({
-        type: SET_ERROR,
-        payload: err,
-      });
+      dispatch(stopLoadingAction(SET_USER));
+      dispatch(setError(SET_USER, err));
     });
 };
 
 export const getUserData = () => (dispatch) => {
-  dispatch({ type: LOADING_USER });
   axios
     .get("/user")
     .then((res) => {
@@ -44,8 +38,8 @@ export const getUserData = () => (dispatch) => {
       });
     })
     .catch((err) => {
-      console.log(err);
       localStorage.removeItem("hasValidCookie");
+      dispatch(setError(SET_USER, err));
       dispatch({ type: SET_UNAUTHENTICATED });
     });
 };
