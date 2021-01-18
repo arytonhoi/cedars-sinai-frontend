@@ -28,7 +28,7 @@ import "../components/folders/folder.css";
 
 // antd
 import { DownOutlined, LoadingOutlined } from "@ant-design/icons";
-import { Button, Dropdown, Empty, Input, Layout, Menu, notification, Spin } from "antd";
+import { Button, Dropdown, Empty, Input, Layout, Menu, notification, Result, Spin } from "antd";
 const { Content, Footer } = Layout;
 const { Search } = Input;
 
@@ -420,9 +420,8 @@ class FolderPage extends Component {
           <div className="page-header-main-items">
             <Search
               size="large"
-              className="folder-search"
+              className="folder-search right-align"
               placeholder="Search in Resources"
-              // prefix={<SearchOutlined />}
               onSearch={(searchTerm) => this.searchFolder(searchTerm)}
             />
           </div>
@@ -480,13 +479,21 @@ class FolderPage extends Component {
                   </Dropdown>
                 </span>
               </header>
-              {(loadingActions.SET_FOLDER || !this.state.numFolderColumns) && (
-                <div className="vertical-content">
+              {/* {loadingActions.SET_FOLDER || !this.state.numFolderColumns ? ( */}
+              {loadingActions.SET_FOLDER ? (
+                <div className="vertical-content vertical-fill-content vertical-centered-content">
                   <Spin />
                 </div>
-              )}
-              {!loadingActions.SET_FOLDER && folder.subfolders.length === 0 && (
-                <div className="vertical-content" style={{ margin: "48px auto" }}>
+              ) : errors.SET_FOLDER ? (
+                <div className="vertical-content vertical-fill-content vertical-centered-content">
+                  <Result
+                    status="error"
+                    title="Couldn't get folders"
+                    subTitle={errors.SET_FOLDER}
+                  />
+                </div>
+              ) : folder.subfolders.length === 0 ? (
+                <div className="vertical-content vertical-fill-content vertical-centered-content">
                   <Empty
                     image={Empty.PRESENTED_IMAGE_SIMPLE}
                     description={
@@ -496,16 +503,7 @@ class FolderPage extends Component {
                     }
                   />
                 </div>
-              )}
-              {!loadingActions.SET_FOLDER && errors.SET_FOLDER && (
-                <div className="vertical-content" style={{ margin: "48px auto" }}>
-                  <Empty
-                    image={Empty.PRESENTED_IMAGE_SIMPLE}
-                    description={<span>{errors.SET_FOLDER.message}</span>}
-                  />
-                </div>
-              )}
-              {!loadingActions.SET_FOLDER && (
+              ) : (
                 <div className={"wrapped-content folder-list"} ref={this.folderListRef}>
                   {folder.subfolders.map((subfolder, i) => (
                     <Folder

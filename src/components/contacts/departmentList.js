@@ -15,15 +15,12 @@ import { Empty, Spin } from "antd";
 class DepartmentList extends Component {
   render() {
     const { isAdmin } = this.props.user;
-    const { loadingActions } = this.props.ui;
 
     const departments = this.props.departments;
     const contacts = this.props.contacts;
     const searchTerm = this.props.searchTerm;
 
-    if (loadingActions.SET_DEPARTMENTS) {
-      return <Spin style={{ marginTop: "48px" }} />;
-    } else if (departments.length === 0) {
+    if (departments.length === 0) {
       return (
         <Empty
           style={{ margin: "auto" }}
@@ -37,11 +34,7 @@ class DepartmentList extends Component {
           }
         ></Empty>
       );
-    } else if (
-      contacts.length === 0 &&
-      // departments.length > 0 &&
-      searchTerm !== ""
-    ) {
+    } else if (contacts.length === 0 && searchTerm !== "") {
       return (
         <Empty
           style={{ margin: "auto" }}
@@ -55,9 +48,7 @@ class DepartmentList extends Component {
       );
     } else {
       const departmentsListComponent = departments.map((d) => {
-        const departmentContacts = contacts.filter(
-          (c) => c.departmentId === d.id
-        );
+        const departmentContacts = contacts.filter((c) => c.departmentId === d.id);
         return (
           <DepartmentSection
             key={d.id}
@@ -80,7 +71,6 @@ class DepartmentList extends Component {
 
 DepartmentList.propTypes = {
   user: PropTypes.object.isRequired,
-  ui: PropTypes.object.isRequired,
   // data
   departments: PropTypes.array.isRequired,
   contacts: PropTypes.array.isRequired,
@@ -95,7 +85,6 @@ DepartmentList.propTypes = {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    ui: state.ui,
   };
 };
 

@@ -21,11 +21,7 @@ import axios from "axios";
 export const getFolder = (folderId, track) => (dispatch) => {
   dispatch(setLoadingAction(SET_FOLDER));
   axios
-    .get(
-      `/folders/${folderId}?${
-        typeof track !== "undefined" && track === true ? "i" : ""
-      }`
-    )
+    .get(`/folders/${folderId}?${typeof track !== "undefined" && track === true ? "i" : ""}`)
     .then((res) => {
       const folder = res.data;
       dispatch({
@@ -107,19 +103,6 @@ export const patchSubfolder = (folderId, updatedFolder) => (dispatch) => {
       // dispatch(setError(PATCH_SUBFOLDER, err));
     });
 };
-
-// export const syncAllSubFolders = (subfolders) => (dispatch) => {
-//   if (typeof subfolders === "object" && subfolders.length > 0) {
-//     subfolders.forEach((x) => {
-//       axios.patch(`/folders/${x.id}`, { index: x.index }).catch((err) => {
-//         dispatch({
-//           type: SET_ERROR,
-//           payload: err,
-//         });
-//       });
-//     });
-//   }
-// };
 
 export const deleteFolder = (folderId) => (dispatch) => {
   dispatch(setLoadingAction(DELETE_SUBFOLDER));

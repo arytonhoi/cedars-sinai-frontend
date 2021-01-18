@@ -11,9 +11,9 @@ import {
 // errors
 export const setError = (actionName, error) => (dispatch) => {
   if (error.response && error.response.data) {
-    error = {message: error.response.data.message}
+    error = { message: error.response.data.message };
   } else if (typeof error === "string") {
-    error = {message: error}
+    error = { message: error };
   }
 
   error.actionName = actionName;

@@ -346,15 +346,17 @@ class AnnouncementPage extends Component {
               </div>
             </div>
             {loadingActions.SET_ANNOUNCEMENTS ? (
-              <div className="padded vertical-content">
-                <Spin style={{ marginTop: "48px" }} />
+              <div className="vertical-content vertical-fill-content vertical-centered-content">
+                <Spin />
               </div>
             ) : errors.SET_ANNOUNCEMENTS ? (
-              <Result
-                status="error"
-                title="Failed to get announcements"
-                subTitle={errors.SET_ANNOUNCEMENTS}
-              />
+              <div className="vertical-content vertical-fill-content vertical-centered-content">
+                <Result
+                  status="error"
+                  title="Couldn't get announcements"
+                  subTitle={errors.SET_ANNOUNCEMENTS}
+                />
+              </div>
             ) : (
               <AnnouncementList
                 announcements={filteredAnnouncements}

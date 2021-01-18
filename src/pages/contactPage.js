@@ -40,7 +40,7 @@ import FloatAddButton from "../components/layout/floatAddButton";
 import "../css/page.css";
 
 // Ant design
-import { Input, Layout, notification } from "antd";
+import { Input, Layout, notification, Result, Spin } from "antd";
 import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 const { Content, Footer } = Layout;
 const defaultContactPic = `https://firebasestorage.googleapis.com/v0/b/fir-db-d2d47.appspot.com/o/
@@ -373,6 +373,7 @@ class ContactPage extends Component {
 
   render() {
     const { isAdmin } = this.props.user;
+    const { errors, loadingActions } = this.props.ui;
     const { matchingSearchContacts, departments } = this.props.contacts;
     const floatAddButtonOptions = {
       Department: this.handleAddorEditDepartment,
@@ -429,17 +430,30 @@ class ContactPage extends Component {
               handleCancelAddorEditContact={this.handleCancelAddorEditContact}
               handleImageChange={this.handleImageChange}
             />
-            <DepartmentList
-              // data
-              departments={departments}
-              // departments={[]}
-              contacts={matchingSearchContacts}
-              // departments
-              handleAddorEditDepartment={this.handleAddorEditDepartment}
-              // contacts
-              handleAddorEditContact={this.handleAddorEditContact}
-              searchTerm={this.state.searchTerm}
-            />
+            {loadingActions.SET_DEPARTMENTS ? (
+              <div className="vertical-content vertical-fill-content vertical-centered-content">
+                <Spin />
+              </div>
+            ) : errors.SET_DEPARTMENTS ? (
+              <div className="vertical-content vertical-fill-content vertical-centered-content">
+                <Result
+                  status="error"
+                  title="Couldn't get contacts"
+                  subTitle={errors.SET_DEPARTMENTS}
+                />
+              </div>
+            ) : (
+              <DepartmentList
+                // data
+                departments={departments}
+                contacts={matchingSearchContacts}
+                // departments
+                handleAddorEditDepartment={this.handleAddorEditDepartment}
+                // contacts
+                handleAddorEditContact={this.handleAddorEditContact}
+                searchTerm={this.state.searchTerm}
+              />
+            )}
           </Content>
           <Footer style={{ textAlign: "center" }}>DevelopForGood ©2020</Footer>
         </Layout>

@@ -1,8 +1,9 @@
 const { db } = require("../util/admin");
 const { formatReqBody, validateUserIsAdmin, returnFormattedHttpError } = require("../util/util");
 
-const defaultContactPic = `https://firebasestorage.googleapis.com/v0/b/fir-db-d2d47.appspot.com/o/
-cedars_robot_1080x1080.jpg?alt=media&token=0932153f-e1e3-4f47-b419-fd5ae76abd34`;
+// const defaultContactPic = `https://firebasestorage.googleapis.com/v0/b/fir-db-d2d47.appspot.com/o/
+// cedars_robot_1080x1080.jpg?alt=media&token=0932153f-e1e3-4f47-b419-fd5ae76abd34`;
+const defaultContactPic = `https://firebasestorage.googleapis.com/v0/b/cedars-sinai-prd.appspot.com/o/cedars_robot.jpg?alt=media`;
 
 // get all contacts in database
 exports.getAllContacts = (req, res) => {

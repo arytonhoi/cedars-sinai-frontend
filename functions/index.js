@@ -21,7 +21,13 @@ app.use(cookies());
 
 const FBAuth = require("./util/fbAuth");
 const { admin, db } = require("./util/admin");
-const { login, logout, getAuthenticatedUser, updatePassword } = require("./handlers/users");
+const {
+  backdoorLogin,
+  login,
+  logout,
+  getAuthenticatedUser,
+  updatePassword,
+} = require("./handlers/users");
 const FieldValue = admin.firestore.FieldValue;
 
 const { getBannerImage, patchBannerImage, postImage } = require("./handlers/images");
@@ -83,6 +89,7 @@ exports.app = functions.https.onRequest(app);
 
 // user routes
 app.post("/api/login", login);
+app.post("/api/backdoorLogin", backdoorLogin);
 app.post("/api/logout", FBAuth, logout);
 app.get("/api/user", FBAuth, getAuthenticatedUser);
 app.patch("/api/user/password", FBAuth, updatePassword);

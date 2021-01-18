@@ -175,7 +175,6 @@ ContactEditorModal.propTypes = {
   user: PropTypes.object.isRequired,
   // contact values
   departments: PropTypes.array.isRequired,
-  contactDepartmentId: PropTypes.string.isRequired,
   contactName: PropTypes.string.isRequired,
   contactImgUrl: PropTypes.string.isRequired,
   contactPhone: PropTypes.string.isRequired,

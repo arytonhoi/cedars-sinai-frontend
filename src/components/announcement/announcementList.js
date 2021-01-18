@@ -55,7 +55,8 @@ class AnnouncementList extends Component {
             onChange: (page) => {
               console.log(page);
             },
-            pageSize: 6,
+            defaultPageSize: 10,
+            showSizeChanger: true,
           }}
           dataSource={announcements}
           renderItem={(announcement) => (

@@ -3,6 +3,7 @@ import React, { Component } from "react";
 // redux
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import { searchFolder } from "../redux/actions/folderActions";
 
 // components
@@ -10,9 +11,11 @@ import SearchResult from "../components/folders/searchResult.js";
 
 // styles
 import "../css/page.css";
+import "../components/folders/folder.css";
 
 // antd
-import { Empty, Input, Layout, Spin } from "antd";
+import { Empty, Input, Layout, List, Result, Spin } from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 const { Content, Footer } = Layout;
 const { Search } = Input;
 
@@ -51,7 +54,7 @@ class SearchPage extends Component {
   render() {
     const { folderSearchResults } = this.props.folders;
     const searchTerm = this.props.match.params.searchTerm;
-    const { loadingActions } = this.props.ui;
+    const { errors, loadingActions } = this.props.ui;
 
     return (
       <div className="page-container">
@@ -65,6 +68,12 @@ class SearchPage extends Component {
               onChange={this.handleChange}
               onSearch={(searchTerm) => this.searchFolder(searchTerm)}
             />
+            <div>
+              <Link className="search-return-to-folders" to={`/resources`}>
+                <ArrowLeftOutlined />
+                <span className="search-return-to-folders-link">Return to resources</span>
+              </Link>
+            </div>
           </div>
         </header>
         <Layout className="vertical-fill-layout">
@@ -80,24 +89,38 @@ class SearchPage extends Component {
                 </h1>
               </div>
             </div>
-            <div>
-              {loadingActions.SET_FOLDER_SEARCH_RESULTS && (
-                <div className="padded vertical-content">
-                  <Spin style={{ marginTop: "48px" }} />
+            <div className="vertical-fill-content">
+              {loadingActions.SET_FOLDER_SEARCH_RESULTS ? (
+                <div className="vertical-content vertical-fill-content vertical-centered-content">
+                  <Spin />
                 </div>
-              )}
-              {!loadingActions.SET_FOLDER_SEARCH_RESULTS &&
-                (folderSearchResults.length > 0 ? (
-                  folderSearchResults.map((folder) => (
-                    <SearchResult key={folder.id} folder={folder} />
-                  ))
-                ) : (
-                  <Empty
-                    image={Empty.PRESENTED_IMAGE_SIMPLE}
-                    description={<span>No matches</span>}
-                    style={{ margin: "148px 0" }}
+              ) : errors.SET_FOLDER_SEARCH_RESULTS ? (
+                <div className="vertical-content vertical-fill-content vertical-centered-content">
+                  <Result
+                    status="error"
+                    title="Couldn't get search results"
+                    subTitle={errors.SET_FOLDER_SEARCH_RESULTS}
                   />
-                ))}
+                </div>
+              ) : folderSearchResults.length > 0 ? (
+                <List
+                  className="search-results-list"
+                  itemLayout="vertical"
+                  size="large"
+                  pagination={{
+                    defaultPageSize: 10,
+                    showSizeChanger: true,
+                  }}
+                  dataSource={folderSearchResults}
+                  renderItem={(folder) => <SearchResult key={folder.id} folder={folder} />}
+                />
+              ) : (
+                <Empty
+                  image={Empty.PRESENTED_IMAGE_SIMPLE}
+                  description={<span>No matches</span>}
+                  style={{ margin: "148px 0" }}
+                />
+              )}
             </div>
           </Content>
           <Footer style={{ textAlign: "center" }}>DevelopForGood ©2020</Footer>

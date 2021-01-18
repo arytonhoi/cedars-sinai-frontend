@@ -18,11 +18,7 @@ exports.formatReqBody = (req, res) => {
 
 exports.validateUserIsAdmin = (req, res) => {
   if (!req.user.isAdmin) {
-    this.returnFormattedHttpError(
-      res,
-      403,
-      "User not nauthorized to call this endpoint"
-    );
+    this.returnFormattedHttpError(res, 403, "User not nauthorized to call this endpoint");
   }
 };
 
@@ -39,11 +35,6 @@ exports.validateReqBodyFields = (req, schema, res) => {
       }
     });
   } catch (err) {
-    return this.returnFormattedHttpError(
-      res,
-      400,
-      "Update JSON body is invalid",
-      err
-    );
+    return this.returnFormattedHttpError(res, 400, "Update JSON body is invalid", err);
   }
 };

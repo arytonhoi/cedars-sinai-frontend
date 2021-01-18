@@ -1,7 +1,6 @@
 /* ============================================================================================== */
 /* GENERAL LAYOUT STYLES */
 /* ============================================================================================== */
-
 .page-container {
   height: 100%;
   position: relative;
@@ -68,10 +67,18 @@
   padding: 24px;
 }
 
-.content-card .vertical-content {
+.vertical-content {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.vertical-fill-content {
+  height: 100%;
+}
+
+.vertical-centered-content {
+  justify-content: center;
 }
 
 .wrapped-content {
