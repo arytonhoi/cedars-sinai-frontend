@@ -20,7 +20,8 @@
     "firebase-functions": "^3.13.0",
     "googleapis": "^66.0.0",
     "http-proxy-middleware": "^1.0.5",
-    "nodemailer": "^6.4.16"
+    "nodemailer": "^6.4.16",
+    "sharp": "^0.27.0"
   },
   "devDependencies": {
     "firebase-functions-test": "^0.2.0"
