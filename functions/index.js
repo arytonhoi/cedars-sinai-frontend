@@ -49,6 +49,13 @@ const {
 } = require("./handlers/announcements");
 
 const {
+  getNewsletters,
+  postNewsletter,
+  deleteNewsletter,
+  updateNewsletter,
+} = require("./handlers/newsletters");
+
+const {
   getAllDepartments,
   postOneDepartment,
   deleteOneDepartment,
@@ -116,6 +123,12 @@ app.get("/api/announcements", FBAuth, getAllAnnouncements);
 app.post("/api/announcements", FBAuth, postOneAnnouncement);
 app.delete("/api/announcements/:announcementId", FBAuth, deleteOneAnnouncement);
 app.patch("/api/announcements/:announcementId", FBAuth, updateOneAnnouncement);
+
+// newsletter
+app.get("/api/newsletters", FBAuth, getNewsletters);
+app.post("/api/newsletters", FBAuth, postNewsletter);
+app.delete("/api/newsletters/:newsletterId", FBAuth, deleteNewsletter);
+app.patch("/api/newsletters/:newsletterId", FBAuth, updateNewsletter);
 
 // contacts
 app.get("/api/departments", FBAuth, getAllDepartments);
