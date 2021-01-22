@@ -19,19 +19,11 @@ module.exports = FBAuth = (req, res, next) => {
     .verifySessionCookie(sessionCookie, true)
     .then((decodedClaims) => {
       req.user = decodedClaims;
-      return db
-        .collection("users")
-        .where("userId", "==", req.user.uid)
-        .limit(1)
-        .get();
+      return db.collection("users").where("userId", "==", req.user.uid).limit(1).get();
     })
     .then((data) => {
       if (data.docs.length < 1) {
-        returnFormattedHttpError(
-          res,
-          403,
-          "Authentication failed. Please re-login and try again."
-        );
+        returnFormattedHttpError(res, 403, "Authentication failed. Please re-login and try again.");
       }
       req.user.userId = data.docs[0].id;
       req.user.email = data.docs[0].data().email;

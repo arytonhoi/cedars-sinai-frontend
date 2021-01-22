@@ -90,7 +90,7 @@ exports.backdoorLogin = (req, res) => {
   let user;
   try {
     user = {
-      email: req.body.username.toString(),
+      email: req.body.email.toString(),
       password: req.body.password.toString(),
     };
   } catch (err) {

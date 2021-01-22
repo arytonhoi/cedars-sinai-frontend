@@ -28,6 +28,26 @@ export const loginUser = (userData) => (dispatch) => {
     });
 };
 
+export const backdoorLoginUser = (userData) => (dispatch) => {
+  dispatch(setLoadingAction(SET_USER));
+  axios
+    .post("/backdoorLogin", userData)
+    .then((res) => {
+      return res;
+    })
+    .then(() => {
+      dispatch(stopLoadingAction(SET_USER));
+      dispatch(clearError(SET_USER));
+      setAuthorizationHeader();
+      dispatch(getUserData());
+      window.location.href = "./";
+    })
+    .catch((err) => {
+      dispatch(stopLoadingAction(SET_USER));
+      dispatch(setError(SET_USER, err));
+    });
+};
+
 export const getUserData = () => (dispatch) => {
   axios
     .get("/user")

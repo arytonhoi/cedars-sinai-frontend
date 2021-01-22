@@ -18,6 +18,7 @@ import axios from "axios";
 // Pages
 import AdminPage from "./pages/adminPage";
 import announcementPage from "./pages/announcementPage";
+import BackdoorLoginPage from "./pages/backdoorLoginPage";
 import newsletterPage from "./pages/newsletterPage";
 import calendarPage from "./pages/calendarPage";
 import contactPage from "./pages/contactPage";
@@ -56,6 +57,7 @@ class App extends Component {
               <Layout className="site-layout">
                 <Switch>
                   <AuthRoute exact path="/login" component={LoginPage} />
+                  <AuthRoute exact path="/backdoorlogin" component={BackdoorLoginPage} />
                   <Route exact path="/">
                     <Redirect to="/announcements" />
                   </Route>
@@ -78,10 +80,15 @@ class App extends Component {
       return (
         <Provider store={store}>
           <Router>
-            <Route exact path="*">
-              <Redirect to="/login" />
-            </Route>
+            <Route exact path="/backdoorlogin" component={BackdoorLoginPage} />
             <Route exact path="/login" component={LoginPage} />
+            <Route exact path="*">
+              {window.location.href.split("/").slice(-1)[0] === "backdoorLogin" ? (
+                <Redirect to="/backdoorLogin" />
+              ) : (
+                <Redirect to="/login" />
+              )}
+            </Route>
           </Router>
         </Provider>
       );

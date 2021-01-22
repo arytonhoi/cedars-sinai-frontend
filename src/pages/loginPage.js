@@ -21,7 +21,7 @@ class LoginPage extends Component {
     };
   }
 
-  handlePatchNewPassword = (formValues) => {
+  handleLoginUser = (formValues) => {
     const reqBody = {
       username: this.state.user,
       password: formValues.password,
@@ -56,7 +56,7 @@ class LoginPage extends Component {
               <Form
                 ref={this.formRef}
                 onFinish={(formValues) => {
-                  this.handlePatchNewPassword(formValues);
+                  this.handleLoginUser(formValues);
                   this.formRef.current.resetFields();
                 }}
               >
