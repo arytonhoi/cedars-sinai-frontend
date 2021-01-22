@@ -30,52 +30,61 @@ class BackdoorLoginPage extends Component {
     const loadingLogin = loadingActions[SET_USER];
 
     return (
-      <Form
-        ref={this.formRef}
-        onFinish={(formValues) => {
-          this.handleLoginUser(formValues);
-          this.formRef.current.resetFields();
-        }}
-      >
-        <Form.Item
-          name="email"
-          rules={[
-            {
-              required: true,
-              message: "Please input the email.",
-            },
-          ]}
-          label="Email"
-        >
-          <Input id="email" name="email" type="text" autoComplete="off" />
-        </Form.Item>
-        <Form.Item
-          name="password"
-          rules={[
-            {
-              required: true,
-              message: "Please input the password.",
-            },
-          ]}
-          label="Password"
-        >
-          <Input.Password id="password" name="password" type="text" autoComplete="off" />
-        </Form.Item>
-        {setUserErrors && (
-          <Alert
-            message={setUserErrors}
-            type="error"
-            showIcon
-            closable
-            afterClose={() => this.props.clearError(SET_USER)}
-          />
-        )}
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            {loadingLogin ? "Signing in..." : "Sign In"}
-          </Button>
-        </Form.Item>
-      </Form>
+      <div className="login-page-container">
+        <div className="login-box-container">
+          <div className="login-box">
+            <h1 className="login-form-header noselect">Backdoor Login</h1>
+            <div className="login-form-container">
+              <Form
+                ref={this.formRef}
+                onFinish={(formValues) => {
+                  this.handleLoginUser(formValues);
+                  this.formRef.current.resetFields();
+                }}
+              >
+                <Form.Item
+                  name="email"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input the email.",
+                    },
+                  ]}
+                  label="Email"
+                >
+                  <Input id="email" name="email" type="text" autoComplete="off" />
+                </Form.Item>
+                <Form.Item
+                  name="password"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input the password.",
+                    },
+                  ]}
+                  label="Password"
+                >
+                  <Input.Password id="password" name="password" type="text" autoComplete="off" />
+                </Form.Item>
+                {setUserErrors && (
+                  <Alert
+                    message={setUserErrors}
+                    type="error"
+                    showIcon
+                    closable
+                    afterClose={() => this.props.clearError(SET_USER)}
+                  />
+                )}
+                <Form.Item>
+                  <Button type="primary" htmlType="submit">
+                    {loadingLogin ? "Signing in..." : "Sign In"}
+                  </Button>
+                </Form.Item>
+              </Form>
+            </div>
+          </div>
+        </div>
+      </div>
     );
   }
 }
