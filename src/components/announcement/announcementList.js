@@ -73,7 +73,7 @@ class AnnouncementList extends Component {
                   )}
                 </span>
                 <h3>{announcement.author}</h3>
-                <h3>{announcement.createdAt.toString("MM/dd/yy")}</h3>
+                <h3>{announcement.createdAt.toString("MMM dd, yyyy")}</h3>
               </header>
               <div className="announcement-content-container">
                 <input

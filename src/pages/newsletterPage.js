@@ -260,7 +260,8 @@ class NewsletterPage extends Component {
                         )}
                       </div>
                       <span className="newsletter-date">
-                        Posted on: {newsletter.createdAt.toString("MM/dd/yy")}
+                        {`Posted on ${newsletter.createdAt.toString("MMM dd, yyyy")}`}
+                        {/* {` at ${newsletter.createdAt.toString("H:mm t")}`} */}
                       </span>
                     </div>
                   </List.Item>

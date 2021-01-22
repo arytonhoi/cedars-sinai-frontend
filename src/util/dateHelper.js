@@ -36,6 +36,7 @@ export class DateHelper {
         }
       }
     }
+    console.log(tokens);
     for (i = 0; i < tokens.length; i++) {
       var add = "";
       switch (tokens[i][0]) {
