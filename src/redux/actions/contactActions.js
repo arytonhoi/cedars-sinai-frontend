@@ -131,6 +131,7 @@ export const postContact = (newContact) => (dispatch) => {
 
 export const patchContact = (updatedContactId, updatedContact) => (dispatch) => {
   dispatch(setLoadingAction(PATCH_CONTACT));
+  console.log(updatedContact);
   axios
     .patch(`/contacts/${updatedContactId}`, updatedContact)
     .then((res) => {

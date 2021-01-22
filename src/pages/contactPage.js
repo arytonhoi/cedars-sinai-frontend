@@ -198,6 +198,7 @@ class ContactPage extends Component {
     axios
       .post(`/images`, formData)
       .then((res) => {
+        console.log(res);
         this.setState({
           contactImgUrl: res.data.imgUrl,
         });
@@ -322,7 +323,7 @@ class ContactPage extends Component {
       name: formValues.contactName,
       phone: formValues.contactPhone,
       email: formValues.contactEmail,
-      imgUrl: formValues.contactImgUrl,
+      imgUrl: this.state.contactImgUrl,
     };
     if (this.state.contactId === "") {
       // posting new contact
