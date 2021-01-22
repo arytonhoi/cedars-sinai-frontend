@@ -2,14 +2,44 @@ const { db } = require("../util/admin");
 const { formatReqBody, validateUserIsAdmin, returnFormattedHttpError } = require("../util/util");
 
 exports.getNewsletters = (req, res) => {
-  // maybe increment folder contents
-  // if (typeof req.query.i === "string") {
-  //   db.doc(`/folders/${req.params.folderId}`).update({
-  //     visits: admin.firestore.FieldValue.increment(1),
-  //   });
-  // }
+  // check for param queries
+  let fromDate;
+  let toDate;
+  let defaultTimeSpan = 31536000000; // past year in milliseconds
+  if (req.query.fromDate) {
+    try {
+      fromDate = new Date(parseInt(req.query.fromDate)).toISOString();
+    } catch (err) {
+      returnFormattedHttpError(
+        res,
+        400,
+        "Invalid param query. Options are fromDate and toDate.",
+        err
+      );
+    }
+  } else {
+    fromDate = new Date(Date.now() - defaultTimeSpan).toISOString();
+  }
+
+  if (req.query.toDate) {
+    try {
+      toDate = new Date(parseInt(req.query.toDate)).toISOString();
+    } catch (err) {
+      returnFormattedHttpError(
+        res,
+        400,
+        "Invalid param query. Options are fromDate and toDate.",
+        err
+      );
+    }
+  } else {
+    toDate = new Date().toISOString();
+  }
+
   db.collection(`newsletters`)
     .orderBy("createdAt", "desc")
+    .where("createdAt", ">=", fromDate)
+    .where("createdAt", "<=", toDate)
     .get()
     .then((data) => {
       let newsletters = [];

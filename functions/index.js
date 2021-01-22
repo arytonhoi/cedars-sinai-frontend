@@ -37,15 +37,15 @@ const {
   getFolder,
   createFolder,
   deleteFolder,
-  updateOneFolder,
+  updateFolder,
   searchFolders,
 } = require("./handlers/folders");
 
 const {
-  getAllAnnouncements,
-  postOneAnnouncement,
-  deleteOneAnnouncement,
-  updateOneAnnouncement,
+  getAnnouncements,
+  postAnnouncement,
+  deleteAnnouncement,
+  updateAnnouncement,
 } = require("./handlers/announcements");
 
 const {
@@ -57,16 +57,16 @@ const {
 
 const {
   getAllDepartments,
-  postOneDepartment,
-  deleteOneDepartment,
-  updateOneDepartment,
+  postDepartment,
+  deleteDepartment,
+  updateDepartment,
 } = require("./handlers/departments");
 
 const {
   getAllContacts,
-  postOneContact,
-  deleteOneContact,
-  updateOneContact,
+  postContact,
+  deleteContact,
+  updateContact,
 } = require("./handlers/contacts");
 
 const {
@@ -116,13 +116,13 @@ app.get("/api/folders/:folderId", FBAuth, getFolder);
 app.get("/api/folders/search/:searchTerm", FBAuth, searchFolders);
 app.post("/api/folders/:folderId", FBAuth, createFolder);
 app.delete("/api/folders/:folderId", FBAuth, deleteFolder);
-app.patch("/api/folders/:folderId", FBAuth, updateOneFolder);
+app.patch("/api/folders/:folderId", FBAuth, updateFolder);
 
 // announcement routes
-app.get("/api/announcements", FBAuth, getAllAnnouncements);
-app.post("/api/announcements", FBAuth, postOneAnnouncement);
-app.delete("/api/announcements/:announcementId", FBAuth, deleteOneAnnouncement);
-app.patch("/api/announcements/:announcementId", FBAuth, updateOneAnnouncement);
+app.get("/api/announcements", FBAuth, getAnnouncements);
+app.post("/api/announcements", FBAuth, postAnnouncement);
+app.delete("/api/announcements/:announcementId", FBAuth, deleteAnnouncement);
+app.patch("/api/announcements/:announcementId", FBAuth, updateAnnouncement);
 
 // newsletter
 app.get("/api/newsletters", FBAuth, getNewsletters);
@@ -132,13 +132,13 @@ app.patch("/api/newsletters/:newsletterId", FBAuth, updateNewsletter);
 
 // contacts
 app.get("/api/departments", FBAuth, getAllDepartments);
-app.post("/api/departments", FBAuth, postOneDepartment);
-app.delete("/api/departments/:departmentId", FBAuth, deleteOneDepartment);
-app.patch("/api/departments/:departmentId", FBAuth, updateOneDepartment);
+app.post("/api/departments", FBAuth, postDepartment);
+app.delete("/api/departments/:departmentId", FBAuth, deleteDepartment);
+app.patch("/api/departments/:departmentId", FBAuth, updateDepartment);
 app.get("/api/contacts", FBAuth, getAllContacts);
-app.post("/api/contacts", FBAuth, postOneContact);
-app.delete("/api/contacts/:contactId", FBAuth, deleteOneContact);
-app.patch("/api/contacts/:contactId", FBAuth, updateOneContact);
+app.post("/api/contacts", FBAuth, postContact);
+app.delete("/api/contacts/:contactId", FBAuth, deleteContact);
+app.patch("/api/contacts/:contactId", FBAuth, updateContact);
 
 // calendar routes
 app.get("/api/calendar", FBAuth, getCalendarList);

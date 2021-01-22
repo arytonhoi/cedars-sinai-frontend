@@ -10,7 +10,7 @@ import "./contacts.css";
 import "../../css/page.css";
 
 // antd
-import { Empty, Spin } from "antd";
+import { Empty } from "antd";
 
 class DepartmentList extends Component {
   render() {

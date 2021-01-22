@@ -62,7 +62,6 @@ class AnnouncementPage extends Component {
       },
       // announcement editor modal
       showAnnouncementEditorModal: false,
-      elementHeight: "",
       // banner img
       isEditingBannerImg: false,
     };

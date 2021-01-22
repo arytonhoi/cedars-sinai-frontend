@@ -25,7 +25,7 @@ exports.getAllDepartments = (req, res) => {
 };
 
 // create file
-exports.postOneDepartment = (req, res) => {
+exports.postDepartment = (req, res) => {
   req = formatReqBody(req);
   validateUserIsAdmin(req, res);
 
@@ -56,7 +56,7 @@ exports.postOneDepartment = (req, res) => {
     });
 };
 
-exports.deleteOneDepartment = (req, res) => {
+exports.deleteDepartment = (req, res) => {
   validateUserIsAdmin(req, res);
 
   const department = db.doc(`/departments/${req.params.departmentId}`);
@@ -85,7 +85,7 @@ exports.deleteOneDepartment = (req, res) => {
     });
 };
 
-exports.updateOneDepartment = (req, res) => {
+exports.updateDepartment = (req, res) => {
   req = formatReqBody(req);
   validateUserIsAdmin(req, res);
 

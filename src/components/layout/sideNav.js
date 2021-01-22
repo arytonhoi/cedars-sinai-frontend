@@ -8,6 +8,7 @@ import { Layout, Menu } from "antd";
 import {
   CalendarOutlined,
   ContactsOutlined,
+  FilePdfOutlined,
   FolderOpenOutlined,
   LogoutOutlined,
   NotificationOutlined,
@@ -33,17 +34,8 @@ class SideNav extends Component {
     const { collapsed } = this.state;
     const { location } = this.props;
     return (
-      <Sider
-        theme="light"
-        collapsible
-        collapsed={collapsed}
-        onCollapse={this.onCollapse}
-      >
-        <Menu
-          theme="light"
-          selectedKeys={[location.pathname.split("/", 2)[1]]}
-          mode="inline"
-        >
+      <Sider theme="light" collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
+        <Menu theme="light" selectedKeys={[location.pathname.split("/", 2)[1]]} mode="inline">
           <Menu.Item style={{ marginTop: "24px", marginBottom: "24px" }}>
             {this.state.collapsed ? (
               <img
@@ -53,15 +45,14 @@ class SideNav extends Component {
                 src={process.env.PUBLIC_URL + "/icon-min.svg"}
               />
             ) : (
-              <img
-                className="logo"
-                alt=""
-                src={process.env.PUBLIC_URL + "/logo.png"}
-              />
+              <img className="logo" alt="" src={process.env.PUBLIC_URL + "/logo.png"} />
             )}
           </Menu.Item>
           <Menu.Item key="announcements" icon={<NotificationOutlined />}>
             <Link to="/announcements">Announcements</Link>
+          </Menu.Item>
+          <Menu.Item key="newsletters" icon={<FilePdfOutlined />}>
+            <Link to="/newsletters">Newsletters</Link>
           </Menu.Item>
           <Menu.Item key="resources" icon={<FolderOpenOutlined />}>
             <Link to="/resources">Resources</Link>

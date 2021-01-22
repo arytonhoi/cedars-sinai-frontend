@@ -271,7 +271,7 @@ exports.deleteFolder = (req, res) => {
     });
 };
 
-exports.updateOneFolder = (req, res) => {
+exports.updateFolder = (req, res) => {
   req = formatReqBody(req);
   validateReqBodyFields(req, folderSchema, res);
   validateUserIsAdmin(req, res);

@@ -3,10 +3,11 @@ import thunk from "redux-thunk";
 
 import { userReducer } from "./reducers/userReducer";
 import { announcementReducer } from "./reducers/announcementReducer";
+import { calendarReducer } from "./reducers/calendarReducer";
 import { contactReducer } from "./reducers/contactReducer";
 import { folderReducer } from "./reducers/folderReducer";
+import { newsletterReducer } from "./reducers/newsletterReducer";
 import { uiReducer } from "./reducers/uiReducer";
-import { calendarReducer } from "./reducers/calendarReducer";
 
 const initialState = {};
 
@@ -15,6 +16,7 @@ const middleware = [thunk];
 const reducers = combineReducers({
   user: userReducer,
   announcements: announcementReducer,
+  newsletters: newsletterReducer,
   contacts: contactReducer,
   folders: folderReducer,
   calendar: calendarReducer,

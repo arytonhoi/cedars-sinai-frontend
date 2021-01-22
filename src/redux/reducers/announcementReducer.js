@@ -57,7 +57,6 @@ export const announcementReducer = (state = initialState, action) => {
         ...state,
         announcements: announcements,
         filteredAnnouncements: announcements,
-        loading: false,
       };
     case POST_ANNOUNCEMENT:
       const newAnnouncement = action.payload;
@@ -68,7 +67,6 @@ export const announcementReducer = (state = initialState, action) => {
         ...state,
         announcements: postedAnnouncements,
         filteredAnnouncements: postedAnnouncements,
-        loading: false,
       };
     case PATCH_ANNOUNCEMENT:
       const updatedAnnouncement = action.payload;
@@ -84,7 +82,6 @@ export const announcementReducer = (state = initialState, action) => {
         ...state,
         announcements: updatedAnnouncements,
         filteredAnnouncements: updatedAnnouncements,
-        loading: false,
       };
     case DELETE_ANNOUNCEMENT:
       const deletedAnnouncementId = action.payload;
@@ -94,7 +91,6 @@ export const announcementReducer = (state = initialState, action) => {
         filteredAnnouncements: state.filteredAnnouncements.filter(
           (a) => a.id !== deletedAnnouncementId
         ),
-        loading: false,
       };
     case FILTER_ANNOUNCEMENTS:
       const filters = action.payload;

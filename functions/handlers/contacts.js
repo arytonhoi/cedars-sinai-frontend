@@ -29,7 +29,7 @@ exports.getAllContacts = (req, res) => {
 };
 
 // create file
-exports.postOneContact = (req, res) => {
+exports.postContact = (req, res) => {
   req = formatReqBody(req);
   validateUserIsAdmin(req, res);
 
@@ -73,7 +73,7 @@ exports.postOneContact = (req, res) => {
     });
 };
 
-exports.deleteOneContact = (req, res) => {
+exports.deleteContact = (req, res) => {
   validateUserIsAdmin(req, res);
 
   const contact = db.doc(`/contacts/${req.params.contactId}`);
@@ -103,7 +103,7 @@ exports.deleteOneContact = (req, res) => {
     });
 };
 
-exports.updateOneContact = (req, res) => {
+exports.updateContact = (req, res) => {
   req = formatReqBody(req);
   validateUserIsAdmin(req, res);
 

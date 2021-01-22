@@ -47,7 +47,9 @@ export class DateHelper {
           break;
         case "HOUR_12":
           add = this.date.getHours() % 12;
-          if(add===0){add+=12};
+          if (add === 0) {
+            add += 12;
+          }
           break;
         case "HOUR_24":
           add = this.date.getHours();
@@ -100,11 +102,11 @@ export class DateHelper {
           add = tokens[i][1].toString();
       }
       if (typeof add == "number") {
-        while(add.toString().length < tokens[i][2]){
-          add = "0"+add
+        while (add.toString().length < tokens[i][2]) {
+          add = "0" + add;
         }
-        if(tokens[i][1] === "YEAR" && add.toString().length > tokens[i][2]){
-          add = add.toString().slice(-tokens[i][2])
+        if (tokens[i][1] === "YEAR" && add.toString().length > tokens[i][2]) {
+          add = add.toString().slice(-tokens[i][2]);
         }
       }
       resultString += add;

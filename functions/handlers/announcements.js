@@ -2,7 +2,7 @@ const { db } = require("../util/admin");
 const { formatReqBody } = require("../util/util");
 
 // get all announcements in database
-exports.getAllAnnouncements = (req, res) => {
+exports.getAnnouncements = (req, res) => {
   if (req.method !== "GET") {
     return res.status(400).json({ error: "Method not allowed" });
   }
@@ -25,7 +25,7 @@ exports.getAllAnnouncements = (req, res) => {
 };
 
 // create file
-exports.postOneAnnouncement = (req, res) => {
+exports.postAnnouncement = (req, res) => {
   try {
     req = formatReqBody(req);
   } catch (e) {
@@ -65,7 +65,7 @@ exports.postOneAnnouncement = (req, res) => {
   }
 };
 
-exports.deleteOneAnnouncement = (req, res) => {
+exports.deleteAnnouncement = (req, res) => {
   if (!req.user.isAdmin) {
     return res.status(403).json({ error: "Unathorized" });
   }
@@ -89,7 +89,7 @@ exports.deleteOneAnnouncement = (req, res) => {
     });
 };
 
-exports.updateOneAnnouncement = (req, res) => {
+exports.updateAnnouncement = (req, res) => {
   try {
     req = formatReqBody(req);
   } catch (e) {

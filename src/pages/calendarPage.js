@@ -14,7 +14,7 @@ import "../css/calendar.css";
 import Day from "../components/calendars/Day";
 
 // Ant design
-import { Modal, Calendar, Layout, Result, Spin } from "antd";
+import { Modal, Calendar, Layout } from "antd";
 import { CalendarOutlined, EnvironmentOutlined, AlignLeftOutlined } from "@ant-design/icons";
 const { Content, Footer } = Layout;
 

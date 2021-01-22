@@ -18,6 +18,7 @@ import axios from "axios";
 // Pages
 import AdminPage from "./pages/adminPage";
 import announcementPage from "./pages/announcementPage";
+import newsletterPage from "./pages/newsletterPage";
 import calendarPage from "./pages/calendarPage";
 import contactPage from "./pages/contactPage";
 import FolderPage from "./pages/folderPage";
@@ -59,6 +60,7 @@ class App extends Component {
                     <Redirect to="/announcements" />
                   </Route>
                   <Route exact path="/announcements" component={announcementPage} />
+                  <Route exact path="/newsletters" component={newsletterPage} />
                   <Route exact path="/resources" component={FolderPage} />
                   <Route exact path="/calendar" component={calendarPage} />
                   <Route exact path="/contacts" component={contactPage} />
