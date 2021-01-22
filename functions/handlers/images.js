@@ -29,7 +29,7 @@ exports.postImage = (req, res) => {
     const filepath = path.join(os.tmpdir(), `${imageFileNamePrefix}.${imageExtension}`);
     imageToBeUploaded = { filepath, mimetype };
 
-    const imageResizer = sharp().resize(1080);
+    const imageResizer = sharp().resize(480);
     fstream = fs.createWriteStream(filepath);
     file.pipe(imageResizer).pipe(fstream);
   });
