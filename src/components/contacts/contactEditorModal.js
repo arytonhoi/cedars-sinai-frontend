@@ -24,8 +24,8 @@ class ContactEditorModal extends Component {
     };
   }
 
-  componentDidUpdate() {
-    if (this.formRef.current) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.contactId !== this.props.contactId && this.formRef.current) {
       this.formRef.current.resetFields();
     }
   }

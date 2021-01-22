@@ -419,6 +419,7 @@ class ContactPage extends Component {
               isEditingExistingContact={this.state.contactId !== ""}
               // contact info
               departments={departments}
+              contactId={this.state.contactId}
               contactDepartmentId={this.state.contactDepartmentId}
               contactName={this.state.contactName}
               contactImgUrl={this.state.contactImgUrl}
