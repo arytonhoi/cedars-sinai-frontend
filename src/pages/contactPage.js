@@ -43,8 +43,6 @@ import "../css/page.css";
 import { Input, Layout, notification, Result, Spin } from "antd";
 import { LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 const { Content, Footer } = Layout;
-const defaultContactPic = `https://firebasestorage.googleapis.com/v0/b/fir-db-d2d47.appspot.com/o/
-cedars_robot_1080x1080.jpg?alt=media&token=0932153f-e1e3-4f47-b419-fd5ae76abd34`;
 
 class ContactPage extends Component {
   constructor() {
@@ -59,6 +57,8 @@ class ContactPage extends Component {
       contactId: "",
       contactName: "",
       contactImgUrl: "",
+      contactImgPreviewUrl: "",
+      contactImgPostBody: null,
       contactPhone: "",
       contactEmail: "",
       // search
@@ -190,24 +190,6 @@ class ContactPage extends Component {
     });
   }
 
-  // images
-  handleImageChange = (event) => {
-    const image = event;
-    const formData = new FormData();
-    formData.append("image", image, image.name);
-    axios
-      .post(`/images`, formData)
-      .then((res) => {
-        console.log(res);
-        this.setState({
-          contactImgUrl: res.data.imgUrl,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
   // general form changes
   handleChange = (event) => {
     const value = event.target.value.trim();
@@ -294,11 +276,13 @@ class ContactPage extends Component {
 
     if (contactId === null) {
       // adding new contact
+      const defaultContactPic = `https://firebasestorage.googleapis.com/v0/b/cedars-sinai-prd.appspot.com/o/cedars_robot.jpg?alt=media`;
       this.setState({
         contactDepartmentId: departmentId,
         contactId: "",
         contactName: "",
-        contactImgUrl: defaultContactPic,
+        contactImgUrl: "",
+        contactImgPreviewUrl: defaultContactPic,
         contactPhone: "",
         contactEmail: "",
       });
@@ -310,6 +294,7 @@ class ContactPage extends Component {
         contactId: contactId,
         contactName: contact.name,
         contactImgUrl: contact.imgUrl,
+        contactImgPreviewUrl: contact.imgUrl,
         contactDepartmentId: contact.departmentId,
         contactPhone: contact.phone,
         contactEmail: contact.email,
@@ -317,13 +302,46 @@ class ContactPage extends Component {
     }
   };
 
+  handleImageChange = (event) => {
+    const reader = new FileReader();
+    const image = event;
+    const formData = new FormData();
+    formData.append("image", image, image.name);
+
+    reader.onload = function (e) {
+      let previewImgUrl = e.target.result;
+      this.setState({
+        contactImgPreviewUrl: previewImgUrl,
+        contactImgPostBody: formData,
+      });
+    }.bind(this);
+
+    reader.readAsDataURL(image);
+  };
+
   handlePostOrPatchContact = (formValues) => {
+    // upload contact image if there is one
+    if (this.state.contactImgPostBody === null) {
+      this.handlePostOrPatchContactHelper(formValues, this.state.contactImgUrl);
+    } else {
+      axios
+        .post(`/images`, this.state.contactImgPostBody)
+        .then((res) => {
+          this.handlePostOrPatchContactHelper(formValues, res.data.imgUrl);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
+  handlePostOrPatchContactHelper = (formValues, contactImgUrl) => {
     const newContact = {
       departmentId: formValues.contactDepartmentId,
       name: formValues.contactName,
       phone: formValues.contactPhone,
       email: formValues.contactEmail,
-      imgUrl: this.state.contactImgUrl,
+      imgUrl: contactImgUrl,
     };
     if (this.state.contactId === "") {
       // posting new contact
@@ -366,6 +384,8 @@ class ContactPage extends Component {
       contactId: "",
       contactName: "",
       contactImgUrl: "",
+      contactImgPreviewUrl: "",
+      contactImgPostBody: null,
       contactDepartmentId: "",
       contactPhone: "",
       contactEmail: "",
@@ -423,7 +443,7 @@ class ContactPage extends Component {
               contactId={this.state.contactId}
               contactDepartmentId={this.state.contactDepartmentId}
               contactName={this.state.contactName}
-              contactImgUrl={this.state.contactImgUrl}
+              contactImgPreviewUrl={this.state.contactImgPreviewUrl}
               contactPhone={this.state.contactPhone}
               contactEmail={this.state.contactEmail}
               // form functions

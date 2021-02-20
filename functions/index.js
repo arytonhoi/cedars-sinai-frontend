@@ -159,6 +159,9 @@ app.post("/api/email", FBAuth, sendEmail);
 app.get("/api/whois", FBAuth, fetchWhois);
 app.get("/api/whois/:domain", FBAuth, fetchWhois);
 
+// Firebase triggers
+
+// When department is deleted, delete its contacts
 exports.onDepartmentDelete = functions.firestore
   .document("/departments/{departmentId}")
   .onDelete((snapshot, context) => {
@@ -177,6 +180,7 @@ exports.onDepartmentDelete = functions.firestore
       .catch((err) => console.error(err));
   });
 
+// When folder is deleted, delete child folders and path references
 exports.onFolderDelete = functions.firestore
   .document("/folders/{folderId}")
   .onDelete((snapshot, context) => {
@@ -198,41 +202,41 @@ exports.onFolderDelete = functions.firestore
       .catch((err) => console.error(err));
   });
 
-exports.onProdDepartmentDelete = functions.firestore
-  .document("/prd_departments/{departmentId}")
-  .onDelete((snapshot, context) => {
-    const departmentId = context.params.departmentId;
-    const batch = db.batch();
-    return db
-      .collection("prd_contacts")
-      .where("departmentId", "==", departmentId)
-      .get()
-      .then((data) => {
-        data.forEach((doc) => {
-          batch.delete(db.doc(`/prd_contacts/${doc.id}`));
-        });
-        return batch.commit();
-      })
-      .catch((err) => console.error(err));
-  });
+// exports.onProdDepartmentDelete = functions.firestore
+//   .document("/prd_departments/{departmentId}")
+//   .onDelete((snapshot, context) => {
+//     const departmentId = context.params.departmentId;
+//     const batch = db.batch();
+//     return db
+//       .collection("prd_contacts")
+//       .where("departmentId", "==", departmentId)
+//       .get()
+//       .then((data) => {
+//         data.forEach((doc) => {
+//           batch.delete(db.doc(`/prd_contacts/${doc.id}`));
+//         });
+//         return batch.commit();
+//       })
+//       .catch((err) => console.error(err));
+//   });
 
-exports.onProdFolderDelete = functions.firestore
-  .document("/prd_folders/{folderId}")
-  .onDelete((snapshot, context) => {
-    const folderId = context.params.folderId;
-    const batch = db.batch();
-    const folderPathsMapRef = db.collection("prd_paths").doc("folders");
-    return db
-      .collection("prd_folders")
-      .where("parent", "==", folderId)
-      .get()
-      .then((data) => {
-        data.forEach((doc) => {
-          const docId = doc.id;
-          batch.update(folderPathsMapRef, { [docId]: FieldValue.delete() });
-          batch.delete(db.doc(`/prd_folders/${docId}`));
-        });
-        return batch.commit();
-      })
-      .catch((err) => console.error(err));
-  });
+// exports.onProdFolderDelete = functions.firestore
+//   .document("/prd_folders/{folderId}")
+//   .onDelete((snapshot, context) => {
+//     const folderId = context.params.folderId;
+//     const batch = db.batch();
+//     const folderPathsMapRef = db.collection("prd_paths").doc("folders");
+//     return db
+//       .collection("prd_folders")
+//       .where("parent", "==", folderId)
+//       .get()
+//       .then((data) => {
+//         data.forEach((doc) => {
+//           const docId = doc.id;
+//           batch.update(folderPathsMapRef, { [docId]: FieldValue.delete() });
+//           batch.delete(db.doc(`/prd_folders/${docId}`));
+//         });
+//         return batch.commit();
+//       })
+//       .catch((err) => console.error(err));
+//   });

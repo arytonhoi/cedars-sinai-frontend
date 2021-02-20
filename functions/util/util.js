@@ -1,3 +1,13 @@
+/**
+ * Converts custom class to plain object so Firestore accepts it.
+ * https://stackoverflow.com/questions/52221578/firestore-doesnt-support-javascript-objects-with-custom-prototypes
+ * @param  {[type]} classObject class object
+ * @return  {} object version of classObject
+ */
+exports.convertToPlainObject = (classObject) => {
+  return JSON.parse(JSON.stringify(classObject));
+};
+
 // logs and returns errors
 exports.returnFormattedHttpError = (res, code, message = "", err = null) => {
   if (err) {

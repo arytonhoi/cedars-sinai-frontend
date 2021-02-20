@@ -1,7 +1,7 @@
 {
   "hosting": [
     {
-      "target": "cedars-sinai-prd",
+      "target": "cedars-sinai-dev",
       "public": "build",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
       "rewrites": [

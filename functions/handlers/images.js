@@ -1,9 +1,10 @@
 const { admin, db } = require("../util/admin");
-// const { formatReqBody } = require("../util/util");
+const { validateUserIsAdmin, returnFormattedHttpError } = require("../util/util");
 const { firebaseConfig } = require("../util/config");
 
 // upload a thumbnail image
 exports.postImage = (req, res) => {
+  validateUserIsAdmin(req, res);
   const BusBoy = require("busboy");
   const path = require("path");
   const os = require("os");
@@ -21,12 +22,14 @@ exports.postImage = (req, res) => {
       return res.status(400).json({ error: "Wrong file type submitted. Must be jpg or png" });
     }
 
+    // if (!thumbnailFilename) {
     const date = new Date();
     const random_num = Math.round(Math.random() * 1000000000000);
-    const imageExtension = filename.split(".")[filename.split(".").length - 1];
     const imageFileNamePrefix = `${date.getTime()}_${random_num}`;
+    const imageExtension = filename.split(".")[filename.split(".").length - 1];
     thumbnailFilename = `${imageFileNamePrefix}.${imageExtension}`;
-    const filepath = path.join(os.tmpdir(), `${imageFileNamePrefix}.${imageExtension}`);
+    // }
+    const filepath = path.join(os.tmpdir(), thumbnailFilename);
     imageToBeUploaded = { filepath, mimetype };
 
     const imageResizer = sharp().resize(480);
@@ -65,10 +68,6 @@ exports.postImage = (req, res) => {
 };
 
 exports.getBannerImage = (req, res) => {
-  if (req.method !== "GET") {
-    return res.status(400).json({ error: "Method not allowed" });
-  }
-
   db.doc(`/banners/${req.params.pageName}`)
     .get()
     .then((doc) => {
@@ -80,9 +79,7 @@ exports.getBannerImage = (req, res) => {
 };
 
 exports.patchBannerImage = (req, res) => {
-  if (req.method !== "PATCH") {
-    return res.status(400).json({ error: "Method not allowed" });
-  }
+  validateUserIsAdmin(req, res);
 
   const updatedBannerImgObj = { imgUrl: req.body.imgUrl };
   db.doc(`/banners/${req.params.pageName}`)

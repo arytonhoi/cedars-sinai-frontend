@@ -104,7 +104,7 @@ class ContactEditorModal extends Component {
           ref={this.formRef}
           initialValues={{
             contactDepartmentId: this.props.contactDepartmentId,
-            contactImgUrl: this.props.contactImgUrl,
+            contactImgPreviewUrl: this.props.contactImgPreviewUrl,
             contactName: this.props.contactName,
             contactPhone: this.props.contactPhone,
             contactEmail: this.props.contactEmail,
@@ -115,18 +115,22 @@ class ContactEditorModal extends Component {
           }}
         >
           <Form.Item
-            name="contactImgUrl"
+            name="contactImgPreviewUrl"
             valuePropName="filelist"
             getValueFromEvent={this.normFile}
           >
             <div className="upload-centered">
-              <Avatar size="large" src={this.props.contactImgUrl} />
+              <Avatar size="large" src={this.props.contactImgPreviewUrl} />
               <Upload name="logo" action={this.props.handleImageChange} showUploadList={false}>
                 <Button icon={<EditOutlined />}>Edit photo</Button>
               </Upload>
             </div>
           </Form.Item>
-          <Form.Item name="contactDepartmentId" label="Department" rules={[{ required: true }]}>
+          <Form.Item
+            name="contactDepartmentId"
+            label="Department"
+            rules={[{ required: true, message: "Please select a department." }]}
+          >
             <Select name="contactDepartmentId" placeholder="Select a department">
               {this.props.departments.map((d) => (
                 <Option key={d.id} value={d.id}>
@@ -176,7 +180,7 @@ ContactEditorModal.propTypes = {
   // contact values
   departments: PropTypes.array.isRequired,
   contactName: PropTypes.string.isRequired,
-  contactImgUrl: PropTypes.string.isRequired,
+  contactImgPreviewUrl: PropTypes.string.isRequired,
   contactPhone: PropTypes.string.isRequired,
   contactEmail: PropTypes.string.isRequired,
   // form functions

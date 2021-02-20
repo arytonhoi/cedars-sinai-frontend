@@ -4,7 +4,7 @@ const { returnFormattedHttpError } = require("../util/util");
 // cookie
 module.exports = FBAuth = (req, res, next) => {
   let sessionCookie;
-  console.log(req.cookies);
+  // console.log(req.cookies);
   sessionCookie = req.cookies["__session"];
   if (sessionCookie === undefined) {
     returnFormattedHttpError(
