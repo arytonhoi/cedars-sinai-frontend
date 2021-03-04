@@ -224,27 +224,27 @@ exports.updatePassword = (req, res) => {
         }
         // update fake staff password
         userPasswordRef.update({ password: user.newPassword });
-        return res.json({ message: "Password updated successfully" });
+        // return res.json({ message: "Password updated successfully" });
       }
     });
-  } else {
-    // attempt to change password normally via actual Firebase auth
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(user.email, user.currentPassword)
-      .then((resUser) => {
-        firebase
-          .auth()
-          .currentUser.updatePassword(user.newPassword)
-          .then(() => {
-            return res.json({ message: "Password updated successfully" });
-          })
-          .catch((err) => {
-            returnFormattedHttpError(res, 500, err.message, err);
-          });
-      })
-      .catch((err) => {
-        returnFormattedHttpError(res, 403, "Current password incorrect", err);
-      });
   }
+
+  // attempt to change password normally via actual Firebase auth
+  firebase
+    .auth()
+    .signInWithEmailAndPassword(user.email, user.currentPassword)
+    .then((resUser) => {
+      firebase
+        .auth()
+        .currentUser.updatePassword(user.newPassword)
+        .then(() => {
+          return res.json({ message: "Password updated successfully" });
+        })
+        .catch((err) => {
+          returnFormattedHttpError(res, 500, err.message, err);
+        });
+    })
+    .catch((err) => {
+      returnFormattedHttpError(res, 403, "Current password incorrect", err);
+    });
 };
